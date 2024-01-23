@@ -1,6 +1,5 @@
 import os
 from functools import cache
-import zipfile
 from typing import AnyStr
 
 from dotenv import load_dotenv
