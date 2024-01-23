@@ -1,5 +1,6 @@
 
 # xn-mc
+![plot](https://xanmc.s3.amazonaws.com/ghbanner.png)
 
 Welcome to **xn-mc**, a repository dedicated to advanced Minecraft server management and configuration.
 
