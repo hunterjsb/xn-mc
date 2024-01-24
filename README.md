@@ -36,4 +36,4 @@ Contributions to **xn-mc** are welcome! If you have a feature request, bug repor
 
 ## License
 
-This project is licensed under [SPECIFY LICENSE] - see the LICENSE file for details.
+This project is licensed under the MIT license - see the LICENSE file for details.
