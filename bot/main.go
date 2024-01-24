@@ -76,8 +76,8 @@ func main() {
 // message is created on any channel that the authenticated bot has access to.
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
-	// Ignore all messages created by the bot itself
-	if m.Author.ID == s.State.User.ID {
+	// Ignore all messages created by the bot itself or in other channels
+	if m.Author.ID == s.State.User.ID || m.ChannelID != channelID {
 		return
 	}
 	// If the message is "ping" reply with "Pong!"
@@ -109,12 +109,12 @@ func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate
 		statusMsg = "Minecraft server is running."
 	}
 
-	s.ChannelMessageSend(m.ChannelID, statusMsg)
+	s.ChannelMessageSend(channelID, statusMsg)
 }
 
 func startMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if startCmd == "" {
-		s.ChannelMessageSend(m.ChannelID, "START_COMMAND is not set in the environment")
+		s.ChannelMessageSend(channelID, "START_COMMAND is not set in the environment")
 		return
 	}
 
@@ -125,7 +125,7 @@ func startMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Redirect output to server.out
 	stdout, err := os.Create(filepath.Join(serverDir, "server.out"))
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Failed to create log file: "+err.Error())
+		s.ChannelMessageSend(channelID, "Failed to create log file: "+err.Error())
 		return
 	}
 	cmd.Stdout = stdout
@@ -133,11 +133,11 @@ func startMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	err = cmd.Start()
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Failed to start the Minecraft server: "+err.Error())
+		s.ChannelMessageSend(channelID, "Failed to start the Minecraft server: "+err.Error())
 		return
 	}
 
-	s.ChannelMessageSend(m.ChannelID, "Minecraft server started.")
+	s.ChannelMessageSend(channelID, "Minecraft server started.")
 }
 
 func stopMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -146,11 +146,11 @@ func stopMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
 	err := cmd.Run()
 
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Failed to stop the Minecraft server: "+err.Error())
+		s.ChannelMessageSend(channelID, "Failed to stop the Minecraft server: "+err.Error())
 		return
 	}
 
-	s.ChannelMessageSend(m.ChannelID, "Minecraft server stopped.")
+	s.ChannelMessageSend(channelID, "Minecraft server stopped.")
 }
 
 var lastReadPosition int64 = 0
