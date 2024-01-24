@@ -1,8 +1,18 @@
 # Server
+<<<<<<< HEAD
 server/*
 !server/server.jar
 *.pid
 *.zip
+=======
+*.out
+server/*
+*.pid
+*.zip
+
+!server/server.jar
+!server/ops.json
+>>>>>>> a418a7430a003bb06406f84af322f3571b55832f
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
