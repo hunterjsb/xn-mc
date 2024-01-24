@@ -1,6 +1,8 @@
 # Server
 server/world/
 server/*.zip
+server/logs
+*.pid
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
