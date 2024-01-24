@@ -64,7 +64,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	// If the message is "ping" reply with "Pong!"
 	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
+		s.ChannelMessageSend(m.ChannelID, "Pong! Yes prntbot is live!\ngithub: https://github.com/hunterjsb/xn-mc?tab=readme-ov-file#xn-mc")
 	}
 
 	if m.Content == "/status" {
