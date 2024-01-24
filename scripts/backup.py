@@ -36,7 +36,8 @@ if __name__ == '__main__':
     import sys
 
     cfg = Config()
-    log_file_path = os.path.expanduser(cfg['SERVER_FP'] + '/server.out')
+    server_fp = 'server' if 'server' in os.listdir() else cfg['SERVER_FP']
+    log_file_path = os.path.expanduser(server_fp + '/server.out')
 
     with open(log_file_path, 'a') as log_file:
         sys.stdout = log_file
