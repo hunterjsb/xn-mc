@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 )
 
 // Variables used for command line parameters
@@ -20,7 +21,11 @@ var (
 )
 
 func init() {
-
+	err := godotenv.Load("../.env") // Adjust the path as necessary
+	if err != nil {
+		fmt.Println("Error loading .env file")
+		return
+	}
 	flag.StringVar(&Token, "t", "", "Bot Token")
 	flag.Parse()
 }
