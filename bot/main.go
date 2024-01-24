@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
@@ -14,10 +16,12 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Variables used for command line parameters
+// Globally available env vars
 var (
 	token     string
 	channelID string
+	startCmd  string
+	serverDir string
 )
 
 func init() {
@@ -30,6 +34,8 @@ func init() {
 	// Get environment variables
 	token = os.Getenv("DISCORD_TOKEN")
 	channelID = os.Getenv("DISCORD_CHANNEL_ID")
+	startCmd = os.Getenv("START_COMMAND")
+	serverDir = os.Getenv("SERVER_FP")
 }
 
 func main() {
@@ -87,6 +93,9 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		startMinecraftServer(s, m)
 	}
 
+	if m.Content == "/stop" {
+		stopMinecraftServer(s, m)
+	}
 }
 
 func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -104,14 +113,44 @@ func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate
 }
 
 func startMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
-	cmd := exec.Command("tmux", "new-session", "-d", "-s", "your_tmux_session_name", "path/to/minecraft_server_command")
-	err := cmd.Run()
+	if startCmd == "" {
+		s.ChannelMessageSend(m.ChannelID, "START_COMMAND is not set in the environment")
+		return
+	}
+
+	cmdArgs := strings.Fields(startCmd)
+	cmd := exec.Command("nohup", cmdArgs...)
+	cmd.Dir = serverDir
+
+	// Redirect output to server.out
+	stdout, err := os.Create(filepath.Join(serverDir, "server.out"))
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Failed to start the Minecraft server.")
+		s.ChannelMessageSend(m.ChannelID, "Failed to create log file: "+err.Error())
+		return
+	}
+	cmd.Stdout = stdout
+	cmd.Stderr = stdout
+
+	err = cmd.Start()
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, "Failed to start the Minecraft server: "+err.Error())
 		return
 	}
 
 	s.ChannelMessageSend(m.ChannelID, "Minecraft server started.")
+}
+
+func stopMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
+	// Command to find and kill the Minecraft server process
+	cmd := exec.Command("pkill", "-f", "server.jar")
+	err := cmd.Run()
+
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, "Failed to stop the Minecraft server: "+err.Error())
+		return
+	}
+
+	s.ChannelMessageSend(m.ChannelID, "Minecraft server stopped.")
 }
 
 var lastReadPosition int64 = 0

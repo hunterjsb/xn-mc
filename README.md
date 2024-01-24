@@ -3,10 +3,7 @@
 ![plot](https://xanmc.s3.amazonaws.com/banner.png)
 
 Welcome to **xn-mc**, a repository dedicated to advanced Minecraft server management and configuration.
-
-## About
-
-This repository hosts a collection of tools, scripts, and configurations aimed at enhancing the Minecraft server experience. Whether you're looking to optimize your server's performance, implement custom features, or manage complex network setups, **xn-mc** is your go-to resource.
+Our goal is to leverage **free-tier** cloud resources to improve server performance and stability while decreasing cost.
 
 ## Features
 

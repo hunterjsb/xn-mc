@@ -20,9 +20,8 @@ class Config:
 
     @property
     def world_filepath(self) -> AnyStr:
-        return os.path.expanduser(self['MC_WORLD_PATH'])
+        return os.path.expanduser(self['SERVER_FP']+self.world_name)
 
     @property
-    @cache
     def world_name(self) -> str:
-        return os.path.basename(os.path.normpath(self.world_filepath))
+        return self['WORLD_NAME']
