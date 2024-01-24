@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -23,7 +26,6 @@ func init() {
 }
 
 func main() {
-
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + Token)
 	if err != nil {
@@ -43,6 +45,9 @@ func main() {
 		fmt.Println("error opening connection,", err)
 		return
 	}
+
+	// Start streaming server logs
+	go streamServerLogsToDiscord(dg, "1199515369069609010", "../server/server.out")
 
 	// Wait here until CTRL-C or other term signal is received.
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
@@ -100,4 +105,57 @@ func startMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	s.ChannelMessageSend(m.ChannelID, "Minecraft server started.")
+}
+
+var lastReadPosition int64 = 0
+
+func streamServerLogsToDiscord(s *discordgo.Session, channelID string, logFilePath string) {
+	ticker := time.NewTicker(5 * time.Second) // Check for updates every 5 seconds
+	for range ticker.C {
+		// Open the log file
+		file, err := os.Open(logFilePath)
+		if err != nil {
+			fmt.Println("Error opening log file:", err)
+			continue
+		}
+
+		// Seek to the last read position
+		_, err = file.Seek(lastReadPosition, 0)
+		if err != nil {
+			fmt.Println("Error seeking log file:", err)
+			file.Close()
+			continue
+		}
+
+		// Read new log entries
+		scanner := bufio.NewScanner(file)
+		var logUpdates string
+		for scanner.Scan() {
+			logUpdates += scanner.Text() + "\n"
+		}
+
+		if err := scanner.Err(); err != nil {
+			fmt.Println("Error reading log file:", err)
+			file.Close()
+			continue
+		}
+
+		// Update the last read position
+		lastReadPosition, err = file.Seek(0, io.SeekCurrent)
+		if err != nil {
+			fmt.Println("Error getting current position in log file:", err)
+			file.Close()
+			continue
+		}
+
+		file.Close()
+
+		// Send new log entries to Discord, if any
+		if logUpdates != "" {
+			_, err = s.ChannelMessageSend(channelID, "```"+logUpdates+"```")
+			if err != nil {
+				fmt.Println("Error sending log updates to Discord:", err)
+			}
+		}
+	}
 }
