@@ -32,10 +32,17 @@ def zip_world(world_fp: AnyStr, output_file_name: str):
 
 
 if __name__ == '__main__':
+    import sys
+
     cfg = Config()
+    log_file_path = '../server/server.out'
 
-    zipped_to = zip_world(cfg.world_filepath, cfg.world_name)
-    print(f'Zipped world to {zipped_to}')
+    with open(log_file_path, 'a') as log_file:
+        sys.stdout = log_file
+        sys.stderr = log_file
 
-    resp = upload_file_to_s3(zipped_to, cfg['S3_BUCKET'], cfg.world_name + '.zip')
-    print(f'Sent zip to AWS, responded with: {resp}')
+        zipped_to = zip_world(cfg.world_filepath, cfg.world_name)
+        print(f'Zipped world to {zipped_to}')
+
+        resp = upload_file_to_s3(zipped_to, cfg['S3_BUCKET'], cfg.world_name + '.zip')
+        print(f'Sent zip to AWS, responded with: {resp}')

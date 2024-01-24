@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -17,7 +16,8 @@ import (
 
 // Variables used for command line parameters
 var (
-	Token string
+	token     string
+	channelID string
 )
 
 func init() {
@@ -26,13 +26,15 @@ func init() {
 		fmt.Println("Error loading .env file")
 		return
 	}
-	flag.StringVar(&Token, "t", "", "Bot Token")
-	flag.Parse()
+
+	// Get environment variables
+	token = os.Getenv("DISCORD_TOKEN")
+	channelID = os.Getenv("DISCORD_CHANNEL_ID")
 }
 
 func main() {
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return
@@ -52,7 +54,7 @@ func main() {
 	}
 
 	// Start streaming server logs
-	go streamServerLogsToDiscord(dg, "1199515369069609010", "../server/server.out")
+	go streamServerLogsToDiscord(dg, channelID, "../server/server.out")
 
 	// Wait here until CTRL-C or other term signal is received.
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
