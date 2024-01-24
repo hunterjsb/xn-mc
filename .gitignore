@@ -1,12 +1,8 @@
 # Server
-server/world/
-server/*.zip
-<<<<<<< HEAD
-server/logs
+server/*
+!server/server.jar
 *.pid
-=======
 *.zip
->>>>>>> f0c96a47767dba34fc0f5c082cce807857c5a18b
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
