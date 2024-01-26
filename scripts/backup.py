@@ -1,5 +1,4 @@
 import os
-import sys
 import zipfile
 import boto3
 import argparse

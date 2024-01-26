@@ -11,7 +11,7 @@ class Config:
     def __init__(self, throw_error=True):
         self.throw_error = throw_error
         if not Config.LOADED:
-            load_dotenv()
+            print('loading dotenv...', load_dotenv())
             Config.LOADED = True
 
     @cache
