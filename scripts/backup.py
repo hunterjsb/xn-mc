@@ -1,9 +1,8 @@
 import os
+import sys
 import zipfile
-from typing import AnyStr
-
 import boto3
-
+import argparse
 from utils.config import Config
 
 
@@ -13,7 +12,7 @@ def upload_file_to_s3(zip_fp: str, bucket: str, key: str):
     return f'https://{bucket}.s3.amazonaws.com/{key}'
 
 
-def zip_world(world_fp: AnyStr, output_file_name: str):
+def zip_world(world_fp: str, output_file_name: str):
     # Determine the parent directory
     parent_dir = os.path.dirname(world_fp)
     output_fp = os.path.join(parent_dir, output_file_name + '.zip')
@@ -32,19 +31,37 @@ def zip_world(world_fp: AnyStr, output_file_name: str):
     return output_fp
 
 
-if __name__ == '__main__':
-    import sys
+def download_file_from_s3(bucket: str, key: str, download_fp: str):
+    s3_client = boto3.client('s3')
+    print('trying to download ', bucket, key.strip('/'), download_fp)
+    s3_client.download_file(bucket, key.strip('/'), download_fp)
 
+
+def unzip_file(zip_fp: str, extract_dir: str):
+    with zipfile.ZipFile(zip_fp, 'r') as zip_ref:
+        zip_ref.extractall(extract_dir)
+
+
+def main(_args):
     cfg = Config()
-    server_fp = 'server' if 'server' in os.listdir() else cfg['SERVER_FP']
-    log_file_path = os.path.expanduser(server_fp + '/server.out')
-
-    with open(log_file_path, 'a') as log_file:
-        sys.stdout = log_file
-        sys.stderr = log_file
-
+    if _args.command == 'upload':
         zipped_to = zip_world(cfg.world_filepath, cfg.world_name)
         print(f'Zipped world to {zipped_to}')
-
         bucket_url = upload_file_to_s3(zipped_to, cfg['S3_BUCKET'], cfg.world_name + '.zip')
         print(f'World backed up to {bucket_url}')
+
+    elif _args.command == 'download':
+        download_fp = os.path.join(cfg.world_filepath + '/', cfg.world_name + '.zip')
+        print(download_fp)
+        download_file_from_s3(cfg['S3_BUCKET'], '/' + cfg.world_name + '.zip', download_fp)
+        print(f'World downloaded to {download_fp}')
+        unzip_file(download_fp, cfg.world_filepath)
+        print(f'World extracted to {cfg.world_filepath}')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Minecraft World Backup and Restore Utility')
+    parser.add_argument('command', choices=['upload', 'download'], help='The command to execute (upload or download)')
+    args = parser.parse_args()
+
+    main(args)
