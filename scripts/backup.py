@@ -51,7 +51,7 @@ def main(_args):
         print(f'World backed up to {bucket_url}')
 
     elif _args.command == 'download':
-        download_fp = os.path.join(cfg.world_filepath + '/', cfg.world_name + '.zip')
+        download_fp = os.path.join(cfg.world_filepath + '.zip')
         print(download_fp)
         download_file_from_s3(cfg['S3_BUCKET'], '/' + cfg.world_name + '.zip', download_fp)
         print(f'World downloaded to {download_fp}')

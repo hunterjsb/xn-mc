@@ -20,7 +20,7 @@ class Config:
 
     @property
     def world_filepath(self) -> AnyStr:
-        return os.path.expanduser(self['SERVER_FP']+self.world_name)
+        return './server/'+self.world_name
 
     @property
     def world_name(self) -> str:
