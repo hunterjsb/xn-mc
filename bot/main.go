@@ -121,12 +121,6 @@ func executeRcon(s *discordgo.Session, cmd string) {
 		s.ChannelMessageSend(channelID, "ERROR: "+err.Error())
 	}
 	s.ChannelMessageSend(channelID, response)
-
-	if response != "" {
-		printCmd := "/say " + fmt.Sprintf("Command run [%s]: %s", cmd, response)
-		rconClient.Execute(printCmd)
-	}
-
 }
 
 func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
