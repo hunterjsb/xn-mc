@@ -129,7 +129,7 @@ func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate
 	err := cmd.Run()
 
 	statusMsg := "Minecraft server is not running."
-	fmt.Println(err)
+
 	if err == nil { // If err is nil, it means a process was found
 		statusMsg = "Minecraft server is running."
 	}
