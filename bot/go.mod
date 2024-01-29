@@ -2,11 +2,9 @@ module xn-mc-bot
 
 go 1.21.3
 
-require github.com/bwmarrin/discordgo v0.27.1
-
 require (
-	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/inhies/go-bytesize v0.0.0-20220417184213-4913239db9cf // indirect
+	github.com/bwmarrin/discordgo v0.27.1
+	github.com/gorcon/rcon v1.3.4
 )
 
 require (

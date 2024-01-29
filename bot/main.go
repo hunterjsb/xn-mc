@@ -13,15 +13,15 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/gorcon/rcon"
 	"github.com/joho/godotenv"
 )
 
 // Globally available env vars
 var (
-	token     string
-	channelID string
-	startCmd  string
-	serverDir string
+	channelID     string
+	commandPrefix byte
+	rconClient    *rcon.Conn
 )
 
 func init() {
@@ -32,15 +32,13 @@ func init() {
 	}
 
 	// Get environment variables
-	token = os.Getenv("DISCORD_TOKEN")
 	channelID = os.Getenv("DISCORD_CHANNEL_ID")
-	startCmd = os.Getenv("START_COMMAND")
-	serverDir = os.Getenv("SERVER_FP")
+	commandPrefix = os.Getenv("COMMAND_PREFIX")[0]
 }
 
 func main() {
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + token)
+	dg, err := discordgo.New("Bot " + os.Getenv("DISCORD_TOKEN"))
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return
@@ -80,26 +78,40 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, "Pong! github: https://github.com/hunterjsb/xn-mc?tab=readme-ov-file#xn-mc")
 	}
 
-	// Ignore all messages created by the bot itself or in other channels
-	if m.Author.ID == s.State.User.ID || m.ChannelID != channelID {
+	// Ignore all messages created by the bot itself OR in other channels OR no command prefix
+	if m.Author.ID == s.State.User.ID || m.ChannelID != channelID || m.Content[0] != commandPrefix {
 		return
 	}
+	command := m.Content[1:]
 
-	if m.Content == "/status" {
+	// Use a switch statement to handle different commands
+	switch command {
+	case "status":
 		checkMinecraftServerStatus(s, m)
-	}
-
-	if m.Content == "/start" {
+	case "start":
 		startMinecraftServer(s, m)
-	}
-
-	if m.Content == "/stop" {
+		rconClient = connectRcon(s)
+	case "stop":
 		stopMinecraftServer(s, m)
-	}
-
-	if m.Content == "/mem" {
+		if rconClient != nil {
+			rconClient.Close()
+		}
+	case "mem":
 		s.ChannelMessageSend(m.ChannelID, ReadMemoryStats().ToStr())
+	default:
+		// Relay any other command to the server
+		s.ChannelMessageSend(m.ChannelID, command)
 	}
+}
+
+func connectRcon(s *discordgo.Session) *rcon.Conn {
+	// open rcon
+	conn, err := rcon.Dial(os.Getenv("RCON_IP"), os.Getenv("RCON_PW"))
+	if err != nil {
+		errStr := fmt.Sprintf("**ERROR**: Could not connect to minecraft rcon on %s", os.Getenv("RCON_IP"))
+		s.ChannelMessageSend(channelID, errStr)
+	}
+	return conn
 }
 
 func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -117,17 +129,17 @@ func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate
 }
 
 func startMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if startCmd == "" {
+	if os.Getenv("START_COMMAND") == "" {
 		s.ChannelMessageSend(channelID, "START_COMMAND is not set in the environment")
 		return
 	}
 
-	cmdArgs := strings.Fields(startCmd)
+	cmdArgs := strings.Fields(os.Getenv("START_COMMAND"))
 	cmd := exec.Command("nohup", cmdArgs...)
-	cmd.Dir = serverDir
+	cmd.Dir = "../server"
 
 	// Redirect output to server.out
-	stdout, err := os.Create(filepath.Join(serverDir, "server.out"))
+	stdout, err := os.Create(filepath.Join("../server", "server.out"))
 	if err != nil {
 		s.ChannelMessageSend(channelID, "Failed to create log file: "+err.Error())
 		return
