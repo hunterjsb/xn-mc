@@ -75,14 +75,14 @@ func main() {
 // This function will be called (due to AddHandler above) every time a new
 // message is created on any channel that the authenticated bot has access to.
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+	// If the message is "ping" reply with "Pong!"
+	if m.Content == "ping" {
+		s.ChannelMessageSend(m.ChannelID, "Pong! github: https://github.com/hunterjsb/xn-mc?tab=readme-ov-file#xn-mc")
+	}
 
 	// Ignore all messages created by the bot itself or in other channels
 	if m.Author.ID == s.State.User.ID || m.ChannelID != channelID {
 		return
-	}
-	// If the message is "ping" reply with "Pong!"
-	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong! Yes prntbot is live!\ngithub: https://github.com/hunterjsb/xn-mc?tab=readme-ov-file#xn-mc")
 	}
 
 	if m.Content == "/status" {
@@ -95,6 +95,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if m.Content == "/stop" {
 		stopMinecraftServer(s, m)
+	}
+
+	if m.Content == "/mem" {
+		s.ChannelMessageSend(m.ChannelID, ReadMemoryStats().ToStr())
 	}
 }
 
@@ -156,7 +160,7 @@ func stopMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
 var lastReadPosition int64 = 0
 
 func streamServerLogsToDiscord(s *discordgo.Session, channelID string, logFilePath string) {
-	ticker := time.NewTicker(5 * time.Second) // Check for updates every 5 seconds
+	ticker := time.NewTicker(2 * time.Second) // Check for updates every 2 seconds
 	for range ticker.C {
 		// Open the log file
 		file, err := os.Open(logFilePath)
