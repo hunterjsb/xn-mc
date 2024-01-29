@@ -47,7 +47,7 @@ func main() {
 	// Register the messageCreate func as a callback for MessageCreate events.
 	dg.AddHandler(messageCreate)
 
-	// In this example, we only care about receiving message events.
+	// We only care about receiving message events.
 	dg.Identify.Intents = discordgo.IntentsGuildMessages
 
 	// Open a websocket connection to Discord and begin listening.
@@ -90,7 +90,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		checkMinecraftServerStatus(s, m)
 	case "start":
 		startMinecraftServer(s, m)
-		rconClient = connectRcon(s)
 	case "stop":
 		stopMinecraftServer(s, m)
 		if rconClient != nil {
@@ -100,18 +99,34 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, ReadMemoryStats().ToStr())
 	default:
 		// Relay any other command to the server
-		s.ChannelMessageSend(m.ChannelID, command)
+		if rconClient == nil {
+			rconClient = connectRcon(s)
+		}
+		executeRcon(s, command)
 	}
 }
 
 func connectRcon(s *discordgo.Session) *rcon.Conn {
-	// open rcon
 	conn, err := rcon.Dial(os.Getenv("RCON_IP"), os.Getenv("RCON_PW"))
 	if err != nil {
-		errStr := fmt.Sprintf("**ERROR**: Could not connect to minecraft rcon on %s", os.Getenv("RCON_IP"))
+		errStr := fmt.Sprintf("**ERROR**: Could not connect to minecraft rcon on %s: %s", os.Getenv("RCON_IP"), err.Error())
 		s.ChannelMessageSend(channelID, errStr)
 	}
 	return conn
+}
+
+func executeRcon(s *discordgo.Session, cmd string) {
+	response, err := rconClient.Execute(cmd)
+	if err != nil {
+		s.ChannelMessageSend(channelID, "ERROR: "+err.Error())
+	}
+	s.ChannelMessageSend(channelID, response)
+
+	if response != "" {
+		printCmd := "/say " + fmt.Sprintf("Command run [%s]: %s", cmd, response)
+		rconClient.Execute(printCmd)
+	}
+
 }
 
 func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
