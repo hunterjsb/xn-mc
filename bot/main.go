@@ -181,7 +181,7 @@ func stopMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
 var lastReadPosition int64 = 0
 
 func streamServerLogsToDiscord(s *discordgo.Session, channelID string, logFilePath string) {
-	ticker := time.NewTicker(2 * time.Second) // Check for updates every 2 seconds
+	ticker := time.NewTicker(4 * time.Second) // Check for updates every 2 seconds
 	for range ticker.C {
 		// Open the log file
 		file, err := os.Open(logFilePath)
