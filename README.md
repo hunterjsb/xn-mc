@@ -1,6 +1,5 @@
 
 # xn-mc
-![plot](https://xanmc.s3.amazonaws.com/banner.png)
 
 Welcome to **xn-mc**, a repository dedicated to advanced Minecraft server management and configuration.
 Our goal is to leverage **free-tier** cloud resources to improve server performance and stability while decreasing cost.
