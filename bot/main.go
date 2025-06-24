@@ -99,6 +99,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	case "mem":
 		s.ChannelMessageSend(m.ChannelID, ReadMemoryStats().ToStr())
+	case "clearlogs":
+		clearServerLogs(s, m)
+	case "archivelogs":
+		archiveServerLogs(s, m)
+	case "logsize":
+		getLogFileSize(s, m)
 	default:
 		// Relay any other command to the server
 		if rconClient == nil {

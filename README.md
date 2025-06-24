@@ -1,4 +1,3 @@
-
 # xn-mc
 
 Welcome to **xn-mc**, a repository dedicated to advanced Minecraft server management and configuration.
@@ -17,6 +16,16 @@ Our goal is to leverage **free-tier** cloud resources to improve server performa
 cd bot
 go run .
 ```
+
+**Bot Commands:**
+- `!status` - Check if Minecraft server is running
+- `!start` - Start the Minecraft server
+- `!stop` - Stop the Minecraft server  
+- `!mem` - Show system memory usage
+- `!clearlogs` - Clear server log file
+- `!archivelogs` - Archive logs with timestamp and clear
+- `!logsize` - Show current log file size
+- Any other command gets sent to server via RCON
 
 ### Server Updates
 ```bash
