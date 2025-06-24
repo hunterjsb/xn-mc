@@ -33,4 +33,4 @@ fi
 CLASSPATH=$(find libraries -name "*.jar" | tr '\n' ':')server.jar
 
 # Start the Minecraft server in a new detached tmux session
-tmux new-session -d -s minecraft "java -Xms1G -Xmx2.5G -cp \"$CLASSPATH\" net.minecraft.server.Main nogui 2>&1 | tee server.out; read"
+tmux new-session -d -s minecraft "java -Xms1G -Xmx2560M -cp \"$CLASSPATH\" net.minecraft.server.Main nogui 2>&1 | tee server.out; read"
