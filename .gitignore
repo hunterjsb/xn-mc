@@ -6,6 +6,8 @@ server/*
 
 !server/server.jar
 !server/ops.json
+!server/start.sh
+!server/eula.txt
 
 # Go binaries
 bot/xn-mc-bot

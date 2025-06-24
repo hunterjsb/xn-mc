@@ -29,8 +29,8 @@ elif [ ! -e "server.jar" ]; then
     exit 1
 fi
 
-# Start the Minecraft server in a new detached tmux session
-tmux new-session -d -s minecraft
+# Build classpath with all libraries
+CLASSPATH=$(find libraries -name "*.jar" | tr '\n' ':')server.jar
 
-# Send the Java command to the tmux session and redirect output to a file
-nohup java -Xms1024M -Xmx7G -jar server.jar nogui &> server.out &
+# Start the Minecraft server in a new detached tmux session
+tmux new-session -d -s minecraft "java -Xms1G -Xmx2.5G -cp \"$CLASSPATH\" net.minecraft.server.Main nogui 2>&1 | tee server.out; read"
