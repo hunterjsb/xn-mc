@@ -7,6 +7,9 @@ server/*
 !server/server.jar
 !server/ops.json
 
+# Go binaries
+bot/xn-mc-bot
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
