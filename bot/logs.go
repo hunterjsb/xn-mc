@@ -119,6 +119,24 @@ func formatFileSize(bytes int64) string {
 	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp])
 }
 
+// showHelpCommands displays all available bot commands
+func showHelpCommands(s *discordgo.Session, m *discordgo.MessageCreate) {
+	helpText := `**🤖 Bot Commands:**
+• ` + "`!status`" + ` - Check if Minecraft server is running
+• ` + "`!start`" + ` - Start the Minecraft server
+• ` + "`!stop`" + ` - Stop the Minecraft server
+• ` + "`!mem`" + ` - Show system memory usage
+• ` + "`!clearlogs`" + ` - Clear server log file
+• ` + "`!archivelogs`" + ` - Archive logs with timestamp and clear
+• ` + "`!logsize`" + ` - Show current log file size
+• ` + "`!help`" + ` - Show this help message
+
+**💬 Server Commands:**
+Any other command gets sent directly to the server via RCON (e.g., ` + "`!list`" + `, ` + "`!gamemode creative`" + `, etc.)`
+
+	s.ChannelMessageSend(m.ChannelID, helpText)
+}
+
 // copyFile copies src file to dst
 func copyFile(src, dst string) error {
 	sourceFile, err := os.Open(src)

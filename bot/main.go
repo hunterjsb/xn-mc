@@ -105,6 +105,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		archiveServerLogs(s, m)
 	case "logsize":
 		getLogFileSize(s, m)
+	case "help":
+		showHelpCommands(s, m)
 	default:
 		// Relay any other command to the server
 		if rconClient == nil {
