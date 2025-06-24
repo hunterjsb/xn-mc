@@ -17,6 +17,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+const maxDiscordMessageLength = 1900 // Leave some room for code blocks
+
 // Globally available env vars
 var (
 	channelID     string
@@ -178,6 +180,28 @@ func stopMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(channelID, "Minecraft server stopped.")
 }
 
+// sendLongMessage splits long messages into chunks and sends them
+func sendLongMessage(s *discordgo.Session, channelID, message string) {
+	if len(message) <= maxDiscordMessageLength {
+		s.ChannelMessageSend(channelID, message)
+		return
+	}
+
+	// Split into chunks
+	for len(message) > 0 {
+		end := maxDiscordMessageLength
+		if end > len(message) {
+			end = len(message)
+		}
+
+		chunk := message[:end]
+		message = message[end:]
+
+		s.ChannelMessageSend(channelID, chunk)
+		time.Sleep(100 * time.Millisecond) // Small delay between chunks
+	}
+}
+
 var lastReadPosition int64 = 0
 
 func streamServerLogsToDiscord(s *discordgo.Session, channelID string, logFilePath string) {
@@ -200,9 +224,9 @@ func streamServerLogsToDiscord(s *discordgo.Session, channelID string, logFilePa
 
 		// Read new log entries
 		scanner := bufio.NewScanner(file)
-		var logUpdates string
+		var logLines []string
 		for scanner.Scan() {
-			logUpdates += scanner.Text() + "\n"
+			logLines = append(logLines, scanner.Text())
 		}
 
 		if err := scanner.Err(); err != nil {
@@ -222,11 +246,29 @@ func streamServerLogsToDiscord(s *discordgo.Session, channelID string, logFilePa
 		file.Close()
 
 		// Send new log entries to Discord, if any
-		if logUpdates != "" {
-			_, err = s.ChannelMessageSend(channelID, "```"+logUpdates+"```")
-			if err != nil {
-				fmt.Println("Error sending log updates to Discord:", err)
+		if len(logLines) > 0 {
+			// Build message with code blocks, but split if too long
+			var currentMessage strings.Builder
+			currentMessage.WriteString("```\n")
+
+			for _, line := range logLines {
+				// Check if adding this line would exceed the limit
+				testMessage := currentMessage.String() + line + "\n```"
+				if len(testMessage) > maxDiscordMessageLength {
+					// Send current message and start a new one
+					currentMessage.WriteString("```")
+					sendLongMessage(s, channelID, currentMessage.String())
+
+					// Start new message
+					currentMessage.Reset()
+					currentMessage.WriteString("```\n")
+				}
+				currentMessage.WriteString(line + "\n")
 			}
+
+			// Send final message
+			currentMessage.WriteString("```")
+			sendLongMessage(s, channelID, currentMessage.String())
 		}
 	}
 }
