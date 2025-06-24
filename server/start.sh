@@ -32,5 +32,11 @@ fi
 # Build classpath with all libraries
 CLASSPATH=$(find libraries -name "*.jar" | tr '\n' ':')server.jar
 
-# Start the Minecraft server in a new detached tmux session
-tmux new-session -d -s minecraft "java -Xms1G -Xmx2560M -cp \"$CLASSPATH\" net.minecraft.server.Main nogui 2>&1 | tee server.out; read"
+# Check if we should run directly (for bot) or in tmux (for manual start)
+if [ "$1" = "--direct" ]; then
+    # Direct execution for bot (output handled by caller)
+    exec java -Xms1G -Xmx2560M -cp "$CLASSPATH" net.minecraft.server.Main nogui
+else
+    # Start the Minecraft server in a new detached tmux session
+    tmux new-session -d -s minecraft "java -Xms1G -Xmx2560M -cp \"$CLASSPATH\" net.minecraft.server.Main nogui 2>&1 | tee server.out; read"
+fi
