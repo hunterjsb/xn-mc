@@ -1,6 +1,11 @@
 # xn-mc
 
 Minecraft server management and Discord bot integration.
+- Send RCON commands to the server from discord
+- start / stop / monitor from discord
+- status page [WIP]
+- download and manage server.jar's, including the latest snapshot
+- backup and migrate worlds
 
 ## Setup
 
