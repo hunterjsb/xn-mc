@@ -80,8 +80,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, "Pong! github: https://github.com/hunterjsb/xn-mc?tab=readme-ov-file#xn-mc")
 	}
 
-	// Ignore all messages created by the bot itself OR in other channels OR no command prefix
-	if m.Author.ID == s.State.User.ID || m.ChannelID != channelID || m.Content[0] != commandPrefix {
+	// Ignore all messages created by the bot itself OR in other channels OR empty messages OR no command prefix
+	if m.Author.ID == s.State.User.ID || m.ChannelID != channelID || len(m.Content) == 0 || m.Content[0] != commandPrefix {
 		return
 	}
 	command := m.Content[1:]
