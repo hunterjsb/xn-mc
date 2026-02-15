@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xandaris Hardcore — One Life. No Resets. No Mercy.</title>
+  <meta name="description" content="Xandaris Hardcore (XHC) is a permadeath, pure vanilla, anarchy Minecraft server. One life. No resets. No mercy.">
+  <meta property="og:title" content="Xandaris Hardcore">
+  <meta property="og:description" content="One Life. No Resets. No Mercy. — A permadeath vanilla anarchy Minecraft server.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hunterjsb.github.io/xn-mc/">
+  <meta property="og:image" content="https://hunterjsb.github.io/xn-mc/og-image.png">
+  <meta name="theme-color" content="#8B0000">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --crimson: #8B0000;
+      --crimson-light: #a01010;
+      --gold: #FFD700;
+      --bg: #1a1a1a;
+      --card-bg: #2D2D2D;
+      --text: #e0e0e0;
+      --text-muted: #999;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+      background: linear-gradient(180deg, #0d0000 0%, var(--bg) 100%);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      color: var(--crimson);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 30px rgba(139, 0, 0, 0.4);
+    }
+
+    .hero .tagline {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--gold);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+
+    .ip-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .ip-box:hover { border-color: var(--gold); }
+
+    .ip-box code {
+      font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+      color: #fff;
+      font-size: 1.2rem;
+    }
+
+    .ip-box .copy-btn {
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .ip-box .copy-btn:hover { background: var(--crimson-light); }
+
+    .copied-toast {
+      display: none;
+      margin-top: 0.75rem;
+      color: var(--gold);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Sections ---------- */
+    section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    section h2 {
+      font-size: 1.6rem;
+      color: var(--crimson);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---------- Discord ---------- */
+    .discord { text-align: center; }
+
+    .discord-btn {
+      display: inline-block;
+      background: #5865F2;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 0.85rem 2.5rem;
+      border-radius: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .discord-btn:hover {
+      background: #4752c4;
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .discord-btn svg {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+
+    /* ---------- Feature Cards ---------- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid #3a3a3a;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--crimson);
+      transform: translateY(-3px);
+    }
+
+    .card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+
+    .card h3 {
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* ---------- Vote Links ---------- */
+    .vote-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .vote-link {
+      display: block;
+      background: var(--card-bg);
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      color: var(--text);
+      font-weight: 500;
+      transition: border-color 0.2s, transform 0.1s;
+    }
+
+    .vote-link:hover {
+      border-color: var(--gold);
+      text-decoration: none;
+      transform: translateY(-2px);
+    }
+
+    /* ---------- Status ---------- */
+    .status { text-align: center; }
+
+    .status-link {
+      display: inline-block;
+      background: var(--card-bg);
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      padding: 0.85rem 2rem;
+      color: var(--text);
+      font-weight: 500;
+      transition: border-color 0.2s;
+    }
+
+    .status-link:hover {
+      border-color: var(--gold);
+      text-decoration: none;
+    }
+
+    .status-link .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #2ecc71;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid #2a2a2a;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--text-muted); }
+    footer a:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Xandaris Hardcore</h1>
+    <p class="tagline">One Life. No Resets. No Mercy.</p>
+    <div class="ip-box" onclick="copyIP()" role="button" tabindex="0" aria-label="Copy server IP">
+      <code>mc.xandaris.space</code>
+      <button class="copy-btn" aria-label="Copy IP to clipboard">Copy IP</button>
+    </div>
+    <p class="copied-toast" id="toast">Copied to clipboard!</p>
+  </section>
+
+  <!-- Discord -->
+  <section class="discord">
+    <h2>Join the Community</h2>
+    <a class="discord-btn" href="https://discord.gg/INVITE_CODE" target="_blank" rel="noopener">
+      <svg width="24" height="24" viewBox="0 0 71 55" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.8 40.8 0 00-1.8 3.7 54 54 0 00-16.2 0A37.4 37.4 0 0025.4.3a.2.2 0 00-.2-.1A58.4 58.4 0 0010.5 5a.2.2 0 00-.1 0A60 60 0 00.3 45.3a.3.3 0 000 .2 58.7 58.7 0 0017.7 9a.2.2 0 00.3-.1 42 42 0 003.6-5.9.2.2 0 00-.1-.3 38.7 38.7 0 01-5.5-2.6.2.2 0 010-.4l1.1-.9a.2.2 0 01.2 0 41.9 41.9 0 0035.6 0 .2.2 0 01.2 0l1.1.9a.2.2 0 010 .3 36.3 36.3 0 01-5.5 2.7.2.2 0 00-.1.3 47.2 47.2 0 003.6 5.9.2.2 0 00.3.1 58.5 58.5 0 0017.7-9 .2.2 0 000-.1A59.5 59.5 0 0060.2 5a.2.2 0 00-.1 0zM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.1s2.8-7.1 6.4-7.1 6.5 3.2 6.4 7.1c0 3.9-2.8 7.1-6.4 7.1zm23.6 0c-3.5 0-6.4-3.2-6.4-7.1s2.8-7.1 6.4-7.1 6.5 3.2 6.4 7.1c0 3.9-2.9 7.1-6.4 7.1z"/>
+      </svg>
+      Join Discord
+    </a>
+  </section>
+
+  <!-- Features -->
+  <section>
+    <h2>The Server</h2>
+    <div class="features-grid">
+      <div class="card">
+        <div class="icon">💀</div>
+        <h3>Permadeath</h3>
+        <p>You die, you're out. Hardcore mode — no second chances, no respawns.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🌿</div>
+        <h3>Pure Vanilla</h3>
+        <p>No plugins, no mods, no handholding. Minecraft as Mojang intended.</p>
+      </div>
+      <div class="card">
+        <div class="icon">⚔️</div>
+        <h3>Anarchy</h3>
+        <p>No rules, no bans, no admins playing favorites. True freedom.</p>
+      </div>
+      <div class="card">
+        <div class="icon">♾️</div>
+        <h3>No Resets</h3>
+        <p>The world persists forever. Your builds — and your ruins — endure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vote -->
+  <section>
+    <h2>Vote for Us</h2>
+    <div class="vote-grid">
+      <a class="vote-link" href="https://minecraft-server-list.com/server/YOUR_ID/" target="_blank" rel="noopener">Minecraft Server List</a>
+      <a class="vote-link" href="https://minecraftservers.org/server/YOUR_ID" target="_blank" rel="noopener">MinecraftServers.org</a>
+      <a class="vote-link" href="https://topminecraftservers.org/server/YOUR_ID" target="_blank" rel="noopener">TopMCServers</a>
+      <a class="vote-link" href="https://minecraft-mp.com/server/YOUR_ID/" target="_blank" rel="noopener">Minecraft-MP</a>
+    </div>
+  </section>
+
+  <!-- Status -->
+  <section class="status">
+    <h2>Server Status</h2>
+    <a class="status-link" href="https://xnmc.statuspage.io/" target="_blank" rel="noopener">
+      <span class="dot"></span>
+      View Status Page
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025–2026 Xandaris Hardcore &middot; <a href="https://github.com/hunterjsb/xn-mc" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+  <script>
+    function copyIP() {
+      navigator.clipboard.writeText('mc.xandaris.space').then(function () {
+        var toast = document.getElementById('toast');
+        toast.style.display = 'block';
+        setTimeout(function () { toast.style.display = 'none'; }, 2000);
+      });
+    }
+
+    // Allow keyboard activation on the IP box
+    document.querySelector('.ip-box').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyIP(); }
+    });
+  </script>
+
+</body>
+</html>
