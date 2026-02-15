@@ -6,6 +6,9 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 type Memory struct {
@@ -24,7 +27,6 @@ func ReadMemoryStats() Memory {
 		panic(err)
 	}
 	defer file.Close()
-	bufio.NewScanner(file)
 	scanner := bufio.NewScanner(file)
 	res := Memory{}
 	for scanner.Scan() {
@@ -39,6 +41,19 @@ func ReadMemoryStats() Memory {
 		}
 	}
 	return res
+}
+
+func buildMemEmbed(m Memory) *discordgo.MessageEmbed {
+	return &discordgo.MessageEmbed{
+		Title: "System Memory",
+		Color: colorInfo,
+		Fields: []*discordgo.MessageEmbedField{
+			{Name: "Total", Value: fmt.Sprintf("%.3f GB", float64(m.MemTotal)/1000000), Inline: true},
+			{Name: "Free", Value: fmt.Sprintf("%.3f GB", float64(m.MemFree)/1000000), Inline: true},
+			{Name: "Available", Value: fmt.Sprintf("%.3f GB", float64(m.MemAvailable)/1000000), Inline: true},
+		},
+		Timestamp: time.Now().Format(time.RFC3339),
+	}
 }
 
 func parseLine(raw string) (key string, value int) {

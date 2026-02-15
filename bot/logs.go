@@ -11,99 +11,138 @@ import (
 
 const serverLogPath = "../server/server.out"
 
-// clearServerLogs truncates the server log file
-func clearServerLogs(s *discordgo.Session, m *discordgo.MessageCreate) {
-	// Check if log file exists
-	if _, err := os.Stat(serverLogPath); os.IsNotExist(err) {
-		s.ChannelMessageSend(m.ChannelID, "Server log file doesn't exist.")
-		return
-	}
-
-	// Get file size before clearing
+// clearServerLogsCore truncates the server log file and returns the freed size.
+func clearServerLogsCore() (string, error) {
 	info, err := os.Stat(serverLogPath)
-	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Error reading log file: "+err.Error())
-		return
+	if os.IsNotExist(err) {
+		return "", fmt.Errorf("server log file doesn't exist")
 	}
-	oldSize := formatFileSize(info.Size())
-
-	// Truncate the file (clear contents)
-	err = os.Truncate(serverLogPath, 0)
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Error clearing logs: "+err.Error())
-		return
+		return "", fmt.Errorf("error reading log file: %w", err)
 	}
 
-	// Reset the log streaming position
+	freedSize := formatFileSize(info.Size())
+
+	if err := os.Truncate(serverLogPath, 0); err != nil {
+		return "", fmt.Errorf("error clearing logs: %w", err)
+	}
+
 	lastReadPosition = 0
-
-	s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("✅ Server logs cleared! (Freed %s)", oldSize))
+	return freedSize, nil
 }
 
-// archiveServerLogs moves current logs to a timestamped backup file
-func archiveServerLogs(s *discordgo.Session, m *discordgo.MessageCreate) {
-	// Check if log file exists
-	if _, err := os.Stat(serverLogPath); os.IsNotExist(err) {
-		s.ChannelMessageSend(m.ChannelID, "Server log file doesn't exist.")
-		return
-	}
-
-	// Get file info
+// archiveServerLogsCore archives logs and returns the archive name and file size.
+func archiveServerLogsCore() (string, string, error) {
 	info, err := os.Stat(serverLogPath)
+	if os.IsNotExist(err) {
+		return "", "", fmt.Errorf("server log file doesn't exist")
+	}
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Error reading log file: "+err.Error())
-		return
+		return "", "", fmt.Errorf("error reading log file: %w", err)
 	}
-
 	if info.Size() == 0 {
-		s.ChannelMessageSend(m.ChannelID, "Log file is already empty.")
-		return
+		return "", "", fmt.Errorf("log file is already empty")
 	}
 
-	// Create archive filename with timestamp
 	timestamp := time.Now().Format("2006-01-02_15-04-05")
 	archivePath := fmt.Sprintf("../server/server.out.%s", timestamp)
 
-	// Copy file to archive
-	err = copyFile(serverLogPath, archivePath)
-	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Error archiving logs: "+err.Error())
-		return
+	if err := copyFile(serverLogPath, archivePath); err != nil {
+		return "", "", fmt.Errorf("error archiving logs: %w", err)
 	}
 
-	// Clear the original file
-	err = os.Truncate(serverLogPath, 0)
-	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Error clearing logs after archive: "+err.Error())
-		return
+	if err := os.Truncate(serverLogPath, 0); err != nil {
+		return "", "", fmt.Errorf("error clearing logs after archive: %w", err)
 	}
 
-	// Reset the log streaming position
 	lastReadPosition = 0
-
-	fileSize := formatFileSize(info.Size())
-	s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("📦 Logs archived to `%s` (%s) and cleared!", filepath.Base(archivePath), fileSize))
+	return filepath.Base(archivePath), formatFileSize(info.Size()), nil
 }
 
-// getLogFileSize returns the current log file size
-func getLogFileSize(s *discordgo.Session, m *discordgo.MessageCreate) {
+// getLogFileSizeCore returns the log file size and last modified time.
+func getLogFileSizeCore() (string, string, error) {
 	info, err := os.Stat(serverLogPath)
 	if os.IsNotExist(err) {
-		s.ChannelMessageSend(m.ChannelID, "Server log file doesn't exist.")
-		return
+		return "", "", fmt.Errorf("server log file doesn't exist")
 	}
 	if err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Error reading log file: "+err.Error())
-		return
+		return "", "", fmt.Errorf("error reading log file: %w", err)
 	}
 
 	size := formatFileSize(info.Size())
 	modTime := info.ModTime().Format("2006-01-02 15:04:05")
-
-	s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("📊 **Server Log Info:**\nSize: %s\nLast Modified: %s", size, modTime))
+	return size, modTime, nil
 }
 
-// formatFileSize converts bytes to human-readable format
+// --- Prefix command wrappers (unchanged behavior) ---
+
+func clearServerLogs(s *discordgo.Session, m *discordgo.MessageCreate) {
+	freedSize, err := clearServerLogsCore()
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, err.Error())
+		return
+	}
+	s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Server logs cleared! (Freed %s)", freedSize))
+}
+
+func archiveServerLogs(s *discordgo.Session, m *discordgo.MessageCreate) {
+	archiveName, fileSize, err := archiveServerLogsCore()
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, err.Error())
+		return
+	}
+	s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Logs archived to `%s` (%s) and cleared!", archiveName, fileSize))
+}
+
+func getLogFileSize(s *discordgo.Session, m *discordgo.MessageCreate) {
+	size, modTime, err := getLogFileSizeCore()
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, err.Error())
+		return
+	}
+	s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("**Server Log Info:**\nSize: %s\nLast Modified: %s", size, modTime))
+}
+
+func showHelpCommands(s *discordgo.Session, m *discordgo.MessageCreate) {
+	helpText := `**Bot Commands:**
+` + "`!status`" + ` - Check if Minecraft server is running
+` + "`!start`" + ` - Start the Minecraft server
+` + "`!stop`" + ` - Stop the Minecraft server
+` + "`!mem`" + ` - Show system memory usage
+` + "`!clearlogs`" + ` - Clear server log file
+` + "`!archivelogs`" + ` - Archive logs with timestamp and clear
+` + "`!logsize`" + ` - Show current log file size
+` + "`!help`" + ` - Show this help message
+
+**Server Commands:**
+Any other command gets sent directly to the server via RCON (e.g., ` + "`!list`" + `, ` + "`!gamemode creative`" + `, etc.)`
+
+	s.ChannelMessageSend(m.ChannelID, helpText)
+}
+
+// buildHelpEmbed creates an embed with all slash commands listed.
+func buildHelpEmbed() *discordgo.MessageEmbed {
+	return &discordgo.MessageEmbed{
+		Title:       "Bot Commands",
+		Description: "All available slash commands:",
+		Color:       colorInfo,
+		Fields: []*discordgo.MessageEmbedField{
+			{Name: "/status", Value: "Check if the Minecraft server is running", Inline: false},
+			{Name: "/start", Value: "Start the Minecraft server", Inline: false},
+			{Name: "/stop", Value: "Stop the Minecraft server", Inline: false},
+			{Name: "/mem", Value: "Show system memory usage", Inline: false},
+			{Name: "/clearlogs", Value: "Clear the server log file", Inline: false},
+			{Name: "/archivelogs", Value: "Archive logs with timestamp and clear", Inline: false},
+			{Name: "/logsize", Value: "Show current log file size", Inline: false},
+			{Name: "/rcon", Value: "Send a command to the server via RCON", Inline: false},
+			{Name: "/help", Value: "Show this help message", Inline: false},
+		},
+		Timestamp: time.Now().Format(time.RFC3339),
+	}
+}
+
+// --- Utility functions ---
+
 func formatFileSize(bytes int64) string {
 	const unit = 1024
 	if bytes < unit {
@@ -119,25 +158,6 @@ func formatFileSize(bytes int64) string {
 	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp])
 }
 
-// showHelpCommands displays all available bot commands
-func showHelpCommands(s *discordgo.Session, m *discordgo.MessageCreate) {
-	helpText := `**🤖 Bot Commands:**
-• ` + "`!status`" + ` - Check if Minecraft server is running
-• ` + "`!start`" + ` - Start the Minecraft server
-• ` + "`!stop`" + ` - Stop the Minecraft server
-• ` + "`!mem`" + ` - Show system memory usage
-• ` + "`!clearlogs`" + ` - Clear server log file
-• ` + "`!archivelogs`" + ` - Archive logs with timestamp and clear
-• ` + "`!logsize`" + ` - Show current log file size
-• ` + "`!help`" + ` - Show this help message
-
-**💬 Server Commands:**
-Any other command gets sent directly to the server via RCON (e.g., ` + "`!list`" + `, ` + "`!gamemode creative`" + `, etc.)`
-
-	s.ChannelMessageSend(m.ChannelID, helpText)
-}
-
-// copyFile copies src file to dst
 func copyFile(src, dst string) error {
 	sourceFile, err := os.Open(src)
 	if err != nil {
