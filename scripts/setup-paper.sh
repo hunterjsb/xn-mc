@@ -97,13 +97,14 @@ find_java() {
     for candidate in \
         /home/linuxbrew/.linuxbrew/opt/openjdk@21/bin/java \
         /usr/lib/jvm/java-21-openjdk-amd64/bin/java \
+        /usr/lib/jvm/java-21-openjdk-arm64/bin/java \
         /usr/lib/jvm/java-21-openjdk/bin/java \
         /usr/lib/jvm/java-21/bin/java \
         "$(command -v java 2>/dev/null || true)"; do
         if [ -n "$candidate" ] && [ -x "$candidate" ]; then
             # Verify it's Java 21+
             local ver
-            ver=$("$candidate" -version 2>&1 | head -1 | grep -oP '"\K[^"]+' | cut -d. -f1)
+            ver=$("$candidate" -version 2>&1 | head -1 | grep -oP '"\K[0-9]+' | head -1)
             if [ "$ver" -ge 21 ] 2>/dev/null; then
                 echo "$candidate"
                 return 0
