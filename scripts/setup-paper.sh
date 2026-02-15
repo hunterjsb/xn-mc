@@ -16,7 +16,8 @@ set -euo pipefail
 #   - server.properties: hardcore=true, difficulty=hard, RCON enabled (pw: minecraft),
 #     spawn-protection=0, enforce-secure-profile=false (for Geyser/Floodgate)
 #   - start.sh: simplified for Paper's -jar launch
-#   - .env: Aikar's GC flags, 2G-4G memory, auto-detected Java path
+#   - .env: Aikar's GC flags, preserves existing memory settings, auto-detected Java path
+#          (prefers Amazon Corretto 21 on arm64 — Ubuntu OpenJDK has SIGSEGV bugs)
 #
 # PLUGINS INSTALLED (13):
 #   DeathBan          - Permanent deathban (ban-time: 0), spectator after death
@@ -95,6 +96,7 @@ fi
 find_java() {
     # Check common locations in priority order
     for candidate in \
+        /opt/corretto-21/bin/java \
         /home/linuxbrew/.linuxbrew/opt/openjdk@21/bin/java \
         /usr/lib/jvm/java-21-openjdk-amd64/bin/java \
         /usr/lib/jvm/java-21-openjdk-arm64/bin/java \
@@ -197,7 +199,7 @@ if [ -f server.properties ]; then
     apply_property "rcon.password" "minecraft"
     apply_property "spawn-protection" "0"
     apply_property "enforce-secure-profile" "false"
-    apply_property "motd" '\u00a74\u00a7lHARDCORE \u00a7r- Permanent Deathban'
+    apply_property "motd" '\u00a71\u00a7lX\u00a79\u00a7lA\u00a73\u00a7lN\u00a7b\u00a7lD\u00a7b\u00a7lA\u00a73\u00a7lR\u00a79\u00a7lI\u00a71\u00a7lS \u00a7r\u2620\\n\u00a77New world. No resets.'
     echo "server.properties updated."
 fi
 
@@ -455,11 +457,12 @@ if [ -f "$GEYSER_CFG" ]; then
     echo "  Geyser: auth-type=floodgate"
 fi
 
-# BlueMap: accept download
+# BlueMap: accept download, 2 render threads
 BLUEMAP_CFG="$PLUGINS_DIR/BlueMap/core.conf"
 if [ -f "$BLUEMAP_CFG" ]; then
     sed -i 's/accept-download: false/accept-download: true/' "$BLUEMAP_CFG"
-    echo "  BlueMap: accept-download=true"
+    sed -i 's/render-thread-count: 1/render-thread-count: 2/' "$BLUEMAP_CFG"
+    echo "  BlueMap: accept-download=true, render-threads=2"
 fi
 
 # AltDetector: 365 day expiration
@@ -480,6 +483,13 @@ if [ -f "$SPAWN_CFG" ]; then
     echo "  RandomSPAWNZ: 5000 radius, first-join-only"
 fi
 
+# HeadDrop: enable broadcast
+HEADDROP_CFG="$PLUGINS_DIR/HeadDrop/config.yml"
+if [ -f "$HEADDROP_CFG" ]; then
+    sed -i '/^broadcast:/,/enabled:/{s/enabled: false/enabled: true/}' "$HEADDROP_CFG"
+    echo "  HeadDrop: broadcast=true"
+fi
+
 # =============================================================================
 # Step 9: Update .env
 # =============================================================================
@@ -488,7 +498,10 @@ echo "=== Updating .env ==="
 ENV_FILE="$PROJECT_DIR/.env"
 if [ -f "$ENV_FILE" ]; then
     # Update START_COMMAND with Aikar's flags and detected Java path
-    sed -i "s|^START_COMMAND=.*|START_COMMAND=\"$JAVA -Xms2G -Xmx4G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -jar server.jar nogui\"|" "$ENV_FILE"
+    # Preserve existing -Xmx if set, otherwise default to 4G
+    EXISTING_XMX=$(grep -oP '\-Xmx\K[^ "]+' "$ENV_FILE" 2>/dev/null || echo "4G")
+    EXISTING_XMS=$(grep -oP '\-Xms\K[^ "]+' "$ENV_FILE" 2>/dev/null || echo "2G")
+    sed -i "s|^START_COMMAND=.*|START_COMMAND=\"$JAVA -Xms${EXISTING_XMS} -Xmx${EXISTING_XMX} -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -jar server.jar nogui\"|" "$ENV_FILE"
     # Ensure RCON password matches
     sed -i 's|^RCON_PW=.*|RCON_PW=minecraft|' "$ENV_FILE"
     echo "  .env updated with Aikar's flags and Java path"
