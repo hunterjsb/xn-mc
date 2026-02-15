@@ -11,7 +11,8 @@ class Config:
     def __init__(self, throw_error=True):
         self.throw_error = throw_error
         if not Config.LOADED:
-            print('loading dotenv...', load_dotenv())
+            env_path = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
+            print('loading dotenv...', load_dotenv(env_path))
             Config.LOADED = True
 
     @cache
@@ -20,7 +21,7 @@ class Config:
 
     @property
     def world_filepath(self) -> AnyStr:
-        return './server/'+self.world_name
+        return os.path.join(self['SERVER_FP'], self.world_name)
 
     @property
     def world_name(self) -> str:

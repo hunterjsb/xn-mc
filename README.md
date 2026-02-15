@@ -55,12 +55,13 @@ cd bot && go run .
 
 ### Server Updates
 ```bash
-python scripts/update_server.py
+cd scripts && uv run python update_server.py
 ```
 
 ### Backups
 ```bash
-python scripts/backup.py
+cd scripts && uv run python backup.py upload    # backup world to S3
+cd scripts && uv run python backup.py download  # restore world from S3
 ```
 
 ## License
