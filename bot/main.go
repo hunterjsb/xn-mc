@@ -203,19 +203,27 @@ func executeRcon(s *discordgo.Session, cmd string) {
 }
 
 func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
-	// Command to check if a process with 'server.jar' is running
-	cmd := exec.Command("pgrep", "-f", "server.jar")
-	err := cmd.Run()
-
 	statusMsg := "Minecraft server is not running."
-	spStatus := StatusMajorOutage // Assume major outage unless proven otherwise
+	spStatus := StatusMajorOutage
 
-	if err == nil { // If err is nil, it means a process was found
-		// Further check with RCON if possible, to ensure it's not just a hung process
-		// For now, pgrep is the primary indicator for "running" vs "not running"
-		// A more nuanced check will be in the periodic goroutine
+	// First try pgrep
+	cmd := exec.Command("pgrep", "-f", "server.jar")
+	processFound := cmd.Run() == nil
+
+	if processFound {
 		statusMsg = "Minecraft server is running (process found)."
 		spStatus = StatusOperational
+	} else {
+		// Fallback: try RCON connection to detect externally started servers
+		conn, err := rcon.Dial(os.Getenv("RCON_IP"), os.Getenv("RCON_PW"))
+		if err == nil {
+			_, err = conn.Execute("list")
+			conn.Close()
+			if err == nil {
+				statusMsg = "Minecraft server is running (RCON responsive)."
+				spStatus = StatusOperational
+			}
+		}
 	}
 
 	s.ChannelMessageSend(channelID, statusMsg)
@@ -435,16 +443,30 @@ func sendLongMessage(s *discordgo.Session, channelID, message string) {
 	}
 }
 
-var lastReadPosition int64 = 0
+var lastReadPosition int64 = -1 // -1 means seek to end on first read
 
 func streamServerLogsToDiscord(s *discordgo.Session, channelID string, logFilePath string) {
-	ticker := time.NewTicker(4 * time.Second) // Check for updates every 2 seconds
+	ticker := time.NewTicker(4 * time.Second)
 	for range ticker.C {
 		// Open the log file
 		file, err := os.Open(logFilePath)
 		if err != nil {
-			fmt.Println("Error opening log file:", err)
+			continue // File doesn't exist yet, silently retry
+		}
+
+		// Check file size to detect truncation (e.g. after !start)
+		info, err := file.Stat()
+		if err != nil {
+			file.Close()
 			continue
+		}
+		if lastReadPosition == -1 || info.Size() < lastReadPosition {
+			// First read: skip to end. Truncated file: reset to beginning.
+			if lastReadPosition == -1 {
+				lastReadPosition = info.Size()
+			} else {
+				lastReadPosition = 0
+			}
 		}
 
 		// Seek to the last read position
