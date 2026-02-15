@@ -5,6 +5,64 @@ set -euo pipefail
 # Paper Hardcore Server Setup Script
 # Works on any Linux distro (Fedora, Ubuntu, etc.) — requires: curl, python3, java 21+
 # =============================================================================
+#
+# WHAT THIS DOES:
+#   Migrates the vanilla MC server to Paper 1.21.11 and sets up a permanent
+#   deathban hardcore server with 13 plugins. The bot (xn-mc-bot) needs NO
+#   changes — it still does `-jar server.jar nogui` and pgrep/pkill server.jar.
+#
+# WHAT CHANGES:
+#   - server.jar symlink -> Paper 1.21.11 (replaces vanilla bundled jar)
+#   - server.properties: hardcore=true, difficulty=hard, RCON enabled (pw: minecraft),
+#     spawn-protection=0, enforce-secure-profile=false (for Geyser/Floodgate)
+#   - start.sh: simplified for Paper's -jar launch
+#   - .env: Aikar's GC flags, 2G-4G memory, auto-detected Java path
+#
+# PLUGINS INSTALLED (13):
+#   DeathBan          - Permanent deathban (ban-time: 0), spectator after death
+#   CoreProtect       - Block/container/chat logging and rollback
+#   LuckPerms         - Permission groups (h2 storage)
+#   HeadDrop          - 100% player head drop on all deaths
+#   AltDetector       - Flags alt accounts (365 day expiration)
+#   Simple Voice Chat - Proximity voice (UDP port 24454)
+#   BlueMap           - Web-based 3D map (http://localhost:8100)
+#   Chunky            - Chunk pre-generation
+#   ChunkyBorder      - World border management
+#   OpenInv           - Open offline player inventories
+#   Geyser-Spigot     - Bedrock crossplay (port 19132)
+#   Floodgate-Spigot  - Bedrock auth (username prefix ".")
+#   RandomSPAWNZ      - Random spawn within 5000 blocks on first join
+#
+# PERFORMANCE TUNING:
+#   - Anti-xray engine-mode 2 (ore obfuscation)
+#   - ALTERNATE_CURRENT redstone (faster)
+#   - Optimized explosions, reduced mob spawns, tighter despawn ranges
+#   - Aikar's G1GC flags in .env
+#
+# THE SCRIPT WILL:
+#   1. Check prerequisites (java 21+, curl, python3, tmux)
+#   2. Download Paper jar and update symlink
+#   3. Write start.sh with auto-detected Java path
+#   4. Boot the server TWICE (once for Paper configs, once for plugin configs)
+#      — each boot takes ~30s, the server auto-stops after generating files
+#   5. Apply all config edits
+#   6. Update .env with Aikar's flags
+#   Total runtime: ~2-3 minutes (mostly download + two server boots)
+#
+# AFTER RUNNING:
+#   1. Start via bot (/start) or: cd server && ./start.sh
+#   2. Verify in-game: /plugins (13 loaded), hardcore hearts visible
+#   3. Pre-gen spawn chunks: /chunky radius 5000 -> /chunky start
+#   4. Set world border with ChunkyBorder
+#   5. BlueMap at http://<server-ip>:8100
+#
+# PORTS USED:
+#   25565/tcp - Minecraft Java
+#   19132/udp - Geyser (Bedrock)
+#   24454/udp - Simple Voice Chat
+#   25575/tcp - RCON
+#    8100/tcp - BlueMap webserver
+# =============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
