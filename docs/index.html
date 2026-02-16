@@ -19,10 +19,11 @@
       --crimson: #8B0000;
       --crimson-light: #a01010;
       --gold: #FFD700;
-      --bg: #1a1a1a;
-      --card-bg: #2D2D2D;
-      --text: #e0e0e0;
-      --text-muted: #999;
+      --bg: #09090b;
+      --card-bg: #0a0a0c;
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
+      --border: #27272a;
     }
 
     body {
@@ -40,7 +41,7 @@
     .hero {
       text-align: center;
       padding: 5rem 1.5rem 3rem;
-      background: linear-gradient(180deg, #0d0000 0%, var(--bg) 100%);
+      background: linear-gradient(180deg, #0d0000 0%, #09090b 100%);
     }
 
     .hero h1 {
@@ -64,8 +65,8 @@
       align-items: center;
       gap: 0.75rem;
       background: var(--card-bg);
-      border: 1px solid #444;
-      border-radius: 8px;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
       padding: 0.75rem 1.25rem;
       font-size: 1.1rem;
       cursor: pointer;
@@ -84,8 +85,8 @@
       background: var(--crimson);
       color: #fff;
       border: none;
-      border-radius: 4px;
-      padding: 0.35rem 0.75rem;
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.85rem;
       font-size: 0.85rem;
       cursor: pointer;
       transition: background 0.2s;
@@ -126,7 +127,7 @@
       font-size: 1.1rem;
       font-weight: 600;
       padding: 0.85rem 2.5rem;
-      border-radius: 8px;
+      border-radius: 0.5rem;
       transition: background 0.2s, transform 0.1s;
     }
 
@@ -150,19 +151,27 @@
 
     .card {
       background: var(--card-bg);
-      border-radius: 10px;
+      border-radius: 0.75rem;
       padding: 1.5rem;
       text-align: center;
-      border: 1px solid #3a3a3a;
+      border: 1px solid var(--border);
       transition: border-color 0.2s, transform 0.2s;
     }
 
     .card:hover {
-      border-color: var(--crimson);
+      border-color: #3f3f46;
       transform: translateY(-3px);
     }
 
-    .card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .card .icon {
+      margin-bottom: 0.75rem;
+      color: var(--gold);
+    }
+
+    .card .icon svg {
+      width: 32px;
+      height: 32px;
+    }
 
     .card h3 {
       color: var(--gold);
@@ -186,8 +195,8 @@
     .vote-link {
       display: block;
       background: var(--card-bg);
-      border: 1px solid #3a3a3a;
-      border-radius: 8px;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
       padding: 1rem;
       text-align: center;
       color: var(--text);
@@ -207,8 +216,8 @@
     .status-link {
       display: inline-block;
       background: var(--card-bg);
-      border: 1px solid #3a3a3a;
-      border-radius: 8px;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
       padding: 0.85rem 2rem;
       color: var(--text);
       font-weight: 500;
@@ -239,7 +248,7 @@
     footer {
       text-align: center;
       padding: 2rem 1.5rem;
-      border-top: 1px solid #2a2a2a;
+      border-top: 1px solid var(--border);
       color: var(--text-muted);
       font-size: 0.85rem;
     }
@@ -254,6 +263,7 @@
       max-width: 960px;
       margin: 0 auto;
       padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
     }
 
     nav .site-name {
@@ -318,22 +328,30 @@
     <h2>The Server</h2>
     <div class="features-grid">
       <div class="card">
-        <div class="icon">💀</div>
+        <div class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></svg>
+        </div>
         <h3>Permadeath</h3>
         <p>You die, you're out. Hardcore mode — no second chances, no respawns.</p>
       </div>
       <div class="card">
-        <div class="icon">🌿</div>
-        <h3>Pure Vanilla</h3>
-        <p>No plugins, no mods, no handholding. Minecraft as Mojang intended.</p>
+        <div class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s1.5 2 2.1 4.7c.7 3.2-.2 5.8-.9 7.1A7 7 0 0 1 11 20Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        </div>
+        <h3>Vanilla Gameplay</h3>
+        <p>No pay-to-win, no gameplay mods. The survival experience stays pure.</p>
       </div>
       <div class="card">
-        <div class="icon">⚔️</div>
+        <div class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="m16 16 3.5 3.5"/><path d="m19 19 1.5 1.5"/><path d="M9.5 6.5 21 18v3h-3L6.5 9.5"/><path d="M11 5l-6 6"/><path d="m8 8-3.5-3.5"/><path d="m5 5-1.5-1.5"/></svg>
+        </div>
         <h3>Anarchy</h3>
         <p>No rules, no bans, no admins playing favorites. True freedom.</p>
       </div>
       <div class="card">
-        <div class="icon">♾️</div>
+        <div class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/></svg>
+        </div>
         <h3>No Resets</h3>
         <p>The world persists forever. Your builds — and your ruins — endure.</p>
       </div>
