@@ -246,9 +246,50 @@
 
     footer a { color: var(--text-muted); }
     footer a:hover { color: var(--gold); }
+    /* ---------- Nav ---------- */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+    }
+
+    nav .site-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--crimson);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    nav .site-name:hover { color: var(--crimson-light); text-decoration: none; }
+
+    nav .nav-links { display: flex; gap: 1.5rem; }
+
+    nav .nav-links a {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav .nav-links a:hover { color: var(--text); text-decoration: none; }
+    nav .nav-links a.active { color: var(--gold); }
   </style>
 </head>
 <body>
+
+  <!-- Nav -->
+  <nav>
+    <a class="site-name" href="index.html">Xandaris Hardcore</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="ranks.html">Ranks</a>
+    </div>
+  </nav>
 
   <!-- Hero -->
   <section class="hero">
