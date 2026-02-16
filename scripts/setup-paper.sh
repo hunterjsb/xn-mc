@@ -8,8 +8,9 @@ set -euo pipefail
 #
 # WHAT THIS DOES:
 #   Migrates the vanilla MC server to Paper 1.21.11 and sets up a permanent
-#   deathban hardcore server with 13 plugins. The bot (xn-mc-bot) needs NO
-#   changes — it still does `-jar server.jar nogui` and pgrep/pkill server.jar.
+#   deathban hardcore server with 15 plugins + donation rank tiers via LuckPerms.
+#   The bot (xn-mc-bot) needs NO changes — it still does `-jar server.jar nogui`
+#   and pgrep/pkill server.jar.
 #
 # WHAT CHANGES:
 #   - server.jar symlink -> Paper 1.21.11 (replaces vanilla bundled jar)
@@ -19,10 +20,10 @@ set -euo pipefail
 #   - .env: Aikar's GC flags, preserves existing memory settings, auto-detected Java path
 #          (prefers Amazon Corretto 21 on arm64 — Ubuntu OpenJDK has SIGSEGV bugs)
 #
-# PLUGINS INSTALLED (13):
+# PLUGINS INSTALLED (15):
 #   DeathBan          - Permanent deathban (ban-time: 0), spectator after death
 #   CoreProtect       - Block/container/chat logging and rollback
-#   LuckPerms         - Permission groups (h2 storage)
+#   LuckPerms         - Permission groups (h2 storage) + donation rank tiers
 #   HeadDrop          - 100% player head drop on all deaths
 #   AltDetector       - Flags alt accounts (365 day expiration)
 #   Simple Voice Chat - Proximity voice (UDP port 24454)
@@ -33,6 +34,8 @@ set -euo pipefail
 #   Geyser-Spigot     - Bedrock crossplay (port 19132)
 #   Floodgate-Spigot  - Bedrock auth (username prefix ".")
 #   RandomSPAWNZ      - Random spawn within 5000 blocks on first join
+#   Tebex             - Donation store integration (executes LP commands on purchase)
+#   NicknameEasy      - /nick with color code support (champion+ perm)
 #
 # PERFORMANCE TUNING:
 #   - Anti-xray engine-mode 2 (ore obfuscation)
@@ -44,15 +47,17 @@ set -euo pipefail
 #   1. Check prerequisites (java 21+, curl, python3, tmux)
 #   2. Download Paper jar and update symlink
 #   3. Write start.sh with auto-detected Java path
-#   4. Boot the server TWICE (once for Paper configs, once for plugin configs)
-#      — each boot takes ~30s, the server auto-stops after generating files
+#   4. Boot the server THREE times:
+#      — Boot 1: generate Paper configs
+#      — Boot 2: generate plugin configs
+#      — Boot 3: set up LuckPerms donation rank groups via RCON
 #   5. Apply all config edits
 #   6. Update .env with Aikar's flags
-#   Total runtime: ~2-3 minutes (mostly download + two server boots)
+#   Total runtime: ~3-4 minutes (mostly download + three server boots)
 #
 # AFTER RUNNING:
 #   1. Start via bot (/start) or: cd server && ./start.sh
-#   2. Verify in-game: /plugins (13 loaded), hardcore hearts visible
+#   2. Verify in-game: /plugins (15 loaded), hardcore hearts visible
 #   3. Pre-gen spawn chunks: /chunky radius 5000 -> /chunky start
 #   4. Set world border with ChunkyBorder
 #   5. BlueMap at http://<server-ip>:8100
@@ -394,7 +399,7 @@ modrinth_dl() {
 }
 
 # Modrinth plugins
-for slug in deathban coreprotect luckperms head-drop altdetector simple-voice-chat bluemap chunky chunkyborder; do
+for slug in deathban coreprotect luckperms head-drop altdetector simple-voice-chat bluemap chunky chunkyborder tebex nickname-easy; do
     modrinth_dl "$slug"
 done
 
@@ -490,8 +495,81 @@ if [ -f "$HEADDROP_CFG" ]; then
     echo "  HeadDrop: broadcast=true"
 fi
 
+# Tebex: secret key must be set manually after setup
+# Run: /tebex secret <key> in-game, or edit plugins/Tebex/config.yml
+# Each Tebex package should execute: lp user {username} parent add <rank>
+echo "  Tebex: installed (set secret key via /tebex secret <key> after first start)"
+
+# NicknameEasy: default config is fine — permissions gate /nick usage
+echo "  NicknameEasy: installed (gated by nicknameseasy.use permission)"
+
 # =============================================================================
-# Step 9: Update .env
+# Step 9: Set up LuckPerms donation rank groups
+# =============================================================================
+echo ""
+echo "=== Setting up LuckPerms donation ranks ==="
+echo "  Booting server to run LP commands via console stdin..."
+cd "$SERVER_DIR"
+> logs/latest.log 2>/dev/null || true
+
+# Pipe LP commands into the server console via stdin.
+# The subshell waits for "Done (", sends commands, then stops the server.
+{
+    # Wait for server to finish starting
+    while ! grep -q "Done (" logs/latest.log 2>/dev/null; do sleep 1; done
+    sleep 3
+    echo "  Server ready, sending LP commands..." >&2
+
+    # Create groups
+    echo "lp creategroup supporter"
+    echo "lp creategroup champion"
+    echo "lp creategroup legend"
+    echo "lp creategroup mythic"
+    sleep 1
+
+    # Set weights
+    echo "lp group supporter setweight 10"
+    echo "lp group champion setweight 20"
+    echo "lp group legend setweight 30"
+    echo "lp group mythic setweight 40"
+    sleep 1
+
+    # Inheritance chain: mythic > legend > champion > supporter > default
+    echo "lp group champion parent add supporter"
+    echo "lp group legend parent add champion"
+    echo "lp group mythic parent add legend"
+    sleep 1
+
+    # Default group: deny cosmetic perms
+    echo "lp group default permission set nicknameseasy.use false"
+    echo "lp group default permission set nicknameseasy.color false"
+    sleep 1
+
+    # Prefixes (quoted to preserve color codes + spaces)
+    echo 'lp group supporter meta setprefix 10 "&a[S] &f"'
+    echo 'lp group champion meta setprefix 20 "&b[C] &f"'
+    echo 'lp group legend meta setprefix 30 "&6[L] &f"'
+    echo 'lp group mythic meta setprefix 40 "&d[M] &f"'
+    sleep 1
+
+    # Champion: unlock /nick
+    echo "lp group champion permission set nicknameseasy.use true"
+    echo "lp group champion permission set nicknameseasy.color true"
+    sleep 1
+
+    # Verify
+    echo "lp listgroups"
+    sleep 2
+
+    echo "  LP commands sent, stopping server..." >&2
+    echo "stop"
+    sleep 5
+} | $JAVA -Xms1G -Xmx2560M -jar server.jar nogui > /dev/null 2>&1
+
+echo "  LuckPerms donation ranks configured."
+
+# =============================================================================
+# Step 10: Update .env
 # =============================================================================
 echo ""
 echo "=== Updating .env ==="
@@ -519,10 +597,15 @@ echo "Java:    $JAVA"
 echo "Paper:   $PAPER_JAR"
 echo "Plugins: $(ls "$PLUGINS_DIR"/*.jar 2>/dev/null | wc -l) installed"
 echo ""
+echo "Donation ranks: supporter, champion, legend, mythic"
+echo "  Champion+ unlocks: /nick with color codes"
+echo ""
 echo "Next steps:"
 echo "  1. Start the server via the bot (/start) or: cd server && ./start.sh"
-echo "  2. Verify: /plugins, hardcore hearts, RCON"
+echo "  2. Verify: /plugins (15 loaded), hardcore hearts, RCON"
 echo "  3. Pre-gen spawn: /chunky radius 5000 && /chunky start"
 echo "  4. Set world border with ChunkyBorder"
-echo "  5. DiscordSRV is NOT included (xn-mc-bot handles Discord)"
+echo "  5. Set Tebex secret: /tebex secret <key>"
+echo "     Configure packages to run: lp user {username} parent add <rank>"
+echo "  6. DiscordSRV is NOT included (xn-mc-bot handles Discord)"
 echo ""
