@@ -10,15 +10,16 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://xandaris.space/">
   <meta property="og:image" content="https://xandaris.space/og-image.png">
-  <meta name="theme-color" content="#8B0000">
+  <meta name="theme-color" content="#FFD700">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --crimson: #8B0000;
-      --crimson-light: #a01010;
-      --gold: #FFD700;
+      --primary: #FFD700;
+      --primary-hover: #e6c200;
+      --accent: #8B0000;
+      --accent-light: #a01010;
       --bg: #09090b;
       --card-bg: #0a0a0c;
       --text: #fafafa;
@@ -34,19 +35,19 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    a { color: var(--gold); text-decoration: none; }
+    a { color: var(--primary); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     /* ---------- Hero ---------- */
     .hero {
       text-align: center;
       padding: 5rem 1.5rem 3rem;
-      background: linear-gradient(180deg, #0d0000 0%, #09090b 100%);
+      background: linear-gradient(180deg, #1a1400 0%, #09090b 100%);
     }
 
     .hero h1 {
       font-size: clamp(2.2rem, 6vw, 4rem);
-      color: var(--crimson);
+      color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 0.5rem;
@@ -55,7 +56,7 @@
 
     .hero .tagline {
       font-size: clamp(1rem, 2.5vw, 1.4rem);
-      color: var(--gold);
+      color: var(--primary);
       margin-bottom: 2rem;
       font-style: italic;
     }
@@ -73,7 +74,7 @@
       transition: border-color 0.2s;
     }
 
-    .ip-box:hover { border-color: var(--gold); }
+    .ip-box:hover { border-color: var(--primary); }
 
     .ip-box code {
       font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
@@ -82,8 +83,8 @@
     }
 
     .ip-box .copy-btn {
-      background: var(--crimson);
-      color: #fff;
+      background: var(--primary);
+      color: #000;
       border: none;
       border-radius: 0.5rem;
       padding: 0.4rem 0.85rem;
@@ -92,12 +93,12 @@
       transition: background 0.2s;
     }
 
-    .ip-box .copy-btn:hover { background: var(--crimson-light); }
+    .ip-box .copy-btn:hover { background: var(--primary-hover); }
 
     .copied-toast {
       display: none;
       margin-top: 0.75rem;
-      color: var(--gold);
+      color: var(--primary);
       font-size: 0.9rem;
     }
 
@@ -110,7 +111,7 @@
 
     section h2 {
       font-size: 1.6rem;
-      color: var(--crimson);
+      color: var(--primary);
       margin-bottom: 1.5rem;
       text-align: center;
       text-transform: uppercase;
@@ -165,7 +166,7 @@
 
     .card .icon {
       margin-bottom: 0.75rem;
-      color: var(--gold);
+      color: var(--primary);
     }
 
     .card .icon svg {
@@ -174,7 +175,7 @@
     }
 
     .card h3 {
-      color: var(--gold);
+      color: var(--primary);
       font-size: 1.1rem;
       margin-bottom: 0.5rem;
     }
@@ -205,46 +206,12 @@
     }
 
     .vote-link:hover {
-      border-color: var(--gold);
+      border-color: var(--primary);
       text-decoration: none;
       transform: translateY(-2px);
     }
 
-    /* ---------- Status ---------- */
-    .status { text-align: center; }
-
-    .status-link {
-      display: inline-block;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 0.75rem;
-      padding: 0.85rem 2rem;
-      color: var(--text);
-      font-weight: 500;
-      transition: border-color 0.2s;
-    }
-
-    .status-link:hover {
-      border-color: var(--gold);
-      text-decoration: none;
-    }
-
-    .status-link .dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background: #2ecc71;
-      border-radius: 50%;
-      margin-right: 0.5rem;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    /* ---------- Footer ---------- */
+/* ---------- Footer ---------- */
     footer {
       text-align: center;
       padding: 2rem 1.5rem;
@@ -254,7 +221,7 @@
     }
 
     footer a { color: var(--text-muted); }
-    footer a:hover { color: var(--gold); }
+    footer a:hover { color: var(--primary); }
     /* ---------- Nav ---------- */
     nav {
       display: flex;
@@ -269,13 +236,13 @@
     nav .site-name {
       font-size: 1.1rem;
       font-weight: 700;
-      color: var(--crimson);
+      color: var(--primary);
       text-decoration: none;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
-    nav .site-name:hover { color: var(--crimson-light); text-decoration: none; }
+    nav .site-name:hover { color: var(--primary-hover); text-decoration: none; }
 
     nav .nav-links { display: flex; gap: 1.5rem; }
 
@@ -287,7 +254,7 @@
     }
 
     nav .nav-links a:hover { color: var(--text); text-decoration: none; }
-    nav .nav-links a.active { color: var(--gold); }
+    nav .nav-links a.active { color: var(--primary); }
   </style>
 </head>
 <body>
@@ -298,6 +265,7 @@
     <div class="nav-links">
       <a href="index.html" class="active">Home</a>
       <a href="ranks.html">Ranks</a>
+      <a href="https://xnmc.statuspage.io/" target="_blank" rel="noopener">Status</a>
     </div>
   </nav>
 
@@ -367,15 +335,6 @@
       <a class="vote-link" href="https://minecraft-server-list.com/server/518047/vote/" target="_blank" rel="noopener">MC Server List</a>
       <a class="vote-link" href="https://minecraft.buzz/vote/19229" target="_blank" rel="noopener">Minecraft Buzz</a>
     </div>
-  </section>
-
-  <!-- Status -->
-  <section class="status">
-    <h2>Server Status</h2>
-    <a class="status-link" href="https://xnmc.statuspage.io/" target="_blank" rel="noopener">
-      <span class="dot"></span>
-      View Status Page
-    </a>
   </section>
 
   <!-- Footer -->

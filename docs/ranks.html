@@ -10,15 +10,16 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://xandaris.space/ranks.html">
   <meta property="og:image" content="https://xandaris.space/og-image.png">
-  <meta name="theme-color" content="#8B0000">
+  <meta name="theme-color" content="#FFD700">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --crimson: #8B0000;
-      --crimson-light: #a01010;
-      --gold: #FFD700;
+      --primary: #FFD700;
+      --primary-hover: #e6c200;
+      --accent: #8B0000;
+      --accent-light: #a01010;
       --bg: #09090b;
       --card-bg: #0a0a0c;
       --text: #fafafa;
@@ -34,7 +35,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    a { color: var(--gold); text-decoration: none; }
+    a { color: var(--primary); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     /* ---------- Nav ---------- */
@@ -51,13 +52,13 @@
     nav .site-name {
       font-size: 1.1rem;
       font-weight: 700;
-      color: var(--crimson);
+      color: var(--primary);
       text-decoration: none;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
-    nav .site-name:hover { color: var(--crimson-light); text-decoration: none; }
+    nav .site-name:hover { color: var(--primary-hover); text-decoration: none; }
 
     nav .nav-links { display: flex; gap: 1.5rem; }
 
@@ -69,18 +70,18 @@
     }
 
     nav .nav-links a:hover { color: var(--text); text-decoration: none; }
-    nav .nav-links a.active { color: var(--gold); }
+    nav .nav-links a.active { color: var(--primary); }
 
     /* ---------- Hero ---------- */
     .hero {
       text-align: center;
       padding: 4rem 1.5rem 2.5rem;
-      background: linear-gradient(180deg, #0d0000 0%, #09090b 100%);
+      background: linear-gradient(180deg, #1a1400 0%, #09090b 100%);
     }
 
     .hero h1 {
       font-size: clamp(2rem, 5vw, 3rem);
-      color: var(--crimson);
+      color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 0.5rem;
@@ -103,7 +104,7 @@
 
     section h2 {
       font-size: 1.6rem;
-      color: var(--crimson);
+      color: var(--primary);
       margin-bottom: 1.5rem;
       text-align: center;
       text-transform: uppercase;
@@ -159,12 +160,12 @@
     }
 
     .tier-card ul li { padding: 0.3rem 0; }
-    .tier-card ul li::before { content: "✦ "; color: var(--gold); }
+    .tier-card ul li::before { content: "✦ "; color: var(--primary); }
 
     .tier-card .buy-btn {
       display: inline-block;
-      background: var(--crimson);
-      color: #fff;
+      background: var(--primary);
+      color: #000;
       font-size: 1rem;
       font-weight: 600;
       padding: 0.75rem 2rem;
@@ -177,7 +178,7 @@
     }
 
     .tier-card .buy-btn:hover {
-      background: var(--crimson-light);
+      background: var(--primary-hover);
       text-decoration: none;
       transform: translateY(-1px);
     }
@@ -187,19 +188,19 @@
     .tier-supporter:hover { border-color: #5cb85c; }
 
     /* Champion */
-    .tier-champion { border-color: var(--gold); }
-    .tier-champion h3 { color: var(--gold); }
-    .tier-champion .badge { background: rgba(255, 215, 0, 0.15); color: var(--gold); }
-    .tier-champion:hover { border-color: var(--gold); }
+    .tier-champion { border-color: var(--primary); }
+    .tier-champion h3 { color: var(--primary); }
+    .tier-champion .badge { background: rgba(255, 215, 0, 0.15); color: var(--primary); }
+    .tier-champion:hover { border-color: var(--primary); }
 
     /* Mythic */
     .tier-mythic {
-      border-color: var(--crimson);
+      border-color: var(--accent);
       box-shadow: 0 0 25px rgba(139, 0, 0, 0.3);
     }
-    .tier-mythic h3 { color: var(--crimson-light); }
+    .tier-mythic h3 { color: var(--accent-light); }
     .tier-mythic .badge { background: rgba(139, 0, 0, 0.2); color: #e04040; }
-    .tier-mythic:hover { border-color: var(--crimson-light); box-shadow: 0 0 35px rgba(139, 0, 0, 0.45); }
+    .tier-mythic:hover { border-color: var(--accent-light); box-shadow: 0 0 35px rgba(139, 0, 0, 0.45); }
 
     /* ---------- Disclaimer ---------- */
     .disclaimer {
@@ -219,7 +220,7 @@
     }
 
     footer a { color: var(--text-muted); }
-    footer a:hover { color: var(--gold); }
+    footer a:hover { color: var(--primary); }
 
     /* ---------- Responsive ---------- */
     @media (max-width: 720px) {
@@ -239,6 +240,7 @@
     <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="ranks.html" class="active">Ranks</a>
+      <a href="https://xnmc.statuspage.io/" target="_blank" rel="noopener">Status</a>
     </div>
   </nav>
 
