@@ -1,0 +1,31 @@
+name: Build map-auth
+
+on:
+  push:
+    tags:
+      - 'map-auth-v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Build binaries
+        working-directory: map-auth
+        run: |
+          GOOS=linux GOARCH=arm64 go build -o map-auth-linux-arm64 .
+          GOOS=linux GOARCH=amd64 go build -o map-auth-linux-amd64 .
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            map-auth/map-auth-linux-arm64
+            map-auth/map-auth-linux-amd64
