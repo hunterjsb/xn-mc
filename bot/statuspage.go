@@ -107,6 +107,9 @@ func checkStatuspageConfig() error {
 		if statuspageBotComponentID == "" {
 			fmt.Println("Warning: STATUSPAGE_BOT_COMPONENT_ID is not set. Bot status will not be reported to Statuspage.")
 		}
+		if statuspageRestartComponentID == "" {
+			fmt.Println("Warning: STATUSPAGE_RESTART_COMPONENT_ID is not set. Restart status will not be reported to Statuspage.")
+		}
 	}
 	return nil
 }

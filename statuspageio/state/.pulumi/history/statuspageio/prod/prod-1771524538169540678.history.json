@@ -1,0 +1,43 @@
+{
+    "kind": "update",
+    "startTime": 1771524536,
+    "message": "Let health check handle statuspage updates on start/restart",
+    "environment": {
+        "exec.kind": "cli",
+        "git.author": "hunterjsb",
+        "git.author.email": "hunterjsb@gmail.com",
+        "git.committer": "hunterjsb",
+        "git.committer.email": "hunterjsb@gmail.com",
+        "git.dirty": "true",
+        "git.head": "09133d41cab19c0a4ab978b903f1128015ebce9d",
+        "git.headName": "refs/heads/master",
+        "pulumi.arch": "amd64",
+        "pulumi.env.PULUMI_CONFIG_PASSPHRASE": "set",
+        "pulumi.flag.stack": "set",
+        "pulumi.flag.yes": "true",
+        "pulumi.os": "linux",
+        "pulumi.version": "v3.222.0",
+        "runtime.executable": "/home/linuxbrew/.linuxbrew/bin/go",
+        "runtime.name": "go",
+        "runtime.version": "go version go1.26.0 linux/amd64",
+        "stack.environments": "[]",
+        "updatePlan": "false",
+        "vcs.kind": "github.com",
+        "vcs.owner": "hunterjsb",
+        "vcs.repo": "xn-mc",
+        "vcs.root": "statuspageio"
+    },
+    "config": {
+        "pulumi:tags": {
+            "pulumi:template": "go"
+        },
+        "statuspageio:pageId": "hg4lqksf4fvl"
+    },
+    "version": 0,
+    "result": "succeeded",
+    "endTime": 1771524538,
+    "resourceChanges": {
+        "create": 1,
+        "same": 3
+    }
+}

@@ -25,6 +25,7 @@ var (
 	statuspagePageID                     string
 	statuspageMinecraftServerComponentID string
 	statuspageBotComponentID             string
+	statuspageRestartComponentID         string
 	spClient                             *StatuspageClient
 )
 
@@ -59,6 +60,7 @@ func init() {
 	statuspagePageID = os.Getenv("STATUSPAGE_PAGE_ID")
 	statuspageMinecraftServerComponentID = os.Getenv("STATUSPAGE_MINECRAFT_SERVER_COMPONENT_ID")
 	statuspageBotComponentID = os.Getenv("STATUSPAGE_BOT_COMPONENT_ID")
+	statuspageRestartComponentID = os.Getenv("STATUSPAGE_RESTART_COMPONENT_ID")
 
 	// Initialize Statuspage client
 	spClient = NewStatuspageClient(statuspageAPIKey, statuspagePageID)
@@ -223,6 +225,13 @@ func restartServerCore() *discordgo.MessageEmbed {
 		return errorEmbed("Restart Failed", "Failed to restart the Minecraft server: "+err.Error())
 	}
 
+	// Mark Restart component as under maintenance on Statuspage
+	if statuspageRestartComponentID != "" {
+		if err := spClient.UpdateComponentStatus(statuspageRestartComponentID, StatusUnderMaintenance); err != nil {
+			fmt.Printf("Failed to set Restart component to under_maintenance: %v\n", err)
+		}
+	}
+
 	return successEmbed("Server Restarting", "Minecraft server restart requested via Crafty. Statuspage will update once the server is ready.")
 }
 
@@ -278,6 +287,13 @@ func performMinecraftServerHealthCheck(s *discordgo.Session, initialCheck bool) 
 			}
 		} else {
 			currentStatus = StatusMajorOutage
+		}
+	}
+
+	// Clear Restart component when server is back to operational
+	if statuspageRestartComponentID != "" && currentStatus == StatusOperational {
+		if err := spClient.UpdateComponentStatus(statuspageRestartComponentID, StatusOperational); err != nil {
+			fmt.Printf("Failed to clear Restart component: %v\n", err)
 		}
 	}
 

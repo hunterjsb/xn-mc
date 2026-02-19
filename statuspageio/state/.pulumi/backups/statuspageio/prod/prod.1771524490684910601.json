@@ -1,0 +1,85 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/statuspageio/prod",
+        "latest": {
+            "manifest": {
+                "time": "2026-02-19T13:08:10.67143452-05:00",
+                "magic": "7b54cd6e79f5cecd9ae124cb92b834b486c7e21993124e3a4e456c27c3ce48f9",
+                "version": "v3.222.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:ws6zzwOQcY0=:v1:Lx8uVir/maravXOK:HvEhR5mI+q1K2upLyIbL/rgYGAMmJg=="
+                }
+            },
+            "resources": [
+                {
+                    "urn": "urn:pulumi:prod::statuspageio::pulumi:pulumi:Stack::statuspageio-prod",
+                    "custom": false,
+                    "type": "pulumi:pulumi:Stack",
+                    "created": "2026-02-19T18:08:10.169740366Z",
+                    "modified": "2026-02-19T18:08:10.169740366Z"
+                },
+                {
+                    "urn": "urn:pulumi:prod::statuspageio::pulumi:providers:statuspage::default_0_1_12",
+                    "custom": true,
+                    "id": "22a2be8f-0e08-4c40-9750-5d7076599136",
+                    "type": "pulumi:providers:statuspage",
+                    "inputs": {
+                        "__internal": {
+                            "name": "terraform-provider",
+                            "parameterization": "eyJyZW1vdGUiOnsidXJsIjoicmVnaXN0cnkub3BlbnRvZnUub3JnL3lhbm5oL3N0YXR1c3BhZ2UiLCJ2ZXJzaW9uIjoiMC4xLjEyIn19",
+                            "version": "1.1.0"
+                        },
+                        "version": "0.1.12"
+                    },
+                    "outputs": {
+                        "version": "0.1.12"
+                    },
+                    "created": "2026-02-19T18:08:10.242809588Z",
+                    "modified": "2026-02-19T18:08:10.242809588Z"
+                },
+                {
+                    "urn": "urn:pulumi:prod::statuspageio::statuspage:index/component:Component::bot",
+                    "custom": true,
+                    "id": "sj039w0r0w69",
+                    "type": "statuspage:index/component:Component",
+                    "inputs": {
+                        "componentId": "sj039w0r0w69",
+                        "description": "Discord Bot",
+                        "name": "Bot",
+                        "pageId": "hg4lqksf4fvl",
+                        "showcase": true,
+                        "status": "operational"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {
+                                "renamed": {
+                                    "componentId": "id"
+                                }
+                            }
+                        },
+                        "automationEmail": "component+f9b6c40b4bb4487c89f191f5a283d221@notifications.statuspage.io",
+                        "componentId": "sj039w0r0w69",
+                        "description": "Discord Bot",
+                        "name": "Bot",
+                        "onlyShowIfDegraded": false,
+                        "pageId": "hg4lqksf4fvl",
+                        "showcase": true,
+                        "status": "operational"
+                    },
+                    "parent": "urn:pulumi:prod::statuspageio::pulumi:pulumi:Stack::statuspageio-prod",
+                    "protect": true,
+                    "provider": "urn:pulumi:prod::statuspageio::pulumi:providers:statuspage::default_0_1_12::22a2be8f-0e08-4c40-9750-5d7076599136",
+                    "created": "2026-02-19T18:08:10.67018113Z",
+                    "modified": "2026-02-19T18:08:10.67018113Z"
+                }
+            ],
+            "metadata": {}
+        }
+    }
+}

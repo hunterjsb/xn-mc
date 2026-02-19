@@ -1,0 +1,62 @@
+name: Deploy Statuspage Components
+on:
+  workflow_dispatch:
+    inputs:
+      triggered_by:
+        description: 'Workflow that triggered this deployment'
+        required: false
+        default: 'manual'
+  push:
+    branches: [master]
+    paths:
+      - 'statuspageio/*.go'
+      - 'statuspageio/go.mod'
+      - 'statuspageio/go.sum'
+      - 'statuspageio/Pulumi.yaml'
+      - 'statuspageio/Pulumi.prod.yaml'
+
+env:
+  PULUMI_CONFIG_PASSPHRASE: ""
+
+defaults:
+  run:
+    working-directory: statuspageio
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Install Pulumi CLI
+        uses: pulumi/setup-pulumi@v2
+
+      - name: Install Statuspage provider
+        run: pulumi package add terraform-provider yannh/statuspage
+
+      - name: Install Go dependencies
+        run: go mod download
+
+      - name: Login to local file backend
+        run: pulumi login file://./state
+
+      - name: Deploy Statuspage components
+        run: pulumi up --stack prod --yes
+        env:
+          STATUSPAGE_TOKEN: ${{ secrets.STATUSPAGE_TOKEN }}
+
+      - name: Commit updated state
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add state/
+          git commit -m "Update statuspageio Pulumi state [skip ci]" || echo "No changes to commit"
+          git push

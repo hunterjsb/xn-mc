@@ -1,0 +1,13 @@
+name: statuspageio
+description: Xandaris Statuspage.io components
+runtime: go
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: go
+packages:
+  statuspage:
+    source: pulumi/pulumi/terraform-provider
+    version: 0.3.0
+    parameters:
+      - yannh/statuspage
