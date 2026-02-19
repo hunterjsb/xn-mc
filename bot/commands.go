@@ -156,7 +156,7 @@ func handleStatus(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				&discordgo.MessageEmbedField{Name: "Players", Value: fmt.Sprintf("%d/%d — %s", st.Online, st.Max, playerText), Inline: false},
 				&discordgo.MessageEmbedField{Name: "CPU", Value: fmt.Sprintf("%.1f%%", st.CPU), Inline: true},
 				&discordgo.MessageEmbedField{Name: "Memory", Value: st.Mem, Inline: true},
-				&discordgo.MessageEmbedField{Name: "World Size", Value: st.WorldSize, Inline: true},
+				&discordgo.MessageEmbedField{Name: "Server Size", Value: st.WorldSize, Inline: true},
 			)
 			if st.Version != "" {
 				embed.Fields = append(embed.Fields,

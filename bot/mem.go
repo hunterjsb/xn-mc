@@ -75,11 +75,24 @@ func readMemoryStats() memory {
 	return res
 }
 
+func readLoadAvg() string {
+	data, err := os.ReadFile("/proc/loadavg")
+	if err != nil {
+		return "N/A"
+	}
+	parts := strings.Fields(string(data))
+	if len(parts) >= 3 {
+		return fmt.Sprintf("%s / %s / %s", parts[0], parts[1], parts[2])
+	}
+	return "N/A"
+}
+
 func buildMemEmbed(m memory) *discordgo.MessageEmbed {
 	return &discordgo.MessageEmbed{
-		Title: "System Memory",
+		Title: "System Stats",
 		Color: colorInfo,
 		Fields: []*discordgo.MessageEmbedField{
+			{Name: "Load Avg (1/5/15m)", Value: readLoadAvg(), Inline: false},
 			{Name: "Total", Value: fmt.Sprintf("%.3f GB", float64(m.MemTotal)/1000000), Inline: true},
 			{Name: "Free", Value: fmt.Sprintf("%.3f GB", float64(m.MemFree)/1000000), Inline: true},
 			{Name: "Available", Value: fmt.Sprintf("%.3f GB", float64(m.MemAvailable)/1000000), Inline: true},
