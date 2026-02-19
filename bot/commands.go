@@ -20,6 +20,48 @@ const (
 	colorInfo    = 0x2979FF
 )
 
+// dirSize walks a directory and returns total size in bytes.
+func dirSize(path string) (int64, error) {
+	var total int64
+	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			total += info.Size()
+		}
+		return nil
+	})
+	return total, err
+}
+
+// formatBytes formats bytes into a human-readable string.
+func formatBytes(b int64) string {
+	const unit = 1024
+	if b < unit {
+		return fmt.Sprintf("%d B", b)
+	}
+	div, exp := int64(unit), 0
+	for n := b / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %cB", float64(b)/float64(div), "KMGTPE"[exp])
+}
+
+// worldSize returns a formatted size of the world/ directory under CRAFTY_SERVER_PATH.
+func worldSize() string {
+	sp := os.Getenv("CRAFTY_SERVER_PATH")
+	if sp == "" {
+		return "N/A"
+	}
+	size, err := dirSize(filepath.Join(sp, "world"))
+	if err != nil {
+		return "N/A"
+	}
+	return formatBytes(size)
+}
+
 // File paths derived from CRAFTY_SERVER_PATH (set in init, fallback to old defaults)
 var (
 	usercachePath  = "../server/usercache.json"
@@ -156,7 +198,8 @@ func handleStatus(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				&discordgo.MessageEmbedField{Name: "Players", Value: fmt.Sprintf("%d/%d — %s", st.Online, st.Max, playerText), Inline: false},
 				&discordgo.MessageEmbedField{Name: "CPU", Value: fmt.Sprintf("%.1f%%", st.CPU), Inline: true},
 				&discordgo.MessageEmbedField{Name: "Memory", Value: st.Mem, Inline: true},
-				&discordgo.MessageEmbedField{Name: "Server Size", Value: st.WorldSize, Inline: true},
+				&discordgo.MessageEmbedField{Name: "World Size", Value: worldSize(), Inline: true},
+			&discordgo.MessageEmbedField{Name: "Server Size", Value: st.WorldSize, Inline: true},
 			)
 			if st.Version != "" {
 				embed.Fields = append(embed.Fields,
