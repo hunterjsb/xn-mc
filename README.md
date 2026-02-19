@@ -1,68 +1,59 @@
 # xn-mc
 
-Minecraft server management and Discord bot integration.
-- Send RCON commands to the server from discord
-- start / stop / monitor from discord
-- status page [WIP]
-- download and manage server.jar's, including the latest snapshot
-- backup and migrate worlds
+Minecraft server management for Xandaris — Discord bot, map auth, backups, and setup tooling.
+
+## Components
+
+### Discord Bot (`bot/`)
+Go-based Discord bot that manages the Minecraft server through [Crafty Controller](https://craftycontrol.com/) and RCON.
+
+**Slash Commands:**
+- `/status` — Server status (players, CPU, memory, disk %, version)
+- `/start` `/stop` `/restart` — Server lifecycle via Crafty
+- `/backup` — Trigger a server backup via Crafty
+- `/mem` — System resource usage (CPU, memory)
+- `/size` — Disk breakdown (overworld, nether, end, BlueMap, plugins, total)
+- `/rcon <command>` — Execute RCON commands
+- `/unban <player>` — Unban a deathbanned player and reset their spawn
+- `/help` — List all commands
+
+Also runs periodic health checks (Crafty + RCON) and updates [Statuspage.io](https://statuspage.io) components automatically.
+
+### Map Auth (`map-auth/`)
+Standalone Go service that replaces vouch-proxy for [BlueMap](https://bluemap.bluecolored.de/). Handles Discord OAuth2 and checks guild roles before granting access — only users with admin/mod/staff roles can view the map at `map.xandaris.space`.
+
+Drops into the same nginx `auth_request` slot as vouch-proxy — same port (9090), same endpoints.
+
+### Scripts (`scripts/`)
+- `setup.sh` — Sets up Crafty Controller (podman) and builds the bot
+- `backup.py` — World backup/restore to S3
 
 ## Setup
 
-Copy `.env.example` to `.env` and configure:
 ```bash
 cp .env.example .env
+# Fill in your credentials (see .env.example for all variables)
+./scripts/setup.sh
 ```
 
-Fill in the following environment variables in your `.env` file:
+### Environment Variables
 
-- `WORLD_NAME`: Name of your Minecraft world.
-- `SERVER_FP`: Filepath to the server directory.
-- `START_COMMAND`: The command used to start your Minecraft server (e.g., "java -Xms1024M -Xmx2G -jar server.jar nogui").
-- `RCON_IP`: RCON IP address and port (e.g., `0.0.0.0:25575`).
-- `RCON_PW`: Your RCON password.
+**Required:**
+- `RCON_IP` / `RCON_PW` — RCON connection
+- `CRAFTY_URL` / `CRAFTY_API_KEY` / `CRAFTY_SERVER_ID` / `CRAFTY_SERVER_PATH` — Crafty Controller
+- `DISCORD_TOKEN` / `DISCORD_CHANNEL_ID` / `DISCORD_GUILD_ID` — Discord bot
 
-### AWS Configuration (Optional - for backups)
-- `S3_BUCKET`: Your S3 bucket name for world backups.
+**Optional:**
+- `S3_BUCKET` — S3 bucket for world backups
+- `STATUSPAGE_API_KEY` / `STATUSPAGE_PAGE_ID` — Statuspage.io integration
+- `STATUSPAGE_MINECRAFT_SERVER_COMPONENT_ID` / `STATUSPAGE_BOT_COMPONENT_ID` — Component IDs
 
-### Discord Bot Configuration
-- `DISCORD_CHANNEL_ID`: The Discord channel ID where the bot should operate.
-- `DISCORD_TOKEN`: Your Discord bot token.
-- `COMMAND_PREFIX`: The prefix for bot commands (e.g., `!`).
+## Releases
 
-### Statuspage.io Integration (Optional)
-To enable Statuspage.io integration, you first need to obtain an API key and identify your Page ID and Component IDs from your Statuspage account.
-- `STATUSPAGE_API_KEY`: Your Statuspage API key.
-- `STATUSPAGE_PAGE_ID`: The ID of your Statuspage page.
-- `STATUSPAGE_MINECRAFT_SERVER_COMPONENT_ID`: The ID of the component on Statuspage representing your Minecraft server. The bot will update this component's status (e.g., Operational, Major Outage).
-- `STATUSPAGE_BOT_COMPONENT_ID`: The ID of the component on Statuspage representing the Discord bot itself. The bot will update this to Operational on startup and Major Outage on shutdown.
+Pre-built binaries (linux/arm64 + linux/amd64) are published to [GitHub Releases](https://github.com/hunterjsb/xn-mc/releases) on tag push:
 
-If `STATUSPAGE_API_KEY` and `STATUSPAGE_PAGE_ID` are set, the bot will attempt to update component statuses. If the component IDs are not set, relevant updates will be skipped with a warning.
-
-## Usage
-
-### Discord Bot
-```bash
-cd bot && go run .
-```
-
-**Commands:**
-- `!status` - Check server status
-- `!start` / `!stop` - Start/stop server
-- `!mem` - Show memory usage
-- `!clearlogs` / `!archivelogs` / `!logsize` - Log management
-- Any other command → sent to server via RCON
-
-### Server Updates
-```bash
-cd scripts && uv run python update_server.py
-```
-
-### Backups
-```bash
-cd scripts && uv run python backup.py upload    # backup world to S3
-cd scripts && uv run python backup.py download  # restore world from S3
-```
+- `bot-v*` — Discord bot binary
+- `map-auth-v*` — Map auth service binary
 
 ## License
 
