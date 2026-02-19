@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 )
@@ -88,6 +89,149 @@ func (c *StatuspageClient) UpdateComponentStatus(componentID string, status stri
 	return fmt.Errorf(errMsg)
 }
 
+// CreateMaintenanceIncident creates an in-progress maintenance incident affecting the given components.
+// Returns the incident ID on success.
+func (c *StatuspageClient) CreateMaintenanceIncident(name, body string, componentIDs []string) (string, error) {
+	if c.apiKey == "" || c.pageID == "" {
+		return "", fmt.Errorf("Statuspage client not configured (API Key or Page ID missing)")
+	}
+
+	components := make(map[string]string, len(componentIDs))
+	for _, id := range componentIDs {
+		components[id] = StatusUnderMaintenance
+	}
+
+	payload := map[string]interface{}{
+		"incident": map[string]interface{}{
+			"name":                  name,
+			"status":                "in_progress",
+			"body":                  body,
+			"impact_override":       "maintenance",
+			"component_ids":         componentIDs,
+			"components":            components,
+			"deliver_notifications": false,
+		},
+	}
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal maintenance incident payload: %w", err)
+	}
+
+	url := fmt.Sprintf("%s/pages/%s/incidents.json", statuspageAPIBaseURL, c.pageID)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return "", fmt.Errorf("failed to create maintenance incident request: %w", err)
+	}
+	req.Header.Set("Authorization", "OAuth "+c.apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to send maintenance incident request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	respBody, _ := io.ReadAll(resp.Body)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return "", fmt.Errorf("failed to create maintenance incident, status: %s, response: %s", resp.Status, string(respBody))
+	}
+
+	var result struct {
+		ID string `json:"id"`
+	}
+	if err := json.Unmarshal(respBody, &result); err != nil {
+		return "", fmt.Errorf("failed to parse maintenance incident response: %w", err)
+	}
+
+	fmt.Printf("Created maintenance incident %s: %s\n", result.ID, name)
+	return result.ID, nil
+}
+
+// ResolveMaintenanceIncidents resolves all unresolved maintenance incidents,
+// setting affected components back to operational.
+func (c *StatuspageClient) ResolveMaintenanceIncidents() error {
+	if c.apiKey == "" || c.pageID == "" {
+		return fmt.Errorf("Statuspage client not configured")
+	}
+
+	url := fmt.Sprintf("%s/pages/%s/incidents/unresolved.json", statuspageAPIBaseURL, c.pageID)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create unresolved incidents request: %w", err)
+	}
+	req.Header.Set("Authorization", "OAuth "+c.apiKey)
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to fetch unresolved incidents: %w", err)
+	}
+	defer resp.Body.Close()
+
+	respBody, _ := io.ReadAll(resp.Body)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("failed to list unresolved incidents, status: %s", resp.Status)
+	}
+
+	var incidents []struct {
+		ID     string `json:"id"`
+		Name   string `json:"name"`
+		Status string `json:"status"`
+		Impact string `json:"impact"`
+	}
+	if err := json.Unmarshal(respBody, &incidents); err != nil {
+		return fmt.Errorf("failed to parse unresolved incidents: %w", err)
+	}
+
+	for _, inc := range incidents {
+		if inc.Impact != "maintenance" {
+			continue
+		}
+		if err := c.resolveIncident(inc.ID); err != nil {
+			fmt.Printf("Failed to resolve maintenance incident %s: %v\n", inc.ID, err)
+		} else {
+			fmt.Printf("Resolved maintenance incident %s (%s)\n", inc.ID, inc.Name)
+		}
+	}
+
+	return nil
+}
+
+func (c *StatuspageClient) resolveIncident(incidentID string) error {
+	payload := map[string]interface{}{
+		"incident": map[string]interface{}{
+			"status":                "completed",
+			"body":                  "Maintenance completed. All systems operational.",
+			"deliver_notifications": false,
+		},
+	}
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	url := fmt.Sprintf("%s/pages/%s/incidents/%s.json", statuspageAPIBaseURL, c.pageID, incidentID)
+	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", "OAuth "+c.apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("status: %s, response: %s", resp.Status, string(body))
+	}
+	return nil
+}
+
 // Helper function to validate essential Statuspage configuration on startup
 func checkStatuspageConfig() error {
 	if statuspageAPIKey == "" {
@@ -106,9 +250,6 @@ func checkStatuspageConfig() error {
 		}
 		if statuspageBotComponentID == "" {
 			fmt.Println("Warning: STATUSPAGE_BOT_COMPONENT_ID is not set. Bot status will not be reported to Statuspage.")
-		}
-		if statuspageRestartComponentID == "" {
-			fmt.Println("Warning: STATUSPAGE_RESTART_COMPONENT_ID is not set. Restart status will not be reported to Statuspage.")
 		}
 	}
 	return nil

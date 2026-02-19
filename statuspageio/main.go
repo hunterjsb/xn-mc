@@ -33,20 +33,8 @@ func main() {
 			return err
 		}
 
-		// Restart component (hidden when operational)
-		restart, err := statuspage.NewComponent(ctx, "restart", &statuspage.ComponentArgs{
-			PageId:             pulumi.String(pageID),
-			Name:               pulumi.String("Restart"),
-			Description:        pulumi.String("Shown during server restarts"),
-			OnlyShowIfDegraded: pulumi.Bool(true),
-		})
-		if err != nil {
-			return err
-		}
-
 		ctx.Export("botComponentId", bot.ID())
 		ctx.Export("serverComponentId", server.ID())
-		ctx.Export("restartComponentId", restart.ID())
 
 		return nil
 	})

@@ -25,7 +25,6 @@ var (
 	statuspagePageID                     string
 	statuspageMinecraftServerComponentID string
 	statuspageBotComponentID             string
-	statuspageRestartComponentID         string
 	spClient                             *StatuspageClient
 )
 
@@ -60,7 +59,6 @@ func init() {
 	statuspagePageID = os.Getenv("STATUSPAGE_PAGE_ID")
 	statuspageMinecraftServerComponentID = os.Getenv("STATUSPAGE_MINECRAFT_SERVER_COMPONENT_ID")
 	statuspageBotComponentID = os.Getenv("STATUSPAGE_BOT_COMPONENT_ID")
-	statuspageRestartComponentID = os.Getenv("STATUSPAGE_RESTART_COMPONENT_ID")
 
 	// Initialize Statuspage client
 	spClient = NewStatuspageClient(statuspageAPIKey, statuspagePageID)
@@ -225,10 +223,15 @@ func restartServerCore() *discordgo.MessageEmbed {
 		return errorEmbed("Restart Failed", "Failed to restart the Minecraft server: "+err.Error())
 	}
 
-	// Mark Restart component as under maintenance on Statuspage
-	if statuspageRestartComponentID != "" {
-		if err := spClient.UpdateComponentStatus(statuspageRestartComponentID, StatusUnderMaintenance); err != nil {
-			fmt.Printf("Failed to set Restart component to under_maintenance: %v\n", err)
+	// Create a maintenance incident on Statuspage
+	if statuspageMinecraftServerComponentID != "" {
+		_, err := spClient.CreateMaintenanceIncident(
+			"Server Restart",
+			"The Minecraft server is restarting. It should be back shortly.",
+			[]string{statuspageMinecraftServerComponentID},
+		)
+		if err != nil {
+			fmt.Printf("Failed to create maintenance incident: %v\n", err)
 		}
 	}
 
@@ -290,10 +293,10 @@ func performMinecraftServerHealthCheck(s *discordgo.Session, initialCheck bool) 
 		}
 	}
 
-	// Clear Restart component when server is back to operational
-	if statuspageRestartComponentID != "" && currentStatus == StatusOperational {
-		if err := spClient.UpdateComponentStatus(statuspageRestartComponentID, StatusOperational); err != nil {
-			fmt.Printf("Failed to clear Restart component: %v\n", err)
+	// Resolve any active maintenance incidents when server is back to operational
+	if currentStatus == StatusOperational {
+		if err := spClient.ResolveMaintenanceIncidents(); err != nil {
+			fmt.Printf("Failed to resolve maintenance incidents: %v\n", err)
 		}
 	}
 
