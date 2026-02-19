@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -49,17 +50,31 @@ func formatBytes(b int64) string {
 	return fmt.Sprintf("%.1f %cB", float64(b)/float64(div), "KMGTPE"[exp])
 }
 
-// worldSize returns a formatted size of the world/ directory under CRAFTY_SERVER_PATH.
-func worldSize() string {
-	sp := os.Getenv("CRAFTY_SERVER_PATH")
-	if sp == "" {
-		return "N/A"
-	}
-	size, err := dirSize(filepath.Join(sp, "world"))
+// serverPath returns CRAFTY_SERVER_PATH or empty string.
+func serverPath() string {
+	return os.Getenv("CRAFTY_SERVER_PATH")
+}
+
+// subDirSize returns the formatted size of a subdirectory, or "N/A".
+func subDirSize(base, sub string) string {
+	size, err := dirSize(filepath.Join(base, sub))
 	if err != nil {
 		return "N/A"
 	}
 	return formatBytes(size)
+}
+
+// diskUsagePercent returns the disk usage percentage for the filesystem containing path.
+func diskUsagePercent(path string) string {
+	var stat syscall.Statfs_t
+	if err := syscall.Statfs(path, &stat); err != nil {
+		return "N/A"
+	}
+	total := stat.Blocks * uint64(stat.Bsize)
+	free := stat.Bfree * uint64(stat.Bsize)
+	used := total - free
+	pct := float64(used) / float64(total) * 100
+	return fmt.Sprintf("%.1f%% (%s / %s)", pct, formatBytes(int64(used)), formatBytes(int64(total)))
 }
 
 // File paths derived from CRAFTY_SERVER_PATH (set in init, fallback to old defaults)
@@ -83,6 +98,7 @@ var slashCommands = []*discordgo.ApplicationCommand{
 	{Name: "restart", Description: "Restart the Minecraft server"},
 	{Name: "backup", Description: "Trigger a server backup via Crafty"},
 	{Name: "mem", Description: "Show system resource usage (CPU, memory, uptime)"},
+	{Name: "size", Description: "Show world, BlueMap, and server disk usage"},
 	{Name: "rcon", Description: "Send a command to the server via RCON",
 		Options: []*discordgo.ApplicationCommandOption{{
 			Type:        discordgo.ApplicationCommandOptionString,
@@ -110,6 +126,7 @@ var slashCommandHandlers = map[string]func(s *discordgo.Session, i *discordgo.In
 	"restart":     handleRestart,
 	"backup":      handleBackup,
 	"mem":         handleMem,
+	"size":        handleSize,
 	"rcon":        handleRcon,
 	"unban":       handleUnban,
 	"help":        handleHelp,
@@ -198,8 +215,12 @@ func handleStatus(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				&discordgo.MessageEmbedField{Name: "Players", Value: fmt.Sprintf("%d/%d — %s", st.Online, st.Max, playerText), Inline: false},
 				&discordgo.MessageEmbedField{Name: "CPU", Value: fmt.Sprintf("%.1f%%", st.CPU), Inline: true},
 				&discordgo.MessageEmbedField{Name: "Memory", Value: st.Mem, Inline: true},
-				&discordgo.MessageEmbedField{Name: "World Size", Value: worldSize(), Inline: true},
-			&discordgo.MessageEmbedField{Name: "Server Size", Value: st.WorldSize, Inline: true},
+				&discordgo.MessageEmbedField{Name: "Disk", Value: diskUsagePercent(func() string {
+				if sp := serverPath(); sp != "" {
+					return sp
+				}
+				return "/"
+			}()), Inline: true},
 			)
 			if st.Version != "" {
 				embed.Fields = append(embed.Fields,
@@ -256,6 +277,32 @@ func handleBackup(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 func handleMem(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	respondEmbed(s, i, buildSystemStatsEmbed())
+}
+
+func handleSize(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	deferResponse(s, i)
+
+	sp := serverPath()
+	if sp == "" {
+		followupEmbed(s, i, errorEmbed("Size Error", "CRAFTY_SERVER_PATH is not configured."))
+		return
+	}
+
+	embed := &discordgo.MessageEmbed{
+		Title: "Disk Usage",
+		Color: colorInfo,
+		Fields: []*discordgo.MessageEmbedField{
+			{Name: "Overworld", Value: subDirSize(sp, "world"), Inline: true},
+			{Name: "Nether", Value: subDirSize(sp, "world_nether"), Inline: true},
+			{Name: "The End", Value: subDirSize(sp, "world_the_end"), Inline: true},
+			{Name: "BlueMap", Value: subDirSize(sp, "bluemap"), Inline: true},
+			{Name: "Plugins", Value: subDirSize(sp, "plugins"), Inline: true},
+			{Name: "Total Server", Value: subDirSize(sp, ""), Inline: true},
+			{Name: "Disk", Value: diskUsagePercent(sp), Inline: false},
+		},
+		Timestamp: time.Now().Format(time.RFC3339),
+	}
+	followupEmbed(s, i, embed)
 }
 
 func handleRcon(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -405,6 +452,7 @@ func buildHelpEmbed() *discordgo.MessageEmbed {
 			{Name: "/restart", Value: "Restart the Minecraft server", Inline: false},
 			{Name: "/backup", Value: "Trigger a server backup via Crafty", Inline: false},
 			{Name: "/mem", Value: "Show system resource usage (CPU, memory)", Inline: false},
+			{Name: "/size", Value: "Show world, BlueMap, and server disk usage", Inline: false},
 			{Name: "/rcon", Value: "Send a command to the server via RCON", Inline: false},
 			{Name: "/unban", Value: "Unban a deathbanned player and reset their spawn", Inline: false},
 			{Name: "/help", Value: "Show this help message", Inline: false},
