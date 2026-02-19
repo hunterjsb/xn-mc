@@ -90,16 +90,20 @@ func init() {
 	}
 }
 
+// adminPerm is the permission bit required for dangerous commands.
+var adminPerm int64 = discordgo.PermissionAdministrator
+
 // Slash command definitions
 var slashCommands = []*discordgo.ApplicationCommand{
 	{Name: "status", Description: "Check if the Minecraft server is running"},
-	{Name: "start", Description: "Start the Minecraft server"},
-	{Name: "stop", Description: "Stop the Minecraft server"},
-	{Name: "restart", Description: "Restart the Minecraft server"},
-	{Name: "backup", Description: "Trigger a server backup via Crafty"},
+	{Name: "start", Description: "Start the Minecraft server", DefaultMemberPermissions: &adminPerm},
+	{Name: "stop", Description: "Stop the Minecraft server", DefaultMemberPermissions: &adminPerm},
+	{Name: "restart", Description: "Restart the Minecraft server", DefaultMemberPermissions: &adminPerm},
+	{Name: "backup", Description: "Trigger a server backup via Crafty", DefaultMemberPermissions: &adminPerm},
 	{Name: "mem", Description: "Show system resource usage (CPU, memory, uptime)"},
 	{Name: "size", Description: "Show world, BlueMap, and server disk usage"},
 	{Name: "rcon", Description: "Send a command to the server via RCON",
+		DefaultMemberPermissions: &adminPerm,
 		Options: []*discordgo.ApplicationCommandOption{{
 			Type:        discordgo.ApplicationCommandOptionString,
 			Name:        "command",
@@ -108,6 +112,7 @@ var slashCommands = []*discordgo.ApplicationCommand{
 		}},
 	},
 	{Name: "unban", Description: "Unban a deathbanned player and reset their spawn",
+		DefaultMemberPermissions: &adminPerm,
 		Options: []*discordgo.ApplicationCommandOption{{
 			Type:        discordgo.ApplicationCommandOptionString,
 			Name:        "player",
