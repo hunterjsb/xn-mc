@@ -101,15 +101,20 @@ func (c *StatuspageClient) CreateMaintenanceIncident(name, body string, componen
 		components[id] = StatusUnderMaintenance
 	}
 
+	now := time.Now().UTC()
 	payload := map[string]interface{}{
 		"incident": map[string]interface{}{
-			"name":                  name,
-			"status":                "in_progress",
-			"body":                  body,
-			"impact_override":       "maintenance",
-			"component_ids":         componentIDs,
-			"components":            components,
-			"deliver_notifications": false,
+			"name":                        name,
+			"status":                      "in_progress",
+			"body":                        body,
+			"impact_override":             "maintenance",
+			"component_ids":               componentIDs,
+			"components":                  components,
+			"deliver_notifications":       false,
+			"scheduled_for":               now.Format(time.RFC3339),
+			"scheduled_until":             now.Add(10 * time.Minute).Format(time.RFC3339),
+			"scheduled_auto_in_progress":  true,
+			"scheduled_auto_completed":    false,
 		},
 	}
 
