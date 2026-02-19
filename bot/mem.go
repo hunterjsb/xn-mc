@@ -11,24 +11,56 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type Memory struct {
+// buildSystemStatsEmbed builds an embed with system stats from Crafty,
+// falling back to /proc/meminfo if Crafty is unavailable.
+func buildSystemStatsEmbed() *discordgo.MessageEmbed {
+	if craftyClient != nil {
+		stats, err := craftyClient.GetServerStats()
+		if err == nil {
+			embed := &discordgo.MessageEmbed{
+				Title: "System Stats",
+				Color: colorInfo,
+				Fields: []*discordgo.MessageEmbedField{
+					{Name: "Server CPU", Value: fmt.Sprintf("%.1f%%", stats.CPU), Inline: true},
+					{Name: "Server Memory", Value: stats.Mem, Inline: true},
+				},
+				Timestamp: time.Now().Format(time.RFC3339),
+			}
+			if stats.Running {
+				embed.Fields = append(embed.Fields,
+					&discordgo.MessageEmbedField{Name: "Status", Value: "Running", Inline: true},
+				)
+			} else {
+				embed.Fields = append(embed.Fields,
+					&discordgo.MessageEmbedField{Name: "Status", Value: "Stopped", Inline: true},
+				)
+			}
+			return embed
+		}
+		fmt.Printf("Crafty stats error (falling back to /proc/meminfo): %v\n", err)
+	}
+
+	// Fallback: local /proc/meminfo
+	mem := readMemoryStats()
+	return buildMemEmbed(mem)
+}
+
+// --- Fallback: /proc/meminfo ---
+
+type memory struct {
 	MemTotal     int
 	MemFree      int
 	MemAvailable int
 }
 
-func (m Memory) ToStr() string {
-	return fmt.Sprintf("MEMORY:\nTotal: %.3f GB\nFree: %.3f GB\nAvailable: %.3f GB", float64(m.MemTotal)/1000000, float64(m.MemFree)/1000000, float64(m.MemAvailable)/1000000)
-}
-
-func ReadMemoryStats() Memory {
+func readMemoryStats() memory {
 	file, err := os.Open("/proc/meminfo")
 	if err != nil {
-		panic(err)
+		return memory{}
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
-	res := Memory{}
+	res := memory{}
 	for scanner.Scan() {
 		key, value := parseLine(scanner.Text())
 		switch key {
@@ -43,7 +75,7 @@ func ReadMemoryStats() Memory {
 	return res
 }
 
-func buildMemEmbed(m Memory) *discordgo.MessageEmbed {
+func buildMemEmbed(m memory) *discordgo.MessageEmbed {
 	return &discordgo.MessageEmbed{
 		Title: "System Memory",
 		Color: colorInfo,
@@ -68,7 +100,7 @@ func toInt(raw string) int {
 	}
 	res, err := strconv.Atoi(raw)
 	if err != nil {
-		panic(err)
+		return 0
 	}
 	return res
 }

@@ -1,0 +1,31 @@
+name: Build xn-bot
+
+on:
+  push:
+    tags:
+      - 'bot-v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Build binaries
+        working-directory: bot
+        run: |
+          GOOS=linux GOARCH=arm64 go build -o xn-bot-linux-arm64 .
+          GOOS=linux GOARCH=amd64 go build -o xn-bot-linux-amd64 .
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            bot/xn-bot-linux-arm64
+            bot/xn-bot-linux-amd64

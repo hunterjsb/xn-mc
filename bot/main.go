@@ -1,14 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"io"
 	"os"
-	"os/exec"
 	"os/signal"
-	"path/filepath"
-	"strings"
 	"syscall"
 	"time"
 
@@ -17,27 +12,28 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const maxDiscordMessageLength = 1900 // Leave some room for code blocks
-
 // Globally available env vars
 var (
-	channelID     string
-	guildID       string
-	commandPrefix byte
-	rconClient    *rcon.Conn
+	channelID string
+	guildID   string
+
+	// Crafty Controller client
+	craftyClient *CraftyClient
 
 	// Statuspage variables
-	statuspageAPIKey                    string
-	statuspagePageID                    string
+	statuspageAPIKey                     string
+	statuspagePageID                     string
 	statuspageMinecraftServerComponentID string
-	statuspageBotComponentID            string
-	spClient                            *StatuspageClient
+	statuspageBotComponentID             string
+	spClient                             *StatuspageClient
 )
 
 func init() {
-	err := godotenv.Load("../.env") // Adjust the path as necessary
-	if err != nil {
-		fmt.Println("Error loading .env file")
+	// Try loading .env file — optional, env vars may come from systemd EnvironmentFile instead.
+	if envFile := os.Getenv("ENV_FILE"); envFile != "" {
+		_ = godotenv.Load(envFile)
+	} else {
+		_ = godotenv.Load("../.env")
 	}
 
 	// Get environment variables
@@ -46,12 +42,16 @@ func init() {
 		fmt.Println("Warning: DISCORD_CHANNEL_ID is not set.")
 	}
 	guildID = os.Getenv("DISCORD_GUILD_ID") // Empty string = global commands
-	commandPrefixStr := os.Getenv("COMMAND_PREFIX")
-	if commandPrefixStr == "" {
-		fmt.Println("Warning: COMMAND_PREFIX is not set. Defaulting to '!'")
-		commandPrefix = '!'
+
+	// Initialize Crafty client
+	craftyURL := os.Getenv("CRAFTY_URL")
+	craftyAPIKey := os.Getenv("CRAFTY_API_KEY")
+	craftyServerID := os.Getenv("CRAFTY_SERVER_ID")
+	if craftyURL == "" || craftyAPIKey == "" || craftyServerID == "" {
+		fmt.Println("Warning: CRAFTY_URL, CRAFTY_API_KEY, or CRAFTY_SERVER_ID not set. Crafty integration disabled.")
 	} else {
-		commandPrefix = commandPrefixStr[0]
+		craftyClient = NewCraftyClient(craftyURL, craftyAPIKey, craftyServerID)
+		fmt.Println("Crafty Controller client initialized.")
 	}
 
 	// Statuspage environment variables
@@ -80,11 +80,8 @@ func main() {
 		return
 	}
 
-	// Register handlers
-	dg.AddHandler(messageCreate)
+	// Register slash command handler
 	dg.AddHandler(interactionCreate)
-
-	dg.Identify.Intents = discordgo.IntentsGuildMessages
 
 	err = dg.Open()
 	if err != nil {
@@ -101,9 +98,6 @@ func main() {
 			fmt.Printf("Registered slash command: /%s\n", created.Name)
 		}
 	}
-
-	// Start streaming server logs
-	go streamServerLogsToDiscord(dg, channelID, "../server/server.out")
 
 	// Update Bot component status to Operational on startup
 	if statuspageBotComponentID != "" {
@@ -156,55 +150,40 @@ type serverStatusResult struct {
 	Running bool
 	Method  string
 	Status  string // Statuspage status constant
+	Stats   *ServerStats
 }
 
 func checkServerStatus() serverStatusResult {
-	// First try pgrep
-	cmd := exec.Command("pgrep", "-f", "server.jar")
-	if cmd.Run() == nil {
-		return serverStatusResult{Running: true, Method: "process found", Status: StatusOperational}
+	if craftyClient == nil {
+		return serverStatusResult{Running: false, Status: StatusMajorOutage}
 	}
 
-	// Fallback: try RCON
-	conn, err := rcon.Dial(os.Getenv("RCON_IP"), os.Getenv("RCON_PW"))
-	if err == nil {
-		_, err = conn.Execute("list")
-		conn.Close()
-		if err == nil {
-			return serverStatusResult{Running: true, Method: "RCON responsive", Status: StatusOperational}
-		}
+	stats, err := craftyClient.GetServerStats()
+	if err != nil {
+		fmt.Printf("Crafty stats error: %v\n", err)
+		return serverStatusResult{Running: false, Status: StatusMajorOutage}
 	}
-
-	return serverStatusResult{Running: false, Status: StatusMajorOutage}
+	if stats.Running {
+		return serverStatusResult{Running: true, Method: "Crafty", Status: StatusOperational, Stats: stats}
+	}
+	return serverStatusResult{Running: false, Status: StatusMajorOutage, Stats: stats}
 }
 
 func startServerCore() *discordgo.MessageEmbed {
-	if os.Getenv("START_COMMAND") == "" {
-		return errorEmbed("Start Failed", "START_COMMAND is not set in the environment.")
+	if craftyClient == nil {
+		return errorEmbed("Start Failed", "Crafty Controller is not configured.")
 	}
 
 	// Check if already running
-	pgrepCmd := exec.Command("pgrep", "-f", "server.jar")
-	if pgrepCmd.Run() == nil {
+	stats, err := craftyClient.GetServerStats()
+	if err == nil && stats.Running {
 		if statuspageMinecraftServerComponentID != "" {
 			spClient.UpdateComponentStatus(statuspageMinecraftServerComponentID, StatusOperational)
 		}
-		return warningEmbed("Already Running", "Minecraft server process appears to be already running.")
+		return warningEmbed("Already Running", "Minecraft server is already running.")
 	}
 
-	cmdArgs := strings.Fields(os.Getenv("START_COMMAND"))
-	cmd := exec.Command("nohup", cmdArgs...)
-	cmd.Dir = "../server"
-
-	stdout, err := os.Create(filepath.Join("../server", "server.out"))
-	if err != nil {
-		return errorEmbed("Start Failed", "Failed to create log file: "+err.Error())
-	}
-	cmd.Stdout = stdout
-	cmd.Stderr = stdout
-
-	err = cmd.Start()
-	if err != nil {
+	if err := craftyClient.StartServer(); err != nil {
 		if statuspageMinecraftServerComponentID != "" {
 			spClient.UpdateComponentStatus(statuspageMinecraftServerComponentID, StatusMajorOutage)
 		}
@@ -222,19 +201,16 @@ func startServerCore() *discordgo.MessageEmbed {
 		})
 	}
 
-	return successEmbed("Server Started", "Minecraft server started successfully.")
+	return successEmbed("Server Started", "Minecraft server start requested via Crafty.")
 }
 
 func stopServerCore() *discordgo.MessageEmbed {
-	cmd := exec.Command("pkill", "-f", "server.jar")
-	err := cmd.Run()
-	if err != nil {
-		return errorEmbed("Stop Failed", "Failed to stop the Minecraft server: "+err.Error())
+	if craftyClient == nil {
+		return errorEmbed("Stop Failed", "Crafty Controller is not configured.")
 	}
 
-	if rconClient != nil {
-		rconClient.Close()
-		rconClient = nil
+	if err := craftyClient.StopServer(); err != nil {
+		return errorEmbed("Stop Failed", "Failed to stop the Minecraft server: "+err.Error())
 	}
 
 	if statuspageMinecraftServerComponentID != "" {
@@ -246,99 +222,44 @@ func stopServerCore() *discordgo.MessageEmbed {
 		}
 	}
 
-	return warningEmbed("Server Stopped", "Minecraft server has been stopped.")
+	return warningEmbed("Server Stopped", "Minecraft server stop requested via Crafty.")
+}
+
+func restartServerCore() *discordgo.MessageEmbed {
+	if craftyClient == nil {
+		return errorEmbed("Restart Failed", "Crafty Controller is not configured.")
+	}
+
+	if err := craftyClient.RestartServer(); err != nil {
+		return errorEmbed("Restart Failed", "Failed to restart the Minecraft server: "+err.Error())
+	}
+
+	if statuspageMinecraftServerComponentID != "" {
+		time.AfterFunc(10*time.Second, func() {
+			spClient.UpdateComponentStatus(statuspageMinecraftServerComponentID, StatusOperational)
+		})
+	}
+
+	return successEmbed("Server Restarting", "Minecraft server restart requested via Crafty.")
+}
+
+func backupServerCore() *discordgo.MessageEmbed {
+	if craftyClient == nil {
+		return errorEmbed("Backup Failed", "Crafty Controller is not configured.")
+	}
+
+	if err := craftyClient.BackupServer(); err != nil {
+		return errorEmbed("Backup Failed", "Failed to backup the Minecraft server: "+err.Error())
+	}
+
+	return successEmbed("Backup Started", "Server backup initiated via Crafty.")
 }
 
 func connectRconSafe() (*rcon.Conn, error) {
 	return rcon.Dial(os.Getenv("RCON_IP"), os.Getenv("RCON_PW"))
 }
 
-// --- Prefix command wrappers (unchanged behavior) ---
-
-func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong! github: https://github.com/hunterjsb/xn-mc?tab=readme-ov-file#xn-mc")
-	}
-
-	if m.Author.ID == s.State.User.ID || m.ChannelID != channelID || len(m.Content) == 0 || m.Content[0] != commandPrefix {
-		return
-	}
-	command := m.Content[1:]
-
-	switch command {
-	case "status":
-		checkMinecraftServerStatus(s, m)
-	case "start":
-		startMinecraftServer(s, m)
-	case "stop":
-		stopMinecraftServer(s, m)
-	case "mem":
-		s.ChannelMessageSend(m.ChannelID, ReadMemoryStats().ToStr())
-	case "clearlogs":
-		clearServerLogs(s, m)
-	case "archivelogs":
-		archiveServerLogs(s, m)
-	case "logsize":
-		getLogFileSize(s, m)
-	case "help":
-		showHelpCommands(s, m)
-	default:
-		// Relay any other command to the server via RCON
-		if rconClient == nil {
-			rconClient = connectRcon(s)
-		}
-		executeRcon(s, command)
-	}
-}
-
-func connectRcon(s *discordgo.Session) *rcon.Conn {
-	conn, err := rcon.Dial(os.Getenv("RCON_IP"), os.Getenv("RCON_PW"))
-	if err != nil {
-		errStr := fmt.Sprintf("**ERROR**: Could not connect to minecraft rcon on %s: %s", os.Getenv("RCON_IP"), err.Error())
-		s.ChannelMessageSend(channelID, errStr)
-	}
-	return conn
-}
-
-func executeRcon(s *discordgo.Session, cmd string) {
-	response, err := rconClient.Execute(cmd)
-	if err != nil {
-		s.ChannelMessageSend(channelID, "ERROR: "+err.Error())
-	}
-	s.ChannelMessageSend(channelID, response)
-}
-
-func checkMinecraftServerStatus(s *discordgo.Session, m *discordgo.MessageCreate) {
-	result := checkServerStatus()
-	if result.Running {
-		s.ChannelMessageSend(channelID, fmt.Sprintf("Minecraft server is running (%s).", result.Method))
-	} else {
-		s.ChannelMessageSend(channelID, "Minecraft server is not running.")
-	}
-
-	if statuspageMinecraftServerComponentID != "" {
-		updateErr := spClient.UpdateComponentStatus(statuspageMinecraftServerComponentID, result.Status)
-		if updateErr != nil {
-			errMsg := fmt.Sprintf("Failed to update Minecraft server status on Statuspage: %v", updateErr)
-			fmt.Println(errMsg)
-			s.ChannelMessageSend(channelID, "Error: "+errMsg)
-		} else {
-			s.ChannelMessageSend(channelID, fmt.Sprintf("Minecraft server status on Statuspage updated to: %s", result.Status))
-		}
-	}
-}
-
-func startMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
-	embed := startServerCore()
-	s.ChannelMessageSendEmbed(m.ChannelID, embed)
-}
-
-func stopMinecraftServer(s *discordgo.Session, m *discordgo.MessageCreate) {
-	embed := stopServerCore()
-	s.ChannelMessageSendEmbed(m.ChannelID, embed)
-}
-
-// --- Health check functions (unchanged) ---
+// --- Health check functions ---
 
 func performMinecraftServerHealthCheck(s *discordgo.Session, initialCheck bool) {
 	if statuspageMinecraftServerComponentID == "" {
@@ -347,43 +268,33 @@ func performMinecraftServerHealthCheck(s *discordgo.Session, initialCheck bool) 
 
 	currentStatus := StatusMajorOutage
 
-	pgrepCmd := exec.Command("pgrep", "-f", "server.jar")
-	pgrepErr := pgrepCmd.Run()
-
-	if pgrepErr == nil {
-		if rconClient == nil || rconClient.RemoteAddr().String() == "" {
-			var tempSession *discordgo.Session
-			if s != nil {
-				tempSession = s
-			}
-			rconClient = connectRcon(tempSession)
-		}
-
-		if rconClient != nil {
-			_, err := rconClient.Execute("list")
-			if err == nil {
-				currentStatus = StatusOperational
+	if craftyClient != nil {
+		stats, err := craftyClient.GetServerStats()
+		if err != nil {
+			fmt.Printf("Health check: Crafty API error: %v\n", err)
+			currentStatus = StatusMajorOutage
+		} else if stats.Running {
+			// Verify RCON responsiveness for full operational status
+			conn, rconErr := connectRconSafe()
+			if rconErr == nil {
+				_, execErr := conn.Execute("list")
+				conn.Close()
+				if execErr == nil {
+					currentStatus = StatusOperational
+				} else {
+					currentStatus = StatusDegradedPerformance
+					if s != nil {
+						s.ChannelMessageSend(channelID, fmt.Sprintf("Warning: Server running (Crafty) but RCON unresponsive: %v", execErr))
+					}
+				}
 			} else {
 				currentStatus = StatusDegradedPerformance
 				if s != nil {
-					s.ChannelMessageSend(channelID, fmt.Sprintf("Warning: Minecraft server process is running, but RCON is unresponsive: %v", err))
+					s.ChannelMessageSend(channelID, "Warning: Server running (Crafty) but RCON connection failed.")
 				}
-				fmt.Printf("RCON command failed during health check: %v\n", err)
-				rconClient.Close()
-				rconClient = nil
 			}
 		} else {
-			currentStatus = StatusDegradedPerformance
-			if s != nil {
-				s.ChannelMessageSend(channelID, "Warning: Minecraft server process is running, but RCON connection failed.")
-			}
-			fmt.Println("RCON client is nil during health check after attempting connection.")
-		}
-	} else {
-		currentStatus = StatusMajorOutage
-		if rconClient != nil {
-			rconClient.Close()
-			rconClient = nil
+			currentStatus = StatusMajorOutage
 		}
 	}
 
@@ -420,97 +331,3 @@ func periodicMinecraftServerHealthCheck(s *discordgo.Session) {
 	}
 }
 
-// --- Log streaming (unchanged) ---
-
-func sendLongMessage(s *discordgo.Session, channelID, message string) {
-	if len(message) <= maxDiscordMessageLength {
-		s.ChannelMessageSend(channelID, message)
-		return
-	}
-
-	for len(message) > 0 {
-		end := maxDiscordMessageLength
-		if end > len(message) {
-			end = len(message)
-		}
-
-		chunk := message[:end]
-		message = message[end:]
-
-		s.ChannelMessageSend(channelID, chunk)
-		time.Sleep(100 * time.Millisecond)
-	}
-}
-
-var lastReadPosition int64 = -1
-
-func streamServerLogsToDiscord(s *discordgo.Session, channelID string, logFilePath string) {
-	ticker := time.NewTicker(4 * time.Second)
-	for range ticker.C {
-		file, err := os.Open(logFilePath)
-		if err != nil {
-			continue
-		}
-
-		info, err := file.Stat()
-		if err != nil {
-			file.Close()
-			continue
-		}
-		if lastReadPosition == -1 || info.Size() < lastReadPosition {
-			if lastReadPosition == -1 {
-				lastReadPosition = info.Size()
-			} else {
-				lastReadPosition = 0
-			}
-		}
-
-		_, err = file.Seek(lastReadPosition, 0)
-		if err != nil {
-			fmt.Println("Error seeking log file:", err)
-			file.Close()
-			continue
-		}
-
-		scanner := bufio.NewScanner(file)
-		var logLines []string
-		for scanner.Scan() {
-			logLines = append(logLines, scanner.Text())
-		}
-
-		if err := scanner.Err(); err != nil {
-			fmt.Println("Error reading log file:", err)
-			file.Close()
-			continue
-		}
-
-		lastReadPosition, err = file.Seek(0, io.SeekCurrent)
-		if err != nil {
-			fmt.Println("Error getting current position in log file:", err)
-			file.Close()
-			continue
-		}
-
-		file.Close()
-
-		if len(logLines) > 0 {
-			var currentMessage strings.Builder
-			currentMessage.WriteString("```\n")
-
-			for _, line := range logLines {
-				testMessage := currentMessage.String() + line + "\n```"
-				if len(testMessage) > maxDiscordMessageLength {
-					currentMessage.WriteString("```")
-					sendLongMessage(s, channelID, currentMessage.String())
-
-					currentMessage.Reset()
-					currentMessage.WriteString("```\n")
-				}
-				currentMessage.WriteString(line + "\n")
-			}
-
-			currentMessage.WriteString("```")
-			sendLongMessage(s, channelID, currentMessage.String())
-		}
-	}
-}
