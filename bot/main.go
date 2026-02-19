@@ -190,18 +190,7 @@ func startServerCore() *discordgo.MessageEmbed {
 		return errorEmbed("Start Failed", "Failed to start the Minecraft server: "+err.Error())
 	}
 
-	if statuspageMinecraftServerComponentID != "" {
-		time.AfterFunc(5*time.Second, func() {
-			updateErr := spClient.UpdateComponentStatus(statuspageMinecraftServerComponentID, StatusOperational)
-			if updateErr != nil {
-				fmt.Printf("Failed to update Minecraft server status to operational on Statuspage: %v\n", updateErr)
-			} else {
-				fmt.Println("Minecraft server status updated to operational on Statuspage after start.")
-			}
-		})
-	}
-
-	return successEmbed("Server Started", "Minecraft server start requested via Crafty.")
+	return successEmbed("Server Starting", "Minecraft server start requested via Crafty. Statuspage will update once the server is ready.")
 }
 
 func stopServerCore() *discordgo.MessageEmbed {
@@ -234,13 +223,7 @@ func restartServerCore() *discordgo.MessageEmbed {
 		return errorEmbed("Restart Failed", "Failed to restart the Minecraft server: "+err.Error())
 	}
 
-	if statuspageMinecraftServerComponentID != "" {
-		time.AfterFunc(10*time.Second, func() {
-			spClient.UpdateComponentStatus(statuspageMinecraftServerComponentID, StatusOperational)
-		})
-	}
-
-	return successEmbed("Server Restarting", "Minecraft server restart requested via Crafty.")
+	return successEmbed("Server Restarting", "Minecraft server restart requested via Crafty. Statuspage will update once the server is ready.")
 }
 
 func backupServerCore() *discordgo.MessageEmbed {
