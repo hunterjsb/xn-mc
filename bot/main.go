@@ -89,13 +89,22 @@ func main() {
 		return
 	}
 
-	// Register slash commands (bulk overwrite clears stale/duplicate registrations)
-	registered, err := dg.ApplicationCommandBulkOverwrite(dg.State.User.ID, guildID, slashCommands)
-	if err != nil {
-		fmt.Printf("Error bulk-registering slash commands: %v\n", err)
-	} else {
-		for _, cmd := range registered {
-			fmt.Printf("Registered slash command: /%s\n", cmd.Name)
+	// Clean up stale global commands (we use guild commands only)
+	globalCmds, err := dg.ApplicationCommands(dg.State.User.ID, "")
+	if err == nil && len(globalCmds) > 0 {
+		fmt.Printf("Cleaning up %d stale global commands...\n", len(globalCmds))
+		for _, cmd := range globalCmds {
+			_ = dg.ApplicationCommandDelete(dg.State.User.ID, "", cmd.ID)
+		}
+	}
+
+	// Register slash commands
+	for _, cmd := range slashCommands {
+		created, err := dg.ApplicationCommandCreate(dg.State.User.ID, guildID, cmd)
+		if err != nil {
+			fmt.Printf("Error registering slash command '%s': %v\n", cmd.Name, err)
+		} else {
+			fmt.Printf("Registered slash command: /%s\n", created.Name)
 		}
 	}
 
