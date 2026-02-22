@@ -1,3 +1,10 @@
+# Chatbot runtime
+chatbot/node_modules/
+chatbot/memories/
+chatbot/known-players.json
+chatbot/botSkins/
+chatbot/skin-assignments.json
+
 # Server
 server/*
 *.pid

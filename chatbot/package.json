@@ -1,0 +1,12 @@
+{
+  "name": "xandaris-chatbots",
+  "version": "1.0.0",
+  "description": "AI chatbots for Xandaris Minecraft server",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "mineflayer": "^4.23.0",
+    "openai": "^4.70.0",
+    "dotenv": "^16.4.0"
+  }
+}
