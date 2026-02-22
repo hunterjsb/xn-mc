@@ -5,16 +5,12 @@ chatbot/known-players.json
 chatbot/botSkins/
 chatbot/skin-assignments.json
 
-# Server
+# Server (live Crafty dir — don't track, avoid permission issues)
 server/*
+!server/.gitkeep
 *.pid
 *.zip
 *.out
-
-!server/server.jar
-!server/ops.json
-!server/start.sh
-!server/eula.txt
 
 # Go binaries
 bot/xn-mc-bot
