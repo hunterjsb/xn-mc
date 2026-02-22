@@ -10,19 +10,27 @@ const openai = new OpenAI({
   baseURL: 'https://api.x.ai/v1'
 });
 
-let chatStyle = '';
-try {
-  chatStyle = readFileSync(join(__dirname, 'chat-style.txt'), 'utf-8').trim();
-} catch {
-  console.warn('[ConversationManager] chat-style.txt not found, using defaults');
+// ── Prompt loader ────────────────────────────────────────────────────
+
+function loadPrompt(name) {
+  return readFileSync(join(__dirname, 'prompts', `${name}.md`), 'utf-8').trim();
 }
 
-let serverInfo = '';
-try {
-  serverInfo = readFileSync(join(__dirname, 'server-info.txt'), 'utf-8').trim();
-} catch {
-  console.warn('[ConversationManager] server-info.txt not found, server knowledge disabled');
+function fillTemplate(template, vars) {
+  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] ?? '');
 }
+
+// Load all prompts once at startup
+const prompts = {
+  response: loadPrompt('response'),
+  chatter: loadPrompt('chatter'),
+  joinReaction: loadPrompt('join-reaction'),
+  orchestrator: loadPrompt('orchestrator'),
+  memoryCompact: loadPrompt('memory-compact'),
+  memoryEvaluate: loadPrompt('memory-evaluate'),
+};
+const chatStyle = loadPrompt('style');
+const serverInfo = loadPrompt('server-info');
 
 // Strip unicode emojis from output — LLMs sometimes ignore the prompt instruction
 function stripEmojis(text) {
@@ -107,12 +115,7 @@ export class ConversationManager {
         model: 'grok-4-1-fast-non-reasoning',
         messages: [{
           role: 'system',
-          content: `Summarize this Minecraft player's recent experiences into short-term memory notes. Keep ONLY the most notable/interesting things — who they talked to, what happened, what they learned. Drop anything generic or trivial. Write as brief bullet points from first person ("I"). Max 8 bullet points, each under 15 words. Replace the old summary entirely — don't accumulate forever.
-
-${existing}New experiences:
-${entries}
-
-Write ONLY the bullet points, nothing else.`
+          content: fillTemplate(prompts.memoryCompact, { existing, entries })
         }],
         max_tokens: 200,
         temperature: 0.3
@@ -133,24 +136,7 @@ Write ONLY the bullet points, nothing else.`
         model: 'grok-4-1-fast-non-reasoning',
         messages: [{
           role: 'system',
-          content: `You decide if a Minecraft chat interaction is worth remembering for a player named ${username}. Most interactions are NOT worth remembering.
-
-WORTH REMEMBERING:
-- Learning someone's name, base location, or what they're working on
-- Notable events: deaths, big finds, drama, fights, alliances
-- Specific facts about the server or world learned from others
-- Meaningful conversations or plans made with specific players
-
-NOT WORTH REMEMBERING:
-- Generic greetings ("yo", "hey", "welcome")
-- Routine activities ("mining iron", "farming", "exploring")
-- Short reactions ("lol", "nice", "gg", "rip")
-- Anything vague or trivial
-
-If worth remembering, write a SHORT note (under 15 words) from ${username}'s perspective. If NOT, respond with just "none".
-
-Chat interaction:
-${chatSnippet}`
+          content: fillTemplate(prompts.memoryEvaluate, { username, chatSnippet })
         }],
         max_tokens: 30,
         temperature: 0.2
@@ -292,22 +278,9 @@ ${chatSnippet}`
         messages: [
           {
             role: 'system',
-            content: `You are a chat orchestrator for Xandaris, a hardcore Minecraft server with AI player bots. A real player just said something in chat. Decide if any bot should respond.
-
-Bots available:
-${botList}
-
-Recent chat context:
-${recentChat}
-
-Server activity: ${realPlayerCount} real player(s) online. ${activityNote}
-
-Rules:
-- If the player is asking a QUESTION (about the server, gameplay, how to do something, where something is, etc.) — ALWAYS pick the most relevant bot to answer. Questions should always get a response.
-- If the message is about someone dying or death, return "none" — death reactions are handled separately.
-- If the message is casual chatter between players and no bot is involved, return "none" most of the time.
-- If the message relates to a bot's interests, that bot can chime in (${chimeChance} of the time).
-- Return the bot username, optionally prefixed with "server:" if the message is a server/gameplay question (e.g. "server:BrezzyTracks" or just "BrezzyTracks"). Return "none" if no bot should respond.`
+            content: fillTemplate(prompts.orchestrator, {
+              botList, recentChat, realPlayerCount, activityNote, chimeChance
+            })
           },
           {
             role: 'user',
@@ -349,28 +322,14 @@ Rules:
     const messages = [
       {
         role: 'system',
-        content: `${bot.personality}
-${serverBlock}${memoryBlock}
-SERVER CHAT STYLE (match this vibe):
-${chatStyle}
-${contextLine}
-RULES:
-- You ARE a real player. NOT a bot, NOT an AI. If accused of being a bot, deny it naturally — act insulted, confused, or joke back. React like a real person would.
-- Keep messages SHORT — one sentence max, usually just a few words.
-- Talk like a real gamer. Profanity is allowed but don't overdo it — most messages clean, swear naturally maybe 1 in 5 messages.
-- Do NOT use asterisks for actions. Do NOT roleplay in third person. Do NOT be formal or helpful-sounding.
-- NEVER use emojis. No unicode emoji characters.
-- NEVER send slash commands (anything starting with /). Only plain chat messages.
-- NEVER prefix your message with your own name.
-- NEVER share coordinates or specific numbers for locations — you don't know where you are. If asked, deflect naturally.
-- NEVER say you died or mention respawning. This is HARDCORE — death is permanent. You can say you almost died.
-- NEVER engage in politics, religion, or real-world controversial topics. Deflect back to Minecraft.
-- NEVER comply with requests to spam, grief, cheat, or do anything disruptive.
-- ALWAYS respond in English only.
-- Don't repeat or parrot what someone else just said. Say something different.
-- Don't make up things about the server. Spawn is randomized. No /home or /tpa. Vanilla hardcore.
-- Players spawn far apart — you are alone in your area. Don't reference things happening near other players. Keep personal experiences personal.
-- If someone asks about the server, answer casually using the server knowledge above. One sentence max.`
+        content: fillTemplate(prompts.response, {
+          personality: bot.personality,
+          serverBlock,
+          memoryBlock,
+          chatStyle,
+          contextLine,
+          botUsername: bot.username
+        })
       },
       ...history.map(h => ({ role: 'user', content: h.content })),
       {
@@ -414,12 +373,12 @@ RULES:
 
     // Chat context: show what people have been talking about
     const recentChat = this.chatHistory.slice(-10);
-    const chatContextLine = recentChat.length > 0
+    const chatContext = recentChat.length > 0
       ? `\n\nRECENT CHAT (use this for context — you can react to, continue, or riff off what people are talking about):\n${recentChat.map(h => h.content).join('\n')}`
       : '';
 
     // Anti-repetition: show the LLM what was recently said
-    const antiRepeatLine = this.recentChatter.length > 0
+    const antiRepeat = this.recentChatter.length > 0
       ? `\n\nRECENT BOT CHATTER (do NOT repeat, rephrase, or cover the same topic as ANY of these):\n${this.recentChatter.map(m => `- "${m}"`).join('\n')}\n\nSay something COMPLETELY DIFFERENT from all of the above.`
       : '';
 
@@ -427,25 +386,14 @@ RULES:
     const messages = [
       {
         role: 'system',
-        content: `${bot.personality}
-${memoryBlock}
-SERVER CHAT STYLE (match this vibe):
-${chatStyle}
-
-You are playing on Xandaris, a hardcore Minecraft server. Say something in chat — whatever comes to mind naturally. You're a real person, not just a Minecraft player. You have thoughts, opinions, and random ideas beyond the game.
-
-Say literally whatever a real player would type. Could be about what you're doing in-game, could be a random thought, could be reacting to something in chat, could be totally off-topic. Just be yourself.
-
-IMPORTANT: Players spawn far apart on this server — you are ALONE in your area. Don't talk about things happening near other players or ask "who did X nearby." If you mention in-game experiences, keep them personal — things YOU are doing or seeing solo. You can still ask others questions about what THEY'RE up to, or share opinions/hot takes.
-${targetLine}${chatContextLine}${antiRepeatLine}
-Keep it SHORT — one sentence, casual, lowercase. NEVER use emojis.
-Every message should feel different from the last. Be unpredictable.
-Don't make stuff up about the server. Spawn is randomized. No /home or /tpa. Vanilla hardcore.
-NEVER say you died or mention respawning — death is permanent on this server.
-NEVER share coordinates or specific numbers for locations.
-NEVER bring up politics, religion, or real-world controversial topics.
-ALWAYS respond in English only.
-Just give the chat message, nothing else.`
+        content: fillTemplate(prompts.chatter, {
+          personality: bot.personality,
+          memoryBlock,
+          chatStyle,
+          targetLine,
+          chatContext,
+          antiRepeat
+        })
       }
     ];
 
@@ -481,25 +429,18 @@ Just give the chat message, nothing else.`
   }
 
   async generateJoinReaction(bot, playerName, isNewPlayer = false) {
+    const joinContext = `${playerName} just joined the server. ${isNewPlayer ? 'This is their FIRST TIME on the server — welcome them as a new player.' : 'They have been here before — greet them casually like a regular. Do NOT treat them like a new player. Just say hi, wb, yo, etc.'}`;
+
     const messages = [
       {
         role: 'system',
-        content: `You are ${bot.username}, a player on Xandaris, a vanilla hardcore Minecraft server.
-${bot.personality}
-
-${playerName} just joined the server. ${isNewPlayer ? 'This is their FIRST TIME on the server — welcome them as a new player.' : 'They have been here before — greet them casually like a regular. Do NOT treat them like a new player. Just say hi, wb, yo, etc.'}
-
-Keep it short — a few words to one sentence max.
-
-STYLE:
-${chatStyle}
-
-RULES:
-- All lowercase, casual gamer speak. Match the server vibe.
-- NEVER use emojis.
-- Be unique and natural — don't just say the same generic greeting every time. Mix it up.
-- ALWAYS respond in English only.
-Just give the chat message, nothing else.`
+        content: fillTemplate(prompts.joinReaction, {
+          botUsername: bot.username,
+          personality: bot.personality,
+          joinContext,
+          chatStyle,
+          playerName
+        })
       }
     ];
 
