@@ -4,6 +4,7 @@ chatbot/memories/
 chatbot/known-players.json
 chatbot/botSkins/
 chatbot/skin-assignments.json
+chatbot/slur-filter.js
 
 # Server (live Crafty dir — don't track, avoid permission issues)
 server/*

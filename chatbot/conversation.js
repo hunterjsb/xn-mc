@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { containsSlur } from './slur-filter.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -469,7 +470,7 @@ export class ConversationManager {
       const response = await callLLM({
         messages,
         max_tokens: 80,
-        temperature: 0.9
+        temperature: 0.75
       }, { label: 'Response', botName: bot.username });
       let reply = stripThinking(response.choices[0].message.content.trim());
       reply = reply.replace(/^["']|["']$/g, '');
@@ -478,6 +479,12 @@ export class ConversationManager {
       reply = reply.replace(new RegExp(`^<?\\[?${nameEsc}\\]?>?\\s*[:>\\-]?\\s*`, 'i'), '');
       reply = stripEmojis(reply);
       reply = trimToComplete(reply);
+
+      // Block slurs — LLMs get tricked via word games
+      if (reply && containsSlur(reply)) {
+        console.log(`[Filter] Blocked slur from ${bot.username}: ${reply}`);
+        return null;
+      }
 
       // Evaluate if this interaction is worth remembering (non-blocking)
       if (reply) {
@@ -529,12 +536,17 @@ export class ConversationManager {
       const response = await callLLM({
         messages,
         max_tokens: 40,
-        temperature: 1.0
+        temperature: 0.8
       }, { label: 'Chatter', botName: bot.username });
       let reply = stripThinking(response.choices[0].message.content.trim());
       reply = reply.replace(/^["']|["']$/g, '');
       reply = stripEmojis(reply);
       reply = trimToComplete(reply);
+
+      if (reply && containsSlur(reply)) {
+        console.log(`[Filter] Blocked slur from ${bot.username}: ${reply}`);
+        return null;
+      }
 
       // Track for anti-repetition (but do NOT memorize — chatter is fabricated)
       if (reply) {
