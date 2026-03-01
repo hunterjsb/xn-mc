@@ -55,6 +55,7 @@ for (let i = 0; i < BOT_COUNT; i++) {
   const profile = personalities[i];
   const bot = new ChatBot(profile, cm, botConfig);
   bot.muted = !!profile.muted;
+  bot.priority = !!profile.priority;
   bots.push(bot);
   botsByName.set(profile.username, bot);
 
@@ -493,13 +494,18 @@ function scheduleChatter() {
   }, interval);
 }
 
-// ── Dynamic bot scaling ──────────────────────────────────────────────
+// ── Dynamic bot scaling with jitter and rotation ─────────────────────
+
+let botCountJitter = 0;
 
 function getTargetBotCount(realPlayers) {
-  const total = bots.length; // use live count, not startup BOT_COUNT
-  if (realPlayers <= 3) return total;                // 1-3 players: all bots
-  if (realPlayers <= 6) return Math.ceil(total * 0.75); // 4-6: ~75%
-  return Math.ceil(total * 0.5);                     // 7+: ~50%
+  const total = bots.length;
+  let base;
+  if (realPlayers <= 3) base = total;
+  else if (realPlayers <= 6) base = Math.ceil(total * 0.75);
+  else base = Math.ceil(total * 0.5);
+  // Apply jitter, but never below 1 or above total
+  return Math.max(1, Math.min(total, base + botCountJitter));
 }
 
 function scaleBots() {
@@ -509,20 +515,54 @@ function scaleBots() {
   const parked = bots.filter(b => b.parked);
 
   if (active.length > target) {
-    // Park excess bots (never park bots[0] — it runs the global listeners)
-    const topark = active.filter(b => b !== bots[0]).slice(-(active.length - target));
-    topark.forEach((b, i) => b.park(i * (15000 + Math.random() * 10000))); // stagger 15-25s apart
-    console.log(`[Scaler] ${realPlayers} players → target ${target} bots (parking ${topark.length} over ~${Math.round(topark.length * 20)}s)`);
+    // Park excess — randomly pick from non-protected bots (not bots[0], not priority)
+    const parkable = active.filter(b => b !== bots[0] && !b.priority);
+    const shuffled = [...parkable].sort(() => Math.random() - 0.5);
+    const topark = shuffled.slice(0, active.length - target);
+    if (topark.length > 0) {
+      topark.forEach((b, i) => b.park(i * (15000 + Math.random() * 10000)));
+      console.log(`[Scaler] ${realPlayers} players → target ${target} bots (parking ${topark.map(b => b.username).join(', ')})`);
+    }
   } else if (active.length < target && parked.length > 0) {
-    // Unpark bots to reach target
-    const tounpark = parked.slice(0, target - active.length);
-    tounpark.forEach(b => b.unpark());
-    console.log(`[Scaler] ${realPlayers} players → target ${target} bots (unparked ${tounpark.length})`);
+    // Unpark — randomly pick from parked bots
+    const shuffled = [...parked].sort(() => Math.random() - 0.5);
+    const tounpark = shuffled.slice(0, target - active.length);
+    if (tounpark.length > 0) {
+      tounpark.forEach(b => b.unpark());
+      console.log(`[Scaler] ${realPlayers} players → target ${target} bots (unparked ${tounpark.map(b => b.username).join(', ')})`);
+    }
   }
+}
+
+// Jitter refresh: every 12-18 min, nudge the target ±1 and optionally rotate a bot
+function scheduleJitterRefresh() {
+  const interval = (12 + Math.random() * 6) * 60 * 1000;
+  setTimeout(() => {
+    const oldJitter = botCountJitter;
+    botCountJitter = Math.floor(Math.random() * 3) - 1; // -1, 0, +1
+    if (botCountJitter !== oldJitter) {
+      console.log(`[Scaler] Jitter: ${botCountJitter > 0 ? '+' : ''}${botCountJitter}`);
+    }
+
+    // 50% chance to rotate: swap a random active non-priority bot with a parked one
+    const activeSwappable = bots.filter(b => !b.parked && b !== bots[0] && !b.priority);
+    const parked = bots.filter(b => b.parked);
+    if (activeSwappable.length > 0 && parked.length > 0 && Math.random() < 0.5) {
+      const out = activeSwappable[Math.floor(Math.random() * activeSwappable.length)];
+      const inn = parked[Math.floor(Math.random() * parked.length)];
+      console.log(`[Scaler] Rotating: ${out.username} out → ${inn.username} in`);
+      out.park(0);
+      setTimeout(() => inn.unpark(), 15000 + Math.random() * 10000);
+    }
+
+    scaleBots();
+    scheduleJitterRefresh();
+  }, interval);
 }
 
 // Check every 45 seconds
 setInterval(scaleBots, 45000);
+scheduleJitterRefresh();
 
 // ── Boot ─────────────────────────────────────────────────────────────
 
@@ -576,7 +616,8 @@ function reconcileBots() {
         bot.chattiness = profile.chattiness;
         bot.interests = profile.interests || [];
         bot.muted = !!profile.muted;
-        console.log(`[HotReload]   ${bot.username} personality updated${bot.muted ? ' (muted)' : ''}`);
+        bot.priority = !!profile.priority;
+        console.log(`[HotReload]   ${bot.username} personality updated${bot.muted ? ' (muted)' : ''}${bot.priority ? ' (priority)' : ''}`);
       }
     }
 
@@ -585,6 +626,7 @@ function reconcileBots() {
     toAdd.forEach((profile, i) => {
       const bot = new ChatBot(profile, cm, botConfig);
       bot.muted = !!profile.muted;
+      bot.priority = !!profile.priority;
       bots.push(bot);
       botsByName.set(profile.username, bot);
 
