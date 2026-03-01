@@ -72,6 +72,19 @@ export class ChatBot {
       this.connected = true;
       this.kickCount = 0; // reset on successful login
 
+      // Fake ping: intercept keep_alive and delay response to simulate real latency
+      const client = this.bot._client;
+      const basePing = 50 + Math.random() * 60; // each bot gets a stable base 50-110ms
+      client._keepAliveHandler = client.listeners('keep_alive')?.[0];
+      if (client._keepAliveHandler) {
+        client.removeListener('keep_alive', client._keepAliveHandler);
+        client.on('keep_alive', (packet) => {
+          const delay = basePing + (Math.random() - 0.5) * 2; // ±1ms jitter
+          setTimeout(() => {
+            client.write('keep_alive', { keepAliveId: packet.keepAliveId });
+          }, delay);
+        });
+      }
     });
 
     // Chat history is managed by the global listener in index.js (not per-bot)
@@ -89,7 +102,8 @@ export class ChatBot {
         this.wasKicked = false;
         return;
       }
-      setTimeout(() => this.connect(), this.reconnectDelay);
+      const jitter = this.reconnectDelay + Math.random() * 30000; // 10-40s stagger
+      setTimeout(() => this.connect(), jitter);
     });
 
     this.bot.on('kicked', (reason) => {
@@ -130,14 +144,12 @@ export class ChatBot {
   park(delay = 0) {
     if (this.parked) return;
     this.parked = true;
-    setTimeout(() => {
+    this._parkTimer = setTimeout(() => {
+      this._parkTimer = null;
+      if (!this.parked) return; // unparked while waiting
       console.log(`[${this.username}] Parked (scaling down)`);
       if (this.bot && this.connected) {
-        // Vanish before disconnecting to suppress "left the game" message
-        this.bot.chat('/vanish');
-        setTimeout(() => {
-          if (this.bot) this.bot.end();
-        }, 1500);
+        if (this.bot) this.bot.end();
       }
     }, delay);
   }
@@ -145,14 +157,30 @@ export class ChatBot {
   unpark() {
     if (!this.parked) return;
     this.parked = false;
+    // Cancel pending park disconnect
+    if (this._parkTimer) {
+      clearTimeout(this._parkTimer);
+      this._parkTimer = null;
+    }
+    // Only reconnect if not already connected
+    if (this.connected) {
+      console.log(`[${this.username}] Unparked (already connected)`);
+      return;
+    }
     console.log(`[${this.username}] Unparked (scaling up)`);
-    setTimeout(() => this.connect(), 10000 + Math.random() * 10000);
+    setTimeout(() => {
+      if (!this.connected && !this.parked) this.connect();
+    }, 10000 + Math.random() * 10000);
   }
 
   async chat(message) {
     if (!this.connected || !message) return;
-    this.bot.chat(message);
-    this.cm.addMessage(this.username, message);
+    const lines = message.split('\n').map(l => l.trim()).filter(Boolean);
+    for (let i = 0; i < lines.length; i++) {
+      if (i > 0) await new Promise(r => setTimeout(r, 250 + Math.random() * 550));
+      this.bot.chat(lines[i]);
+    }
+    this.cm.addMessage(this.username, message, { isBot: true });
     this.cm.recordBotMessage();
   }
 

@@ -1,7 +1,7 @@
 import './env.js';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, watch } from 'fs';
 import { ChatBot } from './bot.js';
-import { ConversationManager } from './conversation.js';
+import { ConversationManager, reloadPrompts } from './conversation.js';
 import { findMentionedBot, findMentionedBots } from './mention.js';
 
 const personalities = JSON.parse(readFileSync('./personalities.json', 'utf-8'));
@@ -54,6 +54,7 @@ console.log(`Rate limit: ${MAX_IN_WINDOW} messages per ${RATE_WINDOW_MIN} min`);
 for (let i = 0; i < BOT_COUNT; i++) {
   const profile = personalities[i];
   const bot = new ChatBot(profile, cm, botConfig);
+  bot.muted = !!profile.muted;
   bots.push(bot);
   botsByName.set(profile.username, bot);
 
@@ -105,7 +106,7 @@ const botLastMessage = new Map(); // per-bot cooldown: username → timestamp
 const BOT_COOLDOWN = 8000; // minimum 8s between messages from the SAME bot
 
 async function dispatchResponse(bot, tag, playerName, { serverQuestion = false } = {}) {
-  if (!bot || !bot.connected || cm.isRateLimited()) return;
+  if (!bot || !bot.connected || bot.muted || cm.isRateLimited()) return;
   if (botBusy.has(bot.username)) {
     console.log(`[${tag}] ${bot.username} busy, skipping`);
     return;
@@ -124,12 +125,13 @@ async function dispatchResponse(bot, tag, playerName, { serverQuestion = false }
 
   setTimeout(async () => {
     if (cm.isRateLimited()) { botBusy.delete(bot.username); return; }
-    const response = await cm.generateResponse(bot, { serverQuestion });
-    if (response) {
-      const typingDelay = cm.getTypingDelay(response);
-      console.log(`[${tag}] ${bot.username} (typing ${Math.round(typingDelay / 1000)}s): ${response}`);
+    const result = await cm.generateResponse(bot, { serverQuestion });
+    if (result) {
+      const { text, fallback } = result;
+      const typingDelay = fallback ? 0 : cm.getTypingDelay(text);
+      console.log(`[${tag}] ${bot.username}${fallback ? ' (instant)' : ` (typing ${Math.round(typingDelay / 1000)}s)`}: ${text}`);
       setTimeout(() => {
-        bot.chat(response);
+        bot.chat(text);
         botLastMessage.set(bot.username, Date.now());
         if (playerName) cm.trackConversation(playerName, bot.username);
         botBusy.delete(bot.username);
@@ -189,7 +191,7 @@ function getDeathVictim(text, onlinePlayers) {
 
 function triggerDeathReactions(victim) {
   console.log(`[Death] ${victim} died! All bots reacting.`);
-  const connected = bots.filter(b => b.connected);
+  const connected = bots.filter(b => b.connected && !b.muted);
   connected.forEach((bot, i) => {
     // Stagger: 2-6s base + 0-4s per bot index so they don't all fire at once
     const delay = 2000 + Math.random() * 4000 + i * (1000 + Math.random() * 3000);
@@ -237,24 +239,7 @@ function setupJoinLeaveListeners() {
         playerLeaveTimestamps.delete(player.username);
 
         const isNew = trackPlayer(player.username);
-        console.log(`[Join] ${player.username} joined (${isNew ? 'NEW' : 'returning'})`);
-
-        const connected = bots.filter(b => b.connected);
-        if (connected.length === 0) return;
-        // Shuffle and pick 1-2 bots, each with independent chance
-        const shuffled = connected.sort(() => Math.random() - 0.5);
-        const count = Math.random() < 0.5 ? 2 : 1; // 50% chance 2 bots, 50% chance 1
-        const chosen = shuffled.slice(0, count);
-        chosen.forEach((bot, i) => {
-          const delay = 2000 + Math.random() * 5000 + i * (2000 + Math.random() * 3000);
-          setTimeout(async () => {
-            const reaction = await cm.generateJoinReaction(bot, player.username, isNew);
-            if (reaction) {
-              console.log(`[Join] ${player.username} (${isNew ? 'new' : 'returning'}) → ${bot.username}: ${reaction}`);
-              bot.chat(reaction);
-            }
-          }, delay);
-        });
+        console.log(`[Join] ${player.username} joined (${isNew ? 'NEW' : 'returning'}) — greetings disabled`);
       });
 
       console.log('Join/leave listener active.');
@@ -478,7 +463,7 @@ function scheduleChatter() {
       scheduleChatter();
       return;
     }
-    const connectedBots = bots.filter(b => b.connected);
+    const connectedBots = bots.filter(b => b.connected && !b.muted);
     if (connectedBots.length === 0) {
       scheduleChatter();
       return;
@@ -489,14 +474,20 @@ function scheduleChatter() {
       return;
     }
     const starter = connectedBots[Math.floor(Math.random() * connectedBots.length)];
+    // chattiness gates whether this bot actually speaks
+    if (Math.random() > starter.chattiness) {
+      console.log(`[Chatter] ${starter.username} rolled above chattiness (${starter.chattiness}), skipping`);
+      scheduleChatter();
+      return;
+    }
     const otherNames = connectedBots
       .filter(b => b.username !== starter.username)
       .map(b => b.username);
-    const message = await cm.generateConversationStarter(starter, otherNames);
-    if (message) {
+    const result = await cm.generateConversationStarter(starter, otherNames);
+    if (result) {
       const pc = getRealPlayerCount();
-      console.log(`[Chatter] ${starter.username} (${pc} players, ${Math.round(interval/60000)}m interval): ${message}`);
-      await starter.chat(message);
+      console.log(`[Chatter] ${starter.username} (${pc} players, ${Math.round(interval/60000)}m interval): ${result.text}`);
+      await starter.chat(result.text);
     }
     scheduleChatter();
   }, interval);
@@ -505,9 +496,10 @@ function scheduleChatter() {
 // ── Dynamic bot scaling ──────────────────────────────────────────────
 
 function getTargetBotCount(realPlayers) {
-  if (realPlayers <= 3) return BOT_COUNT;           // 1-3 players: all bots
-  if (realPlayers <= 6) return Math.ceil(BOT_COUNT * 0.75); // 4-6: ~75%
-  return Math.ceil(BOT_COUNT * 0.5);                // 7+: ~50%
+  const total = bots.length; // use live count, not startup BOT_COUNT
+  if (realPlayers <= 3) return total;                // 1-3 players: all bots
+  if (realPlayers <= 6) return Math.ceil(total * 0.75); // 4-6: ~75%
+  return Math.ceil(total * 0.5);                     // 7+: ~50%
 }
 
 function scaleBots() {
@@ -546,19 +538,137 @@ setTimeout(() => {
   console.log('Silly chatter active.');
 }, BOT_COUNT * 5000 + 5000);
 
-process.on('SIGINT', () => {
+// ── Hot-reload: prompts/ and personalities.json ──────────────────────
+
+function debounce(fn, ms) {
+  let timer;
+  return () => { clearTimeout(timer); timer = setTimeout(fn, ms); };
+}
+
+watch('./prompts', debounce(() => {
+  console.log('[HotReload] prompts/ changed — reloading');
+  reloadPrompts();
+}, 500));
+
+function readBotCountFromEnv() {
+  try {
+    const env = readFileSync('../.env', 'utf-8');
+    const match = env.match(/^BOT_COUNT=(\d+)/m);
+    return match ? parseInt(match[1]) : BOT_COUNT;
+  } catch {
+    return BOT_COUNT;
+  }
+}
+
+function reconcileBots() {
+  try {
+    const updated = JSON.parse(readFileSync('./personalities.json', 'utf-8'));
+    const targetCount = Math.min(readBotCountFromEnv(), updated.length);
+    const desired = updated.slice(0, targetCount);
+    const desiredNames = desired.map(p => p.username);
+    const currentNames = bots.map(b => b.username);
+
+    // Update personalities for existing bots that are staying
+    for (const bot of bots) {
+      const profile = desired.find(p => p.username === bot.username);
+      if (profile) {
+        bot.personality = profile.personality;
+        bot.chattiness = profile.chattiness;
+        bot.interests = profile.interests || [];
+        bot.muted = !!profile.muted;
+        console.log(`[HotReload]   ${bot.username} personality updated${bot.muted ? ' (muted)' : ''}`);
+      }
+    }
+
+    // Spawn new bots (in desired but not already running)
+    const toAdd = desired.filter(p => !botsByName.has(p.username));
+    toAdd.forEach((profile, i) => {
+      const bot = new ChatBot(profile, cm, botConfig);
+      bot.muted = !!profile.muted;
+      bots.push(bot);
+      botsByName.set(profile.username, bot);
+
+      // Apply skin if configured
+      const skinSource = skinAssignments[profile.username];
+      if (skinSource) {
+        const origConnect = bot.connect.bind(bot);
+        bot.connect = function () {
+          origConnect();
+          bot.bot.once('login', () => {
+            setTimeout(() => {
+              if (bot.bot && bot.connected) {
+                console.log(`[Skin] ${bot.username} → /skin set ${skinSource}`);
+                bot.bot.chat(`/skin set ${skinSource}`);
+              }
+            }, 5000);
+          });
+        };
+      }
+
+      // Stagger connections 15s apart
+      setTimeout(() => {
+        bot.connect();
+        setupBotToBotListener(bot);
+      }, i * 15000);
+      console.log(`[HotReload] Spawning new bot: ${profile.username}`);
+    });
+
+    // Remove bots no longer in desired list (never remove bots[0] — runs global listeners)
+    const toRemove = bots.filter(b => !desiredNames.includes(b.username) && b !== bots[0]);
+    for (const bot of toRemove) {
+      console.log(`[HotReload] Removing bot: ${bot.username}`);
+      bot.parked = true; // prevent reconnect attempts
+      if (bot.bot?.end) bot.bot.end();
+      bot.connected = false;
+      botsByName.delete(bot.username);
+      botBusy.delete(bot.username);
+      const idx = bots.indexOf(bot);
+      if (idx !== -1) bots.splice(idx, 1);
+    }
+
+    // Update botNames in-place
+    botNames.length = 0;
+    botNames.push(...bots.map(b => b.username));
+
+    // Update personalities array
+    personalities.length = 0;
+    personalities.push(...updated);
+
+    console.log(`[HotReload] Active bots (${bots.length}): ${botNames.join(', ')}`);
+  } catch (e) {
+    console.error(`[HotReload] Failed to reconcile bots: ${e.message}`);
+  }
+}
+
+watch('./personalities.json', debounce(() => {
+  console.log('[HotReload] personalities.json changed — reconciling bots');
+  reconcileBots();
+}, 500));
+
+watch(new URL('../.env', import.meta.url).pathname, debounce(() => {
+  const newCount = readBotCountFromEnv();
+  if (newCount !== bots.length) {
+    console.log(`[HotReload] .env changed — BOT_COUNT=${newCount}, reconciling`);
+    reconcileBots();
+  }
+}, 500));
+
+console.log('[HotReload] Watching prompts/ and personalities.json');
+
+function gracefulShutdown() {
   console.log('\nShutting down bots...');
   bots.forEach((bot, i) => {
     setTimeout(() => {
       if (bot.bot && bot.connected) {
-        bot.bot.chat('/vanish');
-        setTimeout(() => { if (bot.bot?.end) bot.bot.end(); }, 1500);
+        if (bot.bot?.end) bot.bot.end();
       } else if (bot.bot?.end) {
         bot.bot.end();
       }
-    }, i * 3000 + Math.random() * 2000);
+    }, i * 4000 + Math.random() * 3000);
   });
-  setTimeout(() => process.exit(0), bots.length * 3000 + 7000);
-});
+  setTimeout(() => process.exit(0), bots.length * 4000 + 5000);
+}
+process.on('SIGINT', gracefulShutdown);
+process.on('SIGTERM', gracefulShutdown);
 
 console.log('Bot orchestrator running. Press Ctrl+C to stop.');

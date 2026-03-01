@@ -5,10 +5,93 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const openai = new OpenAI({
+// ── LLM Clients: Ollama (primary) → Grok (fallback) ───────────────
+const grokClient = new OpenAI({
   apiKey: process.env.XAI_API_KEY,
   baseURL: 'https://api.x.ai/v1'
 });
+
+const ollamaBaseUrl = process.env.OLLAMA_URL?.replace(/\/v1\/?$/, ''); // strip /v1 — use native API
+const ollamaModel = process.env.OLLAMA_MODEL;
+const ollamaAuth = process.env.OLLAMA_AUTH;
+const ollamaEnabled = false; // disabled — Ollama API is down, using Grok only
+
+const GROK_MODEL = 'grok-4-1-fast-non-reasoning';
+
+// Native Ollama /api/chat call with think:false
+async function ollamaChat(params) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (ollamaAuth) headers['Authorization'] = `Basic ${ollamaAuth}`;
+
+  const body = {
+    model: ollamaModel,
+    messages: params.messages,
+    stream: false,
+    think: false,
+    keep_alive: 0, // unload after responding — frees VRAM
+    options: {}
+  };
+  if (params.max_tokens) body.options.num_predict = Math.min(params.max_tokens, 50); // cap Ollama shorter
+  if (params.temperature != null) body.options.temperature = params.temperature;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000); // 15s — if GPU is busy, fall back to Grok
+
+  try {
+    const res = await fetch(`${ollamaBaseUrl}/api/chat`, {
+      method: 'POST', headers, body: JSON.stringify(body), signal: controller.signal
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    // Return OpenAI-compatible shape so callers don't change
+    return {
+      choices: [{ message: { role: 'assistant', content: data.message?.content || '' } }]
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+// ── Discord model logging ──────────────────────────────────────────
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+const DISCORD_LOG_CHANNEL = process.env.DISCORD_CHANNEL_ID;
+
+async function discordLog(text) {
+  if (!DISCORD_TOKEN || !DISCORD_LOG_CHANNEL) return;
+  try {
+    await fetch(`https://discord.com/api/v10/channels/${DISCORD_LOG_CHANNEL}/messages`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bot ${DISCORD_TOKEN}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: text })
+    });
+  } catch { /* non-critical */ }
+}
+
+async function callLLM(params, { label = 'LLM', lightweight = false, botName = '' } = {}) {
+  // For lightweight calls (memory eval, orchestrator), prefer Grok for speed
+  if (lightweight || !ollamaEnabled) {
+    const response = await grokClient.chat.completions.create({ ...params, model: GROK_MODEL });
+    console.log(`[${label}] ✓ grok`);
+    return response;
+  }
+
+  // Try Ollama first, fall back to Grok
+  try {
+    const response = await ollamaChat(params);
+    const tag = `ollama (${ollamaModel})`;
+    console.log(`[${label}] ✓ ${tag}`);
+    if (botName) discordLog(`\`[${label}] ${botName} via ${tag}\``);
+    response._fallback = false;
+    return response;
+  } catch (err) {
+    console.warn(`[${label}] Ollama failed (${err.message}), falling back to Grok`);
+    const response = await grokClient.chat.completions.create({ ...params, model: GROK_MODEL });
+    console.log(`[${label}] ✓ grok (fallback)`);
+    if (botName) discordLog(`\`[${label}] ${botName} via grok (fallback)\``);
+    response._fallback = true;
+    return response;
+  }
+}
 
 // ── Prompt loader ────────────────────────────────────────────────────
 
@@ -20,7 +103,7 @@ function fillTemplate(template, vars) {
   return template.replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] ?? '');
 }
 
-// Load all prompts once at startup
+// Load all prompts at startup (mutated in-place by reloadPrompts)
 const prompts = {
   response: loadPrompt('response'),
   chatter: loadPrompt('chatter'),
@@ -29,8 +112,54 @@ const prompts = {
   memoryCompact: loadPrompt('memory-compact'),
   memoryEvaluate: loadPrompt('memory-evaluate'),
 };
-const chatStyle = loadPrompt('style');
-const serverInfo = loadPrompt('server-info');
+let chatStyle = loadPrompt('style');
+let serverInfo = loadPrompt('server-info');
+
+export function reloadPrompts() {
+  const reloaded = [];
+  for (const key of Object.keys(prompts)) {
+    const filename = key.replace(/([A-Z])/g, '-$1').toLowerCase(); // camelCase → kebab-case
+    try {
+      prompts[key] = loadPrompt(filename);
+      reloaded.push(filename);
+    } catch (e) {
+      console.error(`[HotReload] Failed to load ${filename}.md: ${e.message}`);
+    }
+  }
+  try { chatStyle = loadPrompt('style'); reloaded.push('style'); } catch {}
+  try { serverInfo = loadPrompt('server-info'); reloaded.push('server-info'); } catch {}
+  console.log(`[HotReload] Reloaded prompts: ${reloaded.join(', ')}`);
+}
+
+// Trim to last complete thought if truncated mid-sentence
+function trimToComplete(text) {
+  // If it ends with punctuation or looks complete, keep it
+  if (/[.!?)\]]$/.test(text)) return text;
+  // Try cutting at last sentence-ending punctuation
+  const lastBreak = Math.max(text.lastIndexOf('. '), text.lastIndexOf('! '), text.lastIndexOf('? '));
+  if (lastBreak > text.length * 0.4) return text.slice(0, lastBreak + 1);
+  // Try cutting at last comma, dash, or natural pause
+  const lastPause = Math.max(text.lastIndexOf(', '), text.lastIndexOf(' - '), text.lastIndexOf(' — '));
+  if (lastPause > text.length * 0.5) return text.slice(0, lastPause);
+  return text;
+}
+
+// Strip thinking/reasoning tokens that leak into content from local models
+function stripThinking(text) {
+  // Remove <think>...</think> blocks
+  text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+  // Broad catch: any numbered-list opener ("1. ...") — real chat never starts with "1."
+  if (/^\d+\.\s+/i.test(text)) return '';
+  // Catch meta/self-instruction patterns — reject if first word is a reasoning keyword
+  if (/^(think|thought|thinking|reasoning|internal|step|analyze|consider|respond|plan|approach|persona|style|context|instructions?)\b/i.test(text)) return '';
+  // Remove any leading reasoning before actual chat content
+  const chatMatch = text.match(/(?:^|\n)([a-z].*)/i);
+  if (chatMatch && text.indexOf(chatMatch[1]) > text.length * 0.5) {
+    // More than half the text was reasoning preamble — just take the chat part
+    return chatMatch[1].trim();
+  }
+  return text;
+}
 
 // Strip unicode emojis from output — LLMs sometimes ignore the prompt instruction
 function stripEmojis(text) {
@@ -111,15 +240,14 @@ export class ConversationManager {
     const entries = toCompact.join('\n');
 
     try {
-      const response = await openai.chat.completions.create({
-        model: 'grok-4-1-fast-non-reasoning',
+      const response = await callLLM({
         messages: [{
           role: 'system',
           content: fillTemplate(prompts.memoryCompact, { existing, entries })
         }],
         max_tokens: 200,
         temperature: 0.3
-      });
+      }, { label: 'MemoryCompact', lightweight: true });
       mem.summary = response.choices[0].message.content.trim();
       mem.recent = kept;
       this._saveMemory(username);
@@ -132,15 +260,14 @@ export class ConversationManager {
   // Evaluate if an interaction is worth remembering (async, fire-and-forget)
   async evaluateMemory(username, chatSnippet) {
     try {
-      const response = await openai.chat.completions.create({
-        model: 'grok-4-1-fast-non-reasoning',
+      const response = await callLLM({
         messages: [{
           role: 'system',
           content: fillTemplate(prompts.memoryEvaluate, { username, chatSnippet })
         }],
         max_tokens: 30,
         temperature: 0.2
-      });
+      }, { label: 'MemoryEval', lightweight: true });
       const result = response.choices[0].message.content.trim();
       if (result.toLowerCase() === 'none' || result.length < 3) return;
       this.addMemory(username, result);
@@ -176,11 +303,12 @@ export class ConversationManager {
     return entry.botName;
   }
 
-  addMessage(username, message) {
+  addMessage(username, message, { isBot = false } = {}) {
     this.chatHistory.push({
       role: 'user',
       content: `<${username}> ${message}`,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      isBot
     });
     if (this.chatHistory.length > this.maxHistory) {
       this.chatHistory.shift();
@@ -273,8 +401,7 @@ export class ConversationManager {
     }
 
     try {
-      const response = await openai.chat.completions.create({
-        model: 'grok-4-1-fast-non-reasoning',
+      const response = await callLLM({
         messages: [
           {
             role: 'system',
@@ -289,7 +416,7 @@ export class ConversationManager {
         ],
         max_tokens: 20,
         temperature: 0.5
-      });
+      }, { label: 'Orchestrator', lightweight: true });
 
       const pick = response.choices[0].message.content.trim();
       const validNames = botProfiles.map(b => b.username);
@@ -339,18 +466,18 @@ export class ConversationManager {
     ];
 
     try {
-      const response = await openai.chat.completions.create({
-        model: 'grok-4-1-fast-non-reasoning',
+      const response = await callLLM({
         messages,
         max_tokens: 80,
         temperature: 0.9
-      });
-      let reply = response.choices[0].message.content.trim();
+      }, { label: 'Response', botName: bot.username });
+      let reply = stripThinking(response.choices[0].message.content.trim());
       reply = reply.replace(/^["']|["']$/g, '');
       // Strip the bot's own name in any format from the start of the message
       const nameEsc = bot.username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       reply = reply.replace(new RegExp(`^<?\\[?${nameEsc}\\]?>?\\s*[:>\\-]?\\s*`, 'i'), '');
       reply = stripEmojis(reply);
+      reply = trimToComplete(reply);
 
       // Evaluate if this interaction is worth remembering (non-blocking)
       if (reply) {
@@ -358,9 +485,9 @@ export class ConversationManager {
         this.evaluateMemory(bot.username, `${recentContext}\n<${bot.username}> ${reply}`);
       }
 
-      return reply || null;
+      return reply ? { text: reply, fallback: !!response._fallback } : null;
     } catch (err) {
-      console.error(`[Grok Error] ${err.message}`);
+      console.error(`[LLM Error] ${err.message}`);
       return null;
     }
   }
@@ -371,15 +498,15 @@ export class ConversationManager {
       ? `\nAddress your message to ${otherBotNames[Math.floor(Math.random() * otherBotNames.length)]} by name — ask them something or say something to them directly.`
       : '';
 
-    // Chat context: show what people have been talking about
-    const recentChat = this.chatHistory.slice(-10);
+    // Chat context: show only PLAYER messages (exclude bot messages to prevent pattern-copying loops)
+    const recentChat = this.chatHistory.filter(h => !h.isBot).slice(-10);
     const chatContext = recentChat.length > 0
-      ? `\n\nRECENT CHAT (use this for context — you can react to, continue, or riff off what people are talking about):\n${recentChat.map(h => h.content).join('\n')}`
+      ? `\n\nRECENT CHAT (use this for context — you can react to what players are talking about):\n${recentChat.map(h => h.content).join('\n')}`
       : '';
 
-    // Anti-repetition: show the LLM what was recently said
+    // Anti-repetition: show topics to avoid (NOT exact text — LLMs copy exact patterns)
     const antiRepeat = this.recentChatter.length > 0
-      ? `\n\nRECENT BOT CHATTER (do NOT repeat, rephrase, or cover the same topic as ANY of these):\n${this.recentChatter.map(m => `- "${m}"`).join('\n')}\n\nSay something COMPLETELY DIFFERENT from all of the above.`
+      ? `\n\nTOPICS ALREADY COVERED (pick something totally different, do NOT follow any pattern or sentence structure from these):\n${this.recentChatter.slice(-8).map(m => `- ${m.slice(0, 30)}`).join('\n')}\n\nBe original. Do NOT use "too X for Y" or any repeated sentence template.`
       : '';
 
     const memoryBlock = this.getMemoryBlock(bot.username);
@@ -392,44 +519,43 @@ export class ConversationManager {
           chatStyle,
           targetLine,
           chatContext,
-          antiRepeat
+          antiRepeat,
+          botUsername: bot.username
         })
       }
     ];
 
     try {
-      const response = await openai.chat.completions.create({
-        model: 'grok-4-1-fast-non-reasoning',
+      const response = await callLLM({
         messages,
         max_tokens: 40,
         temperature: 1.0
-      });
-      let reply = response.choices[0].message.content.trim();
+      }, { label: 'Chatter', botName: bot.username });
+      let reply = stripThinking(response.choices[0].message.content.trim());
       reply = reply.replace(/^["']|["']$/g, '');
       reply = stripEmojis(reply);
+      reply = trimToComplete(reply);
 
-      // Track for anti-repetition + evaluate memory
+      // Track for anti-repetition (but do NOT memorize — chatter is fabricated)
       if (reply) {
         this.recentChatter.push(reply);
         if (this.recentChatter.length > this.maxRecentChatter) {
           this.recentChatter.shift();
         }
-        // Evaluate if chatter is worth remembering (non-blocking)
-        const recentContext = recentChat.length > 0
-          ? recentChat.slice(-3).map(h => h.content).join('\n') + '\n'
-          : '';
-        this.evaluateMemory(bot.username, `${recentContext}<${bot.username}> ${reply}`);
       }
 
-      return reply || null;
+      return reply ? { text: reply, fallback: !!response._fallback } : null;
     } catch (err) {
-      console.error(`[Grok Error] ${err.message}`);
+      console.error(`[LLM Error] ${err.message}`);
       return null;
     }
   }
 
-  async generateJoinReaction(bot, playerName, isNewPlayer = false) {
+  async generateJoinReaction(bot, playerName, isNewPlayer = false, priorGreeting = '') {
     const joinContext = `${playerName} just joined the server. ${isNewPlayer ? 'This is their FIRST TIME on the server — welcome them as a new player.' : 'They have been here before — greet them casually like a regular. Do NOT treat them like a new player. Just say hi, wb, yo, etc.'}`;
+    const avoidLine = priorGreeting
+      ? `\nAnother bot already said: "${priorGreeting}" — say something COMPLETELY DIFFERENT. Do NOT repeat or rephrase it.`
+      : '';
 
     const messages = [
       {
@@ -437,7 +563,7 @@ export class ConversationManager {
         content: fillTemplate(prompts.joinReaction, {
           botUsername: bot.username,
           personality: bot.personality,
-          joinContext,
+          joinContext: joinContext + avoidLine,
           chatStyle,
           playerName
         })
@@ -445,18 +571,17 @@ export class ConversationManager {
     ];
 
     try {
-      const response = await openai.chat.completions.create({
-        model: 'grok-4-1-fast-non-reasoning',
+      const response = await callLLM({
         messages,
         max_tokens: 30,
         temperature: 1.0
-      });
-      let reply = response.choices[0].message.content.trim();
+      }, { label: 'JoinReaction', botName: bot.username });
+      let reply = stripThinking(response.choices[0].message.content.trim());
       reply = reply.replace(/^["']|["']$/g, '');
       reply = stripEmojis(reply);
-      return reply || null;
+      return reply ? { text: reply, fallback: !!response._fallback } : null;
     } catch (err) {
-      console.error(`[Grok Error] ${err.message}`);
+      console.error(`[LLM Error] ${err.message}`);
       return null;
     }
   }

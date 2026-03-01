@@ -82,6 +82,7 @@ func main() {
 
 	// Register slash command handler
 	dg.AddHandler(interactionCreate)
+	dg.Identify.Intents = discordgo.IntentsGuilds
 
 	err = dg.Open()
 	if err != nil {
