@@ -1,0 +1,49 @@
+{
+    "kind": "update",
+    "startTime": 1772437264,
+    "message": "Remove orphaned link messages from Pulumi state",
+    "environment": {
+        "ci.build.id": "22566147032",
+        "ci.build.number": "5",
+        "ci.build.type": "workflow_dispatch",
+        "ci.build.url": "https://github.com/hunterjsb/xn-mc/actions/runs/22566147032",
+        "ci.pr.headSHA": "c1689aa54bde86c9466f81c4168dd29c88cea3b1",
+        "ci.system": "GitHub Actions",
+        "exec.kind": "cli",
+        "git.author": "hunterjsb",
+        "git.author.email": "hunterjsb@gmail.com",
+        "git.committer": "hunterjsb",
+        "git.committer.email": "hunterjsb@gmail.com",
+        "git.dirty": "true",
+        "git.head": "c1689aa54bde86c9466f81c4168dd29c88cea3b1",
+        "git.headName": "refs/heads/master",
+        "pulumi.arch": "amd64",
+        "pulumi.env.PULUMI_CONFIG_PASSPHRASE": "set",
+        "pulumi.flag.stack": "set",
+        "pulumi.flag.yes": "true",
+        "pulumi.os": "linux",
+        "pulumi.version": "v3.224.0",
+        "runtime.executable": "/opt/hostedtoolcache/go/1.24.13/x64/bin/go",
+        "runtime.name": "go",
+        "runtime.version": "go version go1.24.13 linux/amd64",
+        "stack.environments": "[]",
+        "updatePlan": "false",
+        "vcs.kind": "github.com",
+        "vcs.owner": "hunterjsb",
+        "vcs.repo": "xn-mc",
+        "vcs.root": "discord"
+    },
+    "config": {
+        "pulumi:tags": {
+            "pulumi:template": "go"
+        },
+        "xhc-discord:serverId": "1472695132875915490"
+    },
+    "version": 0,
+    "result": "succeeded",
+    "endTime": 1772437266,
+    "resourceChanges": {
+        "create": 1,
+        "same": 66
+    }
+}
