@@ -9,50 +9,13 @@ import argparse
 import json
 import os
 import re
-import subprocess
-import sys
 from pathlib import Path
 
 import requests
 
 from utils.config import Config
-
-
-WIKI_BASE = "https://wiki.xandaris.space"
-MEDIAWIKI_DIR = "/var/www/mediawiki"
-
-
-# ── Data loading ──────────────────────────────────────────
-
-
-def load_bot_names():
-    """Load bot usernames from chatbot personalities."""
-    path = Path(__file__).parent.parent / "chatbot" / "personalities.json"
-    with open(path) as f:
-        return {p["username"] for p in json.load(f)}
-
-
-def load_usercache(server_dir):
-    """Load UUID→name map from usercache.json."""
-    with open(os.path.join(server_dir, "usercache.json")) as f:
-        return {e["uuid"]: e["name"] for e in json.load(f)}
-
-
-def load_bans(server_dir, bot_names):
-    """Return (deathbanned_names, hackbanned_names) sets."""
-    with open(os.path.join(server_dir, "banned-players.json")) as f:
-        bans = json.load(f)
-    deathbanned, hackbanned = set(), set()
-    for ban in bans:
-        name = ban["name"]
-        if name in bot_names:
-            continue
-        reason = ban.get("reason", "")
-        if "Deathban" in reason or "Game Over" in reason:
-            deathbanned.add(name)
-        else:
-            hackbanned.add(name)
-    return deathbanned, hackbanned
+from utils.players import load_bans, load_bot_names, load_usercache
+from utils.wiki import WIKI_BASE, edit_page, fetch_page, purge_page
 
 
 # ── Stats computation ─────────────────────────────────────
@@ -349,40 +312,6 @@ def update_server_history(text, total, dead, aggregates):
     for pattern, repl in replacements:
         text = re.sub(pattern, repl, text)
     return text
-
-
-# ── Wiki I/O ──────────────────────────────────────────────
-
-
-def fetch_page(title):
-    """Fetch raw wikitext for a page."""
-    resp = requests.get(f"{WIKI_BASE}/index.php",
-                        params={"title": title, "action": "raw"}, timeout=15)
-    resp.raise_for_status()
-    return resp.text
-
-
-def edit_page(title, content, summary):
-    """Write page content via maintenance script."""
-    cmd = [
-        "sudo", "-u", "www-data", "php",
-        os.path.join(MEDIAWIKI_DIR, "maintenance", "run.php"),
-        "edit", "--summary", summary, title,
-    ]
-    result = subprocess.run(cmd, input=content, capture_output=True, text=True,
-                            cwd=MEDIAWIKI_DIR)
-    if result.returncode != 0:
-        print(f"ERROR editing {title}: {result.stderr}", file=sys.stderr)
-        return False
-    print(f"  {title}: {result.stdout.strip()}")
-    return True
-
-
-def purge_page(title):
-    """Purge parser cache for a page."""
-    requests.post(f"{WIKI_BASE}/api.php",
-                  data={"action": "purge", "titles": title, "format": "json"},
-                  timeout=10)
 
 
 # ── Main ──────────────────────────────────────────────────
