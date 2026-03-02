@@ -1,0 +1,49 @@
+{
+    "kind": "update",
+    "startTime": 1772437738,
+    "message": "Fix links embed: use bold masked links instead of headings",
+    "environment": {
+        "ci.build.id": "22566371699",
+        "ci.build.number": "6",
+        "ci.build.type": "push",
+        "ci.build.url": "https://github.com/hunterjsb/xn-mc/actions/runs/22566371699",
+        "ci.pr.headSHA": "ec60e41ccb2043da74f16c57678365a09ba3ea8b",
+        "ci.system": "GitHub Actions",
+        "exec.kind": "cli",
+        "git.author": "hunterjsb",
+        "git.author.email": "hunterjsb@gmail.com",
+        "git.committer": "hunterjsb",
+        "git.committer.email": "hunterjsb@gmail.com",
+        "git.dirty": "true",
+        "git.head": "ec60e41ccb2043da74f16c57678365a09ba3ea8b",
+        "git.headName": "refs/heads/master",
+        "pulumi.arch": "amd64",
+        "pulumi.env.PULUMI_CONFIG_PASSPHRASE": "set",
+        "pulumi.flag.stack": "set",
+        "pulumi.flag.yes": "true",
+        "pulumi.os": "linux",
+        "pulumi.version": "v3.224.0",
+        "runtime.executable": "/opt/hostedtoolcache/go/1.24.13/x64/bin/go",
+        "runtime.name": "go",
+        "runtime.version": "go version go1.24.13 linux/amd64",
+        "stack.environments": "[]",
+        "updatePlan": "false",
+        "vcs.kind": "github.com",
+        "vcs.owner": "hunterjsb",
+        "vcs.repo": "xn-mc",
+        "vcs.root": "discord"
+    },
+    "config": {
+        "pulumi:tags": {
+            "pulumi:template": "go"
+        },
+        "xhc-discord:serverId": "1472695132875915490"
+    },
+    "version": 0,
+    "result": "succeeded",
+    "endTime": 1772437739,
+    "resourceChanges": {
+        "same": 66,
+        "update": 1
+    }
+}
