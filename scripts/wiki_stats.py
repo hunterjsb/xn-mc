@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Auto-update numerical stats on the Xandaris wiki."""
+"""Auto-update numerical stats on the Xandaris wiki.
+
+Updates: Main_Page, Players, Server_History
+Scheduled: daily at 06:00 UTC via /etc/cron.d/wiki-stats
+"""
 
 import argparse
 import json
@@ -16,6 +20,9 @@ from utils.config import Config
 
 WIKI_BASE = "https://wiki.xandaris.space"
 MEDIAWIKI_DIR = "/var/www/mediawiki"
+
+
+# ── Data loading ──────────────────────────────────────────
 
 
 def load_bot_names():
@@ -48,15 +55,19 @@ def load_bans(server_dir, bot_names):
     return deathbanned, hackbanned
 
 
+# ── Stats computation ─────────────────────────────────────
+
+
 def compute_records(server_dir, uuid_to_name, bot_names):
-    """Compute all record values from player stat JSONs."""
+    """Compute per-player record values from stat JSONs."""
     stats_dir = os.path.join(server_dir, "world", "stats")
-    records = {k: (0, "Unknown") for k in [
-        "play_time", "mob_kills", "walk_one_cm", "jump",
+    keys = [
+        "play_time", "mob_kills", "player_kills", "walk_one_cm", "jump",
         "traded_with_villager", "animals_bred", "boat_one_cm",
         "sleep_in_bed", "deaths", "zero_deaths_time",
         "aviate_one_cm", "items_crafted", "diamonds_mined",
-    ]}
+    ]
+    records = {k: (0, "Unknown") for k in keys}
 
     for stats_file in Path(stats_dir).glob("*.json"):
         uuid = stats_file.stem
@@ -78,6 +89,7 @@ def compute_records(server_dir, uuid_to_name, bot_names):
         for rk, sk in [
             ("play_time", "minecraft:play_time"),
             ("mob_kills", "minecraft:mob_kills"),
+            ("player_kills", "minecraft:player_kills"),
             ("walk_one_cm", "minecraft:walk_one_cm"),
             ("jump", "minecraft:jump"),
             ("traded_with_villager", "minecraft:traded_with_villager"),
@@ -111,19 +123,56 @@ def compute_records(server_dir, uuid_to_name, bot_names):
     return records
 
 
+def compute_aggregates(server_dir, uuid_to_name, bot_names):
+    """Compute server-wide aggregate stats."""
+    stats_dir = os.path.join(server_dir, "world", "stats")
+    totals = dict(play_time=0, mob_kills=0, player_kills=0,
+                  distance=0, trades=0)
+
+    for stats_file in Path(stats_dir).glob("*.json"):
+        uuid = stats_file.stem
+        name = uuid_to_name.get(uuid)
+        if not name or name in bot_names:
+            continue
+        try:
+            with open(stats_file) as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            continue
+
+        c = data.get("stats", {}).get("minecraft:custom", {})
+        totals["play_time"] += c.get("minecraft:play_time", 0)
+        totals["mob_kills"] += c.get("minecraft:mob_kills", 0)
+        totals["player_kills"] += c.get("minecraft:player_kills", 0)
+        totals["distance"] += (c.get("minecraft:walk_one_cm", 0) +
+                               c.get("minecraft:sprint_one_cm", 0) +
+                               c.get("minecraft:aviate_one_cm", 0))
+        totals["trades"] += c.get("minecraft:traded_with_villager", 0)
+
+    return totals
+
+
+def count_pages_by_namespace():
+    """Count wiki pages per content namespace."""
+    counts = {}
+    for ns, label in [(0, "main"), (10, "template"), (3000, "player"),
+                      (3002, "event"), (3004, "location"), (3006, "group")]:
+        resp = requests.get(f"{WIKI_BASE}/api.php", params={
+            "action": "query", "list": "allpages", "apnamespace": ns,
+            "aplimit": "max", "format": "json",
+        }, timeout=15)
+        counts[label] = len(resp.json().get("query", {}).get("allpages", []))
+    counts["total"] = sum(counts.values())
+    return counts
+
+
+# ── Formatting helpers ────────────────────────────────────
+
+
 def fmt(raw, unit):
     """Format a stat value for display."""
     if unit == "hours":
         return f"{raw / 72000:,.1f} hours"
-    if unit == "km":
-        return f"{raw / 100000:,.1f} km"
-    return f"{raw:,}"
-
-
-def fmt_short(raw, unit):
-    """Short format for Main_Page bullets."""
-    if unit == "hours":
-        return f"{raw / 72000:,.1f}h"
     if unit == "km":
         return f"{raw / 100000:,.1f} km"
     return f"{raw:,}"
@@ -134,31 +183,46 @@ def plink(name):
     return f"[[Player:{name}|{name}]]"
 
 
-# -- Page updaters --
+# ── Table helpers ─────────────────────────────────────────
 
 
-def update_players_page(text, records, total, alive, dead, hack_count):
-    """Update Server Records table and Statistics section on Players page."""
-    # Extract preserved rows (Fastest Death, Fastest Spawn Death)
+def extract_preserved_rows(text, preserve_labels):
+    """Extract wikitable rows matching any preserve label (case-insensitive)."""
     preserved = []
-    for label in ["Fastest Death", "Fastest Spawn Death"]:
-        m = re.search(r'(\|-\n\| ' + re.escape(label) + r' \|\|[^\n]+)', text)
+    for label in preserve_labels:
+        pattern = r'(\|-\n\| ' + re.escape(label) + r' \|\|[^\n]+)'
+        m = re.search(pattern, text, re.IGNORECASE)
         if m:
             preserved.append(m.group(1))
+    return preserved
+
+
+# ── Page updaters ─────────────────────────────────────────
+
+
+def update_players_page(text, records, total, alive, dead, hack_count, player_pages):
+    """Update Server Records table and Statistics on Players page."""
+    preserved = extract_preserved_rows(text,
+        ["Fastest death", "Fastest Spawn Death", "Fastest spawn death"])
 
     # Build records table
-    row_defs = [
-        ("Most Play Time",        "play_time",            "hours"),
-        ("Most Mob Kills",        "mob_kills",            "count"),
-        ("Longest Walk",          "walk_one_cm",          "km"),
-        ("Most Jumps",            "jump",                 "count"),
-        ("Most Villager Trades",  "traded_with_villager", "count"),
-        ("Most Animals Bred",     "animals_bred",         "count"),
-        ("Longest Boat Journey",  "boat_one_cm",          "km"),
-        ("Most Beds Slept In",    "sleep_in_bed",         "count"),
-        ("Most Deaths",           "deaths",               "count"),
-        ("Zero Deaths (longest)", "zero_deaths_time",     "hours"),
+    before_preserved = [
+        ("Most play time",       "play_time",            "hours"),
+        ("Most mob kills",       "mob_kills",            "count"),
+        ("Most player kills",    "player_kills",         "count"),
+        ("Longest walk",         "walk_one_cm",          "km"),
+        ("Most jumps",           "jump",                 "count"),
+        ("Most villager trades", "traded_with_villager",  "count"),
+        ("Most animals bred",    "animals_bred",         "count"),
+        ("Longest boat journey", "boat_one_cm",          "km"),
+        ("Zero-death record",    "zero_deaths_time",     "hours"),
     ]
+    after_preserved = [
+        ("Most elytra flight",   "aviate_one_cm",  "km"),
+        ("Most items crafted",   "items_crafted",   "count"),
+        ("Most diamonds mined",  "diamonds_mined",  "count"),
+    ]
+
     lines = [
         '== Server Records ==',
         '',
@@ -166,89 +230,128 @@ def update_players_page(text, records, total, alive, dead, hack_count):
         '|-',
         '! Record !! Player !! Value',
     ]
-    for display, key, unit in row_defs:
+    for display, key, unit in before_preserved:
         raw, name = records[key]
-        lines.append('|-')
-        lines.append(f'| {display} || {plink(name)} || {fmt(raw, unit)}')
-
-    # Preserved rows (Fastest Death, Fastest Spawn Death)
+        lines.extend(['|-', f'| {display} || {plink(name)} || {fmt(raw, unit)}'])
     for row in preserved:
         lines.append(row)
-
-    # Remaining computed records after preserved rows
-    for display, key, unit in [
-        ("Most Elytra Flight",  "aviate_one_cm",  "km"),
-        ("Most Items Crafted",  "items_crafted",   "count"),
-        ("Most Diamonds Mined", "diamonds_mined",  "count"),
-    ]:
+    for display, key, unit in after_preserved:
         raw, name = records[key]
-        lines.append('|-')
-        lines.append(f'| {display} || {plink(name)} || {fmt(raw, unit)}')
+        lines.extend(['|-', f'| {display} || {plink(name)} || {fmt(raw, unit)}'])
     lines.append('|}')
 
-    new_section = '\n'.join(lines)
+    new_section = '\n'.join(lines) + '\n'
     text = re.sub(
         r'== Server Records ==\n.*?(?=\n== Statistics ==)',
         new_section, text, count=1, flags=re.DOTALL,
     )
 
-    # Update statistics bullets (replace only the 4 stat lines, keep the rest)
-    text = re.sub(r"\* '''Total unique players:'''[^\n]*",
-                  f"* '''Total unique players:''' {total}", text)
-    text = re.sub(r"\* '''Currently alive:'''[^\n]*",
-                  f"* '''Currently alive:''' {alive}", text)
-    text = re.sub(r"\* '''Permanently dead:'''[^\n]*",
-                  f"* '''Permanently dead:''' {dead}", text)
-    text = re.sub(r"\* '''Banned \(hacking\):'''[^\n]*",
-                  f"* '''Banned (hacking):''' {hack_count}", text)
+    # Update statistics bullets
+    replacements = [
+        (r"\* '''Total unique players:'''[^\n]*",
+         f"* '''Total unique players:''' {total}"),
+        (r"\* '''Currently alive:'''[^\n]*",
+         f"* '''Currently alive:''' ~{alive}"),
+        (r"\* '''Deathbanned:'''[^\n]*",
+         f"* '''Deathbanned:''' {dead}"),
+        (r"\* '''Permanently dead:'''[^\n]*",
+         f"* '''Deathbanned:''' {dead}"),
+        (r"\* '''Banned \(hacking\):'''[^\n]*",
+         f"* '''Banned (hacking):''' {hack_count}"),
+        (r"\* '''Player pages on this wiki:'''[^\n]*",
+         f"* '''Player pages on this wiki:''' {player_pages}"),
+    ]
+    for pattern, repl in replacements:
+        text = re.sub(pattern, repl, text)
 
     return text
 
 
-def update_main_page(text, records, total, alive):
-    """Update Server Records bullets and Quick Stats on Main_Page."""
-    # Extract preserved bullet (Fastest death)
-    preserved = []
-    m = re.search(r"(\* '''Fastest death:'''[^\n]+)", text)
-    if m:
-        preserved.append(m.group(1))
+def update_main_page(text, records, total, alive, dead, aggregates, page_counts):
+    """Update Main_Page: Browse counts, records table, Server at a Glance."""
 
-    # Build server records bullet list
-    bullet_defs = [
-        ("Most time played",   "play_time",       "hours"),
-        ("Most mob kills",     "mob_kills",        "count"),
-        ("Longest walk",       "walk_one_cm",      "km"),
-        ("Zero deaths record", "zero_deaths_time", "hours"),
+    # Update Browse section page counts
+    text = re.sub(r"'''(\d+)''' player pages",
+                  f"'''{page_counts['player']}''' player pages", text)
+    text = re.sub(r"'''(\d+)''' event pages",
+                  f"'''{page_counts['event']}''' event pages", text)
+    text = re.sub(r"'''(\d+)''' locations",
+                  f"'''{page_counts['location']}''' locations", text)
+
+    # Rebuild Server Records table (preserving manual rows)
+    preserved = extract_preserved_rows(text,
+        ["Fastest death", "Most accounts"])
+
+    row_defs = [
+        ("Most time played",     "play_time",            "hours"),
+        ("Most mob kills",       "mob_kills",            "count"),
+        ("Zero-death record",    "zero_deaths_time",     "hours"),
+        ("Most player kills",    "player_kills",         "count"),
+        ("Most villager trades", "traded_with_villager",  "count"),
+        ("Longest walk",         "walk_one_cm",          "km"),
+        ("Most elytra flight",   "aviate_one_cm",        "km"),
     ]
-    lines = ['=== Server Records ===']
-    for display, key, unit in bullet_defs:
-        raw, name = records[key]
-        lines.append(f"* '''{display}:''' {plink(name)} ({fmt_short(raw, unit)})")
-    lines.extend(preserved)
-    for display, key, unit in [
-        ("Most elytra flight", "aviate_one_cm", "km"),
-    ]:
-        raw, name = records[key]
-        lines.append(f"* '''{display}:''' {plink(name)} ({fmt_short(raw, unit)})")
 
-    new_bullets = '\n'.join(lines)
+    lines = [
+        '== Server Records ==',
+        '',
+        '{| class="wikitable" style="width:100%;"',
+        '|-',
+        '! Record !! Player !! Value',
+    ]
+    for display, key, unit in row_defs:
+        raw, name = records[key]
+        lines.extend(['|-', f'| {display} || {plink(name)} || {fmt(raw, unit)}'])
+    for row in preserved:
+        lines.append(row)
+    lines.append('|}')
+
+    new_section = '\n'.join(lines) + '\n'
     text = re.sub(
-        r'=== Server Records ===\n.*?(?=\n\|\})',
-        new_bullets, text, count=1, flags=re.DOTALL,
+        r'== Server Records ==\n.*?(?=\n== Server Features ==)',
+        new_section, text, count=1, flags=re.DOTALL,
     )
 
-    # Update Quick Stats table (Players Joined + Survival Rate cells only)
+    # Update "Server at a Glance" table row
     rate = f"{alive / total * 100:.0f}%" if total > 0 else "N/A"
+    total_hours = f"{aggregates['play_time'] / 72000:,.0f}"
     text = re.sub(
-        r'(\| February 15, 2026 \|\| )\S+( \|\| )[^|]+(\|\|)',
-        rf'\g<1>{total}\g<2>{rate} \3',
+        r'\| February 15, 2026 \|\|[^\n]+',
+        f'| February 15, 2026 || {total}+ || {rate} || {dead}'
+        f' || {total_hours} hours || {page_counts["total"]}',
         text, count=1,
     )
 
     return text
 
 
-# -- Wiki I/O --
+def update_server_history(text, total, dead, aggregates):
+    """Update Server Statistics table on Server History page."""
+    rate = f"{(total - dead) / total * 100:.0f}%" if total > 0 else "N/A"
+    replacements = [
+        (r'\| Total unique players \|\|[^\n]+',
+         f'| Total unique players || {total}+'),
+        (r'\| Total deathbans \|\|[^\n]+',
+         f'| Total deathbans || {dead}'),
+        (r'\| Survival rate \|\|[^\n]+',
+         f'| Survival rate || {rate}'),
+        (r'\| Total play time \|\|[^\n]+',
+         f'| Total play time || {aggregates["play_time"] / 72000:,.0f} hours'),
+        (r'\| Total mob kills \|\|[^\n]+',
+         f'| Total mob kills || {aggregates["mob_kills"]:,}'),
+        (r'\| Total player kills \|\|[^\n]+',
+         f'| Total player kills || {aggregates["player_kills"]:,}'),
+        (r'\| Total distance traveled \|\|[^\n]+',
+         f'| Total distance traveled || {aggregates["distance"] / 100000:,.0f} km'),
+        (r'\| Total villager trades \|\|[^\n]+',
+         f'| Total villager trades || {aggregates["trades"]:,}'),
+    ]
+    for pattern, repl in replacements:
+        text = re.sub(pattern, repl, text)
+    return text
+
+
+# ── Wiki I/O ──────────────────────────────────────────────
 
 
 def fetch_page(title):
@@ -271,14 +374,24 @@ def edit_page(title, content, summary):
     if result.returncode != 0:
         print(f"ERROR editing {title}: {result.stderr}", file=sys.stderr)
         return False
-    print(f"Updated {title}: {result.stdout.strip()}")
+    print(f"  {title}: {result.stdout.strip()}")
     return True
+
+
+def purge_page(title):
+    """Purge parser cache for a page."""
+    requests.post(f"{WIKI_BASE}/api.php",
+                  data={"action": "purge", "titles": title, "format": "json"},
+                  timeout=10)
+
+
+# ── Main ──────────────────────────────────────────────────
 
 
 def main():
     parser = argparse.ArgumentParser(description="Auto-update wiki stats")
     parser.add_argument("--dry-run", action="store_true",
-                        help="Print changes without publishing")
+                        help="Show diffs without publishing")
     args = parser.parse_args()
 
     cfg = Config()
@@ -289,8 +402,10 @@ def main():
     uuid_to_name = load_usercache(server_dir)
     deathbanned, hackbanned = load_bans(server_dir, bot_names)
     records = compute_records(server_dir, uuid_to_name, bot_names)
+    aggregates = compute_aggregates(server_dir, uuid_to_name, bot_names)
+    page_counts = count_pages_by_namespace()
 
-    # Compute aggregate stats
+    # Compute player counts
     all_names = {n for n in uuid_to_name.values() if n not in bot_names}
     total = len(all_names)
     dead = len(deathbanned)
@@ -298,11 +413,14 @@ def main():
     alive = total - dead - hacked
 
     print(f"Players: {total} total, {alive} alive, {dead} dead, {hacked} hack-banned")
+    print(f"Wiki pages: {page_counts}")
     print(f"Bots filtered: {len(bot_names)}")
     print()
+
     for key, unit, display in [
         ("play_time", "hours", "Most Play Time"),
         ("mob_kills", "count", "Most Mob Kills"),
+        ("player_kills", "count", "Most Player Kills"),
         ("walk_one_cm", "km", "Longest Walk"),
         ("jump", "count", "Most Jumps"),
         ("traded_with_villager", "count", "Most Villager Trades"),
@@ -322,21 +440,54 @@ def main():
     # Fetch current pages
     players_text = fetch_page("Players")
     main_text = fetch_page("Main_Page")
+    history_text = fetch_page("Server_History")
 
     # Apply updates
-    new_players = update_players_page(players_text, records, total, alive, dead, hacked)
-    new_main = update_main_page(main_text, records, total, alive)
+    new_players = update_players_page(
+        players_text, records, total, alive, dead, hacked,
+        page_counts["player"])
+    new_main = update_main_page(
+        main_text, records, total, alive, dead, aggregates, page_counts)
+    new_history = update_server_history(
+        history_text, total, dead, aggregates)
+
+    pages = [
+        ("Players", players_text, new_players),
+        ("Main_Page", main_text, new_main),
+        ("Server_History", history_text, new_history),
+    ]
 
     if args.dry_run:
-        print("=== Players page (updated) ===")
-        print(new_players)
-        print()
-        print("=== Main_Page (updated) ===")
-        print(new_main)
+        for title, old, new in pages:
+            if old == new:
+                print(f"=== {title}: no changes ===")
+                continue
+            print(f"=== {title}: changed ===")
+            old_lines = old.splitlines()
+            new_lines = new.splitlines()
+            for i, (o, n) in enumerate(zip(old_lines, new_lines)):
+                if o != n:
+                    print(f"  -{i+1}: {o}")
+                    print(f"  +{i+1}: {n}")
+            # Handle length differences
+            if len(new_lines) > len(old_lines):
+                for i in range(len(old_lines), len(new_lines)):
+                    print(f"  +{i+1}: {new_lines[i]}")
+            elif len(old_lines) > len(new_lines):
+                for i in range(len(new_lines), len(old_lines)):
+                    print(f"  -{i+1}: {old_lines[i]}")
+            print()
         return
 
-    edit_page("Players", new_players, "Auto-update stats")
-    edit_page("Main_Page", new_main, "Auto-update stats")
+    print("Publishing...")
+    for title, old, new in pages:
+        if old == new:
+            print(f"  {title}: unchanged, skipping")
+            continue
+        edit_page(title, new, "Auto-update stats")
+        purge_page(title)
+
+    print("Done.")
 
 
 if __name__ == "__main__":
