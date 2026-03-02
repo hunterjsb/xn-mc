@@ -5,6 +5,10 @@ chatbot/known-players.json
 chatbot/botSkins/
 chatbot/skin-assignments.json
 chatbot/slur-filter.js
+chatbot/revival-profiles/
+
+# Bukkit plugin build output
+revival-plugin/target/
 
 # Server (live Crafty dir — don't track, avoid permission issues)
 server/*
@@ -15,6 +19,11 @@ server/*
 
 # Go binaries
 bot/xn-mc-bot
+discord/xhc-discord
+
+# Discord Pulumi (generated / runtime)
+discord/sdks/
+discord/.outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,0 +1,62 @@
+name: Deploy Discord Server
+on:
+  workflow_dispatch:
+    inputs:
+      triggered_by:
+        description: 'Workflow that triggered this deployment'
+        required: false
+        default: 'manual'
+  push:
+    branches: [master]
+    paths:
+      - 'discord/*.go'
+      - 'discord/go.mod'
+      - 'discord/go.sum'
+      - 'discord/Pulumi.yaml'
+      - 'discord/Pulumi.prod.yaml'
+
+env:
+  PULUMI_CONFIG_PASSPHRASE: ""
+
+defaults:
+  run:
+    working-directory: discord
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Install Pulumi CLI
+        uses: pulumi/setup-pulumi@v2
+
+      - name: Install Discord provider
+        run: pulumi package add terraform-provider lucky3028/discord
+
+      - name: Install Go dependencies
+        run: go mod download
+
+      - name: Login to local file backend
+        run: pulumi login file://./state
+
+      - name: Deploy Discord server
+        run: pulumi up --stack prod --yes
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+
+      - name: Commit updated state
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add state/
+          git commit -m "Update discord Pulumi state [skip ci]" || echo "No changes to commit"
+          git push

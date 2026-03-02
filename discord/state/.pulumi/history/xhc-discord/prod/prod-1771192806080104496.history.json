@@ -1,0 +1,43 @@
+{
+    "kind": "update",
+    "startTime": 1771192803,
+    "message": "give lionclad admin",
+    "environment": {
+        "exec.kind": "cli",
+        "git.author": "hunterjsb",
+        "git.author.email": "hunterjsb@gmail.com",
+        "git.committer": "hunterjsb",
+        "git.committer.email": "hunterjsb@gmail.com",
+        "git.dirty": "true",
+        "git.head": "9250d775d9aedeef30548c34bfd0e2e60ce51694",
+        "git.headName": "refs/heads/main",
+        "pulumi.arch": "amd64",
+        "pulumi.env.PULUMI_BACKEND_URL": "set",
+        "pulumi.env.PULUMI_CONFIG_PASSPHRASE": "set",
+        "pulumi.flag.yes": "true",
+        "pulumi.os": "linux",
+        "pulumi.version": "v3.220.0",
+        "runtime.executable": "/home/linuxbrew/.linuxbrew/bin/go",
+        "runtime.name": "go",
+        "runtime.version": "go version go1.26.0 linux/amd64",
+        "stack.environments": "[]",
+        "updatePlan": "false",
+        "vcs.kind": "github.com",
+        "vcs.owner": "hunterjsb",
+        "vcs.repo": "xhc-discord",
+        "vcs.root": "."
+    },
+    "config": {
+        "pulumi:tags": {
+            "pulumi:template": "go"
+        },
+        "xhc-discord:serverId": "1472695132875915490"
+    },
+    "version": 0,
+    "result": "succeeded",
+    "endTime": 1771192806,
+    "resourceChanges": {
+        "create": 1,
+        "same": 38
+    }
+}

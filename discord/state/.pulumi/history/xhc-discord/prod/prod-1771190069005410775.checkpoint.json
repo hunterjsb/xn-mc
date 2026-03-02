@@ -1,0 +1,2666 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/xhc-discord/prod",
+        "latest": {
+            "manifest": {
+                "time": "2026-02-15T16:14:29.000791739-05:00",
+                "magic": "22b7de8b0b797cfdc538c94a4e1b81eae77789956bbf6ad52b70e5ebbf1f68c0",
+                "version": "v3.220.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:jfaYtxsqvGs=:v1:glJeVADC2gMwDoio:O/gJzvJ/2F/2qsCGqMm3AXt5Svu9Eg=="
+                }
+            },
+            "resources": [
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "custom": false,
+                    "type": "pulumi:pulumi:Stack",
+                    "outputs": {
+                        "adminRoleId": "1472698210005815348",
+                        "announcementsChannelId": "1472698211134079152",
+                        "deadRoleId": "1472697694207217871",
+                        "generalChannelId": "1472698211855630480",
+                        "moderatorRoleId": "1472697696874926284",
+                        "playerRoleId": "1472698210576367721",
+                        "rulesChannelId": "1472698210421051444",
+                        "serverId": "1472695132875915490"
+                    },
+                    "created": "2026-02-15T20:51:30.748382416Z",
+                    "modified": "2026-02-15T20:51:30.748382416Z",
+                    "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0",
+                    "custom": true,
+                    "id": "a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "type": "pulumi:providers:discord",
+                    "inputs": {
+                        "__internal": {
+                            "name": "terraform-provider",
+                            "parameterization": "eyJyZW1vdGUiOnsidXJsIjoicmVnaXN0cnkub3BlbnRvZnUub3JnL2x1Y2t5MzAyOC9kaXNjb3JkIiwidmVyc2lvbiI6IjIuMy4wIn19",
+                            "version": "1.1.0"
+                        },
+                        "version": "2.3.0"
+                    },
+                    "outputs": {
+                        "version": "2.3.0"
+                    },
+                    "created": "2026-02-15T20:51:30.823742895Z",
+                    "modified": "2026-02-15T20:51:30.823742895Z"
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::info",
+                    "custom": true,
+                    "id": "1472697694979096769",
+                    "type": "discord:index/categoryChannel:CategoryChannel",
+                    "inputs": {
+                        "name": "Info",
+                        "position": 0,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "channelId": "1472697694979096769",
+                        "id": "1472697694979096769",
+                        "name": "Info",
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "type": "category"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "name": [],
+                        "position": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:54:52.083693799Z",
+                    "modified": "2026-02-15T20:54:52.083693799Z",
+                    "sourcePosition": "project:///categories.go#17",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///categories.go#17"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#21"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::general",
+                    "custom": true,
+                    "id": "1472697696203702434",
+                    "type": "discord:index/categoryChannel:CategoryChannel",
+                    "inputs": {
+                        "name": "General",
+                        "position": 1,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "channelId": "1472697696203702434",
+                        "id": "1472697696203702434",
+                        "name": "General",
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "type": "category"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "name": [],
+                        "position": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:54:52.298610899Z",
+                    "modified": "2026-02-15T20:54:52.298610899Z",
+                    "sourcePosition": "project:///categories.go#26",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///categories.go#26"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#21"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/role:Role::player",
+                    "custom": true,
+                    "id": "1472698210576367721",
+                    "type": "discord:index/role:Role",
+                    "inputs": {
+                        "color": 3447003,
+                        "hoist": true,
+                        "mentionable": true,
+                        "name": "Player",
+                        "permissions": 3263488,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "color": 3447003,
+                        "hoist": true,
+                        "id": "1472698210576367721",
+                        "managed": false,
+                        "mentionable": true,
+                        "name": "Player",
+                        "permissions": 3263488,
+                        "position": 1,
+                        "serverId": "1472695132875915490"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "color": [],
+                        "hoist": [],
+                        "mentionable": [],
+                        "name": [],
+                        "permissions": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:56:54.963548892Z",
+                    "modified": "2026-02-15T20:56:54.963548892Z",
+                    "sourcePosition": "project:///roles.go#40",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///roles.go#40"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#15"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/role:Role::moderator",
+                    "custom": true,
+                    "id": "1472697696874926284",
+                    "type": "discord:index/role:Role",
+                    "inputs": {
+                        "color": 65280,
+                        "hoist": true,
+                        "mentionable": true,
+                        "name": "Moderator",
+                        "permissions": 11264,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "color": 65280,
+                        "hoist": true,
+                        "id": "1472697696874926284",
+                        "managed": false,
+                        "mentionable": true,
+                        "name": "Moderator",
+                        "permissions": 11264,
+                        "position": 3,
+                        "serverId": "1472695132875915490"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "color": [],
+                        "hoist": [],
+                        "mentionable": [],
+                        "name": [],
+                        "permissions": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:54:52.712888499Z",
+                    "modified": "2026-02-15T20:54:52.712888499Z",
+                    "sourcePosition": "project:///roles.go#28",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///roles.go#28"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#15"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/role:Role::admin",
+                    "custom": true,
+                    "id": "1472698210005815348",
+                    "type": "discord:index/role:Role",
+                    "inputs": {
+                        "color": 16711680,
+                        "hoist": true,
+                        "mentionable": true,
+                        "name": "Admin",
+                        "permissions": 8,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "color": 16711680,
+                        "hoist": true,
+                        "id": "1472698210005815348",
+                        "managed": false,
+                        "mentionable": true,
+                        "name": "Admin",
+                        "permissions": 8,
+                        "position": 1,
+                        "serverId": "1472695132875915490"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "color": [],
+                        "hoist": [],
+                        "mentionable": [],
+                        "name": [],
+                        "permissions": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:56:54.769058276Z",
+                    "modified": "2026-02-15T20:56:54.769058276Z",
+                    "sourcePosition": "project:///roles.go#16",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///roles.go#16"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#15"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::voice",
+                    "custom": true,
+                    "id": "1472697694173532243",
+                    "type": "discord:index/categoryChannel:CategoryChannel",
+                    "inputs": {
+                        "name": "Voice",
+                        "position": 3,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "channelId": "1472697694173532243",
+                        "id": "1472697694173532243",
+                        "name": "Voice",
+                        "position": 3,
+                        "serverId": "1472695132875915490",
+                        "type": "category"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "name": [],
+                        "position": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:54:51.866957321Z",
+                    "modified": "2026-02-15T20:54:51.866957321Z",
+                    "sourcePosition": "project:///categories.go#44",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///categories.go#44"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#21"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                    "custom": true,
+                    "id": "1472697694207217871",
+                    "type": "discord:index/role:Role",
+                    "inputs": {
+                        "color": 8421504,
+                        "hoist": true,
+                        "mentionable": true,
+                        "name": "Dead",
+                        "permissions": 1115136,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "color": 8421504,
+                        "hoist": true,
+                        "id": "1472697694207217871",
+                        "managed": false,
+                        "mentionable": true,
+                        "name": "Dead",
+                        "permissions": 1115136,
+                        "position": 1,
+                        "serverId": "1472695132875915490"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "color": [],
+                        "hoist": [],
+                        "mentionable": [],
+                        "name": [],
+                        "permissions": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:54:52.29861175Z",
+                    "modified": "2026-02-15T20:54:52.29861175Z",
+                    "sourcePosition": "project:///roles.go#52",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///roles.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#15"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin",
+                    "custom": true,
+                    "id": "1472697692819030309",
+                    "type": "discord:index/categoryChannel:CategoryChannel",
+                    "inputs": {
+                        "name": "Admin",
+                        "position": 4,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "channelId": "1472697692819030309",
+                        "id": "1472697692819030309",
+                        "name": "Admin",
+                        "position": 4,
+                        "serverId": "1472695132875915490",
+                        "type": "category"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "name": [],
+                        "position": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:54:51.560545282Z",
+                    "modified": "2026-02-15T20:54:51.560545282Z",
+                    "sourcePosition": "project:///categories.go#53",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///categories.go#53"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#21"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game",
+                    "custom": true,
+                    "id": "1472697693963812934",
+                    "type": "discord:index/categoryChannel:CategoryChannel",
+                    "inputs": {
+                        "name": "Game",
+                        "position": 2,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "channelId": "1472697693963812934",
+                        "id": "1472697693963812934",
+                        "name": "Game",
+                        "position": 2,
+                        "serverId": "1472695132875915490",
+                        "type": "category"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "name": [],
+                        "position": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:54:51.711871843Z",
+                    "modified": "2026-02-15T20:54:51.711871843Z",
+                    "sourcePosition": "project:///categories.go#35",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///categories.go#35"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#21"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::rules",
+                    "custom": true,
+                    "id": "1472698210421051444",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697694979096769",
+                        "name": "rules",
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "topic": "Server rules and guidelines"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697694979096769",
+                        "channelId": "1472698210421051444",
+                        "id": "1472698210421051444",
+                        "name": "rules",
+                        "nsfw": false,
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Server rules and guidelines",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::info"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::info"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:56:54.981952409Z",
+                    "modified": "2026-02-15T20:56:54.981952409Z",
+                    "sourcePosition": "project:///channels.go#29",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#29"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::server-status",
+                    "custom": true,
+                    "id": "1472698209573929052",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697694979096769",
+                        "name": "server-status",
+                        "position": 2,
+                        "serverId": "1472695132875915490",
+                        "topic": "IP, connection info, uptime"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697694979096769",
+                        "channelId": "1472698209573929052",
+                        "id": "1472698209573929052",
+                        "name": "server-status",
+                        "nsfw": false,
+                        "position": 2,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "IP, connection info, uptime",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::info"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::info"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:56:54.833738753Z",
+                    "modified": "2026-02-15T20:56:54.833738753Z",
+                    "sourcePosition": "project:///channels.go#51",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#51"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::announcements",
+                    "custom": true,
+                    "id": "1472698211134079152",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697694979096769",
+                        "name": "announcements",
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "topic": "Server news and updates"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697694979096769",
+                        "channelId": "1472698211134079152",
+                        "id": "1472698211134079152",
+                        "name": "announcements",
+                        "nsfw": false,
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Server news and updates",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::info"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::info"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:56:55.110169761Z",
+                    "modified": "2026-02-15T20:56:55.110169761Z",
+                    "sourcePosition": "project:///channels.go#40",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#40"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::media",
+                    "custom": true,
+                    "id": "1472698212765929524",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697696203702434",
+                        "name": "media",
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "topic": "Screenshots and clips"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697696203702434",
+                        "channelId": "1472698212765929524",
+                        "id": "1472698212765929524",
+                        "name": "media",
+                        "nsfw": false,
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Screenshots and clips",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::general"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::general"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:56:55.571559883Z",
+                    "modified": "2026-02-15T20:56:55.571559883Z",
+                    "sourcePosition": "project:///channels.go#74",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#74"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::general-text",
+                    "custom": true,
+                    "id": "1472698211855630480",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697696203702434",
+                        "name": "general",
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "topic": "Main chat"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697696203702434",
+                        "channelId": "1472698211855630480",
+                        "id": "1472698211855630480",
+                        "name": "general",
+                        "nsfw": false,
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Main chat",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::general"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::general"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:56:55.388989204Z",
+                    "modified": "2026-02-15T20:56:55.388989204Z",
+                    "sourcePosition": "project:///channels.go#63",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#63"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/voiceChannel:VoiceChannel::gaming-voice",
+                    "custom": true,
+                    "id": "1472697701748576430",
+                    "type": "discord:index/voiceChannel:VoiceChannel",
+                    "inputs": {
+                        "bitrate": 64000,
+                        "category": "1472697694173532243",
+                        "name": "Gaming",
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "userLimit": 10
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "bitrate": 64000,
+                        "category": "1472697694173532243",
+                        "channelId": "1472697701748576430",
+                        "id": "1472697701748576430",
+                        "name": "Gaming",
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "type": "voice",
+                        "userLimit": 10
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::voice"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "bitrate": [],
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::voice"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "userLimit": []
+                    },
+                    "created": "2026-02-15T20:54:53.778025863Z",
+                    "modified": "2026-02-15T20:54:53.778025863Z",
+                    "sourcePosition": "project:///channels.go#180",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#180"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#33"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/voiceChannel:VoiceChannel::general-voice",
+                    "custom": true,
+                    "id": "1472697703518568550",
+                    "type": "discord:index/voiceChannel:VoiceChannel",
+                    "inputs": {
+                        "bitrate": 64000,
+                        "category": "1472697694173532243",
+                        "name": "General",
+                        "position": 0,
+                        "serverId": "1472695132875915490"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {
+                                "ps": {
+                                    "userLimit": {
+                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                                        "ciphertext": "v1:O/T2TW6aRbGXckzM:7Z3uoIcv+Tq0XqxsNsDC2OllYj9pHQ0LKfCqchUgSvH+Nu82JQpmJQ=="
+                                    }
+                                }
+                            }
+                        },
+                        "bitrate": 64000,
+                        "category": "1472697694173532243",
+                        "channelId": "1472697703518568550",
+                        "id": "1472697703518568550",
+                        "name": "General",
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "type": "voice"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::voice"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "bitrate": [],
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::voice"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": []
+                    },
+                    "created": "2026-02-15T20:54:54.216621296Z",
+                    "modified": "2026-02-15T20:54:54.216621296Z",
+                    "sourcePosition": "project:///channels.go#169",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#169"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#33"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::admin-text",
+                    "custom": true,
+                    "id": "1472697696807686159",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697692819030309",
+                        "name": "admin",
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "topic": "Private admin channel"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697692819030309",
+                        "channelId": "1472697696807686159",
+                        "id": "1472697696807686159",
+                        "name": "admin",
+                        "nsfw": false,
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Private admin channel",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:54:52.930611438Z",
+                    "modified": "2026-02-15T20:54:52.930611438Z",
+                    "sourcePosition": "project:///channels.go#131",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#131"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::mod-log",
+                    "custom": true,
+                    "id": "1472697698003058698",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697692819030309",
+                        "name": "mod-log",
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "topic": "Moderation log"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697692819030309",
+                        "channelId": "1472697698003058698",
+                        "id": "1472697698003058698",
+                        "name": "mod-log",
+                        "nsfw": false,
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Moderation log",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:54:53.019786905Z",
+                    "modified": "2026-02-15T20:54:53.019786905Z",
+                    "sourcePosition": "project:///channels.go#142",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#142"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::admin-cat-deny-everyone",
+                    "custom": true,
+                    "id": "1472697692819030309:1472695132875915490:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472697692819030309",
+                        "deny": 125952,
+                        "overwriteId": "1472695132875915490",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472697692819030309",
+                        "deny": 125952,
+                        "id": "1472697692819030309:1472695132875915490:role",
+                        "overwriteId": "1472695132875915490",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin"
+                        ],
+                        "deny": [],
+                        "overwriteId": [],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:54:51.71435093Z",
+                    "modified": "2026-02-15T20:54:51.71435093Z",
+                    "sourcePosition": "project:///permissions.go#19",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#19"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::admin-cat-allow-mod",
+                    "custom": true,
+                    "id": "1472697692819030309:1472697696874926284:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 125952,
+                        "channelId": "1472697692819030309",
+                        "deny": 0,
+                        "overwriteId": "1472697696874926284",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 125952,
+                        "channelId": "1472697692819030309",
+                        "deny": 0,
+                        "id": "1472697692819030309:1472697696874926284:role",
+                        "overwriteId": "1472697696874926284",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin",
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::moderator"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::moderator"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.625334881Z",
+                    "modified": "2026-02-15T20:56:54.625334881Z",
+                    "sourcePosition": "project:///permissions.go#41",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#41"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::admin-cat-allow-admin",
+                    "custom": true,
+                    "id": "1472697692819030309:1472698210005815348:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 125952,
+                        "channelId": "1472697692819030309",
+                        "deny": 0,
+                        "overwriteId": "1472698210005815348",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 125952,
+                        "channelId": "1472697692819030309",
+                        "deny": 0,
+                        "id": "1472697692819030309:1472698210005815348:role",
+                        "overwriteId": "1472698210005815348",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin",
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::admin"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::admin"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::admin"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.938720976Z",
+                    "modified": "2026-02-15T20:56:54.938720976Z",
+                    "sourcePosition": "project:///permissions.go#30",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#30"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::builds",
+                    "custom": true,
+                    "id": "1472697699500556446",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697693963812934",
+                        "name": "builds",
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "topic": "Build showcases"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697693963812934",
+                        "channelId": "1472697699500556446",
+                        "id": "1472697699500556446",
+                        "name": "builds",
+                        "nsfw": false,
+                        "position": 1,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Build showcases",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:54:53.331640228Z",
+                    "modified": "2026-02-15T20:54:53.331640228Z",
+                    "sourcePosition": "project:///channels.go#97",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#97"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::deaths",
+                    "custom": true,
+                    "id": "1472697700519645217",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697693963812934",
+                        "name": "deaths",
+                        "position": 2,
+                        "serverId": "1472695132875915490",
+                        "topic": "Hall of the fallen"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697693963812934",
+                        "channelId": "1472697700519645217",
+                        "id": "1472697700519645217",
+                        "name": "deaths",
+                        "nsfw": false,
+                        "position": 2,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Hall of the fallen",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:54:53.823026028Z",
+                    "modified": "2026-02-15T20:54:53.823026028Z",
+                    "sourcePosition": "project:///channels.go#108",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#108"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::coordinates",
+                    "custom": true,
+                    "id": "1472697699265548391",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697693963812934",
+                        "name": "coordinates",
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "topic": "Share base/POI coords"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697693963812934",
+                        "channelId": "1472697699265548391",
+                        "id": "1472697699265548391",
+                        "name": "coordinates",
+                        "nsfw": false,
+                        "position": 0,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Share base/POI coords",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:54:53.225872687Z",
+                    "modified": "2026-02-15T20:54:53.225872687Z",
+                    "sourcePosition": "project:///channels.go#86",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#86"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::trading",
+                    "custom": true,
+                    "id": "1472697698632208575",
+                    "type": "discord:index/textChannel:TextChannel",
+                    "inputs": {
+                        "category": "1472697693963812934",
+                        "name": "trading",
+                        "position": 3,
+                        "serverId": "1472695132875915490",
+                        "topic": "Item trading"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "category": "1472697693963812934",
+                        "channelId": "1472697698632208575",
+                        "id": "1472697698632208575",
+                        "name": "trading",
+                        "nsfw": false,
+                        "position": 3,
+                        "serverId": "1472695132875915490",
+                        "syncPermsWithCategory": true,
+                        "topic": "Item trading",
+                        "type": "text"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "category": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/categoryChannel:CategoryChannel::game"
+                        ],
+                        "name": [],
+                        "position": [],
+                        "serverId": [],
+                        "topic": []
+                    },
+                    "created": "2026-02-15T20:54:53.057048466Z",
+                    "modified": "2026-02-15T20:54:53.057048466Z",
+                    "sourcePosition": "project:///channels.go#119",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///channels.go#119"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#27"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-rules",
+                    "custom": true,
+                    "id": "1472698210421051444:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472698210421051444",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472698210421051444",
+                        "deny": 2099200,
+                        "id": "1472698210421051444:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::rules"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::rules"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:55.114289546Z",
+                    "modified": "2026-02-15T20:56:55.114289546Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-server-status",
+                    "custom": true,
+                    "id": "1472698209573929052:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472698209573929052",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472698209573929052",
+                        "deny": 2099200,
+                        "id": "1472698209573929052:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::server-status"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::server-status"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.974408576Z",
+                    "modified": "2026-02-15T20:56:54.974408576Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-announcements",
+                    "custom": true,
+                    "id": "1472698211134079152:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472698211134079152",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472698211134079152",
+                        "deny": 2099200,
+                        "id": "1472698211134079152:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::announcements"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::announcements"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:55.27279841Z",
+                    "modified": "2026-02-15T20:56:55.27279841Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-media",
+                    "custom": true,
+                    "id": "1472698212765929524:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472698212765929524",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472698212765929524",
+                        "deny": 2099200,
+                        "id": "1472698212765929524:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::media"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::media"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:55.684897096Z",
+                    "modified": "2026-02-15T20:56:55.684897096Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-general",
+                    "custom": true,
+                    "id": "1472698211855630480:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472698211855630480",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472698211855630480",
+                        "deny": 2099200,
+                        "id": "1472698211855630480:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::general-text"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::general-text"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:55.511543118Z",
+                    "modified": "2026-02-15T20:56:55.511543118Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-gaming-vc",
+                    "custom": true,
+                    "id": "1472697701748576430:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472697701748576430",
+                        "deny": 2097152,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472697701748576430",
+                        "deny": 2097152,
+                        "id": "1472697701748576430:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/voiceChannel:VoiceChannel::gaming-voice"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/voiceChannel:VoiceChannel::gaming-voice"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.692535171Z",
+                    "modified": "2026-02-15T20:56:54.692535171Z",
+                    "sourcePosition": "project:///permissions.go#88",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#88"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-general-vc",
+                    "custom": true,
+                    "id": "1472697703518568550:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472697703518568550",
+                        "deny": 2097152,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472697703518568550",
+                        "deny": 2097152,
+                        "id": "1472697703518568550:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/voiceChannel:VoiceChannel::general-voice"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/voiceChannel:VoiceChannel::general-voice"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.681769997Z",
+                    "modified": "2026-02-15T20:56:54.681769997Z",
+                    "sourcePosition": "project:///permissions.go#88",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#88"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-builds",
+                    "custom": true,
+                    "id": "1472697699500556446:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472697699500556446",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472697699500556446",
+                        "deny": 2099200,
+                        "id": "1472697699500556446:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::builds"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::builds"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.614207536Z",
+                    "modified": "2026-02-15T20:56:54.614207536Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-deaths",
+                    "custom": true,
+                    "id": "1472697700519645217:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472697700519645217",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472697700519645217",
+                        "deny": 2099200,
+                        "id": "1472697700519645217:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::deaths"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::deaths"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.614207586Z",
+                    "modified": "2026-02-15T20:56:54.614207586Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-coordinates",
+                    "custom": true,
+                    "id": "1472697699265548391:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472697699265548391",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472697699265548391",
+                        "deny": 2099200,
+                        "id": "1472697699265548391:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::coordinates"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::coordinates"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.614207496Z",
+                    "modified": "2026-02-15T20:56:54.614207496Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-trading",
+                    "custom": true,
+                    "id": "1472697698632208575:1472697694207217871:role",
+                    "type": "discord:index/channelPermission:ChannelPermission",
+                    "inputs": {
+                        "allow": 0,
+                        "channelId": "1472697698632208575",
+                        "deny": 2099200,
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {}
+                        },
+                        "allow": 0,
+                        "channelId": "1472697698632208575",
+                        "deny": 2099200,
+                        "id": "1472697698632208575:1472697694207217871:role",
+                        "overwriteId": "1472697694207217871",
+                        "type": "role"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead",
+                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::trading"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "allow": [],
+                        "channelId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::trading"
+                        ],
+                        "deny": [],
+                        "overwriteId": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::dead"
+                        ],
+                        "type": []
+                    },
+                    "created": "2026-02-15T20:56:54.68682238Z",
+                    "modified": "2026-02-15T20:56:54.68682238Z",
+                    "sourcePosition": "project:///permissions.go#69",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///permissions.go#69"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#39"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                },
+                {
+                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/memberRoles:MemberRoles::hunter",
+                    "custom": true,
+                    "id": "1472695132875915490:371034483836846090",
+                    "type": "discord:index/memberRoles:MemberRoles",
+                    "inputs": {
+                        "roles": [
+                            {
+                                "hasRole": true,
+                                "roleId": "1472698210005815348"
+                            }
+                        ],
+                        "serverId": "1472695132875915490",
+                        "userId": "371034483836846090"
+                    },
+                    "outputs": {
+                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
+                        "__pulumi_raw_state_delta": {
+                            "obj": {
+                                "ps": {
+                                    "roles": {
+                                        "arr": {
+                                            "el": {
+                                                "0": {
+                                                    "obj": {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "renamed": {
+                                    "memberRolesId": "id",
+                                    "roles": "role"
+                                }
+                            }
+                        },
+                        "memberRolesId": "1472695132875915490:371034483836846090",
+                        "roles": [
+                            {
+                                "hasRole": true,
+                                "roleId": "1472698210005815348"
+                            }
+                        ],
+                        "serverId": "1472695132875915490",
+                        "userId": "371034483836846090"
+                    },
+                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
+                    "dependencies": [
+                        "urn:pulumi:prod::xhc-discord::discord:index/role:Role::admin"
+                    ],
+                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_3_0::a260a1b1-cad4-4df2-b89d-4dc10524023f",
+                    "propertyDependencies": {
+                        "roles": [
+                            "urn:pulumi:prod::xhc-discord::discord:index/role:Role::admin"
+                        ],
+                        "serverId": [],
+                        "userId": []
+                    },
+                    "created": "2026-02-15T21:14:28.970649561Z",
+                    "modified": "2026-02-15T21:14:28.970649561Z",
+                    "sourcePosition": "project:///members.go#10",
+                    "stackTrace": [
+                        {
+                            "sourcePosition": "project:///members.go#10"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#44"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
+                        },
+                        {
+                            "sourcePosition": "project:///../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
+                        },
+                        {
+                            "sourcePosition": "project:///main.go#9"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/proc.go#290"
+                        },
+                        {
+                            "sourcePosition": "project:///../../../../var/home/linuxbrew/.linuxbrew/Cellar/go/1.26.0/libexec/src/runtime/asm_amd64.s#1771"
+                        }
+                    ]
+                }
+            ],
+            "metadata": {}
+        }
+    }
+}
