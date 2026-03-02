@@ -128,23 +128,23 @@ func createMessages(ctx *pulumi.Context, textChannels *TextChannels) error {
 			Fields: discord.MessageEmbedFieldArray{
 				discord.MessageEmbedFieldArgs{
 					Name:  pulumi.String("Website"),
-					Value: pulumi.String("### [xandaris.space](https://xandaris.space)"),
+					Value: pulumi.String("**[xandaris.space](https://xandaris.space)**"),
 				},
 				discord.MessageEmbedFieldArgs{
 					Name:  pulumi.String("Server Wiki"),
-					Value: pulumi.String("### [wiki.xandaris.space](https://wiki.xandaris.space)"),
+					Value: pulumi.String("**[wiki.xandaris.space](https://wiki.xandaris.space)**"),
 				},
 				discord.MessageEmbedFieldArgs{
 					Name:  pulumi.String("Status Page"),
-					Value: pulumi.String("### [xnmc.statuspage.io](https://xnmc.statuspage.io)"),
+					Value: pulumi.String("**[xnmc.statuspage.io](https://xnmc.statuspage.io)**"),
 				},
 				discord.MessageEmbedFieldArgs{
 					Name:  pulumi.String("GitHub"),
-					Value: pulumi.String("### [hunterjsb/xn-mc](https://github.com/hunterjsb/xn-mc)"),
+					Value: pulumi.String("**[hunterjsb/xn-mc](https://github.com/hunterjsb/xn-mc)**"),
 				},
 				discord.MessageEmbedFieldArgs{
 					Name:  pulumi.String("Vote for Us"),
-					Value: pulumi.String("### [Coming Soon](https://xandaris.space)"),
+					Value: pulumi.String("**[Coming Soon](https://xandaris.space)**"),
 				},
 			},
 		},
