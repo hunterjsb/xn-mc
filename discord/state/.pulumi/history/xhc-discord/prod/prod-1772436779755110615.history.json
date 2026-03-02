@@ -1,0 +1,42 @@
+{
+    "kind": "update",
+    "startTime": 1772436777,
+    "message": "Migrate xhc-discord Pulumi IaC into discord/",
+    "environment": {
+        "exec.kind": "cli",
+        "git.author": "hunterjsb",
+        "git.author.email": "hunterjsb@gmail.com",
+        "git.committer": "hunterjsb",
+        "git.committer.email": "hunterjsb@gmail.com",
+        "git.dirty": "true",
+        "git.head": "d45e7e0b16870c0e4306b5384db17dd08d86ae7e",
+        "git.headName": "refs/heads/master",
+        "pulumi.arch": "amd64",
+        "pulumi.env.PULUMI_CONFIG_PASSPHRASE": "set",
+        "pulumi.flag.stack": "set",
+        "pulumi.flag.yes": "true",
+        "pulumi.os": "linux",
+        "pulumi.version": "v3.224.0",
+        "runtime.executable": "/home/linuxbrew/.linuxbrew/bin/go",
+        "runtime.name": "go",
+        "runtime.version": "go version go1.26.0 linux/amd64",
+        "stack.environments": "[]",
+        "updatePlan": "false",
+        "vcs.kind": "github.com",
+        "vcs.owner": "hunterjsb",
+        "vcs.repo": "xn-mc",
+        "vcs.root": "discord"
+    },
+    "config": {
+        "pulumi:tags": {
+            "pulumi:template": "go"
+        },
+        "xhc-discord:serverId": "1472695132875915490"
+    },
+    "version": 0,
+    "result": "failed",
+    "endTime": 1772436779,
+    "resourceChanges": {
+        "same": 21
+    }
+}

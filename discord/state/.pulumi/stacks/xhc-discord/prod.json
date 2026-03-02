@@ -740,7 +740,7 @@
                                 "ps": {
                                     "channelId": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:EsTHKEh+txjGeMGx:RgBoTSpFoaDmchugrPu6wmbEJDFttIswA+4B2LNxLYEx6H/AUvIN3w=="
+                                        "ciphertext": "v1:/JuV4dOGJ4TgCLJn:sL3pBpe15YAmYxUWzsiSwSW7NHq+n60ZXT+nzxp/dr3Ii+sI1W9uSw=="
                                     }
                                 }
                             }
@@ -1464,7 +1464,7 @@
                                 "ps": {
                                     "userLimit": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:HrQrEtSDERNbV8G8:esp1RIZSTGG7GDQligp9gn/AZuYeKTGJ2UVXhItsq/67V/+4aqWP8g=="
+                                        "ciphertext": "v1:bkRIqzJf7+QCpsgz:D7RMTCGEGFFNmttxeinpYEWl5F5Y2b29QrzUXuUJDb0erhLwOCFErw=="
                                     }
                                 }
                             }
@@ -1542,7 +1542,7 @@
                                 "ps": {
                                     "userLimit": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:ogJBaerCtLZZUvuQ:TsfHQ007cMdUvSK3uaNcQeNPDydvtn+8NnKvoVS+Hil9HXWBIo9E+Q=="
+                                        "ciphertext": "v1:gDKY6KJ0iCvqaGF4:BLp7fQMSgBOXYAq4r7mE7b2XVsE2EPSA4Mf/Ixm1rS7YM8+rsO5pVA=="
                                     }
                                 }
                             }
@@ -2664,651 +2664,6 @@
                     ]
                 },
                 {
-                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/message:Message::links-github",
-                    "custom": true,
-                    "id": "1477930403250573325",
-                    "type": "discord:index/message:Message",
-                    "inputs": {
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 9807270,
-                            "description": "[hunterjsb/xn-mc](https://github.com/hunterjsb/xn-mc)",
-                            "title": "GitHub"
-                        },
-                        "pinned": true
-                    },
-                    "outputs": {
-                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
-                        "__pulumi_raw_state_delta": {
-                            "obj": {
-                                "ps": {
-                                    "content": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:2yTFoY7aCDfBQ6QX:sPDHiHyTRpipT6b0QEP6WyjEH74zaeH8LZ6O7GwsIAf49DJiqqmsPQ=="
-                                    },
-                                    "editedTimestamp": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:RU3O2BqltzDlionc:iYYplGHkzcSPlw2H3A6y2Qr2eetaCCdlxMigLz112iKfL1E8nJe9wQ=="
-                                    },
-                                    "embed": {
-                                        "plu": {
-                                            "i": {
-                                                "obj": {
-                                                    "ps": {
-                                                        "author": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:p5zJJhQr783iN7pS:BfaIiSVSicaYlS+p1nhXP6rQBM0OOKtc1WvRset/KXwp/52QDho="
-                                                        },
-                                                        "fields": {
-                                                            "arr": {}
-                                                        },
-                                                        "footer": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:vXuyNsMIDA3zCeP7:aEvuMPu8upL+c196yr5nOD2Z1cwxtGyRDAY6LNcgknKPLWe3oHY="
-                                                        },
-                                                        "image": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:0Y93No5MaLLOz+QS:OZRstC4MSEWPqGURwb6nKrChiAr6KNlLK0wchH7ZtV9jOe7XQq4="
-                                                        },
-                                                        "provider": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:Q8NVkp1thcdcnJ+S:1UF4HTrUuhk48Ipuu+q7MsiXIEgYITTmZdavD4PJPaJoldJ6eDI="
-                                                        },
-                                                        "thumbnail": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:wYwBq7sytvJvxiA2:eOE9vqErHCklKoPZWOlZw0kDAa4f3GXxQ8n6AfNsggVFkjuIEQU="
-                                                        },
-                                                        "video": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:9gTxX8eOt+1uVGEG:jniddLnXUHlzneQEwi9/Xl8OUa47iRfBid3jRM0bpQAip1Zs1gU="
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "serverId": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:Mf4CHkWN4wEH4/yt:/ZN6g540yKPrQgaQBW2xWqjLKeyuhG0E58tdAW4KepEC8taf5YyXPA=="
-                                    }
-                                }
-                            }
-                        },
-                        "author": "1472685585188655124",
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 9807270,
-                            "description": "[hunterjsb/xn-mc](https://github.com/hunterjsb/xn-mc)",
-                            "fields": [],
-                            "timestamp": "",
-                            "title": "GitHub",
-                            "url": ""
-                        },
-                        "id": "1477930403250573325",
-                        "pinned": true,
-                        "timestamp": "2026-03-02T07:27:46Z",
-                        "tts": false,
-                        "type": 0
-                    },
-                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
-                    "dependencies": [
-                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                    ],
-                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_5_0::23ac110f-36b1-45ae-bdee-7fc90c99a683",
-                    "propertyDependencies": {
-                        "channelId": [
-                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                        ],
-                        "embed": [],
-                        "pinned": []
-                    },
-                    "created": "2026-03-02T07:27:47.135642296Z",
-                    "modified": "2026-03-02T07:27:47.135642296Z",
-                    "sourcePosition": "project:///messages.go#161",
-                    "stackTrace": [
-                        {
-                            "sourcePosition": "project:///messages.go#161"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#49"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#9"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/proc.go#283"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/asm_amd64.s#1700"
-                        }
-                    ]
-                },
-                {
-                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/message:Message::links-status",
-                    "custom": true,
-                    "id": "1477930404823433311",
-                    "type": "discord:index/message:Message",
-                    "inputs": {
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 15844367,
-                            "description": "[xnmc.statuspage.io](https://xnmc.statuspage.io)",
-                            "title": "Status Page"
-                        },
-                        "pinned": true
-                    },
-                    "outputs": {
-                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
-                        "__pulumi_raw_state_delta": {
-                            "obj": {
-                                "ps": {
-                                    "content": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:I1/h41WcflzNXXxk:wR10jdm/8oaJs3BiA5dHszvoT+i5IiAE7f+Y2YMZPz9PeSXmZlbUBg=="
-                                    },
-                                    "editedTimestamp": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:3Hh4pmQgrXbsas9w:IypANZezZPeSrv9YpXmKk7H1co6EogBVnW+P0U5lpOIjNBSGqtAryg=="
-                                    },
-                                    "embed": {
-                                        "plu": {
-                                            "i": {
-                                                "obj": {
-                                                    "ps": {
-                                                        "author": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:NhGr593iGkTTy5ym:omrc9eYXU9h2rrQKOYbVoODdsKGjgFpWgVonkn4u10oAh4+pYeI="
-                                                        },
-                                                        "fields": {
-                                                            "arr": {}
-                                                        },
-                                                        "footer": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:3w3WIKe4TZrrohTK:JYCph0gBMHdbeWAjcpeV3uXKgxnxaC8GNY5i/UZuhEgfLfSBLmg="
-                                                        },
-                                                        "image": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:5cvb1Uqva23KW4ke:HkJlj8EXUS2rluutn6cvmaLw31PyGkhipRgF6YN5qmtO3BBBnec="
-                                                        },
-                                                        "provider": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:UdWD8pMUuvVWbfTH:SeKJ3f8LZB7TLveyoEBKmQUXedAMOugZIutXYZnfNv+et8ZaO+k="
-                                                        },
-                                                        "thumbnail": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:IUOIvks4vqnQsQs8:U8ilOhN8ATQ1R0Xp1eVgDbZO0uplxuDaHMZEsODpObQ5JZfP2OY="
-                                                        },
-                                                        "video": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:e28BFKTkLch9KyvB:3cuiolTZmpeENXKu75DCm2kqX9LlUYfh0+OQkQPBkwQX1QxNpPg="
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "serverId": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:CP7YPZG32umjZcWO:bVaZx2SxV3GeKR36HdWVGzpCrgclxIV6So7Td0yhLgqJTEjEm4ehCQ=="
-                                    }
-                                }
-                            }
-                        },
-                        "author": "1472685585188655124",
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 15844367,
-                            "description": "[xnmc.statuspage.io](https://xnmc.statuspage.io)",
-                            "fields": [],
-                            "timestamp": "",
-                            "title": "Status Page",
-                            "url": ""
-                        },
-                        "id": "1477930404823433311",
-                        "pinned": true,
-                        "timestamp": "2026-03-02T07:27:47Z",
-                        "tts": false,
-                        "type": 0
-                    },
-                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
-                    "dependencies": [
-                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                    ],
-                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_5_0::23ac110f-36b1-45ae-bdee-7fc90c99a683",
-                    "propertyDependencies": {
-                        "channelId": [
-                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                        ],
-                        "embed": [],
-                        "pinned": []
-                    },
-                    "created": "2026-03-02T07:27:47.550096386Z",
-                    "modified": "2026-03-02T07:27:47.550096386Z",
-                    "sourcePosition": "project:///messages.go#148",
-                    "stackTrace": [
-                        {
-                            "sourcePosition": "project:///messages.go#148"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#49"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#9"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/proc.go#283"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/asm_amd64.s#1700"
-                        }
-                    ]
-                },
-                {
-                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/message:Message::links-vote",
-                    "custom": true,
-                    "id": "1477930403875782719",
-                    "type": "discord:index/message:Message",
-                    "inputs": {
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 10181046,
-                            "description": "[Coming Soon](https://xandaris.space)",
-                            "title": "Vote for Us"
-                        },
-                        "pinned": true
-                    },
-                    "outputs": {
-                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
-                        "__pulumi_raw_state_delta": {
-                            "obj": {
-                                "ps": {
-                                    "content": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:YukVdOncJ31wgLrD:rTJAYdaVT8rA+J6ZtNuyy3WbMROvaYZBLsGd7nO+33UT36AUxi3d0Q=="
-                                    },
-                                    "editedTimestamp": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:65eDILz6dDJi357D:hUXfznA9XYI6G8672CCuZnfJuH5+frvpKmi+fvpSkMQgRqB2mzBRIQ=="
-                                    },
-                                    "embed": {
-                                        "plu": {
-                                            "i": {
-                                                "obj": {
-                                                    "ps": {
-                                                        "author": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:wYpbQfhBZp+O+oKD:rKdJnNzoG/mDbjOMq98fXKVGClwCICGTToONDCCu8lQWRbj9Fbk="
-                                                        },
-                                                        "fields": {
-                                                            "arr": {}
-                                                        },
-                                                        "footer": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:L3nHNc8JMis8zA9s:WxU+fJFjEuXaWB1rP5WuQTAaHBWkud1bc+24sTrIIVx1wwdX51s="
-                                                        },
-                                                        "image": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:HlCOMLrOCvHQ4qJZ:p9jw+TpgjcYL+HVlF+n9hE8TscWA0P0k5CNcaa1o/8l80bJWxHQ="
-                                                        },
-                                                        "provider": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:PaEKaq9iIsI+fo7m:hkIyM6Rh5ALt8iUbGreEcL2jfH1Is8h+wRvMU83ctIc4sjdvFWk="
-                                                        },
-                                                        "thumbnail": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:jBuUICz+MGZ1o2mM:jSYDQUWYqCpy2VBiwjhvw0oIMw+DASP8xY2YVsEtgPTBM67IqwU="
-                                                        },
-                                                        "video": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:C4U5UIC4o1vjFhh5:0g6/YiCbZc/h//TZn5Lk1uAB2Mj6sPmpbrVAifpL0kiiGTpl8eQ="
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "serverId": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:30pIH72Yp2tv02z6:BBYbBHq/SOhxCE28tQyr1gbX96DEKSEDbbJIdw4uWAdS47UQGiGzaw=="
-                                    }
-                                }
-                            }
-                        },
-                        "author": "1472685585188655124",
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 10181046,
-                            "description": "[Coming Soon](https://xandaris.space)",
-                            "fields": [],
-                            "timestamp": "",
-                            "title": "Vote for Us",
-                            "url": ""
-                        },
-                        "id": "1477930403875782719",
-                        "pinned": true,
-                        "timestamp": "2026-03-02T07:27:46Z",
-                        "tts": false,
-                        "type": 0
-                    },
-                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
-                    "dependencies": [
-                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                    ],
-                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_5_0::23ac110f-36b1-45ae-bdee-7fc90c99a683",
-                    "propertyDependencies": {
-                        "channelId": [
-                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                        ],
-                        "embed": [],
-                        "pinned": []
-                    },
-                    "created": "2026-03-02T07:27:47.303962531Z",
-                    "modified": "2026-03-02T07:27:47.303962531Z",
-                    "sourcePosition": "project:///messages.go#174",
-                    "stackTrace": [
-                        {
-                            "sourcePosition": "project:///messages.go#174"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#49"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#9"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/proc.go#283"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/asm_amd64.s#1700"
-                        }
-                    ]
-                },
-                {
-                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/message:Message::links-wiki",
-                    "custom": true,
-                    "id": "1477930405582602402",
-                    "type": "discord:index/message:Message",
-                    "inputs": {
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 3066993,
-                            "description": "[wiki.xandaris.space](https://wiki.xandaris.space)",
-                            "title": "Server Wiki"
-                        },
-                        "pinned": true
-                    },
-                    "outputs": {
-                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
-                        "__pulumi_raw_state_delta": {
-                            "obj": {
-                                "ps": {
-                                    "content": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:869d0Q+O08TpX8AN:FsMxX8hrNCq/NUBbeZu/JhFH75w4PvKMcUmNn43aJ1vHxFvb45tLZQ=="
-                                    },
-                                    "editedTimestamp": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:o+wuUm0yDLYj6kOG:UcrsVcsDbOr7SN9UNHHPk06yldX3pKIPS5H0zdzf0VFM8yAFKm0kZw=="
-                                    },
-                                    "embed": {
-                                        "plu": {
-                                            "i": {
-                                                "obj": {
-                                                    "ps": {
-                                                        "author": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:lCY1K/jMamAdbS0X:vigMB0ELnNj2b3bRRpVJ+ItzqsWCoQWlJJoTMxBR8Bsugj+6b7Q="
-                                                        },
-                                                        "fields": {
-                                                            "arr": {}
-                                                        },
-                                                        "footer": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:HxHBxWPzFlU+ToTJ:4sTOaQfK1pN+PRf2RKg77zFHs7hT0R9NkErMuD+V9RsrGPE4h4Y="
-                                                        },
-                                                        "image": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:3mJZmIP5vGj4G52E:tFHTQM+alcwIbSlXe07ZelryQEGsV6pbRnwQkZpRiZmm+L+fFNw="
-                                                        },
-                                                        "provider": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:RUWkWtji3UJjTkY6:+QRCXB9TQPgt65XqvrNwDeVl+jfzzPF8wKB5bzwV3BZ1UzZbmLk="
-                                                        },
-                                                        "thumbnail": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:4E0Kl7hE12T4y1RU:TVB43YFX2HFNUogeiN/qwDySc6wh53VhrVryZRddBgjhZMWi+U8="
-                                                        },
-                                                        "video": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:SEtdqxaeeUGS8eaV:4Oe0w/5dK08SFOg65kZhMWtyFXKEsxHyVW1WGpwxNshpwS746HQ="
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "serverId": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:509Bg5g5w9/2Faw4:MZw5Z5Qf+HFpMU+igXK9l4/Jr17IDlfAhA7Mlq/EjtSzGuzPZzMRKg=="
-                                    }
-                                }
-                            }
-                        },
-                        "author": "1472685585188655124",
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 3066993,
-                            "description": "[wiki.xandaris.space](https://wiki.xandaris.space)",
-                            "fields": [],
-                            "timestamp": "",
-                            "title": "Server Wiki",
-                            "url": ""
-                        },
-                        "id": "1477930405582602402",
-                        "pinned": true,
-                        "timestamp": "2026-03-02T07:27:47Z",
-                        "tts": false,
-                        "type": 0
-                    },
-                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
-                    "dependencies": [
-                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                    ],
-                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_5_0::23ac110f-36b1-45ae-bdee-7fc90c99a683",
-                    "propertyDependencies": {
-                        "channelId": [
-                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                        ],
-                        "embed": [],
-                        "pinned": []
-                    },
-                    "created": "2026-03-02T07:27:47.813547645Z",
-                    "modified": "2026-03-02T07:27:47.813547645Z",
-                    "sourcePosition": "project:///messages.go#135",
-                    "stackTrace": [
-                        {
-                            "sourcePosition": "project:///messages.go#135"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#49"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#9"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/proc.go#283"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/asm_amd64.s#1700"
-                        }
-                    ]
-                },
-                {
-                    "urn": "urn:pulumi:prod::xhc-discord::discord:index/message:Message::links-website",
-                    "custom": true,
-                    "id": "1477930405889048698",
-                    "type": "discord:index/message:Message",
-                    "inputs": {
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 3447003,
-                            "description": "[xandaris.space](https://xandaris.space)",
-                            "title": "Website"
-                        },
-                        "pinned": true
-                    },
-                    "outputs": {
-                        "__meta": "{\"private_state\":\"bnVsbA==\"}",
-                        "__pulumi_raw_state_delta": {
-                            "obj": {
-                                "ps": {
-                                    "content": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:Rl5JF8zYa1n9u6ib:8YO6OsrZJ6T18em4QoR86m21afrgZqAzKHbzEWFSALpPweFS9S9/cA=="
-                                    },
-                                    "editedTimestamp": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:Q0+vqY+L90p9bbtj:ws5zKX2xwYmUJXD4PqLBXe+9fk/7DItc8cf3NvVXGPWjGfy4zDNAqQ=="
-                                    },
-                                    "embed": {
-                                        "plu": {
-                                            "i": {
-                                                "obj": {
-                                                    "ps": {
-                                                        "author": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:WjZ2+WE7RHIhz2on:ZQlRXh+Ty8Aq7ACji0IeT1LAyPm1SwwZ13HU0QtqMpsjm/0WA4w="
-                                                        },
-                                                        "fields": {
-                                                            "arr": {}
-                                                        },
-                                                        "footer": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:8KQJSh5TiYwaglG6:FxBeWsysRsG3gkdiBFc2kS1AAShbbRrDVjI787yEBCrAYpAtps8="
-                                                        },
-                                                        "image": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:tFMDcZhACRV+4wgr:S6i7NwDiqjzPoIapcMxdWrrTEfQGUD4bwkp9suQ4EF4grsOcwjo="
-                                                        },
-                                                        "provider": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:jcyB9xeyA0Ch0V7M:fl1kL30k3ffjbYzfqoTDrOzjJz0bnjfsD8eYSKiKnK/xncAh7fo="
-                                                        },
-                                                        "thumbnail": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:mqMaeEchZ7T3qgDu:Y12QFZghpWdnMgInqWdTWfJjDScJK0ilnjvS6LVxTFXZAiKue2s="
-                                                        },
-                                                        "video": {
-                                                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:6Lt5ovBgAxkPvTBS:L9oUdnYAEu4AAXShts6UGGesNE87GxOiVRJkgF+9PutsCPziabE="
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "serverId": {
-                                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:Z7e4QG/eLW9d2cll:V/4stFyQNPYKFu/1bhsZmT+mgKfIixQLE7bZKy337S3IoZia9qm7Mw=="
-                                    }
-                                }
-                            }
-                        },
-                        "author": "1472685585188655124",
-                        "channelId": "1473418937235411097",
-                        "embed": {
-                            "color": 3447003,
-                            "description": "[xandaris.space](https://xandaris.space)",
-                            "fields": [],
-                            "timestamp": "",
-                            "title": "Website",
-                            "url": ""
-                        },
-                        "id": "1477930405889048698",
-                        "pinned": true,
-                        "timestamp": "2026-03-02T07:27:47Z",
-                        "tts": false,
-                        "type": 0
-                    },
-                    "parent": "urn:pulumi:prod::xhc-discord::pulumi:pulumi:Stack::xhc-discord-prod",
-                    "dependencies": [
-                        "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                    ],
-                    "provider": "urn:pulumi:prod::xhc-discord::pulumi:providers:discord::default_2_5_0::23ac110f-36b1-45ae-bdee-7fc90c99a683",
-                    "propertyDependencies": {
-                        "channelId": [
-                            "urn:pulumi:prod::xhc-discord::discord:index/textChannel:TextChannel::links"
-                        ],
-                        "embed": [],
-                        "pinned": []
-                    },
-                    "created": "2026-03-02T07:27:48.003911817Z",
-                    "modified": "2026-03-02T07:27:48.003911817Z",
-                    "sourcePosition": "project:///messages.go#122",
-                    "stackTrace": [
-                        {
-                            "sourcePosition": "project:///messages.go#122"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#49"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#140"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#100"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../go/pkg/mod/github.com/pulumi/pulumi/sdk/v3@v3.220.0/go/pulumi/run.go#52"
-                        },
-                        {
-                            "sourcePosition": "project:///main.go#9"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/proc.go#283"
-                        },
-                        {
-                            "sourcePosition": "project:///../../../../../../opt/hostedtoolcache/go/1.24.13/x64/src/runtime/asm_amd64.s#1700"
-                        }
-                    ]
-                },
-                {
                     "urn": "urn:pulumi:prod::xhc-discord::discord:index/channelPermission:ChannelPermission::dead-deny-announcements",
                     "custom": true,
                     "id": "1472698211134079152:1472697694207217871:role",
@@ -3498,7 +2853,7 @@
                                                     "ps": {
                                                         "author": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:IHnNo4SZPcnjGc8A:j6CQ75SKPpTwNg6eiXUhTHHspiSdmH1/yP2TTud1hR0wbzlSZ/M="
+                                                            "ciphertext": "v1:8a/60vzy5bTNNv/n:1rbvTkzQQtrFxLlrgScCEt37tmTaFAuYiCDNsTqsRQvcr6lyUNU="
                                                         },
                                                         "fields": {
                                                             "arr": {
@@ -3523,23 +2878,23 @@
                                                         },
                                                         "footer": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:O0Fi5DF5OLQiYR8S:EadIR3yXle8buVdYBDQMxwKnxUkP4c1cvjsKNtGBDAFvmC4jzrw="
+                                                            "ciphertext": "v1:ZEHB33P4BOK+kWN0:BSOWWK982Stzn/iVTp8hmmwsC7umFtPoIuj01I3bXTBrVaohv3k="
                                                         },
                                                         "image": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:GPoGdJFvrVAZoi7k:oxBSIAzkqN4kfMOHtwZLn3NAw07NeA9qiYf/yKrJiIVxsqLYn88="
+                                                            "ciphertext": "v1:EeH5/GRRvO/cCbNV:9ZRfZl38fzTdnsvrzl5Ycy1mJM0sEFfikUFQijESSxQfKkub1bA="
                                                         },
                                                         "provider": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:kMl/pt+rK6zcafic:xQY4I5g9lX7mApcdaxj9hlbtUnLEi610R6bFkwE5XWOVPAVYatg="
+                                                            "ciphertext": "v1:49+98wugcPRYReMJ:7kJWK6Q/splc/50Bo2nAGypKakxJ6/9w9tLsNKh1YS3RWrZ/Vl8="
                                                         },
                                                         "thumbnail": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:ctjy3AJ6SZsccDb0:20SlUXfEeFWNEeusNW75zjwtdhhtD0leUnNr6KpiLH2tHpLhN+U="
+                                                            "ciphertext": "v1:5jd3JFHEXMf3Jz4B:359RqBUVUXc7jlFJ5d3ptLdImmhCOyeL92RJzWL3qRG4vNxeMNU="
                                                         },
                                                         "video": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:kbaY/oJ+9CdB8O7W:22hPOpQZGjz4bHjKaSOAsBGHzOmtz6J31/Y6mULfDFnW1mQdE5c="
+                                                            "ciphertext": "v1:drB6ULCzDVXRlWYd:b6YwuVYFgxYzPh4Z/wOBa0k+e4qe1c57xoedIGfdWS5b1JC40Qo="
                                                         }
                                                     }
                                                 }
@@ -3548,7 +2903,7 @@
                                     },
                                     "serverId": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:d+ycWlrO8no9NozY:yP5jmOH1U6UUCATb7luCv3iypIAfYJvsCo5kSKlZWCAaONW0n2T+Eg=="
+                                        "ciphertext": "v1:m3ar17QrJQutxbSR:e2nk1gfdGk2TvVVg4eT7J0wSAbsi3IXFl7TCUEwre/4BQlbJFBXw6A=="
                                     }
                                 }
                             }
@@ -3667,7 +3022,7 @@
                                 "ps": {
                                     "content": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:Ugar549YvmUkG43U:B5kNCf+cTCjAjdPYzcqZRNCPx8DzlN6sWP1ptTbDRwnBsCcfywDl4A=="
+                                        "ciphertext": "v1:e921c4KvtuiRBDfc:m5LG/2Pyk0XVxFSSC2w+hdKnHPHSK7ngegIXN8iQF2G/S2txzfh8+g=="
                                     },
                                     "embed": {
                                         "plu": {
@@ -3676,7 +3031,7 @@
                                                     "ps": {
                                                         "author": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:9gAhJR7yd4VrPBH4:7SOgFNFeQFFylfqAW5tG8pvvzZ57Ad8N6IYuzMgL9WlIL4DykdA="
+                                                            "ciphertext": "v1:OhoG/LjWo5CZpVTm:9zYMkZ3uJ+Pr2f2L3gEnSCoH7gpBcjsETiHAQBNXKutdHXhkThU="
                                                         },
                                                         "fields": {
                                                             "arr": {
@@ -3689,23 +3044,23 @@
                                                         },
                                                         "footer": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:qYvpQHDYRDG2CDPD:qkQjJpZoAmRxnpLWn2UIeWOVFDyqcb1uf69pjN/OPSz067gjN4g="
+                                                            "ciphertext": "v1:wYx6OvA/vPby+nlI:mjYOhDC6WNuPfwUr/BEqxshycejvSysbRvsqu3TFNJB5tyTYNU8="
                                                         },
                                                         "image": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:WpmThsscZNEbLvO6:lMtb7eL7KWy9aPc1OdDiyoJXiFfCFkCW7x8gWCQxk8K5rusg5vI="
+                                                            "ciphertext": "v1:i+htZqXOKvTEKZUS:S89okMsJIbjcEX6sfxW7TSlPC5Yu0PmR8G0OBs+3IeH3p0vc+yA="
                                                         },
                                                         "provider": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:iBEgmd+5l1h7G/a8:KebjGVw51FwwpHxyzEQE4G/DIRmX8kEAs6Rb+kzYfW+FbL/3FOg="
+                                                            "ciphertext": "v1:Paq6lPOSjNF0jko/:yZC+XOyxf5fo2bZWWB6Gu/EvjuIAK+3b/PmKwbRSmUR//JJXWHg="
                                                         },
                                                         "thumbnail": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:S5PcG9YWLpb9Drez:WiS0o6DhRrRRx4AO8s9bLSofQeteGQpGin+Z/i8wgK/8naRg/Bk="
+                                                            "ciphertext": "v1:qfraeF8xa7ElcT/X:M7tho8wpJC7Zu/1VB+Dtw1Rfs1/SLTieqtp53ppWoU6fwHBmLZ0="
                                                         },
                                                         "video": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:dstTx1VByMLy4stN:phBvJCVDRfopXladNH10WyX2d7Jb0B8Jt7FAsWNF/3LXj/4GvQI="
+                                                            "ciphertext": "v1:SLhnEfWnad1gaZI8:7sAhl51EcpBeitf9X+6OMumovDaCkUjP8d7Sq4LVj9u0Ie1Muqs="
                                                         }
                                                     }
                                                 }
@@ -3714,7 +3069,7 @@
                                     },
                                     "serverId": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:PVWkQPBL5cgA8eUn:wscmDmPFhsYm2p87QQ64xkGHrcoCCVbneRwbRM7BLbVcRgeUJYhrCw=="
+                                        "ciphertext": "v1:xXkJq1iIJebAqu1U:ERB5qfIXGgFm5vOChZ19ROosScZ3mlnoQVfxGyAN1/pxdxhyHuyoqQ=="
                                     }
                                 }
                             }
@@ -3797,7 +3152,7 @@
                             "fields": [
                                 {
                                     "name": "Perks",
-                                    "value": "• Everything in VIP\n• MVP role & color\n• Name in the credits on the website"
+                                    "value": "• Everything in VIP\n• MVP role \u0026 color\n• Name in the credits on the website"
                                 }
                             ],
                             "title": "MVP — $25"
@@ -3810,11 +3165,11 @@
                                 "ps": {
                                     "content": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:RQHVdV44IFk3nIc6:fOOp8VvRX7480jt7meEFqUvYNuEzkVcaVaPuPC2S9Ije4WugJ7EtOQ=="
+                                        "ciphertext": "v1:3qbaLcCo91C9y4hQ:Et69DgFuMQwu99LJ+gZk/WwbbgQ3Mb6LzxLGKbJKyQZ4lcyuHhzcaw=="
                                     },
                                     "editedTimestamp": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:1rODIo9LzhrLUtfK:vc96Y2kN+Ba6ETgTHcKULyKjTY+gIEL6108N/aoIdqR58svLxxvPbQ=="
+                                        "ciphertext": "v1:7s2Hv7/1JaPzkK7g:EhhLYLQM0ns8f/pHPUkADblBxTfWAnCGv+5V90LzlZ2+nAaG5ghQjg=="
                                     },
                                     "embed": {
                                         "plu": {
@@ -3823,7 +3178,7 @@
                                                     "ps": {
                                                         "author": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:d6z6NTD5Aju60u6U:j3JhkIznFBslhAt3JegwwfW3ZpZYbOkLPFmlj1W01it1HWFCv+k="
+                                                            "ciphertext": "v1:0Hf9If6EGASxtPE4:G9fOJr8mSzJfUDhP4VobD+T234InSR0Pp3gKWl8s7VMPP/iucG4="
                                                         },
                                                         "fields": {
                                                             "arr": {
@@ -3836,23 +3191,23 @@
                                                         },
                                                         "footer": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:DA/Z3CzuK0A7nxOI:L2qd9gbDvKZ+IwO9+8lD6tUtjAZvJaCCdfLNDvWN+2/FUR79GA0="
+                                                            "ciphertext": "v1:CPIeF8CAoUH9Ia30:rgaGtiSa6SyIfkg1coldh8HS3/Na0wWEZ2XeP4aSwj2OhJU9g14="
                                                         },
                                                         "image": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:7VnTGM4vCUI5gOMP:3c79KfHz6KvnFm7RhP5kf54XxguTM3ZDxUU0gtFvbW6Tz2b1PKw="
+                                                            "ciphertext": "v1:dZyKu/0SRwunuUK+:w+vgbRbh1NDLsb48Ie+pJehJl0YTUN9czo8grZvirQuBNMDZCPQ="
                                                         },
                                                         "provider": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:oDGzFJSUjKoqmMJv:l8uWp01XlifBcexTzLZLxOPHFc3C3K2TveVv1zC9vZyaz4g5M0w="
+                                                            "ciphertext": "v1:n0aKKxa/Ex4zVMdb:w3HBQ+jOySj7b5r99qc9NjYbWmL74frFU+zPfVTQzvvucKOT7HE="
                                                         },
                                                         "thumbnail": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:cupyKCDm/fi2wNxE:B9tSHA7VEb4zF6fs0B6+sp1pVf39c1S1I9ZZrOiKzMV3xU0QtuU="
+                                                            "ciphertext": "v1:CgoRl+ArT9eyMDct:U8oSwJMxZgbfH0CgFB9z6eyhNtkYWVER+CyHyckYGJPbVyt/yZg="
                                                         },
                                                         "video": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:/lDuepnxFGWzPENf:i0xMVV13VRS6bF8HHX0CmxcwzTdO+qDviUUPLe8GVredswSflPA="
+                                                            "ciphertext": "v1:wlzYWnjS6YtrLTL1:OW1vOSblj/FIiL3w2vPq/wHZFl6h9cjEKnhzB97rw3XqYXNJhwA="
                                                         }
                                                     }
                                                 }
@@ -3861,7 +3216,7 @@
                                     },
                                     "serverId": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:cTJ13mFp2BxkTa9y:BreKy0ajc4KsU0r8Vbp/fe4NR2SxOKbNPx2R+W5TNoBymCqulLvIDA=="
+                                        "ciphertext": "v1:/wqTrc7L1h42ffhr:ESkqK+bjwBjy1vX8IsCd6HlI6BIbuqHkYy4ApCPVKmsWVwNOK0hZAw=="
                                     }
                                 }
                             }
@@ -3875,7 +3230,7 @@
                                 {
                                     "inline": false,
                                     "name": "Perks",
-                                    "value": "• Everything in VIP\n• MVP role & color\n• Name in the credits on the website"
+                                    "value": "• Everything in VIP\n• MVP role \u0026 color\n• Name in the credits on the website"
                                 }
                             ],
                             "timestamp": "",
@@ -3942,7 +3297,7 @@
                             "fields": [
                                 {
                                     "name": "Perks",
-                                    "value": "• Supporter role & color\n• Access to supporter-only channels\n• Our thanks!"
+                                    "value": "• Supporter role \u0026 color\n• Access to supporter-only channels\n• Our thanks!"
                                 }
                             ],
                             "title": "Supporter — $5"
@@ -3955,11 +3310,11 @@
                                 "ps": {
                                     "content": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:7R16g22el81R/e4L:jQuv5glpJlKNPUijZi+XK/khB5kYmJdymOoT6R2PRRWtE17x5Znatw=="
+                                        "ciphertext": "v1:z15p+iHOYrdwcX14:BRm2xgDgxTAc8ac2v4B5YJix64Pc98xcpIc8niZXe42sPx7hR5TV2A=="
                                     },
                                     "editedTimestamp": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:grZ/a9q+fU4Y60Fp:3elBYCyjJeCpfyhBpPiR9757sHQ24dQl1fBUukMxcZ8z50d7GnTZiQ=="
+                                        "ciphertext": "v1:I6f3nVmMI6GvT1Eh:gNe/6yI2h9Ubyum0CI1pqM/6jeug/mL6x//QyvW7MZtp+iSfd5mYlQ=="
                                     },
                                     "embed": {
                                         "plu": {
@@ -3968,7 +3323,7 @@
                                                     "ps": {
                                                         "author": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:5Q2HFLVDzs7scUNU:rdfQLpjvdveBZyEb8FAZAid9K92HdyWvP4t3WSQkOgRU+b8gAcE="
+                                                            "ciphertext": "v1:rXHenQawUhEfCenn:HWBtXTZcmeX7tiV5vb52WRXImFoksPm+OJKWQ7iH+y/puKgZ95k="
                                                         },
                                                         "fields": {
                                                             "arr": {
@@ -3981,23 +3336,23 @@
                                                         },
                                                         "footer": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:dl5VSvXjfazx9j/4:222zNUDyA+7fpcPORmoK19D3sHDBUETfnSDCmPjKXXaWeBVovig="
+                                                            "ciphertext": "v1:3shExbAbEDoapghc:9snl9rMYWVYyKG00sQs8EXjs/zGV3ASQxmT5tFAIp/4jgkzaPZw="
                                                         },
                                                         "image": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:wx1v9LS9+5OJfqId:T1v5XmZ17hlkpeUNqQFlvLkJYbRaqdXArclaHjdzn5ML7EEGYWQ="
+                                                            "ciphertext": "v1:VJkK9cS6savydF+r:hDVXpdSJZ5EwiyWTgMfkUnCS2bEOBT9v2kLsn4eBqrQ7DNuaUfI="
                                                         },
                                                         "provider": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:4Pg5lVSK18LVtO1f:LQEI1uGK1K4g5xsvH90ePcTmNRLEyz4P3NxeejgYnEc3ZTkCOtk="
+                                                            "ciphertext": "v1:DXjysivW59CzoZ5g:hQsmaTSPQaLZ5WIpYG3axoMSuZQUIZp9HHATIanjLUBY1Q+LVXE="
                                                         },
                                                         "thumbnail": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:+8dRNSUdriIWDNQU:3Q9NKPyul0/JbkNcGtXqQJa9zjCGua6dzbaAfJfvweDGcf8904g="
+                                                            "ciphertext": "v1:JHRoZg18fKl505Ij:HKS/xSUkykFzkLWkhYMlnyCnCwHMNeGHPaQQlyyWQMTgQA9AokA="
                                                         },
                                                         "video": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:eqdCQT6TMAR4K28u:5tFgjQs5mvE78Dp5YKcxa6oP4N8ZUAeOIbMvf42iu1JfFnHeb7I="
+                                                            "ciphertext": "v1:8pJsl5Ro8JTb7rZC:Xo5Mw82gmUK65ScbN6Km6BGWP+HgcvLcRa92ug2RrQj1PPXAg3w="
                                                         }
                                                     }
                                                 }
@@ -4006,7 +3361,7 @@
                                     },
                                     "serverId": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:ms3EAgefgKiXLUHa:Z2FiHO1cZoWCkNIWtD72jSErjcgJRA2oYpIFSyF9c4IJ8RSO/mhAXQ=="
+                                        "ciphertext": "v1:mFMJ0dvZZ5zWB7J7:IAD30zbQYj7hwxy4ArSKocRCwYn2+XCqc/ym9TLuwUVnRW0G4/XVeA=="
                                     }
                                 }
                             }
@@ -4020,7 +3375,7 @@
                                 {
                                     "inline": false,
                                     "name": "Perks",
-                                    "value": "• Supporter role & color\n• Access to supporter-only channels\n• Our thanks!"
+                                    "value": "• Supporter role \u0026 color\n• Access to supporter-only channels\n• Our thanks!"
                                 }
                             ],
                             "timestamp": "",
@@ -4087,7 +3442,7 @@
                             "fields": [
                                 {
                                     "name": "Perks",
-                                    "value": "• Everything in Supporter\n• VIP role & color\n• Priority slot during peak hours"
+                                    "value": "• Everything in Supporter\n• VIP role \u0026 color\n• Priority slot during peak hours"
                                 }
                             ],
                             "title": "VIP — $10"
@@ -4100,11 +3455,11 @@
                                 "ps": {
                                     "content": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:F1sszgKT/RDjVTtg:vBTQS09crbEjeI6wFQR3CHqyooPEtLWa32G2Skn1S8LdHOCFZavLrA=="
+                                        "ciphertext": "v1:dNoUZyaqjKEs0rY5:VH/XmiWcGlG5T+rFOW28RnNpNVmvVyrINohorjpuMyZpRqla3zZydg=="
                                     },
                                     "editedTimestamp": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:Zd2ROUF+GKDlDlfc:YlmnWNr0TRevy/y9la/GjnLOBl3wA1lWSWkUGCiyJiHJen2cKKkN/w=="
+                                        "ciphertext": "v1:H3R+un/imMXavx4C:ZkPaU/kt6L7pm6MkULiO51Psit+SLOu9X1+r/LXmfK/CFisjRZStww=="
                                     },
                                     "embed": {
                                         "plu": {
@@ -4113,7 +3468,7 @@
                                                     "ps": {
                                                         "author": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:+iNR/E3ug67S1i6j:MP0QwoioG8Zk78hmYfPkwRtrYf5Ygzxn41eEQBzrCd9uSct8Bng="
+                                                            "ciphertext": "v1:JApuXH24ZTwprflU:XXBxBu/Pb9uNtLD6paZam5A8/IddtlwQr5+juY08scV4aoEeZNQ="
                                                         },
                                                         "fields": {
                                                             "arr": {
@@ -4126,23 +3481,23 @@
                                                         },
                                                         "footer": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:nioBGoz6A06yflKO:oEuEWkJswKTtQz8IMKPCHxB9AM8vddrHqY5ICbaqEhgdnGMRy40="
+                                                            "ciphertext": "v1:P7cnDygcIMMHaEsB:OGZHaKfLAcIWFmPwZHuCuI2gSktuY+qFg1+3HBx/PU6ioGicJOw="
                                                         },
                                                         "image": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:cen+olaa0rZnK7tO:DcH1lU/Skcz4ylkTlA7IplNTcUmRQ4GBlNDjoAMlo5EtWF+0Uzk="
+                                                            "ciphertext": "v1:EfUAe/K8Y0te17T3:sBBTa+C9tgAKzVCKCeNy+TRPjvoQqNJ8hFaThY/o5Z57SSpLsuA="
                                                         },
                                                         "provider": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:FOEfm4r372oNqKm+:wlPpv/h39IDx5DcrMjjS7abkbz3StBlwEEPNtJnTAFO+lnCfaxw="
+                                                            "ciphertext": "v1:Uc1MtaPmtxZu2UTX:VNjCkWZD1I8il52LD2Nu71AAZHOR2nU4ZES18QC1FYdo7h8iq6s="
                                                         },
                                                         "thumbnail": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:5PAjyTOiNS5lZC9J:XZ6CCagY0U2BwHaYMFdmlhP9GRxuf77m7X79O1ivO7ojk8n0j/I="
+                                                            "ciphertext": "v1:r+H57Z5U2SYc7gov:thLXNcdgV/lyI5xYT4+1QW5xhSENlYkrn6WW7s472o/4BDUnJpM="
                                                         },
                                                         "video": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:kI+iQe5dQtQZZbqT:FmjcwC9NBGefp41C/MMMGvDTF0QC5aIVViUCKEbKUhrkCeFCCZw="
+                                                            "ciphertext": "v1:38PXAwsPznnFc+hQ:t3thEFQUGwl+WlDalhKAlCfukL52/5+zkv+4PetntnkBN0gDQMk="
                                                         }
                                                     }
                                                 }
@@ -4151,7 +3506,7 @@
                                     },
                                     "serverId": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:8X7f5iujQwgvBWe6:73qoMWllIYk7+tE+Jip1TwfxcH6vyh91Ja9XuoaC1NC9i5JzrAQ4zA=="
+                                        "ciphertext": "v1:x9+GHwIhLB8pXorD:SdHcTlopNs/ibJGXQ/cHl/J4VsbXXmx5F3UdjrptsuBV79Vy6AxlyA=="
                                     }
                                 }
                             }
@@ -4165,7 +3520,7 @@
                                 {
                                     "inline": false,
                                     "name": "Perks",
-                                    "value": "• Everything in Supporter\n• VIP role & color\n• Priority slot during peak hours"
+                                    "value": "• Everything in Supporter\n• VIP role \u0026 color\n• Priority slot during peak hours"
                                 }
                             ],
                             "timestamp": "",
@@ -4328,7 +3683,7 @@
                                 "ps": {
                                     "content": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:Gx+W6jYyAyVl0xc8:eMdlZG5aMriswlKMHC39iBgehRIkQq3SbiaM2maOJ551DeyfPAAmyA=="
+                                        "ciphertext": "v1:5/1RafEea+ya0Bsg:l1eF3LgImpFe1fEVZxziuW1QvYSmhA9sJUc9L3/i27k1GX7w2UPRPA=="
                                     },
                                     "embed": {
                                         "plu": {
@@ -4337,7 +3692,7 @@
                                                     "ps": {
                                                         "author": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:MLMacj0VCzzyt9B6:O3Sjed0wQjknuBac+JCbHRcaKu80F7QL1s5lFFz697Wi1UTdvpo="
+                                                            "ciphertext": "v1:PE0dE7GW0/11feoc:GCNOpDChe0dDmGX0h/NwBK20V0MOuzOXLwfDOX0HFZLtyaDwFhc="
                                                         },
                                                         "fields": {
                                                             "arr": {
@@ -4356,23 +3711,23 @@
                                                         },
                                                         "footer": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:BlncNyfuW3j75N91:iTt5MG0cNqhNx+JPcJLdeL4cfs98ury+U0oWWxt2n5Yp1t0L3a0="
+                                                            "ciphertext": "v1:8RLaUHKpb6ojXqN9:6I+wUZjNHo5VK5k2Kc3aCf3KuxEmOo+r/tGzmejzzIynih2mRLU="
                                                         },
                                                         "image": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:3XAuO4hM+nErwILZ:eNMafCExOdolMYlqxVi1lPSWu2+924VF181dJfRnXIwTNaA2kjM="
+                                                            "ciphertext": "v1:YxLh+r/SAlcdXib3:cm9Xf8H1VtA9TnhnoiOxvI9eLGUWjuIRcDZARcKKWy49UaAfjjE="
                                                         },
                                                         "provider": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:ZpZdDOilvBM+Y1QA:hQ252TugHyNwyB3zlXcCbUKGP8yqJJT2xc8hZp76Jlg4L3Qjm9o="
+                                                            "ciphertext": "v1:jlDBX/uaWoqkt3x0:mjkuHfAzHTWv+KcpP4WVJ4qqYKGCBh+Gxfvm7H+bLsyjVdLlrqQ="
                                                         },
                                                         "thumbnail": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:V0+4Q9zGYhc8KM8r:BbLNIflfqTCqeFuTNGEgCevT8DF9cbw/dqZvXHIef96Bq0/nlX8="
+                                                            "ciphertext": "v1:2kHteNf/8r6X9UZR:GEgaTksjy1PEmxU654QFnjoAQDt67hs2JqvQU1flEdnI2aaD5C8="
                                                         },
                                                         "video": {
                                                             "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                                            "ciphertext": "v1:5wqIbK/vctra3aMe:9Socqjy+MTEUOS+CzwwlvQpHHILeQLvuAff4hMhVSaROKfCqLDY="
+                                                            "ciphertext": "v1:vA5GPHLHRilRmIjp:tmhKkcePGwYpB12PR6crBg1YkUAfIlR+4Q7JutejGagj1u+QnxU="
                                                         }
                                                     }
                                                 }
@@ -4381,7 +3736,7 @@
                                     },
                                     "serverId": {
                                         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
-                                        "ciphertext": "v1:UEl8B5NZUr82NS2Z:3Z3m4CqS8HgheiC2/LuGUkb4l4S+rYAr8zL7cPY3yV18Xrg/bKuVWA=="
+                                        "ciphertext": "v1:UGmPNjZXvA+YfUy2:9hAT0cU1aG1GHeCgGdQtOnCVsGI5g2oKebtmmlibMENU/SG4gQsYUA=="
                                     }
                                 }
                             }
