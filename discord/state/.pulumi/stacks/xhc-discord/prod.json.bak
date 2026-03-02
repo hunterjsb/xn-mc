@@ -4,7 +4,7 @@
         "stack": "organization/xhc-discord/prod",
         "latest": {
             "manifest": {
-                "time": "2026-03-02T07:27:48.05133082Z",
+                "time": "2026-03-02T07:27:48.075572603Z",
                 "magic": "ebad6f0f3764e5d1508da7ca29dcc46fe4299975bc64cf19c7e18b2b6efee2c4",
                 "version": "v3.224.0"
             },
