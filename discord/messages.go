@@ -119,65 +119,34 @@ func createMessages(ctx *pulumi.Context, textChannels *TextChannels) error {
 
 	// --- #links message ---
 
-	_, err = discord.NewMessage(ctx, "links-website", &discord.MessageArgs{
+	_, err = discord.NewMessage(ctx, "links-message", &discord.MessageArgs{
 		ChannelId: textChannels.Links.ChannelId,
 		Pinned:    pulumi.Bool(true),
 		Embed: discord.MessageEmbedArgs{
-			Title:       pulumi.String("Website"),
-			Description: pulumi.String("[xandaris.space](https://xandaris.space)"),
-			Color:       pulumi.Float64(0x3498DB),
-		},
-	})
-	if err != nil {
-		return err
-	}
-
-	_, err = discord.NewMessage(ctx, "links-wiki", &discord.MessageArgs{
-		ChannelId: textChannels.Links.ChannelId,
-		Pinned:    pulumi.Bool(true),
-		Embed: discord.MessageEmbedArgs{
-			Title:       pulumi.String("Server Wiki"),
-			Description: pulumi.String("[wiki.xandaris.space](https://wiki.xandaris.space)"),
-			Color:       pulumi.Float64(0x2ECC71),
-		},
-	})
-	if err != nil {
-		return err
-	}
-
-	_, err = discord.NewMessage(ctx, "links-status", &discord.MessageArgs{
-		ChannelId: textChannels.Links.ChannelId,
-		Pinned:    pulumi.Bool(true),
-		Embed: discord.MessageEmbedArgs{
-			Title:       pulumi.String("Status Page"),
-			Description: pulumi.String("[xnmc.statuspage.io](https://xnmc.statuspage.io)"),
-			Color:       pulumi.Float64(0xF1C40F),
-		},
-	})
-	if err != nil {
-		return err
-	}
-
-	_, err = discord.NewMessage(ctx, "links-github", &discord.MessageArgs{
-		ChannelId: textChannels.Links.ChannelId,
-		Pinned:    pulumi.Bool(true),
-		Embed: discord.MessageEmbedArgs{
-			Title:       pulumi.String("GitHub"),
-			Description: pulumi.String("[hunterjsb/xn-mc](https://github.com/hunterjsb/xn-mc)"),
-			Color:       pulumi.Float64(0x95A5A6),
-		},
-	})
-	if err != nil {
-		return err
-	}
-
-	_, err = discord.NewMessage(ctx, "links-vote", &discord.MessageArgs{
-		ChannelId: textChannels.Links.ChannelId,
-		Pinned:    pulumi.Bool(true),
-		Embed: discord.MessageEmbedArgs{
-			Title:       pulumi.String("Vote for Us"),
-			Description: pulumi.String("[Coming Soon](https://xandaris.space)"),
-			Color:       pulumi.Float64(0x9B59B6),
+			Title: pulumi.String("Xandaris Links"),
+			Color: pulumi.Float64(0x3498DB),
+			Fields: discord.MessageEmbedFieldArray{
+				discord.MessageEmbedFieldArgs{
+					Name:  pulumi.String("Website"),
+					Value: pulumi.String("### [xandaris.space](https://xandaris.space)"),
+				},
+				discord.MessageEmbedFieldArgs{
+					Name:  pulumi.String("Server Wiki"),
+					Value: pulumi.String("### [wiki.xandaris.space](https://wiki.xandaris.space)"),
+				},
+				discord.MessageEmbedFieldArgs{
+					Name:  pulumi.String("Status Page"),
+					Value: pulumi.String("### [xnmc.statuspage.io](https://xnmc.statuspage.io)"),
+				},
+				discord.MessageEmbedFieldArgs{
+					Name:  pulumi.String("GitHub"),
+					Value: pulumi.String("### [hunterjsb/xn-mc](https://github.com/hunterjsb/xn-mc)"),
+				},
+				discord.MessageEmbedFieldArgs{
+					Name:  pulumi.String("Vote for Us"),
+					Value: pulumi.String("### [Coming Soon](https://xandaris.space)"),
+				},
+			},
 		},
 	})
 	if err != nil {
