@@ -130,13 +130,6 @@ function getRealPlayerCount() {
   return Object.keys(leader.bot.players).filter(n => !allBots.includes(n)).length;
 }
 
-function resolveSender(leaderBot, senderUuid) {
-  if (!leaderBot.players) return null;
-  for (const [name, player] of Object.entries(leaderBot.players)) {
-    if (player.uuid === senderUuid) return name;
-  }
-  return null;
-}
 
 // ── Dispatch a response from a specific bot ─────────────────────────
 // Flow: read delay → LLM call (~1-2s) → typing delay → send
@@ -724,6 +717,12 @@ async function executeRevivalAction(rBot, actionName, params) {
     case 'smelt': await rBot._cmdSmelt(params.item, params.fuel || 'coal', params.count || 1); break;
     case 'equip_item': rBot._cmdEquip(params.item); break;
     case 'eat': await rBot._cmdEat(); break;
+    case 'whisper':
+      if (params.player && params.message) {
+        rBot.bot.chat(`/msg ${params.player} ${params.message}`);
+        rBot.log('whisper', `Whispered to ${params.player}: ${params.message}`);
+      }
+      break;
     case 'dismiss': rBot._cmdDismiss(); break;
     case 'ask_clarification':
       if (params.question) rBot.chat(params.question);
@@ -860,17 +859,7 @@ function attachGlobalChatListener(leader) {
   if (globalChatListenerBot === leader) return; // already attached to this bot
   globalChatListenerBot = leader;
 
-  // Primary: player_chat packets (works without FreedomChat)
-  leader.bot._client.on('player_chat', async (packet) => {
-    if (globalChatListenerBot !== leader) return; // stale listener
-    const message = packet.plainMessage;
-    if (!message) return;
-    const username = resolveSender(leader.bot, packet.senderUuid);
-    if (!username) return;
-    handlePlayerChat(username, message);
-  });
-
-  // Fallback: system_chat via message event (FreedomChat converts player_chat → system_chat)
+  // Chat arrives as system_chat (LPC/FreedomChat converts player_chat → system_chat)
   leader.bot.on('message', (jsonMsg, position) => {
     if (globalChatListenerBot !== leader) return; // stale listener
     if (position === 'game_info') return; // skip action bar
@@ -949,15 +938,7 @@ function setupBotToBotListener(currentBot) {
         dispatchResponse(currentBot, 'Bot→Bot');
       }
 
-      // Primary: player_chat
-      currentBot.bot._client.on('player_chat', async (packet) => {
-        const message = packet.plainMessage;
-        if (!message) return;
-        const username = resolveSender(currentBot.bot, packet.senderUuid);
-        handleBotToBot(username, message);
-      });
-
-      // Fallback: system_chat (FreedomChat)
+      // Chat arrives as system_chat (LPC/FreedomChat)
       currentBot.bot.on('message', (jsonMsg, position) => {
         if (position === 'game_info') return;
         const text = jsonMsg.toString();
@@ -1100,8 +1081,8 @@ setTimeout(() => {
   setupJoinLeaveListeners();
   bots.forEach(bot => setupBotToBotListener(bot));
   setupWebhookServer();
-  // Clear stale revival state on boot — revivals only happen via fresh rituals
-  if (existsSync(REVIVAL_STATE_FILE)) writeFileSync(REVIVAL_STATE_FILE, '[]');
+  // Restore revival bots from previous session (survives restarts)
+  restoreRevivals();
 }, 3000);
 
 setTimeout(() => {
@@ -1231,9 +1212,14 @@ console.log('[HotReload] Watching prompts/ and personalities.json');
 
 function gracefulShutdown() {
   console.log('\nShutting down bots...');
-  // Despawn all revival bots
+  // Save revival state before disconnecting so they survive restart
+  saveRevivalState();
+  // Disconnect revival bots (but state is already saved)
   for (const [name, rBot] of revivalBots) {
-    rBot.despawn('shutdown');
+    rBot.despawned = true; // prevent _onDespawn from clearing saved state
+    if (rBot.bot && rBot.connected) {
+      try { rBot.bot.end(); } catch {}
+    }
   }
   bots.forEach((bot, i) => {
     setTimeout(() => {

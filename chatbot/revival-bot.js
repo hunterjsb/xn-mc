@@ -320,6 +320,15 @@ export class RevivalBot {
     const stuckTime = now - this._lastPos.time;
     if (stuckTime < STUCK_THRESHOLD) return;
 
+    // Following near the owner is correct — not stuck
+    if (this.state === 'following') {
+      const ownerEnt = this.bot.players[this.owner]?.entity;
+      if (ownerEnt && this.bot.entity.position.distanceTo(ownerEnt.position) < 6) {
+        this._lastPos.time = now; // reset timer — we're just close to owner
+        return;
+      }
+    }
+
     console.log(`[Survival] ${this.username} stuck for ${Math.round(stuckTime / 1000)}s in state "${this.state}" — resetting`);
     this.log('survival', `Unstuck: was "${this.state}" for ${Math.round(stuckTime / 1000)}s, resetting to idle`);
 
@@ -467,7 +476,17 @@ export class RevivalBot {
     this.bot.on('end', () => {
       console.log(`[Revival] ${this.username} disconnected`);
       this.connected = false;
-      if (!this.despawned && !this.suspended) this.despawn('disconnected');
+      if (!this.despawned && !this.suspended) {
+        // Auto-reconnect on unexpected disconnect (protocol errors, etc.)
+        console.log(`[Revival] ${this.username} unexpected disconnect — reconnecting in 5s`);
+        this.log('reconnecting', 'Unexpected disconnect, auto-reconnecting');
+        if (this._tickTimer) { clearTimeout(this._tickTimer); this._tickTimer = null; }
+        if (this._survivalTimer) { clearInterval(this._survivalTimer); this._survivalTimer = null; }
+        this._loopRunning = false;
+        setTimeout(() => {
+          if (!this.despawned) this.connect();
+        }, 5000);
+      }
     });
   }
 

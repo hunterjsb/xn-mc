@@ -919,6 +919,7 @@ ${messagesSection}
 
 RULES:
 - ${rBot.owner} is your owner who revived you. Follow their instructions. Others can chat but can't command you.
+- CRITICAL: When your owner gives a command (follow, mine, attack, come, stop, etc.), you MUST call the matching tool. NEVER just say "ok" without calling the tool — that does nothing. Chat alone does NOT execute actions.
 - Keep chat SHORT (1-5 words), casual, in-character. Match your personality.
 - On idle ticks with no messages: do nothing. Don't call any tools and don't chat. Just return empty.
 - IMPORTANT: If you are already doing something (currentState is not "idle"), do NOT re-issue that action. For example if currentState is "following", do NOT call follow_owner again. Only call tools when you need to CHANGE what you're doing.
@@ -928,10 +929,10 @@ RULES:
 - To get items: check_chests first to see what's available, then take_from_chest, then equip_item. Chain these steps.
 - To store items: use deposit_in_chest (NOT drop_item — that drops on the ground).
 - come_here just walks to your owner. Do NOT use it as a catch-all — only use it when specifically asked to come.
-- For mine/collect: use exact Minecraft block IDs. If the player is vague ("logs", "wood", "ore"), use ask_clarification.
-- Common: cobble=cobblestone, dirt=dirt, coal=coal_ore, iron=iron_ore, diamonds=diamond_ore
+- For mine/collect: translate player requests into Minecraft block IDs. Be smart about it — "dark oak logs" = dark_oak_log, "oak logs" = oak_log, "cobble" = cobblestone, "dirt" = dirt, "coal" = coal_ore, "iron" = iron_ore, "diamonds" = diamond_ore, "stone" = stone, "sand" = sand, "gravel" = gravel, "wood"/"logs" = oak_log (default). Only ask_clarification if you truly cannot guess the block ID.
 - Your survival instincts are AUTOMATIC (eating, fighting back, swimming, getting unstuck). You don't need to call eat or attack for self-defense — that happens on its own. Focus on goals and owner instructions.
 - If you have no food and your hunger is low, check nearby chests for food or ask your owner.
+- NEVER say coordinates in public chat. If you need to share coords, use the whisper tool to DM your owner.
 - No emojis. No roleplay asterisks. No slash commands. English only.
 - You're not fully alive — you're an echo of your former self. Keep this subtle, don't overplay it.`;
 
@@ -954,6 +955,7 @@ RULES:
       { type: 'function', function: { name: 'equip_item', description: 'Equip an item from inventory (armor, weapon, or tool)', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name to equip (e.g. iron_sword, diamond_chestplate)' } }, required: ['item'] } } },
       { type: 'function', function: { name: 'smelt', description: 'Smelt items in a nearby furnace (finds furnace, places fuel + input, waits, takes output)', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item to smelt (e.g. raw_iron, raw_gold, raw_copper, cobblestone)' }, fuel: { type: 'string', description: 'Fuel to use (default: coal)', default: 'coal' }, count: { type: 'integer', description: 'How many to smelt', default: 1 } }, required: ['item'] } } },
       { type: 'function', function: { name: 'eat', description: 'Eat food from inventory to restore hunger', parameters: { type: 'object', properties: {}, required: [] } } },
+      { type: 'function', function: { name: 'whisper', description: 'Send a private message (DM) to a player. Use this for coordinates or sensitive info — never say coords in public chat.', parameters: { type: 'object', properties: { player: { type: 'string', description: 'Player to whisper to' }, message: { type: 'string', description: 'The private message' } }, required: ['player', 'message'] } } },
       { type: 'function', function: { name: 'dismiss', description: 'Despawn permanently. Only if explicitly told to leave.', parameters: { type: 'object', properties: {}, required: [] } } },
       { type: 'function', function: { name: 'ask_clarification', description: 'Ask a clarifying question when instruction is ambiguous', parameters: { type: 'object', properties: { question: { type: 'string', description: 'Short, in-character question' } }, required: ['question'] } } },
       { type: 'function', function: { name: 'set_objective', description: 'Set a new goal to work toward', parameters: { type: 'object', properties: { text: { type: 'string', description: 'What to accomplish' }, priority: { type: 'string', enum: ['high', 'normal', 'low'], default: 'normal' } }, required: ['text'] } } },
@@ -999,13 +1001,15 @@ RULES:
 
         let reply = stripThinking(result.rawThinking);
         reply = reply.replace(/^["']|["']$/g, '');
-        // Strip "chat:", "response:", bot name prefixes, and XML-style tags
-        reply = reply.replace(/^(chat|response|say|message)\s*:\s*/i, '');
+        // Strip "chat:", "**chat**:", "response:", bot name prefixes, and XML-style tags
+        reply = reply.replace(/^\*{0,2}(chat|response|say|message)\*{0,2}\s*:\s*/i, '');
         reply = reply.replace(/<\/?chat>/gi, '');
         const nameEsc = rBot.username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         reply = reply.replace(new RegExp(`^<?\\[?${nameEsc}\\]?>?\\s*[:>\\-]?\\s*`, 'i'), '');
         reply = stripEmojis(reply);
         reply = trimToComplete(reply);
+        // Strip any coordinates from public chat (e.g. "-6448, 79, -11779" or "-6448 79 -11779")
+        reply = reply.replace(/-?\d{2,}[,\s]+-?\d{1,3}[,\s]+-?\d{2,}/g, '[coords hidden]');
         // Filter out LLM echoing instructions or tool names as chat
         const replyLower = reply.toLowerCase();
         const toolNames = ['set_objective', 'complete_objective', 'clear_objectives', 'follow_owner',
