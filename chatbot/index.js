@@ -1034,7 +1034,7 @@ function scaleBots() {
     }
   } else if (active.length < target && parked.length > 0) {
     // Unpark — randomly pick from parked bots (skip those with active revival bots)
-    const shuffled = [...parked].filter(b => !revivalBots.has(b.username)).sort(() => Math.random() - 0.5);
+    const shuffled = [...parked].filter(b => !revivalBots.has(b.username) && !b.deathBanned).sort(() => Math.random() - 0.5);
     const tounpark = shuffled.slice(0, target - active.length);
     if (tounpark.length > 0) {
       tounpark.forEach(b => b.unpark());
@@ -1054,8 +1054,8 @@ function scheduleJitterRefresh() {
     }
 
     // 50% chance to rotate: swap a random active non-priority bot with a parked one
-    const activeSwappable = bots.filter(b => !b.parked && b !== bots[0] && !b.priority);
-    const parked = bots.filter(b => b.parked);
+    const activeSwappable = bots.filter(b => !b.parked && b !== bots[0] && !b.priority && !b.deathBanned);
+    const parked = bots.filter(b => b.parked && !b.deathBanned);
     if (activeSwappable.length > 0 && parked.length > 0 && Math.random() < 0.5) {
       const out = activeSwappable[Math.floor(Math.random() * activeSwappable.length)];
       const inn = parked[Math.floor(Math.random() * parked.length)];

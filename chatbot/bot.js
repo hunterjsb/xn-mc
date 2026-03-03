@@ -51,6 +51,7 @@ export class ChatBot {
     this.maxKickRetries = 5;
     this.afkInterval = null;
     this.wasKicked = false; // prevent double-reconnect from kicked + end
+    this.deathBanned = false; // permanently banned — don't reconnect or unpark
     this.parked = false; // when true, bot stays disconnected (dynamic scaling)
   }
 
@@ -114,6 +115,13 @@ export class ChatBot {
       this.wasKicked = true;
       this.kickCount++;
 
+      // Detect death ban — stop reconnecting permanently
+      if (readable.toLowerCase().includes('deathban') || readable.toLowerCase().includes('game over')) {
+        console.log(`[${this.username}] Death-banned — will not reconnect.`);
+        this.deathBanned = true;
+        return;
+      }
+
       if (this.kickCount >= this.maxKickRetries) {
         console.error(`[${this.username}] Kicked ${this.kickCount} times in a row, giving up. Manual restart needed.`);
         return; // don't reconnect
@@ -157,6 +165,10 @@ export class ChatBot {
 
   unpark() {
     if (!this.parked) return;
+    if (this.deathBanned) {
+      console.log(`[${this.username}] Skipping unpark — death-banned`);
+      return;
+    }
     this.parked = false;
     // Cancel pending park disconnect
     if (this._parkTimer) {

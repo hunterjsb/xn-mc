@@ -223,10 +223,10 @@ export class RevivalBot {
       .catch(() => {}); // silent fail — next tick will retry
   }
 
-  // Fight back when hit by hostiles (only if idle or following)
+  // Fight back when hit by hostiles
   _survivalDefend() {
-    // Only auto-defend if not busy with an owner-issued action
-    if (this.state !== 'idle' && this.state !== 'following' && this.state !== 'guarding') return;
+    // Skip during mining/checking chests — those are interruptible by other means
+    if (this.state === 'mining' || this.state === 'checking_chests') return;
 
     // Check if a hostile mob is attacking us (within 5 blocks and targeting us)
     const hostile = this.bot.nearestEntity(e => {
