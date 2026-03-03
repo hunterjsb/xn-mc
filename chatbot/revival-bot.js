@@ -1,9 +1,18 @@
 import mineflayer from 'mineflayer';
+import crypto from 'crypto';
 import pathfinderPkg from 'mineflayer-pathfinder';
 const { pathfinder, Movements, goals } = pathfinderPkg;
 import { plugin as collectBlock } from 'mineflayer-collectblock';
 import { plugin as pvp } from 'mineflayer-pvp';
 import mcData from 'minecraft-data';
+
+function offlineUUID(username) {
+  const md5 = crypto.createHash('md5').update('OfflinePlayer:' + username).digest();
+  md5[6] = (md5[6] & 0x0f) | 0x30;
+  md5[8] = (md5[8] & 0x3f) | 0x80;
+  const hex = md5.toString('hex');
+  return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
+}
 
 const TWO_HOURS = 2 * 60 * 60 * 1000;
 const OWNER_GRACE_PERIOD = 5 * 60 * 1000;
@@ -41,6 +50,8 @@ export class RevivalBot {
     this.connected = false;
     this.state = 'idle';
     this.despawned = false;
+    this.suspended = false;           // true when owner offline — bot disconnected but not despawned
+    this._suspendPos = null;          // saved position when suspended
     this.debugChat = false;           // toggle: show LLM thinking + tool calls in-game
 
     // ── Agent memory ──────────────────────────────────────────────────
@@ -358,6 +369,7 @@ export class RevivalBot {
     if (this.despawned) return;
     console.log(`[Revival] ${this.username} connecting (revived by ${this.owner})...`);
 
+    const uuid = offlineUUID(this.username);
     this.bot = mineflayer.createBot({
       host: this.config.host || 'localhost',
       port: this.config.port || 25565,
@@ -365,6 +377,7 @@ export class RevivalBot {
       version: false,
       auth: 'offline',
       hideErrors: false,
+      fakeHost: `localhost\x00127.0.0.1\x00${uuid}`
     });
 
     this.bot.on('login', () => {
@@ -383,11 +396,13 @@ export class RevivalBot {
       this._movements.allow1by1towers = true;
       this.bot.pathfinder.setMovements(this._movements);
 
-      // 2-hour despawn timer
-      this._despawnTimer = setTimeout(() => {
-        console.log(`[Revival] ${this.username} timed out (2 hours)`);
-        this.despawn('timeout');
-      }, TWO_HOURS);
+      // 2-hour despawn timer (only set once — not on resume from suspend)
+      if (!this._despawnTimer) {
+        this._despawnTimer = setTimeout(() => {
+          console.log(`[Revival] ${this.username} timed out (2 hours)`);
+          this.despawn('timeout');
+        }, TWO_HOURS);
+      }
 
       // Fake ping
       const client = this.bot._client;
@@ -406,7 +421,14 @@ export class RevivalBot {
       this.startAgentLoop();
     });
 
+    // Ignore death events in the first 5s — mineflayer can fire 'death' on spawn
+    // if the player's last state was dead (health=0)
+    const connectTime = Date.now();
     this.bot.on('death', () => {
+      if (Date.now() - connectTime < 5000) {
+        console.log(`[Revival] ${this.username} death event within 5s of connect — ignoring (spawn artifact)`);
+        return;
+      }
       console.log(`[Revival] ${this.username} died in-game — permanent despawn`);
       this.log('died', 'Died in-game');
       this.despawn('death');
@@ -417,8 +439,8 @@ export class RevivalBot {
         console.log(`[Revival] Owner ${this.owner} disconnected — ${OWNER_GRACE_PERIOD / 60000}min grace`);
         this.log('owner_left', `${this.owner} disconnected`);
         this._ownerGraceTimer = setTimeout(() => {
-          console.log(`[Revival] Owner ${this.owner} didn't return — despawning ${this.username}`);
-          this.despawn('owner_left');
+          console.log(`[Revival] Owner ${this.owner} didn't return — suspending ${this.username}`);
+          this.suspend();
         }, OWNER_GRACE_PERIOD);
       }
     });
@@ -445,8 +467,51 @@ export class RevivalBot {
     this.bot.on('end', () => {
       console.log(`[Revival] ${this.username} disconnected`);
       this.connected = false;
-      if (!this.despawned) this.despawn('disconnected');
+      if (!this.despawned && !this.suspended) this.despawn('disconnected');
     });
+  }
+
+  suspend() {
+    if (this.despawned || this.suspended) return;
+    this.suspended = true;
+
+    // Save current position before disconnecting
+    if (this.bot?.entity?.position) {
+      const p = this.bot.entity.position;
+      this._suspendPos = { x: Math.floor(p.x), y: Math.floor(p.y), z: Math.floor(p.z) };
+    } else {
+      this._suspendPos = this.spawnPos;
+    }
+
+    // Stop all loops (but keep the 2-hour despawn timer running)
+    if (this._ownerGraceTimer) { clearTimeout(this._ownerGraceTimer); this._ownerGraceTimer = null; }
+    if (this._tickTimer) { clearTimeout(this._tickTimer); this._tickTimer = null; }
+    if (this._survivalTimer) { clearInterval(this._survivalTimer); this._survivalTimer = null; }
+
+    try {
+      if (this.bot) {
+        this.bot.pathfinder?.stop();
+        this.bot.pvp?.stop();
+      }
+    } catch { /* already gone */ }
+
+    if (this.bot && this.connected) {
+      try { this.bot.end(); } catch { /* already gone */ }
+    }
+    this.connected = false;
+    this.state = 'idle';
+
+    console.log(`[Revival] ${this.username} suspended at ${this._suspendPos.x},${this._suspendPos.y},${this._suspendPos.z} — waiting for ${this.owner}`);
+    this.log('suspended', `Suspended at ${this._suspendPos.x},${this._suspendPos.y},${this._suspendPos.z}`);
+    if (this._onSuspend) this._onSuspend(this.username);
+  }
+
+  resume() {
+    if (this.despawned || !this.suspended) return;
+    this.suspended = false;
+    console.log(`[Revival] ${this.username} resuming — owner ${this.owner} is back`);
+    this.log('resumed', `Owner ${this.owner} returned`);
+    this.connect();
   }
 
   despawn(reason = 'unknown') {

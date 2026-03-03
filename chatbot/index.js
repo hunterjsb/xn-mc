@@ -56,11 +56,12 @@ function saveRevivalState() {
     state.push({
       deadPlayer: rBot.username,
       reviver: rBot.owner,
-      pos: rBot.spawnPos,
+      pos: rBot._suspendPos || rBot.spawnPos,
       profile: rBot.profile,
       objectives: rBot.objectives,
       actionLog: rBot.actionLog.slice(-5),
       createdAt: rBot.revivalInfo?.time || Date.now(),
+      suspended: rBot.suspended || false,
     });
   }
   try { writeFileSync(REVIVAL_STATE_FILE, JSON.stringify(state, null, 2)); } catch {}
@@ -100,6 +101,7 @@ for (let i = 0; i < BOT_COUNT; i++) {
     const origConnect = bot.connect.bind(bot);
     bot.connect = function () {
       origConnect();
+      if (!bot.bot) return; // connect was skipped (parked or failed)
       const onLogin = () => {
         setTimeout(() => {
           if (bot.bot && bot.connected) {
@@ -268,6 +270,25 @@ function setupJoinLeaveListeners() {
       leader.bot.on('playerJoined', (player) => {
         if (!player.username || botNames.includes(player.username)) return;
 
+        // Resume suspended revival bots when their owner returns
+        for (const [deadName, rBot] of revivalBots) {
+          if (rBot.suspended && rBot.owner === player.username) {
+            console.log(`[Revival] Owner ${player.username} returned — resuming ${deadName}`);
+            rBot.resume();
+            // Teleport to saved position after reconnect
+            const waitForConnect = setInterval(() => {
+              if (rBot.connected) {
+                clearInterval(waitForConnect);
+                const pos = rBot._suspendPos || rBot.spawnPos;
+                rcon(`tp ${deadName} ${pos.x} ${pos.y} ${pos.z}`).then(resp => {
+                  console.log(`[Revival] Resumed & teleported ${deadName}: ${resp}`);
+                }).catch(() => {});
+              }
+            }, 500);
+            setTimeout(() => clearInterval(waitForConnect), 30000);
+          }
+        }
+
         // Skip welcome if this is a quick reconnect (left within 10s)
         const lastLeave = playerLeaveTimestamps.get(player.username);
         if (lastLeave && Date.now() - lastLeave < RECONNECT_GRACE_PERIOD) {
@@ -330,17 +351,28 @@ function parseChatFromSystem(text) {
 function resolveUsername(leader, nickname) {
   if (!leader.bot?.players) return null;
   const lower = nickname.toLowerCase();
+  const players = Object.keys(leader.bot.players);
   // Direct match on username
-  for (const name of Object.keys(leader.bot.players)) {
+  for (const name of players) {
     if (name === nickname) return name;
   }
   // Case-insensitive exact match
-  for (const name of Object.keys(leader.bot.players)) {
+  for (const name of players) {
     if (lower === name.toLowerCase()) return name;
   }
   // Nickname contains username (e.g. "☭ samboyd" contains "samboyd")
-  for (const name of Object.keys(leader.bot.players)) {
+  for (const name of players) {
     if (lower.includes(name.toLowerCase())) return name;
+  }
+  // Username contains nickname (reverse check)
+  for (const name of players) {
+    if (name.toLowerCase().includes(lower)) return name;
+  }
+  // Fuzzy: same sorted letters (handles swaps like Lkgye → Lkyge)
+  const sortedNick = lower.split('').sort().join('');
+  for (const name of players) {
+    const sortedName = name.toLowerCase().split('').sort().join('');
+    if (sortedNick === sortedName) return name;
   }
   return null;
 }
@@ -402,6 +434,10 @@ function wireRevivalBot(rBot) {
       console.log(`[Revival] Unparking regular chatbot ${username}`);
       regular.unpark();
     }
+  };
+
+  rBot._onSuspend = (username) => {
+    saveRevivalState();
   };
 
   // Agent loop tick — called every 10-20s by revival-bot.js
@@ -578,6 +614,15 @@ async function restoreRevivals() {
 
     wireRevivalBot(rBot);
     revivalBots.set(s.deadPlayer, rBot);
+
+    // If it was suspended, restore in suspended state (wait for owner to join)
+    if (s.suspended) {
+      rBot.suspended = true;
+      rBot._suspendPos = s.pos;
+      console.log(`[Revival] Restoring ${s.deadPlayer} as suspended (owner: ${s.reviver})`);
+      continue;
+    }
+
     rBot.connect();
 
     // Pardon + teleport after connect (in case server also restarted)
@@ -1122,6 +1167,7 @@ function reconcileBots() {
         const origConnect = bot.connect.bind(bot);
         bot.connect = function () {
           origConnect();
+          if (!bot.bot) return;
           bot.bot.once('login', () => {
             setTimeout(() => {
               if (bot.bot && bot.connected) {

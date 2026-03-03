@@ -71,21 +71,22 @@ def _fmt_duration(seconds):
 # ── briefing ─────────────────────────────────────────────
 
 
-def cmd_briefing(args, cfg):
+def build_briefing(date_str, cfg):
+    """Generate briefing text for a date. Returns the briefing string."""
     server_dir = cfg["SERVER_FP"]
     bot_names = load_bot_names()
     uuid_map = load_usercache(server_dir)
     n2u = name_to_uuid(uuid_map)
     ban_details = load_ban_details(server_dir)
 
-    lines = _load_lines(server_dir, args.date, bot_names)
+    lines = _load_lines(server_dir, date_str, bot_names)
     deaths = extract_deaths(lines, bot_names)
     sessions = extract_sessions(lines, bot_names)
     advs_log = extract_advancements(lines, bot_names)
     all_chat = extract_all_chat(lines, bot_names)
 
-    date_display = _date_display(args.date)
-    obit_title = f"Event:Obituaries {datetime.strptime(args.date, '%Y-%m-%d').strftime('%B %-d')}"
+    date_display = _date_display(date_str)
+    obit_title = f"Event:Obituaries {datetime.strptime(date_str, '%Y-%m-%d').strftime('%B %-d')}"
 
     # Check which players are already documented (look for Player: links in table)
     existing_page = fetch_page(obit_title)
@@ -201,7 +202,11 @@ def cmd_briefing(args, cfg):
     out.append(f"Total player chat messages: {len(all_chat)}")
     out.append(f"Active players: {', '.join(active_players)}")
 
-    print("\n".join(out))
+    return "\n".join(out)
+
+
+def cmd_briefing(args, cfg):
+    print(build_briefing(args.date, cfg))
 
 
 # ── deaths ───────────────────────────────────────────────

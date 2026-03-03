@@ -57,13 +57,15 @@ export class ChatBot {
   connect() {
     if (this.parked) return; // don't connect if parked (e.g. revival bot active)
     console.log(`[${this.username}] Connecting to ${this.config.host}:${this.config.port}...`);
+    const uuid = offlineUUID(this.username);
     this.bot = mineflayer.createBot({
       host: this.config.host || 'localhost',
       port: this.config.port || 25565,
       username: this.username,
       version: false,
       auth: 'offline',
-      hideErrors: false
+      hideErrors: false,
+      fakeHost: `localhost\x00127.0.0.1\x00${uuid}`
     });
 
     this.bot.on('login', () => {
