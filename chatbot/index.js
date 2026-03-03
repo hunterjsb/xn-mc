@@ -1,6 +1,9 @@
 import './env.js';
+import { createServer } from 'http';
 import { readFileSync, writeFileSync, existsSync, watch } from 'fs';
 import { ChatBot } from './bot.js';
+import { RevivalBot } from './revival-bot.js';
+import { getPlayerProfile } from './distill-player.js';
 import { ConversationManager, reloadPrompts } from './conversation.js';
 import { findMentionedBot, findMentionedBots } from './mention.js';
 
@@ -42,6 +45,36 @@ function trackPlayer(username) {
 
 const bots = [];
 const botsByName = new Map();
+const revivalBots = new Map(); // deadPlayer → RevivalBot
+const MAX_REVIVAL_BOTS = 5;
+const REVIVAL_STATE_FILE = './revival-state.json';
+
+function saveRevivalState() {
+  const state = [];
+  for (const [name, rBot] of revivalBots) {
+    if (rBot.despawned) continue;
+    state.push({
+      deadPlayer: rBot.username,
+      reviver: rBot.owner,
+      pos: rBot.spawnPos,
+      profile: rBot.profile,
+      objectives: rBot.objectives,
+      actionLog: rBot.actionLog.slice(-5),
+      createdAt: rBot.revivalInfo?.time || Date.now(),
+    });
+  }
+  try { writeFileSync(REVIVAL_STATE_FILE, JSON.stringify(state, null, 2)); } catch {}
+}
+
+function loadRevivalState() {
+  try {
+    if (!existsSync(REVIVAL_STATE_FILE)) return [];
+    const data = JSON.parse(readFileSync(REVIVAL_STATE_FILE, 'utf-8'));
+    // Filter out expired ones (older than 2 hours)
+    const twoHours = 2 * 60 * 60 * 1000;
+    return data.filter(s => Date.now() - s.createdAt < twoHours);
+  } catch { return []; }
+}
 const botConfig = {
   host: process.env.MC_HOST || 'localhost',
   port: parseInt(process.env.MC_PORT) || 25565
@@ -84,10 +117,15 @@ for (let i = 0; i < BOT_COUNT; i++) {
 
 const botNames = bots.map(b => b.username);
 
+function getAllBotNames() {
+  return [...botNames, ...revivalBots.keys()];
+}
+
 function getRealPlayerCount() {
   const leader = bots[0];
   if (!leader?.bot?.players) return 0;
-  return Object.keys(leader.bot.players).filter(n => !botNames.includes(n)).length;
+  const allBots = getAllBotNames();
+  return Object.keys(leader.bot.players).filter(n => !allBots.includes(n)).length;
 }
 
 function resolveSender(leaderBot, senderUuid) {
@@ -307,13 +345,438 @@ function resolveUsername(leader, nickname) {
   return null;
 }
 
+// ── RCON helper ──────────────────────────────────────────────────────
+
+import net from 'net';
+
+function rcon(command) {
+  return new Promise((resolve, reject) => {
+    const host = '127.0.0.1';
+    const port = 25575;
+    const password = process.env.RCON_PW || 'minecraft';
+    const s = new net.Socket();
+    s.connect(port, host, () => {
+      // Login packet
+      const loginPayload = Buffer.alloc(password.length + 2);
+      loginPayload.write(password);
+      const loginPkt = Buffer.alloc(12 + password.length + 2);
+      loginPkt.writeInt32LE(10 + password.length, 0);
+      loginPkt.writeInt32LE(0, 4);
+      loginPkt.writeInt32LE(3, 8);
+      loginPayload.copy(loginPkt, 12);
+      s.write(loginPkt);
+    });
+    let step = 0;
+    s.on('data', (data) => {
+      if (step === 0) {
+        // Login response, now send command
+        step = 1;
+        const cmdBuf = Buffer.alloc(command.length + 2);
+        cmdBuf.write(command);
+        const cmdPkt = Buffer.alloc(12 + command.length + 2);
+        cmdPkt.writeInt32LE(10 + command.length, 0);
+        cmdPkt.writeInt32LE(1, 4);
+        cmdPkt.writeInt32LE(2, 8);
+        cmdBuf.copy(cmdPkt, 12);
+        s.write(cmdPkt);
+      } else {
+        const resp = data.slice(12).toString('utf-8').replace(/\0/g, '');
+        s.destroy();
+        resolve(resp);
+      }
+    });
+    s.on('error', reject);
+    setTimeout(() => { s.destroy(); reject(new Error('RCON timeout')); }, 5000);
+  });
+}
+
+// ── Revival handling ─────────────────────────────────────────────────
+
+function wireRevivalBot(rBot) {
+  rBot._onDespawn = (username, reason) => {
+    console.log(`[Revival] Cleaning up ${username} (${reason})`);
+    revivalBots.delete(username);
+    saveRevivalState();
+    const regular = botsByName.get(username);
+    if (regular) {
+      console.log(`[Revival] Unparking regular chatbot ${username}`);
+      regular.unpark();
+    }
+  };
+
+  // Agent loop tick — called every 10-20s by revival-bot.js
+  // Supports multi-step chaining: execute actions, then re-tick to let LLM see results
+  rBot._onTick = async (bot) => {
+    const MAX_STEPS = 3;
+    let allSenders = [];
+    let lastChat = null; // only send chat from the final step
+
+    for (let step = 0; step < MAX_STEPS; step++) {
+      if (!bot.connected || bot.despawned) break;
+
+      const result = await cm.revivalTick(bot);
+      if (step === 0) allSenders = result.senders;
+
+      // Debug mode: emit thinking + tool calls as in-game chat
+      if (bot.debugChat && bot.connected && !bot.despawned) {
+        const dbgMessages = [];
+        if (result.rawThinking) {
+          const think = result.rawThinking.replace(/\n/g, ' ').slice(0, 200);
+          dbgMessages.push(`[think] ${think}`);
+        }
+        for (const action of result.actions) {
+          const args = Object.keys(action.params).length > 0
+            ? `(${JSON.stringify(action.params)})` : '()';
+          dbgMessages.push(`[tool] ${action.name}${args}`.slice(0, 256));
+        }
+        if (dbgMessages.length === 0) {
+          dbgMessages.push('[think] (idle — no action)');
+        }
+        for (const msg of dbgMessages) {
+          console.log(`[DBG] ${bot.username}: ${msg}`);
+          try { bot.bot.chat(msg); } catch (e) { console.log(`[DBG] chat error: ${e.message}`); }
+          await new Promise(r => setTimeout(r, 350));
+        }
+      }
+
+      const logBefore = bot.actionLog.length;
+      for (const action of result.actions) {
+        await executeRevivalAction(bot, action.name, action.params);
+      }
+
+      // Debug mode: emit action results
+      if (bot.debugChat && bot.connected && !bot.despawned) {
+        const newEntries = bot.actionLog.slice(logBefore);
+        for (const entry of newEntries) {
+          const prefix = entry.type.includes('fail') ? '[FAIL]'
+            : entry.type.includes('success') ? '[OK]'
+            : entry.type.includes('partial') ? '[PARTIAL]'
+            : `[${entry.type}]`;
+          const dbgMsg = `${prefix} ${entry.detail}`.slice(0, 256);
+          console.log(`[DBG Chat] ${bot.username}: ${dbgMsg}`);
+          bot.bot.chat(dbgMsg);
+          await new Promise(r => setTimeout(r, 300));
+        }
+      }
+
+      // Keep the latest chat — will only be sent after the loop ends
+      if (result.chat) lastChat = result.chat;
+
+      // Chain if actions produced new log entries (results the LLM should see)
+      const newLogs = bot.actionLog.length - logBefore;
+      if (result.actions.length === 0 || newLogs === 0) break;
+      console.log(`[Revival Tick] ${bot.username} chaining step ${step + 1}/${MAX_STEPS} (${newLogs} new log entries)`);
+    }
+
+    // Send chat AFTER all chaining is done (so it reflects actual results)
+    if (lastChat && bot.connected && !bot.despawned) {
+      const delay = 500 + Math.random() * 1500;
+      console.log(`[Revival Chat] ${bot.username} (${Math.round(delay / 1000)}s): ${lastChat}`);
+      await new Promise(r => setTimeout(r, delay));
+      if (bot.connected && !bot.despawned) {
+        bot.chat(lastChat);
+        for (const sender of allSenders) {
+          cm.trackConversation(sender, bot.username);
+        }
+      }
+    }
+  };
+}
+
+async function handleRevival(reviver, deadPlayer, pos) {
+  console.log(`[Revival] Handling revival: ${reviver} revived ${deadPlayer} at ${pos.x},${pos.y},${pos.z}`);
+
+  if (revivalBots.has(deadPlayer)) {
+    console.log(`[Revival] ${deadPlayer} already has an active revival bot`);
+    return;
+  }
+  if (revivalBots.size >= MAX_REVIVAL_BOTS) {
+    console.log(`[Revival] Max revival bots (${MAX_REVIVAL_BOTS}) reached`);
+    return;
+  }
+
+  const existingBot = botsByName.get(deadPlayer);
+  if (existingBot) {
+    console.log(`[Revival] Parking regular chatbot ${deadPlayer} for revival`);
+    existingBot.park(0);
+    migrateGlobalChatListener();
+  }
+
+  let profile;
+  try {
+    profile = await getPlayerProfile(deadPlayer);
+    console.log(`[Revival] Profile for ${deadPlayer}: ${profile.personality?.slice(0, 80)}...`);
+  } catch (err) {
+    console.error(`[Revival] Profile generation failed: ${err.message}`);
+    profile = {
+      personality: 'A confused player who just woke up from the dead.',
+      chatStyle: 'Short lowercase messages, dazed tone.',
+      samplePhrases: ['huh', 'where am i', 'what happened']
+    };
+  }
+
+  const rBot = new RevivalBot({
+    deadPlayer,
+    reviver,
+    pos,
+    profile,
+    conversationManager: cm,
+    config: botConfig
+  });
+
+  wireRevivalBot(rBot);
+  revivalBots.set(deadPlayer, rBot);
+  saveRevivalState();
+  rBot.connect();
+
+  // After connecting: teleport to ritual location, queue greeting for agent loop
+  const waitForConnect = setInterval(() => {
+    if (rBot.connected) {
+      clearInterval(waitForConnect);
+      const { x, y, z } = pos;
+      rcon(`tp ${deadPlayer} ${x} ${y} ${z}`).then(resp => {
+        console.log(`[Revival] Teleported ${deadPlayer} to ${x},${y},${z}: ${resp}`);
+      }).catch(err => {
+        console.error(`[Revival] Teleport failed: ${err.message}`);
+      });
+      // Start the agent loop so periodic ticks fire
+      rBot.startAgentLoop();
+
+      setTimeout(() => {
+        if (rBot.connected && !rBot.despawned) {
+          rBot.queueMessage('__system__', `You were just revived by ${reviver}. Greet them warmly but briefly, in your style.`);
+        }
+      }, 2000);
+    }
+    if (rBot.despawned) clearInterval(waitForConnect);
+  }, 1000);
+}
+
+// Restore revival bots from previous session
+async function restoreRevivals() {
+  const saved = loadRevivalState();
+  if (saved.length === 0) return;
+  console.log(`[Revival] Restoring ${saved.length} revival bot(s) from previous session`);
+
+  for (const s of saved) {
+    const existingBot = botsByName.get(s.deadPlayer);
+    if (existingBot) { existingBot.park(0); migrateGlobalChatListener(); }
+
+    const rBot = new RevivalBot({
+      deadPlayer: s.deadPlayer,
+      reviver: s.reviver,
+      pos: s.pos,
+      profile: s.profile,
+      conversationManager: cm,
+      config: botConfig
+    });
+
+    // Restore agent memory
+    if (s.objectives) rBot.objectives = s.objectives;
+    if (s.actionLog) rBot.actionLog = s.actionLog;
+    if (s.createdAt) rBot.revivalInfo.time = s.createdAt;
+
+    wireRevivalBot(rBot);
+    revivalBots.set(s.deadPlayer, rBot);
+    rBot.connect();
+
+    // Pardon + teleport after connect (in case server also restarted)
+    const waitForConnect = setInterval(() => {
+      if (rBot.connected) {
+        clearInterval(waitForConnect);
+        rcon(`pardon ${s.deadPlayer}`).catch(() => {});
+        const { x, y, z } = s.pos;
+        rcon(`tp ${s.deadPlayer} ${x} ${y} ${z}`).then(resp => {
+          console.log(`[Revival] Restored & teleported ${s.deadPlayer}: ${resp}`);
+        }).catch(() => {});
+        rBot.startAgentLoop();
+        rBot.log('restored', `Reconnected after restart (owner: ${s.reviver})`);
+      }
+      if (rBot.despawned) clearInterval(waitForConnect);
+    }, 1000);
+
+    console.log(`[Revival] Restoring ${s.deadPlayer} (owner: ${s.reviver})`);
+  }
+}
+
+// ── Webhook server ───────────────────────────────────────────────────
+
+function setupWebhookServer() {
+  const port = parseInt(process.env.WEBHOOK_PORT) || 8765;
+  const secret = process.env.WEBHOOK_SECRET || '';
+
+  const server = createServer((req, res) => {
+    if (req.method !== 'POST' || req.url !== '/revival') {
+      res.writeHead(404);
+      res.end('Not found');
+      return;
+    }
+
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+
+        // Verify secret
+        if (secret && data.secret !== secret) {
+          console.log('[Webhook] Invalid secret');
+          res.writeHead(403);
+          res.end('Forbidden');
+          return;
+        }
+
+        const { reviver, deadPlayer, x, y, z } = data;
+        if (!reviver || !deadPlayer) {
+          res.writeHead(400);
+          res.end('Missing fields');
+          return;
+        }
+        if (reviver === deadPlayer) {
+          console.log('[Webhook] Ignoring self-revival');
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ status: 'ignored', reason: 'self-revival' }));
+          return;
+        }
+
+        console.log(`[Webhook] Revival request: ${reviver} → ${deadPlayer} at ${x},${y},${z}`);
+        handleRevival(reviver, deadPlayer, { x, y, z });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'ok' }));
+      } catch (err) {
+        console.error(`[Webhook] Error: ${err.message}`);
+        res.writeHead(500);
+        res.end('Server error');
+      }
+    });
+  });
+
+  server.listen(port, () => {
+    console.log(`[Webhook] Revival webhook listening on :${port}`);
+  });
+}
+
+// ── Revival action executor ─────────────────────────────────────────
+
+async function executeRevivalAction(rBot, actionName, params) {
+  console.log(`[Revival Action] ${rBot.username}: ${actionName}(${JSON.stringify(params)})`);
+  switch (actionName) {
+    case 'follow_owner': rBot._cmdFollow(); break;
+    case 'follow_player': rBot._cmdFollowPlayer(params.player); break;
+    case 'come_here': rBot._cmdCome(); break;
+    case 'stop': rBot._cmdStop(); break;
+    case 'guard': rBot._cmdGuard(); break;
+    case 'mine': await rBot._cmdMine(params.block, params.count || 16); break;
+    case 'attack': await rBot._cmdAttack(params.mob, params.count || 1); break;
+    case 'drop_item': rBot._cmdDrop(params.item, params.count); break;
+    case 'drop_all': await rBot._cmdDropAll(); break;
+    case 'give_item': rBot._cmdGive(params.player, params.item, params.count); break;
+    case 'check_chests': await rBot._cmdCheckChests(); break;
+    case 'take_from_chest': await rBot._cmdTakeFromChest(params.item, params.count); break;
+    case 'deposit_in_chest': await rBot._cmdDepositInChest(params.item, params.count); break;
+    case 'deposit_all': await rBot._cmdDepositAll(); break;
+    case 'craft_item': await rBot._cmdCraft(params.item, params.count || 1); break;
+    case 'smelt': await rBot._cmdSmelt(params.item, params.fuel || 'coal', params.count || 1); break;
+    case 'equip_item': rBot._cmdEquip(params.item); break;
+    case 'eat': await rBot._cmdEat(); break;
+    case 'dismiss': rBot._cmdDismiss(); break;
+    case 'ask_clarification':
+      if (params.question) rBot.chat(params.question);
+      break;
+    case 'set_objective': rBot.addObjective(params.text, params.priority || 'normal'); break;
+    case 'complete_objective': rBot.completeObjective(params.text); break;
+    case 'clear_objectives': rBot.clearObjectives(); break;
+    default: console.log(`[Revival Action] Unknown action: ${actionName}`);
+  }
+}
+
+// ── Player chat handler ─────────────────────────────────────────────
+
 async function handlePlayerChat(username, message) {
+  console.log(`[Chat] ${username}: "${message}"`);
   // Add to shared history ONCE (this is the single source of truth)
   if (!botNames.includes(username)) {
     cm.addMessage(username, message);
   }
 
   if (botNames.includes(username)) return; // don't process bot messages here
+
+  // 0a. Debug toggle: "debug" or "debug <botname>" toggles debug chat for the owner's bot
+  const msgLower = message.toLowerCase();
+  if (msgLower === 'debug' || msgLower.startsWith('debug ')) {
+    // If "debug botname", find that specific bot; otherwise toggle all owned bots
+    const debugArg = msgLower.replace(/^debug\s*/, '').trim();
+    for (const [deadName, rBot] of revivalBots) {
+      if (rBot.owner !== username || !rBot.connected) continue;
+      if (debugArg) {
+        const nameClean = deadName.toLowerCase().replace(/[_\s]/g, '');
+        const argClean = debugArg.replace(/[_\s]/g, '');
+        if (!nameClean.includes(argClean) && !deadName.toLowerCase().includes(debugArg)) continue;
+      }
+      rBot.debugChat = !rBot.debugChat;
+      const status = rBot.debugChat ? 'ON' : 'OFF';
+      console.log(`[Debug] ${username} toggled debug for ${rBot.username}: ${status}`);
+      rBot.bot.chat(`[dbg] debug mode ${status}`);
+    }
+    return;
+  }
+
+  // 0. Revival bot interaction — queue message for agent tick
+  //    Fuzzy name matching: "pepperoni dude" matches "pepperoni_dude", "zold" matches "Zold_"
+  const ownedBots = [];
+  const mentionedBots = [];
+  for (const [deadName, rBot] of revivalBots) {
+    if (!rBot.connected) continue;
+    if (rBot.owner === username) ownedBots.push(rBot);
+    // Fuzzy match: check each word in the message against cleaned bot name variants
+    const nameClean = deadName.toLowerCase().replace(/[_\s]/g, '');
+    const nameLower = deadName.toLowerCase();
+    const msgWords = msgLower.split(/[\s,]+/);
+    const mentioned = msgWords.some(w => {
+      const wClean = w.replace(/[_\s]/g, '');
+      return wClean === nameClean || wClean === nameLower
+        || nameClean.startsWith(wClean) && wClean.length >= 3; // "brezzy" matches "brezzytracks"
+    }) || msgLower.includes(nameLower);
+    if (mentioned) mentionedBots.push(rBot);
+  }
+  // Routing rules:
+  // 1. Owner mentions a specific bot by name → route to that bot
+  // 2. Owner has only one bot → route to it
+  // 3. Owner has multiple bots but didn't mention one → route to all owned bots
+  // 4. Non-owner mentioning a bot by name → route to that bot
+  if (ownedBots.length > 0) {
+    // Check if the owner mentioned a specific bot they own
+    const ownedMentioned = mentionedBots.filter(b => b.owner === username);
+    if (ownedMentioned.length > 0) {
+      for (const target of ownedMentioned) {
+        console.log(`[Revival] "${message}" → ${target.username} (owner+mention)`);
+        target.queueMessage(username, message);
+      }
+    } else if (ownedBots.length === 1) {
+      console.log(`[Revival] "${message}" → ${ownedBots[0].username} (owner)`);
+      ownedBots[0].queueMessage(username, message);
+    } else {
+      // Multiple bots, no mention — send to the most recently messaged one
+      const sorted = ownedBots.sort((a, b) => {
+        const aLast = a.pendingMessages.length > 0 ? a.pendingMessages[a.pendingMessages.length - 1].timestamp
+          : a.actionLog.length > 0 ? a.actionLog[a.actionLog.length - 1].timestamp : 0;
+        const bLast = b.pendingMessages.length > 0 ? b.pendingMessages[b.pendingMessages.length - 1].timestamp
+          : b.actionLog.length > 0 ? b.actionLog[b.actionLog.length - 1].timestamp : 0;
+        return bLast - aLast;
+      });
+      const target = sorted[0];
+      console.log(`[Revival] "${message}" → ${target.username} (owner, most recent)`);
+      target.queueMessage(username, message);
+    }
+    return;
+  }
+  if (mentionedBots.length > 0) {
+    const target = mentionedBots[0];
+    console.log(`[Revival] "${message}" → ${target.username} (mention)`);
+    target.queueMessage(username, message);
+    return;
+  }
+
   if (cm.isRateLimited()) return;
 
   // 1. Direct mentions — dispatch to ALL mentioned bots
@@ -346,40 +809,59 @@ async function handlePlayerChat(username, message) {
   }
 }
 
+let globalChatListenerBot = null; // track which bot has the global chat listener
+
+function attachGlobalChatListener(leader) {
+  if (globalChatListenerBot === leader) return; // already attached to this bot
+  globalChatListenerBot = leader;
+
+  // Primary: player_chat packets (works without FreedomChat)
+  leader.bot._client.on('player_chat', async (packet) => {
+    if (globalChatListenerBot !== leader) return; // stale listener
+    const message = packet.plainMessage;
+    if (!message) return;
+    const username = resolveSender(leader.bot, packet.senderUuid);
+    if (!username) return;
+    handlePlayerChat(username, message);
+  });
+
+  // Fallback: system_chat via message event (FreedomChat converts player_chat → system_chat)
+  leader.bot.on('message', (jsonMsg, position) => {
+    if (globalChatListenerBot !== leader) return; // stale listener
+    if (position === 'game_info') return; // skip action bar
+    const text = jsonMsg.toString();
+    if (!text || text.length < 3) return;
+
+    // Skip death messages (handled by death listener)
+    if (isDeathMessage(text)) return;
+
+    const parsed = parseChatFromSystem(text);
+    if (!parsed) return;
+
+    const username = resolveUsername(leader, parsed.nickname);
+    if (!username) return;
+
+    handlePlayerChat(username, parsed.message);
+  });
+
+  console.log(`Global chat listener active on ${leader.username} (player_chat + system_chat fallback).`);
+}
+
+// Re-attach global chat listener to a different connected, non-parked bot
+function migrateGlobalChatListener() {
+  const candidate = bots.find(b => b.connected && !b.parked && b.bot?._client);
+  if (candidate && candidate !== globalChatListenerBot) {
+    console.log(`[ChatListener] Migrating from ${globalChatListenerBot?.username || 'none'} to ${candidate.username}`);
+    attachGlobalChatListener(candidate);
+  }
+}
+
 function setupGlobalChatListener() {
   const leader = bots[0];
   const checkReady = setInterval(() => {
     if (leader.bot && leader.bot._client) {
       clearInterval(checkReady);
-
-      // Primary: player_chat packets (works without FreedomChat)
-      leader.bot._client.on('player_chat', async (packet) => {
-        const message = packet.plainMessage;
-        if (!message) return;
-        const username = resolveSender(leader.bot, packet.senderUuid);
-        if (!username) return;
-        handlePlayerChat(username, message);
-      });
-
-      // Fallback: system_chat via message event (FreedomChat converts player_chat → system_chat)
-      leader.bot.on('message', (jsonMsg, position) => {
-        if (position === 'game_info') return; // skip action bar
-        const text = jsonMsg.toString();
-        if (!text || text.length < 3) return;
-
-        // Skip death messages (handled by death listener)
-        if (isDeathMessage(text)) return;
-
-        const parsed = parseChatFromSystem(text);
-        if (!parsed) return;
-
-        const username = resolveUsername(leader, parsed.nickname);
-        if (!username) return;
-
-        handlePlayerChat(username, parsed.message);
-      });
-
-      console.log('Global chat listener active (player_chat + system_chat fallback).');
+      attachGlobalChatListener(leader);
     }
   }, 1000);
 }
@@ -521,11 +1003,12 @@ function scaleBots() {
     const topark = shuffled.slice(0, active.length - target);
     if (topark.length > 0) {
       topark.forEach((b, i) => b.park(i * (15000 + Math.random() * 10000)));
+      migrateGlobalChatListener();
       console.log(`[Scaler] ${realPlayers} players → target ${target} bots (parking ${topark.map(b => b.username).join(', ')})`);
     }
   } else if (active.length < target && parked.length > 0) {
-    // Unpark — randomly pick from parked bots
-    const shuffled = [...parked].sort(() => Math.random() - 0.5);
+    // Unpark — randomly pick from parked bots (skip those with active revival bots)
+    const shuffled = [...parked].filter(b => !revivalBots.has(b.username)).sort(() => Math.random() - 0.5);
     const tounpark = shuffled.slice(0, target - active.length);
     if (tounpark.length > 0) {
       tounpark.forEach(b => b.unpark());
@@ -571,6 +1054,9 @@ setTimeout(() => {
   setupDeathListener();
   setupJoinLeaveListeners();
   bots.forEach(bot => setupBotToBotListener(bot));
+  setupWebhookServer();
+  // Clear stale revival state on boot — revivals only happen via fresh rituals
+  if (existsSync(REVIVAL_STATE_FILE)) writeFileSync(REVIVAL_STATE_FILE, '[]');
 }, 3000);
 
 setTimeout(() => {
@@ -699,6 +1185,10 @@ console.log('[HotReload] Watching prompts/ and personalities.json');
 
 function gracefulShutdown() {
   console.log('\nShutting down bots...');
+  // Despawn all revival bots
+  for (const [name, rBot] of revivalBots) {
+    rBot.despawn('shutdown');
+  }
   bots.forEach((bot, i) => {
     setTimeout(() => {
       if (bot.bot && bot.connected) {

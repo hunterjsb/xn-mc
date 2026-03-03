@@ -1,0 +1,6 @@
+name: RevivalRitual
+version: '1.0.0'
+main: space.xandaris.revival.RevivalPlugin
+api-version: '1.21'
+description: Revive dead players as mineflayer bots using an iron golem ritual
+author: hunterjsb

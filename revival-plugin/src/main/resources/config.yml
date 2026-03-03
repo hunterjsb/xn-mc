@@ -1,0 +1,7 @@
+# RevivalRitual Configuration
+
+# Webhook URL to notify the chatbot system
+webhook-url: "http://localhost:8765/revival"
+
+# Secret for authenticating webhook requests (must match WEBHOOK_SECRET in .env)
+webhook-secret: "test-secret"
