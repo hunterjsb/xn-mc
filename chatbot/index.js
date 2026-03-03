@@ -494,6 +494,11 @@ function wireRevivalBot(rBot) {
       // Chain if actions produced new log entries (results the LLM should see)
       const newLogs = bot.actionLog.length - logBefore;
       if (result.actions.length === 0 || newLogs === 0) break;
+      // Skip further chaining if owner sent a message mid-tick (handle it on next tick instead)
+      if (bot._abortIdleTick) {
+        console.log(`[Revival Tick] ${bot.username} breaking chain — owner message pending`);
+        break;
+      }
       console.log(`[Revival Tick] ${bot.username} chaining step ${step + 1}/${MAX_STEPS} (${newLogs} new log entries)`);
     }
 
@@ -507,6 +512,10 @@ function wireRevivalBot(rBot) {
         for (const sender of allSenders) {
           cm.trackConversation(sender, bot.username);
         }
+        // Fire-and-forget memory evaluation (mirrors regular bot behavior)
+        const recentMsgs = bot.actionLog.slice(-5).map(e => `[${e.type}] ${e.detail}`).join('\n');
+        const snippet = `${recentMsgs}\n<${bot.username}> ${lastChat}`;
+        cm.evaluateMemory(bot.username, snippet);
       }
     }
   };
@@ -728,7 +737,10 @@ async function executeRevivalAction(rBot, actionName, params) {
       if (params.question) rBot.chat(params.question);
       break;
     case 'set_objective': rBot.addObjective(params.text, params.priority || 'normal'); break;
-    case 'complete_objective': rBot.completeObjective(params.text); break;
+    case 'complete_objective':
+      rBot.completeObjective(params.text);
+      cm.addMemory(rBot.username, `Completed objective: ${params.text}`);
+      break;
     case 'clear_objectives': rBot.clearObjectives(); break;
     default: console.log(`[Revival Action] Unknown action: ${actionName}`);
   }
@@ -788,37 +800,42 @@ async function handlePlayerChat(username, message) {
   // 2. Owner has only one bot → route to it
   // 3. Owner has multiple bots but didn't mention one → route to all owned bots
   // 4. Non-owner mentioning a bot by name → route to that bot
-  if (ownedBots.length > 0) {
-    // Check if the owner mentioned a specific bot they own
-    const ownedMentioned = mentionedBots.filter(b => b.owner === username);
-    if (ownedMentioned.length > 0) {
-      for (const target of ownedMentioned) {
-        console.log(`[Revival] "${message}" → ${target.username} (owner+mention)`);
+  // Check if message mentions a regular chatbot — if so, skip revival routing for that message
+  const mentionsRegularBot = findMentionedBots(message, personalities).length > 0;
+
+  if (!mentionsRegularBot) {
+    if (ownedBots.length > 0) {
+      // Check if the owner mentioned a specific bot they own
+      const ownedMentioned = mentionedBots.filter(b => b.owner === username);
+      if (ownedMentioned.length > 0) {
+        for (const target of ownedMentioned) {
+          console.log(`[Revival] "${message}" → ${target.username} (owner+mention)`);
+          target.queueMessage(username, message);
+        }
+      } else if (ownedBots.length === 1) {
+        console.log(`[Revival] "${message}" → ${ownedBots[0].username} (owner)`);
+        ownedBots[0].queueMessage(username, message);
+      } else {
+        // Multiple bots, no mention — send to the most recently messaged one
+        const sorted = ownedBots.sort((a, b) => {
+          const aLast = a.pendingMessages.length > 0 ? a.pendingMessages[a.pendingMessages.length - 1].timestamp
+            : a.actionLog.length > 0 ? a.actionLog[a.actionLog.length - 1].timestamp : 0;
+          const bLast = b.pendingMessages.length > 0 ? b.pendingMessages[b.pendingMessages.length - 1].timestamp
+            : b.actionLog.length > 0 ? b.actionLog[b.actionLog.length - 1].timestamp : 0;
+          return bLast - aLast;
+        });
+        const target = sorted[0];
+        console.log(`[Revival] "${message}" → ${target.username} (owner, most recent)`);
         target.queueMessage(username, message);
       }
-    } else if (ownedBots.length === 1) {
-      console.log(`[Revival] "${message}" → ${ownedBots[0].username} (owner)`);
-      ownedBots[0].queueMessage(username, message);
-    } else {
-      // Multiple bots, no mention — send to the most recently messaged one
-      const sorted = ownedBots.sort((a, b) => {
-        const aLast = a.pendingMessages.length > 0 ? a.pendingMessages[a.pendingMessages.length - 1].timestamp
-          : a.actionLog.length > 0 ? a.actionLog[a.actionLog.length - 1].timestamp : 0;
-        const bLast = b.pendingMessages.length > 0 ? b.pendingMessages[b.pendingMessages.length - 1].timestamp
-          : b.actionLog.length > 0 ? b.actionLog[b.actionLog.length - 1].timestamp : 0;
-        return bLast - aLast;
-      });
-      const target = sorted[0];
-      console.log(`[Revival] "${message}" → ${target.username} (owner, most recent)`);
-      target.queueMessage(username, message);
+      return;
     }
-    return;
-  }
-  if (mentionedBots.length > 0) {
-    const target = mentionedBots[0];
-    console.log(`[Revival] "${message}" → ${target.username} (mention)`);
-    target.queueMessage(username, message);
-    return;
+    if (mentionedBots.length > 0) {
+      const target = mentionedBots[0];
+      console.log(`[Revival] "${message}" → ${target.username} (mention)`);
+      target.queueMessage(username, message);
+      return;
+    }
   }
 
   if (cm.isRateLimited()) return;
@@ -827,8 +844,9 @@ async function handlePlayerChat(username, message) {
   const mentioned = findMentionedBots(message, personalities);
   if (mentioned.length > 0) {
     for (const botName of mentioned) {
-      console.log(`[Mention] "${message}" → ${botName}`);
-      dispatchResponse(botsByName.get(botName), 'Mention', username);
+      const mbot = botsByName.get(botName);
+      console.log(`[Mention] "${message}" → ${botName} (connected=${mbot?.connected}, parked=${mbot?.parked}, muted=${mbot?.muted})`);
+      dispatchResponse(mbot, 'Mention', username);
     }
     return;
   }

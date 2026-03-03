@@ -21,6 +21,7 @@ const TICK_INTERVAL_MAX = 20000;  // 20s
 const SURVIVAL_INTERVAL = 3000;   // 3s — fast reactive loop
 const STUCK_THRESHOLD = 30000;    // 30s same position → unstuck
 const MAX_LOG_ENTRIES = 15;
+const MAX_TICK_HISTORY = 4;
 
 const HOSTILE_MOBS = new Set([
   'zombie', 'skeleton', 'creeper', 'spider', 'enderman', 'witch', 'phantom',
@@ -28,6 +29,24 @@ const HOSTILE_MOBS = new Set([
   'ghast', 'wither_skeleton', 'piglin_brute', 'cave_spider', 'slime',
   'magma_cube', 'warden', 'breeze',
 ]);
+
+const UNDERGROUND_BLOCKS = {
+  ancient_debris:    { y: 15,   dimension: 'the_nether' },
+  diamond_ore:       { y: -59,  dimension: 'overworld' },
+  deepslate_diamond_ore: { y: -59, dimension: 'overworld' },
+  emerald_ore:       { y: -16,  dimension: 'overworld' },
+  deepslate_emerald_ore: { y: -16, dimension: 'overworld' },
+  gold_ore:          { y: -16,  dimension: 'overworld' },
+  deepslate_gold_ore: { y: -16, dimension: 'overworld' },
+  lapis_ore:         { y: 0,    dimension: 'overworld' },
+  deepslate_lapis_ore: { y: 0,  dimension: 'overworld' },
+  redstone_ore:      { y: -59,  dimension: 'overworld' },
+  deepslate_redstone_ore: { y: -59, dimension: 'overworld' },
+  nether_gold_ore:   { y: 15,   dimension: 'the_nether' },
+  nether_quartz_ore: { y: 15,   dimension: 'the_nether' },
+};
+
+const PICKAXE_TIERS = ['netherite_pickaxe', 'diamond_pickaxe', 'iron_pickaxe', 'golden_pickaxe', 'stone_pickaxe', 'wooden_pickaxe'];
 
 const FOOD_ITEMS = new Set([
   'bread', 'cooked_beef', 'cooked_porkchop', 'cooked_chicken', 'cooked_mutton',
@@ -64,12 +83,16 @@ export class RevivalBot {
       time: Date.now()
     };
 
+    // ── Tick history for LLM context ──────────────────────────────────
+    this.tickHistory = [];            // compact summaries of recent ticks
+
     // ── Lifecycle ─────────────────────────────────────────────────────
     this._despawnTimer = null;
     this._ownerGraceTimer = null;
     this._tickTimer = null;
     this._survivalTimer = null;
     this._ticking = false;            // prevent overlapping ticks
+    this._abortIdleTick = false;      // set true when owner messages during a tick
     this._onDespawn = null;
     this._onTick = null;              // callback: (rBot) => Promise — set by index.js
 
@@ -111,6 +134,11 @@ export class RevivalBot {
     this.log('objectives_cleared', 'all objectives cleared');
   }
 
+  recordTickExchange(summary) {
+    this.tickHistory.push(summary);
+    if (this.tickHistory.length > MAX_TICK_HISTORY) this.tickHistory.shift();
+  }
+
   queueMessage(sender, message) {
     this.pendingMessages.push({ sender, message, timestamp: Date.now() });
     // Instant interrupt: if owner says "stop"/"cancel" while a long action is running, break it immediately
@@ -123,9 +151,16 @@ export class RevivalBot {
         try { this.bot?.pvp?.stop(); } catch {}
       }
     }
-    // Bump the next tick sooner for responsiveness (without breaking the loop)
+    // Owner messages get near-instant ticks; others keep normal bump
+    const isOwner = sender === this.owner;
+    const bumpDelay = isOwner ? (100 + Math.random() * 200) : (500 + Math.random() * 1000);
+
     if (!this._ticking && this.connected && !this.despawned && this._loopRunning) {
-      this._scheduleNextTick(500 + Math.random() * 1000);
+      this._scheduleNextTick(bumpDelay);
+    }
+    // If currently ticking and owner sent a message, flag to shorten next idle delay
+    if (this._ticking && isOwner) {
+      this._abortIdleTick = true;
     }
   }
 
@@ -163,11 +198,16 @@ export class RevivalBot {
       }
     }
 
+    // Dimension: "minecraft:overworld" → "overworld", "minecraft:the_nether" → "the_nether", etc.
+    const rawDim = this.bot.game?.dimension || 'unknown';
+    const dimension = rawDim.replace(/^minecraft:/, '');
+
     return {
       position: `${Math.round(pos.x)}, ${Math.round(pos.y)}, ${Math.round(pos.z)}`,
       health: Math.round(health),
       food: Math.round(food),
       timeOfDay: isDay === null ? 'unknown' : (isDay ? 'day' : 'night'),
+      dimension,
       inventory: inventory.length > 0 ? inventory.join(', ') : 'empty',
       ownerDistance: ownerDist !== null ? `${ownerDist}m` : 'not visible',
       nearbyEntities: nearby.length > 0 ? nearby.slice(0, 15).join(', ') : 'none',
@@ -362,13 +402,20 @@ export class RevivalBot {
       return;
     }
     this._ticking = true;
+    this._abortIdleTick = false;
     try {
       if (this._onTick) await this._onTick(this);
     } catch (err) {
       console.error(`[Revival Tick] ${this.username} error: ${err.message}`);
     } finally {
       this._ticking = false;
-      this._scheduleNextTick();
+      // If owner sent a message during this tick, schedule fast follow-up
+      if (this._abortIdleTick) {
+        this._abortIdleTick = false;
+        this._scheduleNextTick(100 + Math.random() * 200);
+      } else {
+        this._scheduleNextTick();
+      }
     }
   }
 
@@ -476,6 +523,7 @@ export class RevivalBot {
     this.bot.on('end', () => {
       console.log(`[Revival] ${this.username} disconnected`);
       this.connected = false;
+      this.tickHistory = [];
       if (!this.despawned && !this.suspended) {
         // Auto-reconnect on unexpected disconnect (protocol errors, etc.)
         console.log(`[Revival] ${this.username} unexpected disconnect — reconnecting in 5s`);
@@ -528,6 +576,7 @@ export class RevivalBot {
   resume() {
     if (this.despawned || !this.suspended) return;
     this.suspended = false;
+    this.tickHistory = [];
     console.log(`[Revival] ${this.username} resuming — owner ${this.owner} is back`);
     this.log('resumed', `Owner ${this.owner} returned`);
     this.connect();
@@ -671,6 +720,22 @@ export class RevivalBot {
       // Find the nearest matching block
       const block = this.bot.findBlock({ matching: blockType.id, maxDistance: 64 });
       if (!block) {
+        // Try strip-mining if this is an underground block
+        const ugInfo = UNDERGROUND_BLOCKS[blockName];
+        if (ugInfo) {
+          const rawDim = this.bot.game?.dimension || '';
+          const currentDim = rawDim.replace(/^minecraft:/, '');
+          if (currentDim !== ugInfo.dimension) {
+            failReason = `${blockName} spawns in the ${ugInfo.dimension}, but you're in the ${currentDim}`;
+            break;
+          }
+          const stripResult = await this._stripMine(blockName, blockType.id, count - mined, ugInfo.y);
+          mined += stripResult.found;
+          if (stripResult.found === 0) {
+            failReason = stripResult.reason || `strip-mined but found no ${blockName}`;
+          }
+          break; // strip-mine handles its own loop
+        }
         failReason = `no ${blockName} found nearby`;
         break;
       }
@@ -705,6 +770,115 @@ export class RevivalBot {
     } else {
       this.log('action_success', `Mined ${mined} ${blockName}`);
     }
+  }
+
+  async _stripMine(blockName, blockTypeId, targetCount, optimalY) {
+    this.log('action', `Strip-mining for ${blockName} at Y=${optimalY}`);
+    console.log(`[StripMine] ${this.username} mining ${blockName} → Y=${optimalY}`);
+
+    // Check for a pickaxe
+    const pickaxe = this.bot.inventory.items().find(i => PICKAXE_TIERS.includes(i.name));
+    if (!pickaxe) {
+      this.log('action_failed', `Strip-mine ${blockName}: no pickaxe in inventory`);
+      return { found: 0, reason: 'no pickaxe in inventory' };
+    }
+    try { await this.bot.equip(pickaxe, 'hand'); } catch {}
+
+    // Navigate to optimal Y level
+    const pos = this.bot.entity.position;
+    const targetPos = pos.offset(0, optimalY - Math.round(pos.y), 0);
+    try {
+      this.bot.pathfinder.setGoal(new goals.GoalNear(targetPos.x, targetPos.y, targetPos.z, 3));
+      await Promise.race([
+        new Promise(resolve => this.bot.once('goal_reached', resolve)),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('nav timeout')), 20000)),
+        new Promise((_, reject) => {
+          const check = setInterval(() => {
+            if (this.state !== 'mining') { clearInterval(check); reject(new Error('interrupted')); }
+          }, 500);
+          setTimeout(() => clearInterval(check), 20000);
+        })
+      ]);
+    } catch (err) {
+      if (err.message === 'interrupted') return { found: 0, reason: 'interrupted' };
+      // Navigation failed — try to mine from current position anyway
+      console.log(`[StripMine] ${this.username} nav failed (${err.message}), mining from current pos`);
+    }
+
+    // Pick random cardinal direction
+    const dirs = [{ x: 1, z: 0 }, { x: -1, z: 0 }, { x: 0, z: 1 }, { x: 0, z: -1 }];
+    const dir = dirs[Math.floor(Math.random() * dirs.length)];
+
+    let found = 0;
+    let blocksDug = 0;
+    const startTime = Date.now();
+    const MAX_BLOCKS = 80;
+    const TIMEOUT = 60000;
+
+    while (found < targetCount && blocksDug < MAX_BLOCKS && this.state === 'mining'
+           && this.connected && !this.despawned && (Date.now() - startTime) < TIMEOUT) {
+      const botPos = this.bot.entity.position;
+      // Dig a 1x2 tunnel: foot level and head level
+      const footPos = botPos.offset(dir.x, 0, dir.z);
+      const headPos = botPos.offset(dir.x, 1, dir.z);
+
+      for (const digPos of [footPos, headPos]) {
+        if (this.state !== 'mining') break;
+        const blk = this.bot.blockAt(digPos);
+        if (!blk || blk.name === 'air' || blk.name === 'cave_air' || blk.name === 'void_air') continue;
+
+        // Check if this is our target ore
+        if (blk.type === blockTypeId) {
+          found++;
+          console.log(`[StripMine] ${this.username} found ${blockName}! (${found}/${targetCount})`);
+        }
+
+        try {
+          await this.bot.dig(blk);
+          blocksDug++;
+        } catch {
+          // Skip undiggable blocks (bedrock, etc.)
+        }
+      }
+
+      // Also check blocks adjacent to the tunnel (ore veins beside the path)
+      for (const offset of [{ x: 0, y: 0, z: 0 }, { x: 0, y: 1, z: 0 }]) {
+        for (const side of [
+          { x: dir.z, z: -dir.x },  // left
+          { x: -dir.z, z: dir.x },  // right
+          { x: 0, z: 0, y: -1 },    // below feet
+          { x: 0, z: 0, y: 2 },     // above head
+        ]) {
+          if (this.state !== 'mining' || found >= targetCount) break;
+          const checkPos = botPos.offset(dir.x + side.x, (side.y ?? offset.y), dir.z + side.z);
+          const sideBlk = this.bot.blockAt(checkPos);
+          if (sideBlk && sideBlk.type === blockTypeId) {
+            found++;
+            console.log(`[StripMine] ${this.username} found ${blockName} in wall! (${found}/${targetCount})`);
+            try { await this.bot.dig(sideBlk); blocksDug++; } catch {}
+          }
+        }
+      }
+
+      // Step forward
+      try {
+        this.bot.setControlState('forward', true);
+        await new Promise(r => setTimeout(r, 300));
+        this.bot.setControlState('forward', false);
+      } catch {}
+    }
+
+    try { this.bot.setControlState('forward', false); } catch {}
+    const reason = found >= targetCount ? null
+      : (Date.now() - startTime >= TIMEOUT) ? 'strip-mine timeout'
+      : blocksDug >= MAX_BLOCKS ? 'reached max tunnel length'
+      : this.state !== 'mining' ? 'interrupted'
+      : `strip-mined ${blocksDug} blocks but found no ${blockName}`;
+
+    if (found > 0) {
+      this.log('action_success', `Strip-mined ${found} ${blockName} (dug ${blocksDug} blocks)`);
+    }
+    return { found, reason };
   }
 
   async _cmdAttack(mobName, count = 1) {

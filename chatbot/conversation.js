@@ -904,6 +904,7 @@ Report this action result in 1-5 words, in character. Be natural and casual. No 
 PERSONALITY: ${profile.personality || 'Unknown'}
 CHAT STYLE: ${profile.chatStyle || 'Short lowercase messages'}
 ${profile.samplePhrases?.length ? `EXAMPLE PHRASES: ${profile.samplePhrases.join(', ')}` : ''}
+${this.getMemoryBlock(rBot.username)}
 
 WORLD STATE:
 ${worldSection}
@@ -942,7 +943,7 @@ RULES:
       { type: 'function', function: { name: 'come_here', description: "Walk to the owner's position (one-time)", parameters: { type: 'object', properties: {}, required: [] } } },
       { type: 'function', function: { name: 'stop', description: 'Stop all current actions', parameters: { type: 'object', properties: {}, required: [] } } },
       { type: 'function', function: { name: 'guard', description: 'Guard current position — attack hostile mobs', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'mine', description: 'Find and mine blocks nearby. Finds all matching blocks within 64 blocks and collects them in batch.', parameters: { type: 'object', properties: { block: { type: 'string', description: 'Exact Minecraft block ID (e.g. oak_log, cobblestone, iron_ore, diamond_ore)' }, count: { type: 'integer', description: 'How many to mine (default 16). Use higher numbers for bulk gathering.' } }, required: ['block'] } } },
+      { type: 'function', function: { name: 'mine', description: 'Find and mine blocks nearby. Finds exposed blocks within 64 blocks. For underground ores (diamond_ore, ancient_debris, emerald_ore, etc.), automatically strip-mines at the optimal Y level if none are visible. Checks dimension — e.g. ancient_debris requires the_nether.', parameters: { type: 'object', properties: { block: { type: 'string', description: 'Exact Minecraft block ID (e.g. oak_log, cobblestone, iron_ore, diamond_ore, ancient_debris)' }, count: { type: 'integer', description: 'How many to mine (default 16). Use higher numbers for bulk gathering.' } }, required: ['block'] } } },
       { type: 'function', function: { name: 'attack', description: 'Attack nearby mobs of a type. Walks to them, fights until dead, repeats for count.', parameters: { type: 'object', properties: { mob: { type: 'string', description: 'Mob name (e.g. chicken, sheep, zombie, skeleton)' }, count: { type: 'integer', description: 'How many to kill (default 1). Use higher numbers for bulk hunting.' } }, required: ['mob'] } } },
       { type: 'function', function: { name: 'drop_item', description: 'Drop a specific item from inventory', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name' }, count: { type: 'integer' } }, required: ['item'] } } },
       { type: 'function', function: { name: 'drop_all', description: 'Drop ALL items from inventory at once', parameters: { type: 'object', properties: {}, required: [] } } },
@@ -964,12 +965,19 @@ RULES:
     ];
 
     try {
+      // Build messages with tick history injected into the user prompt
+      const historySection = rBot.tickHistory.length > 0
+        ? '\n\nYOUR RECENT TICK HISTORY (what you did on previous ticks — do NOT repeat yourself):\n'
+          + rBot.tickHistory.map((h, i) => `  Tick ${i + 1}: ${h}`).join('\n')
+        : '';
+      const messages = [
+        { role: 'system', content: systemPrompt + historySection },
+        { role: 'user', content: 'Tick. Decide what to do.' }
+      ];
+
       const response = await grokClient.chat.completions.create({
         model: GROK_MODEL,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: 'Tick. Decide what to do.' }
-        ],
+        messages,
         tools,
         max_tokens: 250,
         temperature: 0.6
@@ -1019,6 +1027,17 @@ RULES:
           || replyLower.includes('no messages') || replyLower.includes('currentstate')
           || toolNames.some(t => replyLower.includes(t));
         if (reply && !containsSlur(reply) && !isEcho) result.chat = reply;
+      }
+
+      // Record compact tick summary for conversation continuity (skip empty idle ticks)
+      const summaryParts = [];
+      for (const a of result.actions) {
+        const argStr = Object.keys(a.params).length > 0 ? `(${Object.values(a.params).join(',')})` : '';
+        summaryParts.push(`[tool] ${a.name}${argStr}`);
+      }
+      if (result.chat) summaryParts.push(`[chat] ${result.chat}`);
+      if (summaryParts.length > 0) {
+        rBot.recordTickExchange(summaryParts.join(' | '));
       }
 
       return result;
