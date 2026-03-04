@@ -1,28 +1,31 @@
 # xn-mc
 
-Minecraft server management for Xandaris — Discord bot, map auth, backups, and setup tooling.
+Minecraft server management for Xandaris — Discord bot, AI chatbots, revival system, map auth, backups, and tooling.
 
 ## Components
 
 ### Discord Bot (`bot/`)
-Go-based Discord bot that manages the Minecraft server through [Crafty Controller](https://craftycontrol.com/) and RCON.
+Go-based Discord bot for server management via [Crafty Controller](https://craftycontrol.com/) and RCON.
 
-**Slash Commands:**
-- `/status` — Server status (players, CPU, memory, disk %, version)
-- `/start` `/stop` `/restart` — Server lifecycle via Crafty
-- `/backup` — Trigger a server backup via Crafty
-- `/mem` — System resource usage (CPU, memory)
-- `/size` — Disk breakdown (overworld, nether, end, BlueMap, plugins, total)
-- `/rcon <command>` — Execute RCON commands
-- `/unban <player>` — Unban a deathbanned player and reset their spawn
-- `/help` — List all commands
+**Slash Commands:** `/status`, `/start`, `/stop`, `/restart`, `/backup`, `/mem`, `/size`, `/rcon`, `/unban`, `/help`
 
-Also runs periodic health checks (Crafty + RCON) and updates [Statuspage.io](https://statuspage.io) components automatically.
+Also runs periodic health checks and updates [Statuspage.io](https://statuspage.io) automatically.
+
+### Chatbots (`chatbot/`)
+AI-driven Minecraft bots (mineflayer) that join the server and chat with players. Powered by xAI Grok. Managed by PM2 as `xandaris-bots`.
+
+- **Regular bots** — Idle chatbots with unique personalities, react to player messages and server events
+- **Revival bots** — Summoned by an iron golem ritual. Revived "players" that follow owner commands: mining, combat, chest management, crafting, building, and more (16 tools). Persist across restarts.
+
+**Revival webhook** (`:8765`):
+- `POST /revival` — Trigger a revival (called by the MC plugin)
+- `POST /rbsay` — Inject a message into a revival bot's queue for testing
+- `GET /rblist` — List active revival bots
+
+Revival events are announced as embeds in the Discord `#deaths` channel.
 
 ### Map Auth (`map-auth/`)
-Standalone Go service that replaces vouch-proxy for [BlueMap](https://bluemap.bluecolored.de/). Handles Discord OAuth2 and checks guild roles before granting access — only users with admin/mod/staff roles can view the map at `map.xandaris.space`.
-
-Drops into the same nginx `auth_request` slot as vouch-proxy — same port (9090), same endpoints.
+Go service for [BlueMap](https://bluemap.bluecolored.de/) access control. Discord OAuth2 + guild role check behind nginx `auth_request` at `map.xandaris.space`.
 
 ### Scripts (`scripts/`)
 - `setup.sh` — Sets up Crafty Controller (podman) and builds the bot
@@ -32,28 +35,16 @@ Drops into the same nginx `auth_request` slot as vouch-proxy — same port (9090
 
 ```bash
 cp .env.example .env
-# Fill in your credentials (see .env.example for all variables)
+# Fill in credentials (see .env.example for all variables)
 ./scripts/setup.sh
 ```
 
-### Environment Variables
-
-**Required:**
-- `RCON_IP` / `RCON_PW` — RCON connection
-- `CRAFTY_URL` / `CRAFTY_API_KEY` / `CRAFTY_SERVER_ID` / `CRAFTY_SERVER_PATH` — Crafty Controller
-- `DISCORD_TOKEN` / `DISCORD_CHANNEL_ID` / `DISCORD_GUILD_ID` — Discord bot
-
-**Optional:**
-- `S3_BUCKET` — S3 bucket for world backups
-- `STATUSPAGE_API_KEY` / `STATUSPAGE_PAGE_ID` — Statuspage.io integration
-- `STATUSPAGE_MINECRAFT_SERVER_COMPONENT_ID` / `STATUSPAGE_BOT_COMPONENT_ID` — Component IDs
-
 ## Releases
 
-Pre-built binaries (linux/arm64 + linux/amd64) are published to [GitHub Releases](https://github.com/hunterjsb/xn-mc/releases) on tag push:
+Pre-built binaries (linux/arm64 + linux/amd64) on [GitHub Releases](https://github.com/hunterjsb/xn-mc/releases) via tag push:
 
-- `bot-v*` — Discord bot binary
-- `map-auth-v*` — Map auth service binary
+- `bot-v*` — Discord bot
+- `map-auth-v*` — Map auth service
 
 ## License
 
