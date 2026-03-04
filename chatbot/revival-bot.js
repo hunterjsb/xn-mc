@@ -624,10 +624,6 @@ export class RevivalBot {
 
   // ── Action Implementations ────────────────────────────────────────
 
-  _cmdFollow() {
-    this._cmdFollowPlayer(this.owner);
-  }
-
   _cmdFollowPlayer(playerName) {
     this.state = 'following';
     const playerEntity = this.bot.players[playerName]?.entity;
@@ -1427,6 +1423,91 @@ export class RevivalBot {
       this.log('action_success', `Ate ${foods[0].name}`);
     } catch (err) {
       this.log('action_failed', `Eat: ${err.message}`);
+    }
+  }
+
+  async _cmdSleep() {
+    const bedColors = ['white', 'orange', 'magenta', 'light_blue', 'yellow', 'lime',
+      'pink', 'gray', 'light_gray', 'cyan', 'purple', 'blue', 'brown', 'green', 'red', 'black'];
+    const bedIds = bedColors
+      .map(c => this._mcData?.blocksByName[`${c}_bed`]?.id)
+      .filter(id => id != null);
+
+    const bed = this.bot.findBlock({ matching: bedIds, maxDistance: 32 });
+    if (!bed) {
+      this.log('action_failed', 'No bed found nearby');
+      return;
+    }
+
+    try {
+      const dist = this.bot.entity.position.distanceTo(bed.position);
+      if (dist > 3) {
+        this.bot.pathfinder.setGoal(new goals.GoalNear(bed.position.x, bed.position.y, bed.position.z, 2));
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => { this.bot.pathfinder.stop(); reject(new Error('timeout walking to bed')); }, 15000);
+          this.bot.once('goal_reached', () => { clearTimeout(timeout); resolve(); });
+        });
+      }
+      await this.bot.sleep(bed);
+      this.log('action_success', 'Sleeping in bed');
+    } catch (err) {
+      this.log('action_failed', `Sleep: ${err.message}`);
+    }
+  }
+
+  async _cmdPlace(blockName, direction = 'forward') {
+    // Find block in inventory by fuzzy match
+    const item = this.bot.inventory.items().find(i => i.name.includes(blockName));
+    if (!item) {
+      this.log('action_failed', `No ${blockName} in inventory`);
+      return;
+    }
+
+    try {
+      await this.bot.equip(item, 'hand');
+    } catch (err) {
+      this.log('action_failed', `Equip ${item.name}: ${err.message}`);
+      return;
+    }
+
+    const pos = this.bot.entity.position.floored();
+    let refBlock, faceVector;
+
+    if (direction === 'below') {
+      refBlock = this.bot.blockAt(pos.offset(0, -1, 0));
+      faceVector = { x: 0, y: 1, z: 0 };
+    } else if (direction === 'above') {
+      refBlock = this.bot.blockAt(pos.offset(0, 2, 0));
+      faceVector = { x: 0, y: -1, z: 0 };
+    } else {
+      // forward — use bot yaw to get cardinal direction
+      const yaw = this.bot.entity.yaw;
+      const dx = -Math.sin(yaw);
+      const dz = -Math.cos(yaw);
+      const cardinal = Math.abs(dx) > Math.abs(dz)
+        ? { x: Math.sign(dx), y: 0, z: 0 }
+        : { x: 0, y: 0, z: Math.sign(dz) };
+      const targetPos = pos.offset(cardinal.x, 0, cardinal.z);
+      refBlock = this.bot.blockAt(targetPos);
+      // If target is air, place on top of block below target
+      if (refBlock && refBlock.name === 'air') {
+        refBlock = this.bot.blockAt(targetPos.offset(0, -1, 0));
+        faceVector = { x: 0, y: 1, z: 0 };
+      } else {
+        faceVector = { x: -cardinal.x, y: 0, z: -cardinal.z };
+      }
+    }
+
+    if (!refBlock || refBlock.name === 'air') {
+      this.log('action_failed', 'No solid block to place against');
+      return;
+    }
+
+    try {
+      await this.bot.placeBlock(refBlock, faceVector);
+      this.log('action_success', `Placed ${item.name}`);
+    } catch (err) {
+      this.log('action_failed', `Place ${item.name}: ${err.message}`);
     }
   }
 }

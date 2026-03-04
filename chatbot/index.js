@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync, existsSync, watch } from 'fs';
 import { ChatBot } from './bot.js';
 import { RevivalBot } from './revival-bot.js';
 import { getPlayerProfile } from './distill-player.js';
-import { ConversationManager, reloadPrompts } from './conversation.js';
+import { ConversationManager, reloadPrompts, discordRevivalEmbed } from './conversation.js';
 import { findMentionedBot, findMentionedBots } from './mention.js';
 
 const personalities = JSON.parse(readFileSync('./personalities.json', 'utf-8'));
@@ -422,6 +422,8 @@ function wireRevivalBot(rBot) {
     console.log(`[Revival] Cleaning up ${username} (${reason})`);
     revivalBots.delete(username);
     saveRevivalState();
+    // Remove GrimAC exemption so the real player isn't exempt if they rejoin
+    rcon(`lp user ${username} permission unset grim.exempt`).catch(() => {});
     const regular = botsByName.get(username);
     if (regular) {
       console.log(`[Revival] Unparking regular chatbot ${username}`);
@@ -574,9 +576,12 @@ async function handleRevival(reviver, deadPlayer, pos) {
       const { x, y, z } = pos;
       rcon(`tp ${deadPlayer} ${x} ${y} ${z}`).then(resp => {
         console.log(`[Revival] Teleported ${deadPlayer} to ${x},${y},${z}: ${resp}`);
+        discordRevivalEmbed(deadPlayer, reviver);
       }).catch(err => {
         console.error(`[Revival] Teleport failed: ${err.message}`);
       });
+      // Exempt revival bots from GrimAC
+      rcon(`lp user ${deadPlayer} permission set grim.exempt true`).catch(() => {});
       // Start the agent loop so periodic ticks fire
       rBot.startAgentLoop();
 
@@ -632,6 +637,7 @@ async function restoreRevivals() {
       if (rBot.connected) {
         clearInterval(waitForConnect);
         rcon(`pardon ${s.deadPlayer}`).catch(() => {});
+        rcon(`lp user ${s.deadPlayer} permission set grim.exempt true`).catch(() => {});
         const { x, y, z } = s.pos;
         rcon(`tp ${s.deadPlayer} ${x} ${y} ${z}`).then(resp => {
           console.log(`[Revival] Restored & teleported ${s.deadPlayer}: ${resp}`);
@@ -653,6 +659,62 @@ function setupWebhookServer() {
   const secret = process.env.WEBHOOK_SECRET || '';
 
   const server = createServer((req, res) => {
+    // GET /rblist — list active revival bots
+    if (req.method === 'GET' && req.url === '/rblist') {
+      const bots = [];
+      for (const [name, rBot] of revivalBots) {
+        bots.push({
+          name,
+          owner: rBot.owner,
+          state: rBot.state,
+          connected: rBot.connected,
+          objectives: rBot.objectives || [],
+          pending: rBot.pendingMessages.length,
+        });
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ bots }, null, 2));
+      return;
+    }
+
+    // POST /rbsay — inject a message into a revival bot's queue
+    // { bot: "BotName", message: "follow me", as?: "OwnerName" }
+    if (req.method === 'POST' && req.url === '/rbsay') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const data = JSON.parse(body);
+          const { bot: botName, message } = data;
+          if (!botName || !message) {
+            res.writeHead(400);
+            res.end(JSON.stringify({ error: 'Missing bot or message' }));
+            return;
+          }
+          // Find bot by case-insensitive match
+          let rBot;
+          for (const [name, rb] of revivalBots) {
+            if (name.toLowerCase() === botName.toLowerCase()) { rBot = rb; break; }
+          }
+          if (!rBot || !rBot.connected) {
+            res.writeHead(404);
+            res.end(JSON.stringify({ error: `No active revival bot "${botName}"`, available: [...revivalBots.keys()] }));
+            return;
+          }
+          const sender = data.as || rBot.owner;
+          rBot.queueMessage(sender, message);
+          cm.addMessage(sender, message);
+          console.log(`[Webhook] rbsay: ${sender} → ${rBot.username}: "${message}"`);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ status: 'ok', bot: rBot.username, sender, message }));
+        } catch (err) {
+          res.writeHead(500);
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return;
+    }
+
     if (req.method !== 'POST' || req.url !== '/revival') {
       res.writeHead(404);
       res.end('Not found');
@@ -708,24 +770,33 @@ function setupWebhookServer() {
 async function executeRevivalAction(rBot, actionName, params) {
   console.log(`[Revival Action] ${rBot.username}: ${actionName}(${JSON.stringify(params)})`);
   switch (actionName) {
-    case 'follow_owner': rBot._cmdFollow(); break;
-    case 'follow_player': rBot._cmdFollowPlayer(params.player); break;
+    case 'follow': rBot._cmdFollowPlayer(params.player || rBot.owner); break;
     case 'come_here': rBot._cmdCome(); break;
     case 'stop': rBot._cmdStop(); break;
     case 'guard': rBot._cmdGuard(); break;
     case 'mine': await rBot._cmdMine(params.block, params.count || 16); break;
     case 'attack': await rBot._cmdAttack(params.mob, params.count || 1); break;
-    case 'drop_item': rBot._cmdDrop(params.item, params.count); break;
-    case 'drop_all': await rBot._cmdDropAll(); break;
-    case 'give_item': rBot._cmdGive(params.player, params.item, params.count); break;
-    case 'check_chests': await rBot._cmdCheckChests(); break;
-    case 'take_from_chest': await rBot._cmdTakeFromChest(params.item, params.count); break;
-    case 'deposit_in_chest': await rBot._cmdDepositInChest(params.item, params.count); break;
-    case 'deposit_all': await rBot._cmdDepositAll(); break;
-    case 'craft_item': await rBot._cmdCraft(params.item, params.count || 1); break;
+    case 'drop':
+      if (params.item) rBot._cmdDrop(params.item, params.count);
+      else await rBot._cmdDropAll();
+      break;
+    case 'give': rBot._cmdGive(params.player, params.item, params.count); break;
+    case 'chest':
+      switch (params.action) {
+        case 'check': await rBot._cmdCheckChests(); break;
+        case 'take': await rBot._cmdTakeFromChest(params.item, params.count); break;
+        case 'deposit':
+          if (params.item) await rBot._cmdDepositInChest(params.item, params.count);
+          else await rBot._cmdDepositAll();
+          break;
+      }
+      break;
+    case 'craft': await rBot._cmdCraft(params.item, params.count || 1); break;
+    case 'equip': rBot._cmdEquip(params.item); break;
     case 'smelt': await rBot._cmdSmelt(params.item, params.fuel || 'coal', params.count || 1); break;
-    case 'equip_item': rBot._cmdEquip(params.item); break;
     case 'eat': await rBot._cmdEat(); break;
+    case 'sleep': await rBot._cmdSleep(); break;
+    case 'place': await rBot._cmdPlace(params.block, params.direction || 'forward'); break;
     case 'whisper':
       if (params.player && params.message) {
         rBot.bot.chat(`/msg ${params.player} ${params.message}`);
@@ -733,15 +804,17 @@ async function executeRevivalAction(rBot, actionName, params) {
       }
       break;
     case 'dismiss': rBot._cmdDismiss(); break;
-    case 'ask_clarification':
-      if (params.question) rBot.chat(params.question);
+    case 'remember':
+      if (params.text) cm.addMemory(rBot.username, params.text);
       break;
-    case 'set_objective': rBot.addObjective(params.text, params.priority || 'normal'); break;
-    case 'complete_objective':
-      rBot.completeObjective(params.text);
-      cm.addMemory(rBot.username, `Completed objective: ${params.text}`);
+    case 'objective':
+      if (params.action === 'set') rBot.addObjective(params.text, params.priority || 'normal');
+      else if (params.action === 'complete') {
+        rBot.completeObjective(params.text);
+        cm.addMemory(rBot.username, `Completed objective: ${params.text}`);
+      }
+      else if (params.action === 'clear') rBot.clearObjectives();
       break;
-    case 'clear_objectives': rBot.clearObjectives(); break;
     default: console.log(`[Revival Action] Unknown action: ${actionName}`);
   }
 }

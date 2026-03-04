@@ -68,6 +68,28 @@ async function discordLog(text) {
   } catch { /* non-critical */ }
 }
 
+const DISCORD_DEATHS_CHANNEL = '1472697700519645217';
+
+export async function discordRevivalEmbed(deadPlayer, reviver) {
+  if (!DISCORD_TOKEN) return;
+  try {
+    await fetch(`https://discord.com/api/v10/channels/${DISCORD_DEATHS_CHANNEL}/messages`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bot ${DISCORD_TOKEN}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        embeds: [{
+          color: 0x00ff00,
+          author: {
+            name: `☠ ${deadPlayer} has been revived by ${reviver}!`,
+            icon_url: `https://cravatar.eu/helmavatar/${deadPlayer}`
+          },
+          timestamp: new Date().toISOString()
+        }]
+      })
+    });
+  } catch { /* non-critical */ }
+}
+
 async function callLLM(params, { label = 'LLM', lightweight = false, botName = '' } = {}) {
   // For lightweight calls (memory eval, orchestrator), prefer Grok for speed
   if (lightweight || !ollamaEnabled) {
@@ -923,45 +945,43 @@ RULES:
 - CRITICAL: When your owner gives a command (follow, mine, attack, come, stop, etc.), you MUST call the matching tool. NEVER just say "ok" without calling the tool — that does nothing. Chat alone does NOT execute actions.
 - Keep chat SHORT (1-5 words), casual, in-character. Match your personality.
 - On idle ticks with no messages: do nothing. Don't call any tools and don't chat. Just return empty.
-- IMPORTANT: If you are already doing something (currentState is not "idle"), do NOT re-issue that action. For example if currentState is "following", do NOT call follow_owner again. Only call tools when you need to CHANGE what you're doing.
+- IMPORTANT: If you are already doing something (currentState is not "idle"), do NOT re-issue that action. For example if currentState is "following", do NOT call follow again. Only call tools when you need to CHANGE what you're doing.
 - IMPORTANT: If an action just FAILED (check RECENT ACTIONS), do NOT retry the same action. Tell your owner it failed and why, or try a different approach.
 - When a player talks to you: respond naturally. Take action if your owner instructs you.
-- Use set_objective to remember tasks. Use complete_objective when done.
-- To get items: check_chests first to see what's available, then take_from_chest, then equip_item. Chain these steps.
-- To store items: use deposit_in_chest (NOT drop_item — that drops on the ground).
+- Use objective(set) to remember tasks. Use objective(complete) when done.
+- To get items: chest(check) first, then chest(take), then equip. Chain these steps.
+- To store items: use chest(deposit) (NOT drop — that drops on the ground). Omit item to deposit everything.
 - come_here just walks to your owner. Do NOT use it as a catch-all — only use it when specifically asked to come.
-- For mine/collect: translate player requests into Minecraft block IDs. Be smart about it — "dark oak logs" = dark_oak_log, "oak logs" = oak_log, "cobble" = cobblestone, "dirt" = dirt, "coal" = coal_ore, "iron" = iron_ore, "diamonds" = diamond_ore, "stone" = stone, "sand" = sand, "gravel" = gravel, "wood"/"logs" = oak_log (default). Only ask_clarification if you truly cannot guess the block ID.
-- Your survival instincts are AUTOMATIC (eating, fighting back, swimming, getting unstuck). You don't need to call eat or attack for self-defense — that happens on its own. Focus on goals and owner instructions.
+- For mine/collect: translate player requests into Minecraft block IDs. "dark oak logs" = dark_oak_log, "cobble" = cobblestone, "diamonds" = diamond_ore, "wood"/"logs" = oak_log, etc.
+- Your survival instincts are AUTOMATIC (eating, fighting back, swimming, getting unstuck). Focus on goals and owner instructions.
 - If you have no food and your hunger is low, check nearby chests for food or ask your owner.
-- NEVER say coordinates in public chat. If you need to share coords, use the whisper tool to DM your owner.
+- Use sleep when it's nighttime and your owner asks or you need to skip the night.
+- Use place to put blocks like torches, crafting tables, etc. Direction defaults to forward.
+- Use remember when your owner tells you to remember something important for later.
+- NEVER say coordinates in public chat. Use whisper to DM your owner.
 - No emojis. No roleplay asterisks. No slash commands. English only.
 - You're not fully alive — you're an echo of your former self. Keep this subtle, don't overplay it.`;
 
     const tools = [
-      { type: 'function', function: { name: 'follow_owner', description: 'Follow the owner around', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'follow_player', description: 'Follow a specific player around', parameters: { type: 'object', properties: { player: { type: 'string', description: 'Player name to follow' } }, required: ['player'] } } },
+      { type: 'function', function: { name: 'follow', description: 'Follow a player around. Defaults to your owner if no player specified.', parameters: { type: 'object', properties: { player: { type: 'string', description: 'Player name (omit to follow owner)' } }, required: [] } } },
       { type: 'function', function: { name: 'come_here', description: "Walk to the owner's position (one-time)", parameters: { type: 'object', properties: {}, required: [] } } },
       { type: 'function', function: { name: 'stop', description: 'Stop all current actions', parameters: { type: 'object', properties: {}, required: [] } } },
       { type: 'function', function: { name: 'guard', description: 'Guard current position — attack hostile mobs', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'mine', description: 'Find and mine blocks nearby. Finds exposed blocks within 64 blocks. For underground ores (diamond_ore, ancient_debris, emerald_ore, etc.), automatically strip-mines at the optimal Y level if none are visible. Checks dimension — e.g. ancient_debris requires the_nether.', parameters: { type: 'object', properties: { block: { type: 'string', description: 'Exact Minecraft block ID (e.g. oak_log, cobblestone, iron_ore, diamond_ore, ancient_debris)' }, count: { type: 'integer', description: 'How many to mine (default 16). Use higher numbers for bulk gathering.' } }, required: ['block'] } } },
-      { type: 'function', function: { name: 'attack', description: 'Attack nearby mobs of a type. Walks to them, fights until dead, repeats for count.', parameters: { type: 'object', properties: { mob: { type: 'string', description: 'Mob name (e.g. chicken, sheep, zombie, skeleton)' }, count: { type: 'integer', description: 'How many to kill (default 1). Use higher numbers for bulk hunting.' } }, required: ['mob'] } } },
-      { type: 'function', function: { name: 'drop_item', description: 'Drop a specific item from inventory', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name' }, count: { type: 'integer' } }, required: ['item'] } } },
-      { type: 'function', function: { name: 'drop_all', description: 'Drop ALL items from inventory at once', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'give_item', description: 'Walk to a player and give them an item', parameters: { type: 'object', properties: { player: { type: 'string' }, item: { type: 'string' }, count: { type: 'integer' } }, required: ['player', 'item'] } } },
-      { type: 'function', function: { name: 'check_chests', description: 'Scan nearby containers (chests, barrels, furnaces, blast furnaces, smokers) and report their contents', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'take_from_chest', description: 'Take a specific item from the nearest container (chests, barrels, or furnace output)', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name to take (e.g. iron_ingot, diamond_pickaxe)' }, count: { type: 'integer', description: 'How many (omit for all)' } }, required: ['item'] } } },
-      { type: 'function', function: { name: 'deposit_in_chest', description: 'Put a specific item from inventory into the nearest chest', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name to deposit' }, count: { type: 'integer', description: 'How many (omit for all)' } }, required: ['item'] } } },
-      { type: 'function', function: { name: 'deposit_all', description: 'Dump ALL items from inventory into the nearest chest(s)', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'craft_item', description: 'Craft an item using a nearby crafting table or inventory (2x2)', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item to craft (e.g. wooden_pickaxe, stone_sword, furnace)' }, count: { type: 'integer', description: 'How many to craft', default: 1 } }, required: ['item'] } } },
-      { type: 'function', function: { name: 'equip_item', description: 'Equip an item from inventory (armor, weapon, or tool)', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name to equip (e.g. iron_sword, diamond_chestplate)' } }, required: ['item'] } } },
-      { type: 'function', function: { name: 'smelt', description: 'Smelt items in a nearby furnace (finds furnace, places fuel + input, waits, takes output)', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item to smelt (e.g. raw_iron, raw_gold, raw_copper, cobblestone)' }, fuel: { type: 'string', description: 'Fuel to use (default: coal)', default: 'coal' }, count: { type: 'integer', description: 'How many to smelt', default: 1 } }, required: ['item'] } } },
-      { type: 'function', function: { name: 'eat', description: 'Eat food from inventory to restore hunger', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'whisper', description: 'Send a private message (DM) to a player. Use this for coordinates or sensitive info — never say coords in public chat.', parameters: { type: 'object', properties: { player: { type: 'string', description: 'Player to whisper to' }, message: { type: 'string', description: 'The private message' } }, required: ['player', 'message'] } } },
+      { type: 'function', function: { name: 'mine', description: 'Find and mine blocks nearby. For underground ores, automatically strip-mines at optimal Y.', parameters: { type: 'object', properties: { block: { type: 'string', description: 'Minecraft block ID (e.g. oak_log, diamond_ore, cobblestone)' }, count: { type: 'integer', description: 'How many to mine (default 16)' } }, required: ['block'] } } },
+      { type: 'function', function: { name: 'attack', description: 'Attack nearby mobs of a type.', parameters: { type: 'object', properties: { mob: { type: 'string', description: 'Mob name (e.g. chicken, zombie)' }, count: { type: 'integer', description: 'How many to kill (default 1)' } }, required: ['mob'] } } },
+      { type: 'function', function: { name: 'drop', description: 'Drop items. Omit item to drop everything.', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name (omit to drop all)' }, count: { type: 'integer', description: 'How many (omit for all of that item)' } }, required: [] } } },
+      { type: 'function', function: { name: 'give', description: 'Walk to a player and give them an item', parameters: { type: 'object', properties: { player: { type: 'string' }, item: { type: 'string' }, count: { type: 'integer' } }, required: ['player', 'item'] } } },
+      { type: 'function', function: { name: 'chest', description: 'Interact with nearby chests/containers.', parameters: { type: 'object', properties: { action: { type: 'string', enum: ['check', 'take', 'deposit'], description: 'check = scan contents, take = grab item, deposit = store item (omit item to store all)' }, item: { type: 'string', description: 'Item name (required for take, optional for deposit)' }, count: { type: 'integer', description: 'How many (omit for all)' } }, required: ['action'] } } },
+      { type: 'function', function: { name: 'craft', description: 'Craft an item using nearby crafting table or inventory', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item to craft (e.g. wooden_pickaxe, furnace)' }, count: { type: 'integer', description: 'How many (default 1)' } }, required: ['item'] } } },
+      { type: 'function', function: { name: 'equip', description: 'Equip an item from inventory', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name (e.g. iron_sword, diamond_chestplate)' } }, required: ['item'] } } },
+      { type: 'function', function: { name: 'smelt', description: 'Smelt items in a nearby furnace', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item to smelt (e.g. raw_iron)' }, fuel: { type: 'string', description: 'Fuel (default: coal)' }, count: { type: 'integer', description: 'How many (default 1)' } }, required: ['item'] } } },
+      { type: 'function', function: { name: 'eat', description: 'Eat food from inventory', parameters: { type: 'object', properties: {}, required: [] } } },
+      { type: 'function', function: { name: 'sleep', description: 'Sleep in a nearby bed', parameters: { type: 'object', properties: {}, required: [] } } },
+      { type: 'function', function: { name: 'place', description: 'Place a block from inventory', parameters: { type: 'object', properties: { block: { type: 'string', description: 'Block name (e.g. torch, cobblestone, crafting_table)' }, direction: { type: 'string', enum: ['forward', 'below', 'above'], description: 'Where to place (default: forward)' } }, required: ['block'] } } },
+      { type: 'function', function: { name: 'whisper', description: 'DM a player. Use for coordinates or sensitive info.', parameters: { type: 'object', properties: { player: { type: 'string' }, message: { type: 'string' } }, required: ['player', 'message'] } } },
       { type: 'function', function: { name: 'dismiss', description: 'Despawn permanently. Only if explicitly told to leave.', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'ask_clarification', description: 'Ask a clarifying question when instruction is ambiguous', parameters: { type: 'object', properties: { question: { type: 'string', description: 'Short, in-character question' } }, required: ['question'] } } },
-      { type: 'function', function: { name: 'set_objective', description: 'Set a new goal to work toward', parameters: { type: 'object', properties: { text: { type: 'string', description: 'What to accomplish' }, priority: { type: 'string', enum: ['high', 'normal', 'low'], default: 'normal' } }, required: ['text'] } } },
-      { type: 'function', function: { name: 'complete_objective', description: 'Mark an objective as done', parameters: { type: 'object', properties: { text: { type: 'string', description: 'Objective text (partial match OK)' } }, required: ['text'] } } },
-      { type: 'function', function: { name: 'clear_objectives', description: 'Clear all objectives', parameters: { type: 'object', properties: {}, required: [] } } },
+      { type: 'function', function: { name: 'remember', description: 'Store a memory for later. Use when your owner tells you to remember something.', parameters: { type: 'object', properties: { text: { type: 'string', description: 'What to remember' } }, required: ['text'] } } },
+      { type: 'function', function: { name: 'objective', description: 'Manage your objectives/goals.', parameters: { type: 'object', properties: { action: { type: 'string', enum: ['set', 'complete', 'clear'], description: 'set = new goal, complete = mark done, clear = remove all' }, text: { type: 'string', description: 'Objective text (required for set/complete)' }, priority: { type: 'string', enum: ['high', 'normal', 'low'], description: 'Priority (for set, default: normal)' } }, required: ['action'] } } },
     ];
 
     try {
@@ -1020,9 +1040,8 @@ RULES:
         reply = reply.replace(/-?\d{2,}[,\s]+-?\d{1,3}[,\s]+-?\d{2,}/g, '[coords hidden]');
         // Filter out LLM echoing instructions or tool names as chat
         const replyLower = reply.toLowerCase();
-        const toolNames = ['set_objective', 'complete_objective', 'clear_objectives', 'follow_owner',
-          'come_here', 'check_chests', 'take_from_chest', 'deposit_in_chest', 'craft_item',
-          'equip_item', 'give_item', 'drop_item', 'ask_clarification', 'mine(', 'attack('];
+        const toolNames = ['objective(', 'follow(', 'come_here', 'chest(', 'craft(',
+          'equip(', 'give(', 'drop(', 'mine(', 'attack(', 'sleep', 'place(', 'remember('];
         const isEcho = replyLower.includes('idle tick') || replyLower.includes('do nothing')
           || replyLower.includes('no messages') || replyLower.includes('currentstate')
           || toolNames.some(t => replyLower.includes(t));
