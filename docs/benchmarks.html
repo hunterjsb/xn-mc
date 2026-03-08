@@ -190,135 +190,123 @@
       color: var(--text-muted);
     }
 
-    /* ---------- Chart Section ---------- */
-    .chart-section {
-      margin-bottom: 2.5rem;
-    }
-
-    .chart-section h3 {
-      font-size: 1.1rem;
-      color: var(--text);
-      margin-bottom: 0.25rem;
-    }
-
-    .chart-section .chart-subtitle {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-    }
-
-    .chart-group {
+    /* ---------- Vertical Bar Chart ---------- */
+    .vchart-controls {
       display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      align-items: center;
+      gap: 1rem;
       margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
 
-    .chart-group-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.25rem;
-    }
-
-    .chart-group-label .group-icon {
-      width: 20px;
-      height: 20px;
-      image-rendering: pixelated;
-    }
-
-    .bar-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .bar-label {
-      width: 120px;
-      flex-shrink: 0;
-      font-family: "Cascadia Code", "Fira Code", monospace;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-align: right;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .bar-track {
-      flex: 1;
-      height: 28px;
+    .vchart-controls select {
+      appearance: none;
       background: #18181b;
-      border-radius: 0.35rem;
-      overflow: hidden;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.5rem 2rem 0.5rem 0.75rem;
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a1a1aa'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      transition: border-color 0.2s;
+    }
+
+    .vchart-controls select:hover { border-color: #3f3f46; }
+    .vchart-controls select:focus { outline: none; border-color: var(--primary); }
+
+    .vchart-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem 1.5rem 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .vchart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 0;
+      height: 220px;
+      padding-bottom: 0;
       position: relative;
     }
 
-    .bar-fill {
+    .vchart-model {
+      flex: 1;
+      max-width: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      position: relative;
       height: 100%;
-      border-radius: 0.35rem;
-      transition: width 0.6s ease;
+      justify-content: flex-end;
+    }
+
+    .vchart-bar-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex: 1;
+      align-items: flex-end;
+    }
+
+    .vchart-bar {
+      width: 48px;
+      border-radius: 0.35rem 0.35rem 0 0;
+      transition: height 0.5s ease;
+      position: relative;
+      min-height: 2px;
+    }
+
+    .vchart-bar-label {
+      position: absolute;
+      top: -1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .vchart-name {
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 0.5rem 0.25rem 0;
+      line-height: 1.2;
+      word-break: break-all;
+      max-width: 100%;
+    }
+
+    .vchart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .vchart-legend-item {
       display: flex;
       align-items: center;
-      padding-left: 0.5rem;
-      min-width: fit-content;
+      gap: 0.35rem;
     }
 
-    .bar-fill span {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--bg);
-      white-space: nowrap;
-      padding-right: 0.5rem;
-    }
-
-    .bar-fill.pass { background: var(--green); }
-    .bar-fill.partial { background: var(--orange); }
-    .bar-fill.fail-bar { background: var(--red); }
-    .bar-fill.time-bar { background: var(--primary); }
-    .bar-fill.tool-bar { background: var(--blue); }
-
-    /* Multibar: 3 thin bars per model */
-    .multi-model {
-      margin-bottom: 1rem;
-    }
-
-    .multi-model .model-header {
-      font-family: "Cascadia Code", "Fira Code", monospace;
-      font-size: 0.8rem;
-      color: var(--text);
-      margin-bottom: 0.35rem;
-      font-weight: 600;
-    }
-
-    .multi-model .bar-row {
-      gap: 0.5rem;
-    }
-
-    .multi-model .bar-track {
-      height: 22px;
-    }
-
-    .multi-model .bar-metric {
-      width: 70px;
+    .vchart-legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
       flex-shrink: 0;
-      font-size: 0.7rem;
-      color: #52525b;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      text-align: right;
-    }
-
-    .bar-value {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      flex-shrink: 0;
-      width: 60px;
     }
 
     /* ---------- Comparison Grid ---------- */
@@ -449,27 +437,6 @@
       margin-top: 1rem;
     }
 
-    /* ---------- Legend ---------- */
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .legend-swatch {
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-    }
   </style>
 </head>
 <body>
@@ -612,13 +579,17 @@
     <h2>Results</h2>
     <p class="description">Each model runs every benchmark multiple times at random surface locations. Success = target item in inventory before 5-minute timeout.</p>
 
-    <div id="multi-chart" class="chart-section">
-      <div class="chart-subtitle">Grouped by benchmark. Models sorted by pass rate.</div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-swatch" style="background: var(--green)"></div> Pass Rate</div>
-        <div class="legend-item"><div class="legend-swatch" style="background: var(--primary)"></div> Avg Time</div>
-        <div class="legend-item"><div class="legend-swatch" style="background: var(--blue)"></div> Tool Calls</div>
-      </div>
+    <div class="vchart-controls">
+      <select id="bench-select"></select>
+      <select id="metric-select">
+        <option value="rate">Pass Rate</option>
+        <option value="time">Avg Time</option>
+        <option value="tools">Tool Calls</option>
+      </select>
+    </div>
+    <div class="vchart-container">
+      <div id="vchart" class="vchart"></div>
+      <div id="vchart-legend" class="vchart-legend"></div>
     </div>
 
     <h3 style="margin-bottom: 0.75rem;">Detailed Results</h3>
@@ -681,12 +652,6 @@
       return s >= 60 ? `${Math.floor(s / 60)}m${String(s % 60).padStart(2, '0')}s` : `${s}s`;
     }
 
-    function rateClass(rate) {
-      if (rate >= 1) return 'pass';
-      if (rate < 0.4) return 'fail-bar';
-      return 'partial';
-    }
-
     function rateTextClass(rate) {
       if (rate >= 1) return 'pass';
       if (rate < 0.4) return 'fail';
@@ -699,17 +664,24 @@
       return 'red';
     }
 
-    // Sort models by overall pass rate descending
+    // Auto-assign colors from a palette
+    const MODEL_COLORS = [
+      '#22c55e', '#3b82f6', '#f59e0b', '#ef4444',
+      '#a855f7', '#ec4899', '#14b8a6', '#f97316',
+      '#6366f1', '#84cc16',
+    ];
+    const colorMap = {};
+    // Sort models by overall rate for consistent ordering
     const ranked = [...models].sort((a, b) =>
       (summary[b]?.overall?.rate || 0) - (summary[a]?.overall?.rate || 0)
     );
+    ranked.forEach((m, i) => { colorMap[m] = MODEL_COLORS[i % MODEL_COLORS.length]; });
 
     // ── At a Glance ──
     const glanceDesc = document.querySelector('#glance-section .description');
     glanceDesc.textContent = `${totalRuns} total runs across ${models.length} models.`;
 
     const glanceGrid = document.getElementById('glance-grid');
-    // Show top 2 models' pass rate + avg time
     const topModels = ranked.slice(0, 2);
     let glanceHTML = '';
     for (const m of topModels) {
@@ -733,56 +705,95 @@
     }
     glanceGrid.innerHTML = glanceHTML;
 
-    // ── Multibar Chart ──
-    // Find global maxes for scaling
-    let maxTime = 0, maxTools = 0;
-    for (const m of models) {
-      for (const b of benchmarks) {
-        const s = summary[m]?.[b];
-        if (!s) continue;
-        if (s.avgTime != null && s.avgTime > maxTime) maxTime = s.avgTime;
-        if (s.avgTools != null && s.avgTools > maxTools) maxTools = s.avgTools;
-      }
+    // ── Vertical Bar Chart ──
+    const benchSelect = document.getElementById('bench-select');
+    const metricSelect = document.getElementById('metric-select');
+    const vchartEl = document.getElementById('vchart');
+    const legendEl = document.getElementById('vchart-legend');
+
+    // Populate benchmark dropdown
+    for (const b of benchmarks) {
+      const opt = document.createElement('option');
+      opt.value = b;
+      opt.textContent = benchNames[b] || b;
+      benchSelect.appendChild(opt);
     }
 
-    const multiChart = document.getElementById('multi-chart');
-    for (const bench of benchmarks) {
-      const name = benchNames[bench] || bench;
-      // Sort models by pass rate descending
-      const sorted = [...models].sort((a, b) =>
-        (summary[b]?.[bench]?.rate || 0) - (summary[a]?.[bench]?.rate || 0)
-      );
+    function renderChart() {
+      const bench = benchSelect.value;
+      const metric = metricSelect.value;
 
-      let groupHTML = `<div class="chart-group"><div class="chart-group-label">${name}</div>`;
+      // Sort: rate descending, time ascending, tools ascending
+      const sorted = [...ranked].sort((a, b) => {
+        const sa = summary[a]?.[bench], sb = summary[b]?.[bench];
+        if (!sa || !sb) return 0;
+        if (metric === 'rate') return (sb.rate || 0) - (sa.rate || 0);
+        if (metric === 'time') {
+          if (sa.avgTime == null) return 1;
+          if (sb.avgTime == null) return -1;
+          return sa.avgTime - sb.avgTime;
+        }
+        if (sa.avgTools == null) return 1;
+        if (sb.avgTools == null) return -1;
+        return sa.avgTools - sb.avgTools;
+      });
+
+      // Find max for scaling
+      let maxVal = 0;
       for (const m of sorted) {
         const s = summary[m]?.[bench];
         if (!s) continue;
-        const pct = Math.round(s.rate * 100);
-        const timePct = (s.avgTime != null && maxTime > 0) ? Math.round((s.avgTime / maxTime) * 100) : 0;
-        const toolPct = (s.avgTools != null && maxTools > 0) ? Math.round((s.avgTools / maxTools) * 100) : 0;
-
-        groupHTML += `<div class="multi-model">
-          <div class="model-header">${m}</div>
-          <div class="bar-row">
-            <div class="bar-metric">pass</div>
-            <div class="bar-track"><div class="bar-fill ${rateClass(s.rate)}" style="width: ${Math.max(pct, 8)}%"><span>${s.pass}/${s.total}</span></div></div>
-            <div class="bar-value">${pct}%</div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-metric">time</div>
-            <div class="bar-track"><div class="bar-fill time-bar" style="width: ${s.avgTime != null ? Math.max(timePct, 12) : 0}%">${s.avgTime != null ? `<span>${fmtTime(s.avgTime)}</span>` : ''}</div></div>
-            <div class="bar-value">${fmtTime(s.avgTime)}</div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-metric">tools</div>
-            <div class="bar-track"><div class="bar-fill tool-bar" style="width: ${s.avgTools != null ? Math.max(toolPct, 12) : 0}%">${s.avgTools != null ? `<span>${s.avgTools}</span>` : ''}</div></div>
-            <div class="bar-value">${s.avgTools ?? '-'} avg</div>
-          </div>
-        </div>`;
+        let v = 0;
+        if (metric === 'rate') v = s.rate || 0;
+        else if (metric === 'time') v = s.avgTime || 0;
+        else v = s.avgTools || 0;
+        if (v > maxVal) maxVal = v;
       }
-      groupHTML += '</div>';
-      multiChart.insertAdjacentHTML('beforeend', groupHTML);
+      if (metric === 'rate') maxVal = 1; // always scale to 100%
+
+      let html = '';
+      for (const m of sorted) {
+        const s = summary[m]?.[bench];
+        if (!s) continue;
+        const color = colorMap[m];
+        let val, label, heightPct;
+
+        if (metric === 'rate') {
+          val = s.rate || 0;
+          label = `${Math.round(val * 100)}%`;
+          heightPct = val * 100;
+        } else if (metric === 'time') {
+          val = s.avgTime;
+          label = fmtTime(val);
+          heightPct = (val != null && maxVal > 0) ? (val / maxVal) * 100 : 0;
+        } else {
+          val = s.avgTools;
+          label = val != null ? String(val) : '-';
+          heightPct = (val != null && maxVal > 0) ? (val / maxVal) * 100 : 0;
+        }
+
+        html += `
+          <div class="vchart-model">
+            <div class="vchart-bar-wrap">
+              <div class="vchart-bar" style="height: ${Math.max(heightPct, 1)}%; background: ${color};">
+                <div class="vchart-bar-label">${label}</div>
+              </div>
+            </div>
+            <div class="vchart-name">${m}</div>
+          </div>`;
+      }
+      vchartEl.innerHTML = html;
+
+      // Legend
+      legendEl.innerHTML = sorted
+        .filter(m => summary[m]?.[bench])
+        .map(m => `<div class="vchart-legend-item"><div class="vchart-legend-swatch" style="background:${colorMap[m]}"></div>${m}</div>`)
+        .join('');
     }
+
+    benchSelect.addEventListener('change', renderChart);
+    metricSelect.addEventListener('change', renderChart);
+    renderChart();
 
     // ── Detailed Table ──
     const tbody = document.getElementById('results-tbody');
@@ -798,7 +809,6 @@
         const name = benchNames[bench] || bench;
         const pct = Math.round(s.rate * 100);
 
-        // Find best time for this bench across all models
         let bestTime = Infinity;
         for (const om of models) {
           const t = summary[om]?.[bench]?.avgTime;
@@ -808,7 +818,7 @@
 
         tableHTML += `
           <tr>
-            <td><span class="model-tag">${m}</span></td>
+            <td><span class="model-tag" style="border-color:${colorMap[m]};color:${colorMap[m]}">${m}</span></td>
             <td>${name}</td>
             <td class="${rateTextClass(s.rate)}">${s.pass}/${s.total} (${pct}%)</td>
             <td${isBestTime ? ' class="best"' : ''}>${fmtTime(s.avgTime)}</td>
