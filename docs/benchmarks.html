@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Benchmarks — Xandaris Hardcore</title>
+  <meta name="description" content="Revival bot benchmark results. Measuring how well AI agents can complete Minecraft survival tasks.">
+  <meta property="og:title" content="AI Benchmarks — Xandaris Hardcore">
+  <meta property="og:description" content="Revival bot benchmarks — craft, cook, smelt. How fast can an AI survive?">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://xandaris.space/benchmarks.html">
+  <meta property="og:image" content="https://xandaris.space/og-image.png">
+  <meta name="theme-color" content="#FFD700">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #FFD700;
+      --primary-hover: #e6c200;
+      --accent: #8B0000;
+      --bg: #09090b;
+      --card-bg: #0a0a0c;
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
+      --border: #27272a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ---------- Nav ---------- */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .site-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    nav .site-name:hover { color: var(--primary-hover); text-decoration: none; }
+    nav .nav-links { display: flex; gap: 1.5rem; }
+
+    nav .nav-links a {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav .nav-links a:hover { color: var(--text); text-decoration: none; }
+    nav .nav-links a.active { color: var(--primary); }
+
+    /* ---------- Page Header ---------- */
+    .page-header {
+      text-align: center;
+      padding: 3rem 1.5rem 1rem;
+      background: linear-gradient(180deg, #1a1400 0%, #09090b 100%);
+    }
+
+    .page-header h1 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ---------- Sections ---------- */
+    section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    section h2 {
+      font-size: 1.4rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    section h3 {
+      font-size: 1.1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .description {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+
+    /* ---------- Benchmark Cards ---------- */
+    .bench-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .bench-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .bench-card:hover { border-color: #3f3f46; }
+
+    .bench-card .bench-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .bench-card .bench-goal {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .bench-card .bench-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .bench-card .step {
+      background: #18181b;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      color: var(--text-muted);
+    }
+
+    .bench-card .step .arrow {
+      color: #3f3f46;
+      margin: 0 0.1rem;
+    }
+
+    .bench-card .inventory {
+      font-size: 0.8rem;
+      color: #52525b;
+      margin-bottom: 0.75rem;
+    }
+
+    .bench-card .inventory span {
+      color: var(--text-muted);
+    }
+
+    /* ---------- Results Table ---------- */
+    .results-wrap {
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td { color: var(--text); }
+
+    tr:hover td { background: rgba(255, 215, 0, 0.03); }
+
+    .pass { color: #22c55e; font-weight: 600; }
+    .fail { color: #ef4444; font-weight: 600; }
+    .best { color: var(--primary); font-weight: 600; }
+
+    .model-tag {
+      display: inline-block;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 0.8rem;
+      background: #18181b;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.15rem 0.5rem;
+    }
+
+    /* ---------- Methodology ---------- */
+    .method-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .method-list li {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 0.35rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .method-list li::before {
+      content: ">";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-family: monospace;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--text-muted); }
+    footer a:hover { color: var(--primary); }
+
+    .last-updated {
+      text-align: center;
+      color: #52525b;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a class="site-name" href="index.html">Xandaris Hardcore</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="ranks.html">Ranks</a>
+      <a href="benchmarks.html" class="active">Benchmarks</a>
+      <a href="https://xnmc.statuspage.io/" target="_blank" rel="noopener">Status</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Revival Bot Benchmarks</h1>
+    <p>Measuring how well AI agents complete Minecraft survival tasks autonomously — from chopping wood to smelting iron.</p>
+  </div>
+
+  <!-- Benchmark Definitions -->
+  <section>
+    <h2>The Tasks</h2>
+    <p class="description">Each benchmark spawns a revival bot with a specific inventory and goal. The bot must plan and execute a multi-step crafting chain using tool calls — no human guidance.</p>
+
+    <div class="bench-grid">
+      <div class="bench-card">
+        <div class="bench-name">Wooden Pickaxe</div>
+        <div class="bench-goal">Craft a wooden pickaxe from nothing</div>
+        <div class="inventory">Start: <span>empty inventory</span></div>
+        <div class="bench-steps">
+          <span class="step">mine oak_log</span>
+          <span class="step">craft planks</span>
+          <span class="step">craft crafting_table</span>
+          <span class="step">place table</span>
+          <span class="step">craft sticks</span>
+          <span class="step">craft pickaxe</span>
+        </div>
+      </div>
+
+      <div class="bench-card">
+        <div class="bench-name">Cooked Food</div>
+        <div class="bench-goal">Kill an animal and cook the meat</div>
+        <div class="inventory">Start: <span>wooden tools, cobblestone, planks</span></div>
+        <div class="bench-steps">
+          <span class="step">craft furnace</span>
+          <span class="step">place furnace</span>
+          <span class="step">kill animal</span>
+          <span class="step">smelt meat</span>
+        </div>
+      </div>
+
+      <div class="bench-card">
+        <div class="bench-name">Iron Shears</div>
+        <div class="bench-goal">Mine iron, smelt ingots, craft shears</div>
+        <div class="inventory">Start: <span>stone pickaxe, furnace, food, planks</span></div>
+        <div class="bench-steps">
+          <span class="step">mine iron_ore</span>
+          <span class="step">place furnace</span>
+          <span class="step">smelt raw_iron</span>
+          <span class="step">craft shears</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section>
+    <h2>Results</h2>
+    <p class="description">Each model runs the full benchmark suite multiple times. Success = target item appears in inventory before the 5-minute timeout.</p>
+
+    <div class="results-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Benchmark</th>
+            <th>Pass Rate</th>
+            <th>Avg Time</th>
+            <th>Avg Tools</th>
+            <th>Avg Failures</th>
+          </tr>
+        </thead>
+        <tbody id="results-body">
+          <tr>
+            <td><span class="model-tag">gpt-5-mini</span></td>
+            <td>Wooden Pickaxe</td>
+            <td class="pass">2/2 (100%)</td>
+            <td>3m08s</td>
+            <td>9</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td><span class="model-tag">gpt-5-mini</span></td>
+            <td>Cooked Food</td>
+            <td class="pass">2/2 (100%)</td>
+            <td>2m01s</td>
+            <td>6</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td><span class="model-tag">gpt-5-mini</span></td>
+            <td>Iron Shears</td>
+            <td class="pass">2/2 (100%)</td>
+            <td>1m56s</td>
+            <td>5</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td><span class="model-tag">grok-4-1-fast</span></td>
+            <td colspan="5" style="color: var(--text-muted); font-style: italic;">Pending — xAI API credits exhausted, rerun when available</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Methodology -->
+  <section>
+    <h2>Methodology</h2>
+    <ul class="method-list">
+      <li>Bot spawns via revival webhook at a fixed location with pre-set inventory</li>
+      <li>Environment is prepared: oak logs planted (pick), cows summoned (food), iron ore placed (shears)</li>
+      <li>Time set to day, bot teleported to spawn after greeting cycle</li>
+      <li>Goal sent as owner chat message; up to 4 retries if bot goes idle for 20s</li>
+      <li>Success = target item detected in inventory via RCON polling every 5s</li>
+      <li>Timeout: 5 minutes (pick, shears), 3 minutes (food)</li>
+      <li>Metrics: wall-clock time, total tool calls, failed tool calls, LLM chat messages</li>
+      <li>The bot uses a single LLM call per tick (10-20s interval) with up to 3 chain steps</li>
+    </ul>
+
+    <p class="last-updated">Last updated: March 8, 2026</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025-2026 Xandaris Hardcore &middot; <a href="https://github.com/hunterjsb/xn-mc" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+</body>
+</html>
