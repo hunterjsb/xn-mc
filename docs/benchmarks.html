@@ -568,190 +568,32 @@
     </div>
   </section>
 
-  <!-- Overview Stats -->
-  <section>
+  <!-- Dynamic sections rendered by JS -->
+  <section id="glance-section">
     <h2>At a Glance</h2>
-    <p class="description">5 runs per benchmark, random spawn locations via <code>spreadplayers</code>.</p>
-    <div class="compare-grid">
-      <div class="stat-card">
-        <div class="stat-value green">80%</div>
-        <div class="stat-label">Overall Pass Rate</div>
-        <div class="stat-model">grok-4.1-fast</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value orange">60%</div>
-        <div class="stat-label">Overall Pass Rate</div>
-        <div class="stat-model">gpt-5-mini</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">1m37s</div>
-        <div class="stat-label">Avg Completion Time</div>
-        <div class="stat-model">grok-4.1-fast</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">2m52s</div>
-        <div class="stat-label">Avg Completion Time</div>
-        <div class="stat-model">gpt-5-mini</div>
-      </div>
-    </div>
+    <p class="description">Loading results...</p>
+    <div id="glance-grid" class="compare-grid"></div>
   </section>
 
-  <!-- Visual Charts -->
-  <section>
+  <section id="results-section">
     <h2>Results</h2>
-    <p class="description">Each model runs every benchmark 5 times at random surface locations. Success = target item in inventory before 5-minute timeout.</p>
+    <p class="description">Each model runs every benchmark multiple times at random surface locations. Success = target item in inventory before 5-minute timeout.</p>
 
-    <!-- Pass Rate Chart -->
-    <div class="chart-section">
+    <div id="pass-rate-chart" class="chart-section">
       <h3>Pass Rate</h3>
-      <div class="chart-subtitle">5 runs per benchmark, random spawn</div>
-
+      <div class="chart-subtitle">Per benchmark, random spawn</div>
       <div class="legend">
         <div class="legend-item"><div class="legend-swatch" style="background: var(--green)"></div> 100%</div>
         <div class="legend-item"><div class="legend-swatch" style="background: var(--orange)"></div> Partial</div>
         <div class="legend-item"><div class="legend-swatch" style="background: var(--red)"></div> &lt;40%</div>
       </div>
-
-      <div class="chart-group">
-        <div class="chart-group-label">
-          <svg class="group-icon" viewBox="0 0 16 16"><rect x="6" y="0" width="2" height="2" fill="#C4A46C"/><rect x="8" y="0" width="2" height="2" fill="#C4A46C"/><rect x="10" y="0" width="2" height="2" fill="#C4A46C"/><rect x="4" y="2" width="2" height="2" fill="#C4A46C"/><rect x="10" y="2" width="2" height="2" fill="#C4A46C"/><rect x="10" y="4" width="2" height="2" fill="#8B6914"/><rect x="8" y="6" width="2" height="2" fill="#8B6914"/><rect x="6" y="8" width="2" height="2" fill="#8B6914"/><rect x="4" y="10" width="2" height="2" fill="#8B6914"/><rect x="2" y="12" width="2" height="2" fill="#8B6914"/></svg>
-          Wooden Pickaxe
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">grok-4.1-fast</div>
-          <div class="bar-track"><div class="bar-fill pass" style="width: 100%"><span>5/5</span></div></div>
-          <div class="bar-value">100%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">gpt-5-mini</div>
-          <div class="bar-track"><div class="bar-fill partial" style="width: 60%"><span>3/5</span></div></div>
-          <div class="bar-value">60%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">minimax-m2.5</div>
-          <div class="bar-track"><div class="bar-fill partial" style="width: 40%"><span>2/5</span></div></div>
-          <div class="bar-value">40%</div>
-        </div>
-      </div>
-
-      <div class="chart-group">
-        <div class="chart-group-label">
-          <svg class="group-icon" viewBox="0 0 16 16"><rect x="4" y="2" width="2" height="2" fill="#8B4513"/><rect x="6" y="2" width="2" height="2" fill="#A0522D"/><rect x="8" y="2" width="2" height="2" fill="#8B4513"/><rect x="2" y="4" width="2" height="2" fill="#8B4513"/><rect x="4" y="4" width="2" height="2" fill="#CD853F"/><rect x="6" y="4" width="2" height="2" fill="#D2691E"/><rect x="8" y="4" width="2" height="2" fill="#CD853F"/><rect x="10" y="4" width="2" height="2" fill="#8B4513"/><rect x="4" y="6" width="2" height="2" fill="#D2691E"/><rect x="6" y="6" width="2" height="2" fill="#F4A460"/><rect x="8" y="6" width="2" height="2" fill="#D2691E"/><rect x="4" y="8" width="2" height="2" fill="#CD853F"/><rect x="6" y="8" width="2" height="2" fill="#D2691E"/><rect x="8" y="8" width="2" height="2" fill="#CD853F"/><rect x="6" y="10" width="2" height="2" fill="#8B4513"/></svg>
-          Cooked Food
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">gpt-5-mini</div>
-          <div class="bar-track"><div class="bar-fill partial" style="width: 60%"><span>3/5</span></div></div>
-          <div class="bar-value">60%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">grok-4.1-fast</div>
-          <div class="bar-track"><div class="bar-fill partial" style="width: 40%"><span>2/5</span></div></div>
-          <div class="bar-value">40%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">minimax-m2.5</div>
-          <div class="bar-track"><div class="bar-fill fail-bar" style="width: 20%"><span>1/5</span></div></div>
-          <div class="bar-value">20%</div>
-        </div>
-      </div>
-
-      <div class="chart-group">
-        <div class="chart-group-label">
-          <svg class="group-icon" viewBox="0 0 16 16"><rect x="4" y="0" width="2" height="2" fill="#C0C0C0"/><rect x="10" y="0" width="2" height="2" fill="#C0C0C0"/><rect x="4" y="2" width="2" height="2" fill="#A8A8A8"/><rect x="10" y="2" width="2" height="2" fill="#A8A8A8"/><rect x="4" y="4" width="2" height="2" fill="#C0C0C0"/><rect x="6" y="4" width="2" height="2" fill="#A8A8A8"/><rect x="8" y="4" width="2" height="2" fill="#A8A8A8"/><rect x="10" y="4" width="2" height="2" fill="#C0C0C0"/><rect x="6" y="6" width="2" height="2" fill="#D3D3D3"/><rect x="8" y="6" width="2" height="2" fill="#D3D3D3"/><rect x="4" y="8" width="2" height="2" fill="#C0C0C0"/><rect x="6" y="8" width="2" height="2" fill="#A8A8A8"/><rect x="8" y="8" width="2" height="2" fill="#A8A8A8"/><rect x="10" y="8" width="2" height="2" fill="#C0C0C0"/><rect x="4" y="10" width="2" height="2" fill="#808080"/><rect x="10" y="10" width="2" height="2" fill="#808080"/></svg>
-          Iron Shears
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">grok-4.1-fast</div>
-          <div class="bar-track"><div class="bar-fill pass" style="width: 100%"><span>5/5</span></div></div>
-          <div class="bar-value">100%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">minimax-m2.5</div>
-          <div class="bar-track"><div class="bar-fill partial" style="width: 60%"><span>3/5</span></div></div>
-          <div class="bar-value">60%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">gpt-5-mini</div>
-          <div class="bar-track"><div class="bar-fill partial" style="width: 60%"><span>3/5</span></div></div>
-          <div class="bar-value">60%</div>
-        </div>
-      </div>
     </div>
 
-    <!-- Time Chart -->
-    <div class="chart-section">
+    <div id="time-chart" class="chart-section">
       <h3>Avg Completion Time</h3>
       <div class="chart-subtitle">Lower is better. Only passing runs counted.</div>
-
-      <div class="chart-group">
-        <div class="chart-group-label">
-          <svg class="group-icon" viewBox="0 0 16 16"><rect x="6" y="0" width="2" height="2" fill="#C4A46C"/><rect x="8" y="0" width="2" height="2" fill="#C4A46C"/><rect x="10" y="0" width="2" height="2" fill="#C4A46C"/><rect x="4" y="2" width="2" height="2" fill="#C4A46C"/><rect x="10" y="2" width="2" height="2" fill="#C4A46C"/><rect x="10" y="4" width="2" height="2" fill="#8B6914"/><rect x="8" y="6" width="2" height="2" fill="#8B6914"/><rect x="6" y="8" width="2" height="2" fill="#8B6914"/><rect x="4" y="10" width="2" height="2" fill="#8B6914"/><rect x="2" y="12" width="2" height="2" fill="#8B6914"/></svg>
-          Wooden Pickaxe
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">grok-4.1-fast</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 34%"><span>1m42s</span></div></div>
-          <div class="bar-value best">9 tools</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">gpt-5-mini</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 63%"><span>3m10s</span></div></div>
-          <div class="bar-value">9 tools</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">minimax-m2.5</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 70%"><span>3m30s</span></div></div>
-          <div class="bar-value">13 tools</div>
-        </div>
-      </div>
-
-      <div class="chart-group">
-        <div class="chart-group-label">
-          <svg class="group-icon" viewBox="0 0 16 16"><rect x="4" y="2" width="2" height="2" fill="#8B4513"/><rect x="6" y="2" width="2" height="2" fill="#A0522D"/><rect x="8" y="2" width="2" height="2" fill="#8B4513"/><rect x="2" y="4" width="2" height="2" fill="#8B4513"/><rect x="4" y="4" width="2" height="2" fill="#CD853F"/><rect x="6" y="4" width="2" height="2" fill="#D2691E"/><rect x="8" y="4" width="2" height="2" fill="#CD853F"/><rect x="10" y="4" width="2" height="2" fill="#8B4513"/><rect x="4" y="6" width="2" height="2" fill="#D2691E"/><rect x="6" y="6" width="2" height="2" fill="#F4A460"/><rect x="8" y="6" width="2" height="2" fill="#D2691E"/><rect x="4" y="8" width="2" height="2" fill="#CD853F"/><rect x="6" y="8" width="2" height="2" fill="#D2691E"/><rect x="8" y="8" width="2" height="2" fill="#CD853F"/><rect x="6" y="10" width="2" height="2" fill="#8B4513"/></svg>
-          Cooked Food
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">grok-4.1-fast</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 30%"><span>1m30s</span></div></div>
-          <div class="bar-value best">7 tools</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">minimax-m2.5</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 36%"><span>1m48s</span></div></div>
-          <div class="bar-value">7 tools</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">gpt-5-mini</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 62%"><span>3m05s</span></div></div>
-          <div class="bar-value">8 tools</div>
-        </div>
-      </div>
-
-      <div class="chart-group">
-        <div class="chart-group-label">
-          <svg class="group-icon" viewBox="0 0 16 16"><rect x="4" y="0" width="2" height="2" fill="#C0C0C0"/><rect x="10" y="0" width="2" height="2" fill="#C0C0C0"/><rect x="4" y="2" width="2" height="2" fill="#A8A8A8"/><rect x="10" y="2" width="2" height="2" fill="#A8A8A8"/><rect x="4" y="4" width="2" height="2" fill="#C0C0C0"/><rect x="6" y="4" width="2" height="2" fill="#A8A8A8"/><rect x="8" y="4" width="2" height="2" fill="#A8A8A8"/><rect x="10" y="4" width="2" height="2" fill="#C0C0C0"/><rect x="6" y="6" width="2" height="2" fill="#D3D3D3"/><rect x="8" y="6" width="2" height="2" fill="#D3D3D3"/><rect x="4" y="8" width="2" height="2" fill="#C0C0C0"/><rect x="6" y="8" width="2" height="2" fill="#A8A8A8"/><rect x="8" y="8" width="2" height="2" fill="#A8A8A8"/><rect x="10" y="8" width="2" height="2" fill="#C0C0C0"/><rect x="4" y="10" width="2" height="2" fill="#808080"/><rect x="10" y="10" width="2" height="2" fill="#808080"/></svg>
-          Iron Shears
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">minimax-m2.5</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 31%"><span>1m25s</span></div></div>
-          <div class="bar-value best">6 tools</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">grok-4.1-fast</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 33%"><span>1m38s</span></div></div>
-          <div class="bar-value">6 tools</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">gpt-5-mini</div>
-          <div class="bar-track"><div class="bar-fill time-bar" style="width: 47%"><span>2m22s</span></div></div>
-          <div class="bar-value">5 tools</div>
-        </div>
-      </div>
     </div>
 
-    <!-- Detailed Table -->
     <h3 style="margin-bottom: 0.75rem;">Detailed Results</h3>
     <div class="results-wrap">
       <table>
@@ -764,73 +606,7 @@
             <th>Avg Tools</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td><span class="model-tag">grok-4.1-fast</span></td>
-            <td>Wooden Pickaxe</td>
-            <td class="pass">5/5 (100%)</td>
-            <td class="best">1m42s</td>
-            <td>9</td>
-          </tr>
-          <tr>
-            <td><span class="model-tag">grok-4.1-fast</span></td>
-            <td>Cooked Food</td>
-            <td class="partial-text">2/5 (40%)</td>
-            <td class="best">1m30s</td>
-            <td>7</td>
-          </tr>
-          <tr>
-            <td><span class="model-tag">grok-4.1-fast</span></td>
-            <td>Iron Shears</td>
-            <td class="pass">5/5 (100%)</td>
-            <td>1m38s</td>
-            <td>6</td>
-          </tr>
-          <tr><td colspan="5" style="border-bottom-color: #3f3f46"></td></tr>
-          <tr>
-            <td><span class="model-tag">gpt-5-mini</span></td>
-            <td>Wooden Pickaxe</td>
-            <td class="partial-text">3/5 (60%)</td>
-            <td>3m10s</td>
-            <td>9</td>
-          </tr>
-          <tr>
-            <td><span class="model-tag">gpt-5-mini</span></td>
-            <td>Cooked Food</td>
-            <td class="partial-text">3/5 (60%)</td>
-            <td>3m05s</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <td><span class="model-tag">gpt-5-mini</span></td>
-            <td>Iron Shears</td>
-            <td class="partial-text">3/5 (60%)</td>
-            <td>2m22s</td>
-            <td>5</td>
-          </tr>
-          <tr><td colspan="5" style="border-bottom-color: #3f3f46"></td></tr>
-          <tr>
-            <td><span class="model-tag">minimax-m2.5</span></td>
-            <td>Wooden Pickaxe</td>
-            <td class="partial-text">2/5 (40%)</td>
-            <td>3m30s</td>
-            <td>13</td>
-          </tr>
-          <tr>
-            <td><span class="model-tag">minimax-m2.5</span></td>
-            <td>Cooked Food</td>
-            <td class="fail">1/5 (20%)</td>
-            <td>1m48s</td>
-            <td>7</td>
-          </tr>
-          <tr>
-            <td><span class="model-tag">minimax-m2.5</span></td>
-            <td>Iron Shears</td>
-            <td class="partial-text">3/5 (60%)</td>
-            <td class="best">1m25s</td>
-            <td>6</td>
-          </tr>
-        </tbody>
+        <tbody id="results-tbody"></tbody>
       </table>
     </div>
   </section>
@@ -846,17 +622,198 @@
       <li>Success = target item detected in inventory via RCON polling every 5s</li>
       <li>Timeout: 5 minutes for all benchmarks</li>
       <li>Metrics: wall-clock time, total tool calls, failed tool calls, LLM chat messages</li>
-      <li>Models tested via OpenAI API (gpt-5-mini) and OpenRouter (grok-4.1-fast, minimax-m2.5)</li>
-      <li>5 runs per model per benchmark (45 total runs)</li>
     </ul>
 
-    <p class="last-updated">Last updated: March 8, 2026</p>
+    <p id="last-updated" class="last-updated">Loading...</p>
   </section>
 
   <!-- Footer -->
   <footer>
     <p>&copy; 2025-2026 Xandaris Hardcore &middot; <a href="https://github.com/hunterjsb/xn-mc" target="_blank" rel="noopener">GitHub</a></p>
   </footer>
+
+  <script>
+  (async () => {
+    let data;
+    try {
+      const res = await fetch('benchmark-data.json');
+      if (!res.ok) throw new Error(res.statusText);
+      data = await res.json();
+    } catch (e) {
+      document.getElementById('glance-grid').innerHTML =
+        '<p style="color:var(--text-muted)">Could not load benchmark data.</p>';
+      return;
+    }
+
+    const { models, benchmarks, benchNames, summary, totalRuns, generated } = data;
+
+    // ── Helpers ──
+    function fmtTime(ms) {
+      if (ms == null) return '-';
+      const s = Math.round(ms / 1000);
+      return s >= 60 ? `${Math.floor(s / 60)}m${String(s % 60).padStart(2, '0')}s` : `${s}s`;
+    }
+
+    function rateClass(rate) {
+      if (rate >= 1) return 'pass';
+      if (rate < 0.4) return 'fail-bar';
+      return 'partial';
+    }
+
+    function rateTextClass(rate) {
+      if (rate >= 1) return 'pass';
+      if (rate < 0.4) return 'fail';
+      return 'partial-text';
+    }
+
+    function rateColorClass(rate) {
+      if (rate >= 0.8) return 'green';
+      if (rate >= 0.5) return 'orange';
+      return 'red';
+    }
+
+    // Sort models by overall pass rate descending
+    const ranked = [...models].sort((a, b) =>
+      (summary[b]?.overall?.rate || 0) - (summary[a]?.overall?.rate || 0)
+    );
+
+    // ── At a Glance ──
+    const glanceDesc = document.querySelector('#glance-section .description');
+    glanceDesc.textContent = `${totalRuns} total runs across ${models.length} models.`;
+
+    const glanceGrid = document.getElementById('glance-grid');
+    // Show top 2 models' pass rate + avg time
+    const topModels = ranked.slice(0, 2);
+    let glanceHTML = '';
+    for (const m of topModels) {
+      const o = summary[m].overall;
+      const pct = Math.round(o.rate * 100);
+      glanceHTML += `
+        <div class="stat-card">
+          <div class="stat-value ${rateColorClass(o.rate)}">${pct}%</div>
+          <div class="stat-label">Overall Pass Rate</div>
+          <div class="stat-model">${m}</div>
+        </div>`;
+    }
+    for (const m of topModels) {
+      const o = summary[m].overall;
+      glanceHTML += `
+        <div class="stat-card">
+          <div class="stat-value">${fmtTime(o.avgTime)}</div>
+          <div class="stat-label">Avg Completion Time</div>
+          <div class="stat-model">${m}</div>
+        </div>`;
+    }
+    glanceGrid.innerHTML = glanceHTML;
+
+    // ── Pass Rate Bars ──
+    const passChart = document.getElementById('pass-rate-chart');
+    for (const bench of benchmarks) {
+      const name = benchNames[bench] || bench;
+      // Sort models by pass rate for this bench, descending
+      const sorted = [...models].sort((a, b) =>
+        (summary[b]?.[bench]?.rate || 0) - (summary[a]?.[bench]?.rate || 0)
+      );
+      let groupHTML = `<div class="chart-group"><div class="chart-group-label">${name}</div>`;
+      for (const m of sorted) {
+        const s = summary[m]?.[bench];
+        if (!s) continue;
+        const pct = Math.round(s.rate * 100);
+        groupHTML += `
+          <div class="bar-row">
+            <div class="bar-label">${m}</div>
+            <div class="bar-track"><div class="bar-fill ${rateClass(s.rate)}" style="width: ${Math.max(pct, 8)}%"><span>${s.pass}/${s.total}</span></div></div>
+            <div class="bar-value">${pct}%</div>
+          </div>`;
+      }
+      groupHTML += '</div>';
+      passChart.insertAdjacentHTML('beforeend', groupHTML);
+    }
+
+    // ── Time Bars ──
+    // Find global max avg time across all model/bench combos for scaling
+    let maxTime = 0;
+    for (const m of models) {
+      for (const b of benchmarks) {
+        const t = summary[m]?.[b]?.avgTime;
+        if (t != null && t > maxTime) maxTime = t;
+      }
+    }
+
+    const timeChart = document.getElementById('time-chart');
+    for (const bench of benchmarks) {
+      const name = benchNames[bench] || bench;
+      // Sort by avg time ascending (fastest first), nulls last
+      const sorted = [...models]
+        .filter(m => summary[m]?.[bench]?.avgTime != null)
+        .sort((a, b) => (summary[a][bench].avgTime || 0) - (summary[b][bench].avgTime || 0));
+
+      // Find best (lowest) time for this bench
+      const bestTime = sorted.length > 0 ? summary[sorted[0]][bench].avgTime : null;
+      // Find best (lowest) avg tools for this bench
+      let bestTools = Infinity;
+      for (const m of sorted) {
+        const t = summary[m][bench].avgTools;
+        if (t != null && t < bestTools) bestTools = t;
+      }
+
+      let groupHTML = `<div class="chart-group"><div class="chart-group-label">${name}</div>`;
+      for (const m of sorted) {
+        const s = summary[m][bench];
+        const pct = maxTime > 0 ? Math.round((s.avgTime / maxTime) * 100) : 50;
+        const isBestTime = s.avgTime === bestTime;
+        const isBestTools = s.avgTools === bestTools;
+        groupHTML += `
+          <div class="bar-row">
+            <div class="bar-label">${m}</div>
+            <div class="bar-track"><div class="bar-fill time-bar" style="width: ${Math.max(pct, 15)}%"><span>${fmtTime(s.avgTime)}</span></div></div>
+            <div class="bar-value${isBestTools ? ' best' : ''}">${s.avgTools ?? '-'} tools</div>
+          </div>`;
+      }
+      groupHTML += '</div>';
+      timeChart.insertAdjacentHTML('beforeend', groupHTML);
+    }
+
+    // ── Detailed Table ──
+    const tbody = document.getElementById('results-tbody');
+    let tableHTML = '';
+    for (let mi = 0; mi < ranked.length; mi++) {
+      const m = ranked[mi];
+      if (mi > 0) {
+        tableHTML += `<tr><td colspan="5" style="border-bottom-color: #3f3f46"></td></tr>`;
+      }
+      for (const bench of benchmarks) {
+        const s = summary[m]?.[bench];
+        if (!s) continue;
+        const name = benchNames[bench] || bench;
+        const pct = Math.round(s.rate * 100);
+
+        // Find best time for this bench across all models
+        let bestTime = Infinity;
+        for (const om of models) {
+          const t = summary[om]?.[bench]?.avgTime;
+          if (t != null && t < bestTime) bestTime = t;
+        }
+        const isBestTime = s.avgTime != null && s.avgTime <= bestTime;
+
+        tableHTML += `
+          <tr>
+            <td><span class="model-tag">${m}</span></td>
+            <td>${name}</td>
+            <td class="${rateTextClass(s.rate)}">${s.pass}/${s.total} (${pct}%)</td>
+            <td${isBestTime ? ' class="best"' : ''}>${fmtTime(s.avgTime)}</td>
+            <td>${s.avgTools ?? '-'}</td>
+          </tr>`;
+      }
+    }
+    tbody.innerHTML = tableHTML;
+
+    // ── Last updated ──
+    const ts = new Date(generated);
+    document.getElementById('last-updated').textContent =
+      `Last updated: ${ts.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} — ${totalRuns} runs across ${models.length} models`;
+  })();
+  </script>
 
 </body>
 </html>

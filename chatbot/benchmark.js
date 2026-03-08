@@ -14,7 +14,14 @@
  *   node benchmark.js pick --runs 3 # run 3 times for avg
  */
 
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { rcon } from './shared.js';
+import { compileBenchmarks } from './compile-benchmarks.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const RESULTS_PATH = path.join(__dirname, 'benchmarks', 'results.jsonl');
 
 const API = 'http://localhost:8765';
 const BOT_NAME = 'BenchBot';
@@ -299,6 +306,7 @@ async function runBenchmark(benchId) {
     failures: metrics.totalFailures || 0,
     inventory: finalInv.map(i => `${i.name} x${i.count}`),
     log: metrics.log || [],
+    pos,
   };
 
   // 12. Print result
@@ -322,6 +330,27 @@ async function runBenchmark(benchId) {
   }
 
   return result;
+}
+
+// ── Persistence ─────────────────────────────────────────────────────
+
+function saveResult(result, model) {
+  const record = {
+    model,
+    bench: result.benchmark,
+    success: result.success,
+    elapsed: result.elapsed || 0,
+    toolCalls: result.toolCalls || 0,
+    failures: result.failures || 0,
+    chatMessages: result.chatMessages || 0,
+    idleTicks: result.idleTicks || 0,
+    inventory: result.inventory || [],
+    pos: result.pos || { x: 0, y: 70, z: 0 },
+    ts: new Date().toISOString(),
+  };
+  fs.mkdirSync(path.dirname(RESULTS_PATH), { recursive: true });
+  fs.appendFileSync(RESULTS_PATH, JSON.stringify(record) + '\n');
+  console.log(`  Saved to ${path.relative(process.cwd(), RESULTS_PATH)}`);
 }
 
 // ── Main ─────────────────────────────────────────────────────────────
@@ -383,14 +412,20 @@ async function main() {
     }
 
     for (const id of benchIds) {
+      const m = model || 'gpt-5-mini';
       try {
         const result = await runBenchmark(id);
-        result.model = model || 'gpt-5-mini';
+        result.model = m;
         allResults.push(result);
+        saveResult(result, m);
       } catch (err) {
         console.error(`  ERROR: ${err.message}`);
-        allResults.push({ benchmark: id, success: false, error: err.message, model: model || 'gpt-5-mini' });
+        const failResult = { benchmark: id, success: false, error: err.message, model: m };
+        allResults.push(failResult);
+        saveResult(failResult, m);
       }
+      // Recompile summary after each run
+      try { compileBenchmarks(); } catch {}
       if (benchIds.length > 1) await sleep(5000);
     }
   }

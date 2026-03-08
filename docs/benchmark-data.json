@@ -1,0 +1,696 @@
+{
+  "generated": "2026-03-08T23:41:44.519Z",
+  "totalRuns": 60,
+  "models": [
+    "grok-4.1-fast",
+    "gpt-5-mini",
+    "minimax-m2.5",
+    "anthropic/claude-haiku-4.5"
+  ],
+  "benchmarks": [
+    "pick",
+    "food",
+    "shears"
+  ],
+  "benchNames": {
+    "pick": "Wooden Pickaxe",
+    "food": "Cooked Food",
+    "shears": "Iron Shears"
+  },
+  "summary": {
+    "grok-4.1-fast": {
+      "overall": {
+        "pass": 12,
+        "total": 15,
+        "rate": 0.8,
+        "avgTime": 98333,
+        "avgTools": 7
+      },
+      "pick": {
+        "pass": 5,
+        "total": 5,
+        "rate": 1,
+        "avgTime": 102000,
+        "avgTools": 9,
+        "avgFailures": 0
+      },
+      "food": {
+        "pass": 2,
+        "total": 5,
+        "rate": 0.4,
+        "avgTime": 90000,
+        "avgTools": 7,
+        "avgFailures": 0
+      },
+      "shears": {
+        "pass": 5,
+        "total": 5,
+        "rate": 1,
+        "avgTime": 98000,
+        "avgTools": 6,
+        "avgFailures": 0
+      }
+    },
+    "gpt-5-mini": {
+      "overall": {
+        "pass": 9,
+        "total": 15,
+        "rate": 0.6,
+        "avgTime": 172333,
+        "avgTools": 7
+      },
+      "pick": {
+        "pass": 3,
+        "total": 5,
+        "rate": 0.6,
+        "avgTime": 190000,
+        "avgTools": 9,
+        "avgFailures": 0
+      },
+      "food": {
+        "pass": 3,
+        "total": 5,
+        "rate": 0.6,
+        "avgTime": 185000,
+        "avgTools": 8,
+        "avgFailures": 0
+      },
+      "shears": {
+        "pass": 3,
+        "total": 5,
+        "rate": 0.6,
+        "avgTime": 142000,
+        "avgTools": 5,
+        "avgFailures": 0
+      }
+    },
+    "minimax-m2.5": {
+      "overall": {
+        "pass": 6,
+        "total": 15,
+        "rate": 0.4,
+        "avgTime": 130500,
+        "avgTools": 9
+      },
+      "pick": {
+        "pass": 2,
+        "total": 5,
+        "rate": 0.4,
+        "avgTime": 210000,
+        "avgTools": 13,
+        "avgFailures": 0
+      },
+      "food": {
+        "pass": 1,
+        "total": 5,
+        "rate": 0.2,
+        "avgTime": 108000,
+        "avgTools": 7,
+        "avgFailures": 0
+      },
+      "shears": {
+        "pass": 3,
+        "total": 5,
+        "rate": 0.6,
+        "avgTime": 85000,
+        "avgTools": 6,
+        "avgFailures": 0
+      }
+    },
+    "anthropic/claude-haiku-4.5": {
+      "overall": {
+        "pass": 11,
+        "total": 15,
+        "rate": 0.7333333333333333,
+        "avgTime": 72636,
+        "avgTools": 7
+      },
+      "pick": {
+        "pass": 4,
+        "total": 5,
+        "rate": 0.8,
+        "avgTime": 82000,
+        "avgTools": 9,
+        "avgFailures": 1
+      },
+      "food": {
+        "pass": 3,
+        "total": 5,
+        "rate": 0.6,
+        "avgTime": 66667,
+        "avgTools": 7,
+        "avgFailures": 1
+      },
+      "shears": {
+        "pass": 4,
+        "total": 5,
+        "rate": 0.8,
+        "avgTime": 67750,
+        "avgTools": 5,
+        "avgFailures": 0
+      }
+    }
+  },
+  "runs": [
+    {
+      "model": "grok-4.1-fast",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 102000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-08T00:00:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 102000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-08T00:01:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 102000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-08T00:02:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 102000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-08T00:03:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 102000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-08T00:04:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "food",
+      "success": true,
+      "elapsed": 90000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ts": "2026-03-08T00:05:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "food",
+      "success": true,
+      "elapsed": 90000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ts": "2026-03-08T00:06:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:07:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:08:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:09:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 98000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T00:10:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 98000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T00:11:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 98000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T00:12:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 98000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T00:13:00Z"
+    },
+    {
+      "model": "grok-4.1-fast",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 98000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T00:14:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 190000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-08T00:15:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 190000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-08T00:16:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 190000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-08T00:17:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:18:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:19:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": true,
+      "elapsed": 185000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ts": "2026-03-08T00:20:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": true,
+      "elapsed": 185000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ts": "2026-03-08T00:21:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": true,
+      "elapsed": 185000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ts": "2026-03-08T00:22:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:23:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:24:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 142000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ts": "2026-03-08T00:25:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 142000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ts": "2026-03-08T00:26:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 142000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ts": "2026-03-08T00:27:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:28:00Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:29:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 210000,
+      "toolCalls": 13,
+      "failures": 0,
+      "ts": "2026-03-08T00:30:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 210000,
+      "toolCalls": 13,
+      "failures": 0,
+      "ts": "2026-03-08T00:31:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:32:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:33:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:34:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "food",
+      "success": true,
+      "elapsed": 108000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ts": "2026-03-08T00:35:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:36:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:37:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:38:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:39:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 85000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T00:40:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 85000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T00:41:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 85000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T00:42:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:43:00Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T00:44:00Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 51000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ts": "2026-03-08T23:08:17Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 87000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T23:09:25Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 72000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ts": "2026-03-08T23:11:08Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 57000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ts": "2026-03-08T23:12:37Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "food",
+      "success": true,
+      "elapsed": 72000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ts": "2026-03-08T23:13:50Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 82000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ts": "2026-03-08T23:15:18Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 51000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ts": "2026-03-08T23:16:57Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 5000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-08T23:18:05Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 303000,
+      "toolCalls": 22,
+      "failures": 6,
+      "ts": "2026-03-08T23:18:26Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 169000,
+      "toolCalls": 15,
+      "failures": 2,
+      "ts": "2026-03-08T23:23:46Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "food",
+      "success": true,
+      "elapsed": 56000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ts": "2026-03-08T23:26:51Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 56000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ts": "2026-03-08T23:28:04Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 302000,
+      "toolCalls": 13,
+      "failures": 0,
+      "ts": "2026-03-08T23:29:17Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "food",
+      "success": true,
+      "elapsed": 72000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ts": "2026-03-08T23:34:35Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 61000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ts": "2026-03-08T23:36:03Z"
+    }
+  ]
+}
