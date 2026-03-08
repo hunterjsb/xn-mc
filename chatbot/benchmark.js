@@ -34,11 +34,11 @@ const BENCHMARKS = {
     name: 'Cooked Food',
     startItems: [
       'wooden_pickaxe 1', 'wooden_sword 1', 'wooden_axe 1',
-      'cobblestone 8', 'oak_planks 16', 'stick 8',
+      'cobblestone 8', 'oak_planks 16', 'stick 8', 'crafting_table 1',
     ],
     goal: 'craft a furnace, place it, kill a cow or pig, smelt the raw meat with oak_planks as fuel',
     successItems: ['cooked_beef', 'cooked_porkchop', 'cooked_chicken', 'cooked_mutton', 'cooked_rabbit'],
-    timeout: 180_000,
+    timeout: 300_000,
   },
   shears: {
     name: 'Iron Shears',
@@ -114,16 +114,14 @@ function fmtTime(ms) {
 
 // ── Spawn location ──────────────────────────────────────────────────
 
-// Known bench location with planted trees nearby
-const DEFAULT_POS = { x: 99195, y: 70, z: -141695 };
-
-async function getSpawnLocation() {
-  // Try to spawn near samboyd, fall back to bench location
-  try {
-    const pos = await getPlayerPos('samboyd');
-    if (pos.x !== 0 || pos.z !== 0) return pos;
-  } catch {}
-  return DEFAULT_POS;
+// Generate random x,z coords. The bot will be tp'd after connecting, and the
+// server places entities on the surface. We use spreadplayers on the connected
+// bot to find a safe non-ocean location.
+function randomCoords() {
+  return {
+    x: Math.floor(Math.random() * 2500) - 1250,
+    z: Math.floor(Math.random() * 2500) - 1250,
+  };
 }
 
 // ── Run a single benchmark ──────────────────────────────────────────
@@ -140,19 +138,25 @@ async function runBenchmark(benchId) {
   try { await rcon(`kick ${BOT_NAME}`); } catch {}
   await sleep(3000);
 
-  // 2. Pardon + OP (deathban.immune) + spawn bot
+  // 2. Pardon + OP (deathban.immune) + spawn bot at world spawn first
   try { await rcon(`pardon ${BOT_NAME}`); } catch {}
   try { await rcon(`op ${BOT_NAME}`); } catch {}
-  const pos = await getSpawnLocation();
-  console.log(`  Spawning at ${pos.x}, ${pos.y}, ${pos.z}...`);
-  await api('POST', '/revival', { reviver: OWNER, deadPlayer: BOT_NAME, ...pos });
+  // Spawn at world spawn (loaded chunks), then spreadplayers to random location
+  await api('POST', '/revival', { reviver: OWNER, deadPlayer: BOT_NAME, x: 0, y: 70, z: 0 });
 
   // 3. Wait for connection
   await waitForBot(BOT_NAME);
   console.log(`  Connected!`);
-  await sleep(3000); // let it settle
+  await sleep(2000);
 
-  // 4. Set time to day, set up environment, set up inventory
+  // 4. Teleport to random safe location using spreadplayers (avoids oceans)
+  const { x: cx, z: cz } = randomCoords();
+  await rcon(`spreadplayers ${cx} ${cz} 100 1250 false ${BOT_NAME}`);
+  await sleep(1000);
+  const pos = await getPlayerPos(BOT_NAME);
+  console.log(`  Spawned at ${pos.x}, ${pos.y}, ${pos.z}`);
+
+  // 5. Set time to day, set up environment, set up inventory
   await rcon('time set day');
   // Ensure solid ground at spawn for all benchmarks
   for (let dx = -1; dx <= 1; dx++) {
@@ -163,7 +167,6 @@ async function runBenchmark(benchId) {
   // (food cows spawned later, after greeting cycle)
   if (benchId === 'shears') {
     // Place iron_ore blocks spaced apart so each is individually reachable
-    // (canDig=false for underground blocks prevents pathing through ore)
     const orePositions = [
       [pos.x + 3, pos.y, pos.z],
       [pos.x - 3, pos.y, pos.z],
@@ -176,18 +179,15 @@ async function runBenchmark(benchId) {
     }
   }
   if (benchId === 'pick') {
-    // Clear a flat area and plant oak log columns right next to spawn
+    // Clear a flat area and plant oak log columns nearby
     for (let dx = -2; dx <= 2; dx++) {
       for (let dz = -2; dz <= 2; dz++) {
-        // Clear 3 blocks above ground level
         for (let dy = 0; dy <= 2; dy++) {
           await rcon(`setblock ${pos.x + dx} ${pos.y + dy} ${pos.z + dz} minecraft:air`);
         }
-        // Ensure solid ground
         await rcon(`setblock ${pos.x + dx} ${pos.y - 1} ${pos.z + dz} minecraft:grass_block`);
       }
     }
-    // Place 2 oak log columns 2 blocks away (easy to reach and mine)
     for (let y = 0; y < 4; y++) {
       await rcon(`setblock ${pos.x + 2} ${pos.y + y} ${pos.z} minecraft:oak_log`);
       await rcon(`setblock ${pos.x - 2} ${pos.y + y} ${pos.z} minecraft:oak_log`);
@@ -198,13 +198,9 @@ async function runBenchmark(benchId) {
     const [name, count] = item.split(' ');
     await rcon(`give ${BOT_NAME} minecraft:${name} ${count || 1}`);
   }
-  if (bench.startItems.length > 0) {
-    console.log(`  Inventory: ${bench.startItems.join(', ')}`);
-  } else {
-    console.log(`  Inventory: empty`);
-  }
+  console.log(`  Inventory: ${bench.startItems.length > 0 ? bench.startItems.join(', ') : 'empty'}`);
 
-  // 5. Wait for greeting cycle to finish (bot goes idle with no pending)
+  // 6. Wait for greeting cycle to finish
   console.log(`  Waiting for greeting cycle...`);
   for (let i = 0; i < 15; i++) {
     await sleep(2000);
@@ -213,11 +209,11 @@ async function runBenchmark(benchId) {
     if (bot && bot.state === 'idle' && bot.pending === 0) break;
   }
 
-  // 5b. Teleport bot back to spawn point (it may have wandered during greeting)
+  // 6b. Teleport bot back to spawn point (may have wandered during greeting)
   await rcon(`tp ${BOT_NAME} ${pos.x} ${pos.y} ${pos.z}`);
   await sleep(1000);
 
-  // 5c. Spawn animals for food bench (right before goal so they don't wander)
+  // 6c. Spawn animals for food bench (right before goal so they don't wander)
   if (benchId === 'food') {
     await rcon(`summon cow ${pos.x + 3} ${pos.y} ${pos.z}`);
     await rcon(`summon cow ${pos.x - 3} ${pos.y} ${pos.z}`);
