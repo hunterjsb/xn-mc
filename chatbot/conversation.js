@@ -12,6 +12,12 @@ const grokClient = new OpenAI({
   baseURL: 'https://api.x.ai/v1'
 });
 
+// OpenAI client for revival bots (GPT-5 mini)
+const openaiClient = process.env.OPENAI_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null;
+const REVIVAL_MODEL = 'gpt-5-mini';
+
 const ollamaBaseUrl = process.env.OLLAMA_URL?.replace(/\/v1\/?$/, ''); // strip /v1 — use native API
 const ollamaModel = process.env.OLLAMA_MODEL;
 const ollamaAuth = process.env.OLLAMA_AUTH;
@@ -91,7 +97,21 @@ export async function discordRevivalEmbed(deadPlayer, reviver) {
 }
 
 async function callLLM(params, { label = 'LLM', lightweight = false, botName = '' } = {}) {
-  // For lightweight calls (memory eval, orchestrator), prefer Grok for speed
+  // Use OpenAI if available, otherwise Grok
+  if (openaiClient) {
+    // GPT-5 mini: max_tokens → max_completion_tokens, no custom temperature
+    const { max_tokens, temperature, ...rest } = params;
+    const openaiParams = {
+      ...rest,
+      model: REVIVAL_MODEL,
+      ...(max_tokens ? { max_completion_tokens: Math.max(max_tokens * 8, 2048) } : {}),
+    };
+    const response = await openaiClient.chat.completions.create(openaiParams);
+    console.log(`[${label}] ✓ openai`);
+    return response;
+  }
+
+  // Grok fallback
   if (lightweight || !ollamaEnabled) {
     const response = await grokClient.chat.completions.create({ ...params, model: GROK_MODEL });
     console.log(`[${label}] ✓ grok`);
@@ -765,18 +785,22 @@ RECENT CHAT:
 ${history.map(h => h.content).join('\n')}`;
 
     try {
-      const response = await grokClient.chat.completions.create({
-        model: GROK_MODEL,
+      const revivalClient = openaiClient || grokClient;
+      const revivalModel = openaiClient ? REVIVAL_MODEL : GROK_MODEL;
+      const extraParams = openaiClient
+        ? { max_completion_tokens: 2048 }
+        : { max_tokens: 100, temperature: 0.6 };
+      const response = await revivalClient.chat.completions.create({
+        model: revivalModel,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `<${senderName}> ${message}` }
         ],
         tools: isOwner ? tools : [], // only give tools if owner is speaking
-        max_tokens: 100,
-        temperature: 0.6
+        ...extraParams,
       });
 
-      console.log(`[RevivalAction] ✓ grok`);
+      console.log(`[RevivalAction] ✓ ${openaiClient ? 'openai' : 'grok'}`);
       const choice = response.choices[0];
       const result = { actions: [], chat: null };
 
@@ -812,9 +836,14 @@ ${history.map(h => h.content).join('\n')}`;
 
   async generateRevivalStatus(rBot, actionResult) {
     const profile = rBot.profile || {};
+    const revivalClient = openaiClient || grokClient;
+    const revivalModel = openaiClient ? REVIVAL_MODEL : GROK_MODEL;
     try {
-      const response = await grokClient.chat.completions.create({
-        model: GROK_MODEL,
+      const extraParams = openaiClient
+        ? { max_completion_tokens: 1024 }
+        : { max_tokens: 30, temperature: 0.7 };
+      const response = await revivalClient.chat.completions.create({
+        model: revivalModel,
         messages: [
           {
             role: 'system',
@@ -823,8 +852,7 @@ Report this action result in 1-5 words, in character. Be natural and casual. No 
           },
           { role: 'user', content: actionResult }
         ],
-        max_tokens: 30,
-        temperature: 0.7
+        ...extraParams,
       });
       let reply = response.choices[0].message.content.trim();
       reply = reply.replace(/^["']|["']$/g, '');
@@ -944,11 +972,12 @@ RULES:
 - ${rBot.owner} is your owner who revived you. Follow their instructions. Others can chat but can't command you.
 - CRITICAL: When your owner gives a command (follow, mine, attack, come, stop, etc.), you MUST call the matching tool. NEVER just say "ok" without calling the tool — that does nothing. Chat alone does NOT execute actions.
 - Keep chat SHORT (1-5 words), casual, in-character. Match your personality.
-- On idle ticks with no messages: do nothing. Don't call any tools and don't chat. Just return empty.
+- On idle ticks with NO messages AND no objectives: do nothing. Just return empty.
+- AUTONOMOUS EXECUTION: When you have objectives or your RECENT ACTIONS show a multi-step task in progress, KEEP WORKING. Do the next step immediately — do NOT stop to ask "what now" or wait for confirmation. For example, if told to "craft a wooden pickaxe", set an objective, then chain: craft planks → craft sticks → craft pickaxe → complete objective, all without waiting for further instructions.
 - IMPORTANT: If you are already doing something (currentState is not "idle"), do NOT re-issue that action. For example if currentState is "following", do NOT call follow again. Only call tools when you need to CHANGE what you're doing.
 - IMPORTANT: If an action just FAILED (check RECENT ACTIONS), do NOT retry the same action. Tell your owner it failed and why, or try a different approach.
 - When a player talks to you: respond naturally. Take action if your owner instructs you.
-- Use objective(set) to remember tasks. Use objective(complete) when done.
+- Use objective(set) to track multi-step goals. Use objective(complete) when the ENTIRE goal is done. While an objective is active, keep working toward it each tick.
 - To get items: chest(check) first, then chest(take), then equip. Chain these steps.
 - To store items: use chest(deposit) (NOT drop — that drops on the ground). Omit item to deposit everything.
 - come_here just walks to your owner. Do NOT use it as a catch-all — only use it when specifically asked to come.
@@ -959,7 +988,7 @@ RULES:
 - Use place to put blocks like torches, crafting tables, etc. Direction defaults to forward.
 - Use remember when your owner tells you to remember something important for later.
 - NEVER say coordinates in public chat. Use whisper to DM your owner.
-- No emojis. No roleplay asterisks. No slash commands. English only.
+- No emojis. No roleplay asterisks. No slash commands. Respond in whatever language fits your personality and the conversation.
 - You're not fully alive — you're an echo of your former self. Keep this subtle, don't overplay it.`;
 
     const tools = [
@@ -995,22 +1024,27 @@ RULES:
         { role: 'user', content: 'Tick. Decide what to do.' }
       ];
 
-      const response = await grokClient.chat.completions.create({
-        model: GROK_MODEL,
+      const revivalClient = openaiClient || grokClient;
+      const revivalModel = openaiClient ? REVIVAL_MODEL : GROK_MODEL;
+      const extraParams = openaiClient
+        ? { max_completion_tokens: 4096 }
+        : { max_tokens: 250, temperature: 0.6 };
+      const response = await revivalClient.chat.completions.create({
+        model: revivalModel,
         messages,
         tools,
-        max_tokens: 250,
-        temperature: 0.6
+        ...extraParams,
       });
 
       const choice = response.choices[0];
       const hasTools = !!choice.message.tool_calls?.length;
       const hasContent = !!choice.message.content?.trim();
       const msgCount = pendingMessages.length;
+      const llmTag = openaiClient ? 'openai' : 'grok';
       if (msgCount > 0 && !hasTools && !hasContent) {
-        console.log(`[RevivalTick] ⚠ grok (${rBot.username}) — ${msgCount} messages but LLM returned empty. finish_reason=${choice.finish_reason}`);
+        console.log(`[RevivalTick] ⚠ ${llmTag} (${rBot.username}) — ${msgCount} messages but LLM returned empty. finish_reason=${choice.finish_reason}`);
       } else {
-        console.log(`[RevivalTick] ✓ grok (${rBot.username})${msgCount > 0 ? ` (${msgCount} msgs)` : ''}`);
+        console.log(`[RevivalTick] ✓ ${llmTag} (${rBot.username})${msgCount > 0 ? ` (${msgCount} msgs)` : ''}`);
       }
       const result = { actions: [], chat: null, senders, rawThinking: null };
 

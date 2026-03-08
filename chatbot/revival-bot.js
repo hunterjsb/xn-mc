@@ -248,8 +248,8 @@ export class RevivalBot {
   _survivalEat() {
     if (this.bot.food >= 14) return;
     if (Date.now() - this._lastEatTime < 10000) return; // 10s cooldown
-    // Don't interrupt active combat
-    if (this.state === 'attacking') return;
+    // Don't interrupt active combat or crafting (window click conflicts)
+    if (this.state === 'attacking' || this.state === 'crafting' || this.state === 'smelting') return;
 
     const food = this.bot.inventory.items().find(i => FOOD_ITEMS.has(i.name));
     if (!food) return;
@@ -712,9 +712,19 @@ export class RevivalBot {
     let mined = 0;
     let failReason = null;
 
+    // Auto-equip best tool for the block type
+    const bestTool = this.bot.pathfinder?.bestHarvestTool(this.bot.blockAt(this.bot.entity.position.offset(0, -1, 0)) || blockType)
+      || this.bot.inventory.items().find(i => PICKAXE_TIERS.includes(i.name));
+    if (bestTool) try { await this.bot.equip(bestTool, 'hand'); } catch {}
+
+    const skippedPositions = new Set();
     while (mined < count && this.state === 'mining' && this.connected && !this.despawned) {
-      // Find the nearest matching block
-      const block = this.bot.findBlock({ matching: blockType.id, maxDistance: 64 });
+      // Find the nearest matching block, excluding already-skipped ones
+      const block = this.bot.findBlock({
+        matching: blockType.id,
+        maxDistance: 64,
+        useExtraInfo: (b) => !skippedPositions.has(b.position.toString()),
+      });
       if (!block) {
         // Try strip-mining if this is an underground block
         const ugInfo = UNDERGROUND_BLOCKS[blockName];
@@ -736,9 +746,20 @@ export class RevivalBot {
         break;
       }
       try {
-        // Race collect against a 30s timeout and state-change abort
+        // Disable canDig for underground blocks so pathfinder won't mine through stone
+        const prevCanDig = this._movements.canDig;
+        if (UNDERGROUND_BLOCKS[blockName]) {
+          this._movements.canDig = false;
+          this.bot.pathfinder.setMovements(this._movements);
+        }
+
+        // Race collect against a 15s timeout and state-change abort
+        const restoreMovements = () => {
+          this._movements.canDig = prevCanDig;
+          this.bot.pathfinder.setMovements(this._movements);
+        };
         await Promise.race([
-          this.bot.collectBlock.collect(block, { ignoreNoPath: true }),
+          this.bot.collectBlock.collect(block).finally(restoreMovements),
           new Promise((_, reject) => {
             const check = setInterval(() => {
               if (this.state !== 'mining') {
@@ -747,11 +768,17 @@ export class RevivalBot {
                 reject(new Error('interrupted'));
               }
             }, 250);
-            setTimeout(() => { clearInterval(check); reject(new Error('collect timeout')); }, 30000);
+            setTimeout(() => { clearInterval(check); reject(new Error('collect timeout')); }, 15000);
           })
         ]);
         mined++;
       } catch (err) {
+        // If pathfinding failed, skip this block and try the next one
+        if (err.message === 'collect timeout' || err.message.includes('NoPath')) {
+          console.log(`[Mine] ${this.username}: skipping unreachable ${blockName} at ${block.position}`);
+          skippedPositions.add(block.position.toString());
+          continue;
+        }
         failReason = err.message;
         break;
       }
@@ -1262,84 +1289,111 @@ export class RevivalBot {
 
   async _cmdCraft(itemName, count = 1) {
     this.log('action', `Crafting ${count}x ${itemName}`);
+    const prevState = this.state;
+    this.state = 'crafting';
 
     const item = this._mcData?.itemsByName[itemName];
     if (!item) {
       this.log('action_failed', `Unknown item: ${itemName}`);
-      return;
-    }
-
-    const recipes = this.bot.recipesFor(item.id, null, 1, null);
-    // Try with crafting table if no 2x2 recipe
-    let craftingTable = null;
-    if (recipes.length === 0) {
-      const tableBlock = this.bot.findBlock({
-        matching: this._mcData.blocksByName.crafting_table?.id,
-        maxDistance: 32,
-      });
-      if (tableBlock) {
-        const dist = this.bot.entity.position.distanceTo(tableBlock.position);
-        if (dist > 4) {
-          this.bot.pathfinder.setGoal(new goals.GoalNear(tableBlock.position.x, tableBlock.position.y, tableBlock.position.z, 3));
-          await new Promise(resolve => {
-            const timeout = setTimeout(() => resolve(), 10000);
-            this.bot.once('goal_reached', () => { clearTimeout(timeout); resolve(); });
-          });
-        }
-        craftingTable = tableBlock;
-      }
-    }
-
-    const allRecipes = this.bot.recipesFor(item.id, null, count, craftingTable);
-    if (allRecipes.length === 0) {
-      this.log('action_failed', `No recipe for ${itemName} (missing materials or crafting table)`);
+      this.state = prevState;
       return;
     }
 
     try {
-      await this.bot.craft(allRecipes[0], count, craftingTable);
-      this.log('action_success', `Crafted ${count}x ${itemName}`);
-    } catch (err) {
-      this.log('action_failed', `Craft ${itemName}: ${err.message}`);
+      // Stop pathfinding during craft to avoid window click conflicts
+      this.bot.pathfinder.setGoal(null);
+
+      // Debug: log inventory and recipe state
+      const invItems = this.bot.inventory.items().map(i => `${i.name}x${i.count}`).join(', ');
+      console.log(`[Craft Debug] ${this.username}: crafting ${count}x ${itemName} (id=${item.id})`);
+      console.log(`[Craft Debug] ${this.username}: inventory=[${invItems}]`);
+
+      const recipes = this.bot.recipesFor(item.id, null, 1, null);
+      console.log(`[Craft Debug] ${this.username}: 2x2 recipes=${recipes.length}`);
+      // Try with crafting table if no 2x2 recipe
+      let craftingTable = null;
+      if (recipes.length === 0) {
+        const tableBlock = this.bot.findBlock({
+          matching: this._mcData.blocksByName.crafting_table?.id,
+          maxDistance: 32,
+        });
+        if (tableBlock) {
+          const dist = this.bot.entity.position.distanceTo(tableBlock.position);
+          if (dist > 4) {
+            this.bot.pathfinder.setGoal(new goals.GoalNear(tableBlock.position.x, tableBlock.position.y, tableBlock.position.z, 3));
+            await new Promise(resolve => {
+              const timeout = setTimeout(() => resolve(), 10000);
+              this.bot.once('goal_reached', () => { clearTimeout(timeout); resolve(); });
+            });
+          }
+          craftingTable = tableBlock;
+        }
+      }
+
+      let crafted = 0;
+      for (let i = 0; i < count; i++) {
+        const recipes = this.bot.recipesFor(item.id, null, 1, craftingTable);
+        if (recipes.length === 0) break;
+        try {
+          await this.bot.craft(recipes[0], 1, craftingTable);
+          crafted++;
+        } catch (err) {
+          console.log(`[Craft Debug] ${this.username}: craft error: ${err.message}`);
+          if (crafted === 0) {
+            this.log('action_failed', `Craft ${itemName}: ${err.message}`);
+            return;
+          }
+          break; // partial success
+        }
+      }
+      if (crafted === 0) {
+        this.log('action_failed', `No recipe for ${itemName} (missing materials or crafting table)`);
+      } else {
+        this.log('action_success', `Crafted ${crafted}x ${itemName}`);
+      }
+    } finally {
+      this.state = prevState;
     }
   }
 
   async _cmdSmelt(itemName, fuelName = 'coal', count = 1) {
     this.log('action', `Smelting ${count}x ${itemName} with ${fuelName}`);
-
-    // Find a furnace nearby
-    const furnaceIds = ['furnace', 'blast_furnace', 'smoker']
-      .map(n => this._mcData?.blocksByName[n]?.id).filter(Boolean);
-    const furnaceBlock = this.bot.findBlock({ matching: furnaceIds, maxDistance: 32 });
-    if (!furnaceBlock) {
-      this.log('action_failed', 'No furnace found nearby');
-      return;
-    }
-
-    // Walk to furnace if needed
-    const dist = this.bot.entity.position.distanceTo(furnaceBlock.position);
-    if (dist > 4) {
-      const { x, y, z } = furnaceBlock.position;
-      this.bot.pathfinder.setGoal(new goals.GoalNear(x, y, z, 3));
-      await new Promise(resolve => {
-        const timeout = setTimeout(() => resolve(), 15000);
-        this.bot.once('goal_reached', () => { clearTimeout(timeout); resolve(); });
-      });
-    }
-
-    // Check we have the input item and fuel
-    const inputItem = this.bot.inventory.items().find(i => i.name.includes(itemName));
-    if (!inputItem) {
-      this.log('action_failed', `No ${itemName} in inventory`);
-      return;
-    }
-    const fuelItem = this.bot.inventory.items().find(i => i.name.includes(fuelName));
-    if (!fuelItem) {
-      this.log('action_failed', `No ${fuelName} (fuel) in inventory`);
-      return;
-    }
+    const prevState = this.state;
+    this.state = 'smelting';
 
     try {
+      // Find a furnace nearby
+      const furnaceIds = ['furnace', 'blast_furnace', 'smoker']
+        .map(n => this._mcData?.blocksByName[n]?.id).filter(Boolean);
+      const furnaceBlock = this.bot.findBlock({ matching: furnaceIds, maxDistance: 32 });
+      if (!furnaceBlock) {
+        this.log('action_failed', 'No furnace found nearby');
+        return;
+      }
+
+      // Walk to furnace if needed
+      const dist = this.bot.entity.position.distanceTo(furnaceBlock.position);
+      if (dist > 4) {
+        const { x, y, z } = furnaceBlock.position;
+        this.bot.pathfinder.setGoal(new goals.GoalNear(x, y, z, 3));
+        await new Promise(resolve => {
+          const timeout = setTimeout(() => resolve(), 15000);
+          this.bot.once('goal_reached', () => { clearTimeout(timeout); resolve(); });
+        });
+      }
+
+      // Check we have the input item and fuel
+      const inputItem = this.bot.inventory.items().find(i => i.name.includes(itemName));
+      if (!inputItem) {
+        this.log('action_failed', `No ${itemName} in inventory`);
+        return;
+      }
+      const fuelItem = this.bot.inventory.items().find(i => i.name.includes(fuelName));
+      if (!fuelItem) {
+        this.log('action_failed', `No ${fuelName} (fuel) in inventory`);
+        return;
+      }
+
       const furnace = await this.bot.openFurnace(furnaceBlock);
       const smeltCount = Math.min(count, inputItem.count);
 
@@ -1356,7 +1410,7 @@ export class RevivalBot {
       while (Date.now() - start < maxWait) {
         await new Promise(r => setTimeout(r, 2000));
         if (!furnace.inputItem()) break; // all smelted
-        if (this.state !== 'idle' && this.state !== 'mining') break; // interrupted
+        if (this.state !== 'smelting') break; // interrupted
       }
 
       // Take output
@@ -1371,10 +1425,12 @@ export class RevivalBot {
       furnace.close();
     } catch (err) {
       this.log('action_failed', `Smelt: ${err.message}`);
+    } finally {
+      this.state = prevState;
     }
   }
 
-  _cmdEquip(itemName) {
+  async _cmdEquip(itemName) {
     const item = this.bot.inventory.items().find(i =>
       i.name.toLowerCase().includes(itemName.toLowerCase())
     );
@@ -1392,11 +1448,12 @@ export class RevivalBot {
     else if (item.name.includes('shield')) dest = 'off-hand';
 
     this.log('action', `Equipping ${item.name} to ${dest}`);
-    this.bot.equip(item, dest).then(() => {
+    try {
+      await this.bot.equip(item, dest);
       this.log('action_success', `Equipped ${item.name}`);
-    }).catch(err => {
+    } catch (err) {
       this.log('action_failed', `Equip ${item.name}: ${err.message}`);
-    });
+    }
   }
 
   async _cmdEat() {
@@ -1456,7 +1513,6 @@ export class RevivalBot {
   }
 
   async _cmdPlace(blockName, direction = 'forward') {
-    // Find block in inventory by fuzzy match
     const item = this.bot.inventory.items().find(i => i.name.includes(blockName));
     if (!item) {
       this.log('action_failed', `No ${blockName} in inventory`);
@@ -1471,43 +1527,47 @@ export class RevivalBot {
     }
 
     const pos = this.bot.entity.position.floored();
-    let refBlock, faceVector;
+    const Vec3 = this.bot.entity.position.constructor;
 
-    if (direction === 'below') {
-      refBlock = this.bot.blockAt(pos.offset(0, -1, 0));
-      faceVector = { x: 0, y: 1, z: 0 };
-    } else if (direction === 'above') {
-      refBlock = this.bot.blockAt(pos.offset(0, 2, 0));
-      faceVector = { x: 0, y: -1, z: 0 };
-    } else {
-      // forward — use bot yaw to get cardinal direction
+    // Build candidate list: try requested direction first, then fallbacks
+    const candidates = [];
+    const belowRef = this.bot.blockAt(pos.offset(0, -1, 0));
+    const fwd = () => {
       const yaw = this.bot.entity.yaw;
       const dx = -Math.sin(yaw);
       const dz = -Math.cos(yaw);
-      const cardinal = Math.abs(dx) > Math.abs(dz)
-        ? { x: Math.sign(dx), y: 0, z: 0 }
-        : { x: 0, y: 0, z: Math.sign(dz) };
-      const targetPos = pos.offset(cardinal.x, 0, cardinal.z);
-      refBlock = this.bot.blockAt(targetPos);
-      // If target is air, place on top of block below target
-      if (refBlock && refBlock.name === 'air') {
-        refBlock = this.bot.blockAt(targetPos.offset(0, -1, 0));
-        faceVector = { x: 0, y: 1, z: 0 };
-      } else {
-        faceVector = { x: -cardinal.x, y: 0, z: -cardinal.z };
+      const c = Math.abs(dx) > Math.abs(dz)
+        ? { x: Math.sign(dx), z: 0 } : { x: 0, z: Math.sign(dz) };
+      for (const dist of [2, 1]) {
+        const tp = pos.offset(c.x * dist, 0, c.z * dist);
+        const tb = this.bot.blockAt(tp);
+        if (tb && tb.name === 'air') {
+          const bl = this.bot.blockAt(tp.offset(0, -1, 0));
+          if (bl && bl.name !== 'air') return { ref: bl, face: new Vec3(0, 1, 0) };
+        }
+      }
+      return null;
+    };
+
+    if (direction === 'below' && belowRef && belowRef.name !== 'air') {
+      candidates.push({ ref: belowRef, face: new Vec3(0, 1, 0) });
+    }
+    const fwdResult = fwd();
+    if (fwdResult) candidates.push(fwdResult);
+    // Always add below as fallback
+    if (belowRef && belowRef.name !== 'air' && direction !== 'below') {
+      candidates.push({ ref: belowRef, face: new Vec3(0, 1, 0) });
+    }
+
+    for (const { ref, face } of candidates) {
+      try {
+        await this.bot.placeBlock(ref, face);
+        this.log('action_success', `Placed ${item.name}`);
+        return;
+      } catch (err) {
+        console.log(`[Place] ${this.username}: failed against ${ref.name}@${ref.position}: ${err.message}`);
       }
     }
-
-    if (!refBlock || refBlock.name === 'air') {
-      this.log('action_failed', 'No solid block to place against');
-      return;
-    }
-
-    try {
-      await this.bot.placeBlock(refBlock, faceVector);
-      this.log('action_success', `Placed ${item.name}`);
-    } catch (err) {
-      this.log('action_failed', `Place ${item.name}: ${err.message}`);
-    }
+    this.log('action_failed', `Place ${item.name}: no valid placement found`)
   }
 }

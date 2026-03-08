@@ -76,22 +76,28 @@ function extractPlayerChats(playerName) {
 // ── Call LLM to distill player profile ───────────────────────────────
 
 async function distillPlayer(playerName, chats) {
-  const client = new OpenAI({
-    apiKey: process.env.XAI_API_KEY,
-    baseURL: 'https://api.x.ai/v1'
-  });
+  // Try xAI first, fall back to OpenAI
+  let client, model, extraParams;
+  if (process.env.OPENAI_API_KEY) {
+    client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    model = 'gpt-5-mini';
+    extraParams = { max_completion_tokens: 1024 };
+  } else {
+    client = new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: 'https://api.x.ai/v1' });
+    model = 'grok-4-1-fast-non-reasoning';
+    extraParams = { max_tokens: 400, temperature: 0.4 };
+  }
 
   const chatBlock = chats.map(c => `<${c.username}> ${c.message}`).join('\n');
   const prompt = distillPrompt.replace('{{playerName}}', playerName);
 
   const response = await client.chat.completions.create({
-    model: 'grok-4-1-fast-non-reasoning',
+    model,
     messages: [
       { role: 'system', content: prompt },
       { role: 'user', content: `Here are ${chats.length} chat messages from ${playerName}:\n\n${chatBlock}` }
     ],
-    max_tokens: 400,
-    temperature: 0.4
+    ...extraParams,
   });
 
   const raw = response.choices[0].message.content.trim();

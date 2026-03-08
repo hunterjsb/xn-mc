@@ -1,11 +1,9 @@
 import './env.js';
-import { createServer } from 'http';
 import { readFileSync, writeFileSync, existsSync, watch } from 'fs';
 import { ChatBot } from './bot.js';
-import { RevivalBot } from './revival-bot.js';
-import { getPlayerProfile } from './distill-player.js';
-import { ConversationManager, reloadPrompts, discordRevivalEmbed } from './conversation.js';
+import { ConversationManager, reloadPrompts } from './conversation.js';
 import { findMentionedBot, findMentionedBots } from './mention.js';
+import { parseChatFromSystem, resolveUsername } from './shared.js';
 
 const personalities = JSON.parse(readFileSync('./personalities.json', 'utf-8'));
 const skinAssignments = existsSync('./skin-assignments.json')
@@ -43,39 +41,10 @@ function trackPlayer(username) {
   return true; // new player
 }
 
+const REVIVAL_NAMES_FILE = './revival-names.json';
+
 const bots = [];
 const botsByName = new Map();
-const revivalBots = new Map(); // deadPlayer → RevivalBot
-const MAX_REVIVAL_BOTS = 5;
-const REVIVAL_STATE_FILE = './revival-state.json';
-
-function saveRevivalState() {
-  const state = [];
-  for (const [name, rBot] of revivalBots) {
-    if (rBot.despawned) continue;
-    state.push({
-      deadPlayer: rBot.username,
-      reviver: rBot.owner,
-      pos: rBot._suspendPos || rBot.spawnPos,
-      profile: rBot.profile,
-      objectives: rBot.objectives,
-      actionLog: rBot.actionLog.slice(-5),
-      createdAt: rBot.revivalInfo?.time || Date.now(),
-      suspended: rBot.suspended || false,
-    });
-  }
-  try { writeFileSync(REVIVAL_STATE_FILE, JSON.stringify(state, null, 2)); } catch {}
-}
-
-function loadRevivalState() {
-  try {
-    if (!existsSync(REVIVAL_STATE_FILE)) return [];
-    const data = JSON.parse(readFileSync(REVIVAL_STATE_FILE, 'utf-8'));
-    // Filter out expired ones (older than 2 hours)
-    const twoHours = 2 * 60 * 60 * 1000;
-    return data.filter(s => Date.now() - s.createdAt < twoHours);
-  } catch { return []; }
-}
 const botConfig = {
   host: process.env.MC_HOST || 'localhost',
   port: parseInt(process.env.MC_PORT) || 25565
@@ -119,8 +88,17 @@ for (let i = 0; i < BOT_COUNT; i++) {
 
 const botNames = bots.map(b => b.username);
 
+function getRevivalBotNames() {
+  try {
+    if (existsSync(REVIVAL_NAMES_FILE)) {
+      return JSON.parse(readFileSync(REVIVAL_NAMES_FILE, 'utf-8'));
+    }
+  } catch {}
+  return [];
+}
+
 function getAllBotNames() {
-  return [...botNames, ...revivalBots.keys()];
+  return [...botNames, ...getRevivalBotNames()];
 }
 
 function getRealPlayerCount() {
@@ -263,25 +241,6 @@ function setupJoinLeaveListeners() {
       leader.bot.on('playerJoined', (player) => {
         if (!player.username || botNames.includes(player.username)) return;
 
-        // Resume suspended revival bots when their owner returns
-        for (const [deadName, rBot] of revivalBots) {
-          if (rBot.suspended && rBot.owner === player.username) {
-            console.log(`[Revival] Owner ${player.username} returned — resuming ${deadName}`);
-            rBot.resume();
-            // Teleport to saved position after reconnect
-            const waitForConnect = setInterval(() => {
-              if (rBot.connected) {
-                clearInterval(waitForConnect);
-                const pos = rBot._suspendPos || rBot.spawnPos;
-                rcon(`tp ${deadName} ${pos.x} ${pos.y} ${pos.z}`).then(resp => {
-                  console.log(`[Revival] Resumed & teleported ${deadName}: ${resp}`);
-                }).catch(() => {});
-              }
-            }, 500);
-            setTimeout(() => clearInterval(waitForConnect), 30000);
-          }
-        }
-
         // Skip welcome if this is a quick reconnect (left within 10s)
         const lastLeave = playerLeaveTimestamps.get(player.username);
         if (lastLeave && Date.now() - lastLeave < RECONNECT_GRACE_PERIOD) {
@@ -330,495 +289,6 @@ function setupDeathListener() {
   }, 1000);
 }
 
-// ── Global chat listener ────────────────────────────────────────────
-
-// Parse "username » message" from system_chat text (LPC format via FreedomChat)
-function parseChatFromSystem(text) {
-  // LPC format: "nickname » message" — the » (or >) separates name from message
-  const match = text.match(/^(.+?)\s+[»>]\s+(.+)$/);
-  if (!match) return null;
-  return { nickname: match[1].trim(), message: match[2].trim() };
-}
-
-// Resolve a nickname/display name back to the real username
-function resolveUsername(leader, nickname) {
-  if (!leader.bot?.players) return null;
-  const lower = nickname.toLowerCase();
-  const players = Object.keys(leader.bot.players);
-  // Direct match on username
-  for (const name of players) {
-    if (name === nickname) return name;
-  }
-  // Case-insensitive exact match
-  for (const name of players) {
-    if (lower === name.toLowerCase()) return name;
-  }
-  // Nickname contains username (e.g. "☭ samboyd" contains "samboyd")
-  for (const name of players) {
-    if (lower.includes(name.toLowerCase())) return name;
-  }
-  // Username contains nickname (reverse check)
-  for (const name of players) {
-    if (name.toLowerCase().includes(lower)) return name;
-  }
-  // Fuzzy: same sorted letters (handles swaps like Lkgye → Lkyge)
-  const sortedNick = lower.split('').sort().join('');
-  for (const name of players) {
-    const sortedName = name.toLowerCase().split('').sort().join('');
-    if (sortedNick === sortedName) return name;
-  }
-  return null;
-}
-
-// ── RCON helper ──────────────────────────────────────────────────────
-
-import net from 'net';
-
-function rcon(command) {
-  return new Promise((resolve, reject) => {
-    const host = '127.0.0.1';
-    const port = 25575;
-    const password = process.env.RCON_PW || 'minecraft';
-    const s = new net.Socket();
-    s.connect(port, host, () => {
-      // Login packet
-      const loginPayload = Buffer.alloc(password.length + 2);
-      loginPayload.write(password);
-      const loginPkt = Buffer.alloc(12 + password.length + 2);
-      loginPkt.writeInt32LE(10 + password.length, 0);
-      loginPkt.writeInt32LE(0, 4);
-      loginPkt.writeInt32LE(3, 8);
-      loginPayload.copy(loginPkt, 12);
-      s.write(loginPkt);
-    });
-    let step = 0;
-    s.on('data', (data) => {
-      if (step === 0) {
-        // Login response, now send command
-        step = 1;
-        const cmdBuf = Buffer.alloc(command.length + 2);
-        cmdBuf.write(command);
-        const cmdPkt = Buffer.alloc(12 + command.length + 2);
-        cmdPkt.writeInt32LE(10 + command.length, 0);
-        cmdPkt.writeInt32LE(1, 4);
-        cmdPkt.writeInt32LE(2, 8);
-        cmdBuf.copy(cmdPkt, 12);
-        s.write(cmdPkt);
-      } else {
-        const resp = data.slice(12).toString('utf-8').replace(/\0/g, '');
-        s.destroy();
-        resolve(resp);
-      }
-    });
-    s.on('error', reject);
-    setTimeout(() => { s.destroy(); reject(new Error('RCON timeout')); }, 5000);
-  });
-}
-
-// ── Revival handling ─────────────────────────────────────────────────
-
-function wireRevivalBot(rBot) {
-  rBot._onDespawn = (username, reason) => {
-    console.log(`[Revival] Cleaning up ${username} (${reason})`);
-    revivalBots.delete(username);
-    saveRevivalState();
-    // Remove GrimAC exemption so the real player isn't exempt if they rejoin
-    rcon(`lp user ${username} permission unset grim.exempt`).catch(() => {});
-    const regular = botsByName.get(username);
-    if (regular) {
-      console.log(`[Revival] Unparking regular chatbot ${username}`);
-      regular.unpark();
-    }
-  };
-
-  rBot._onSuspend = (username) => {
-    saveRevivalState();
-  };
-
-  // Agent loop tick — called every 10-20s by revival-bot.js
-  // Supports multi-step chaining: execute actions, then re-tick to let LLM see results
-  rBot._onTick = async (bot) => {
-    const MAX_STEPS = 3;
-    let allSenders = [];
-    let lastChat = null; // only send chat from the final step
-
-    for (let step = 0; step < MAX_STEPS; step++) {
-      if (!bot.connected || bot.despawned) break;
-
-      const result = await cm.revivalTick(bot);
-      if (step === 0) allSenders = result.senders;
-
-      // Debug mode: emit thinking + tool calls as in-game chat
-      if (bot.debugChat && bot.connected && !bot.despawned) {
-        const dbgMessages = [];
-        if (result.rawThinking) {
-          const think = result.rawThinking.replace(/\n/g, ' ').slice(0, 200);
-          dbgMessages.push(`[think] ${think}`);
-        }
-        for (const action of result.actions) {
-          const args = Object.keys(action.params).length > 0
-            ? `(${JSON.stringify(action.params)})` : '()';
-          dbgMessages.push(`[tool] ${action.name}${args}`.slice(0, 256));
-        }
-        if (dbgMessages.length === 0) {
-          dbgMessages.push('[think] (idle — no action)');
-        }
-        for (const msg of dbgMessages) {
-          console.log(`[DBG] ${bot.username}: ${msg}`);
-          try { bot.bot.chat(msg); } catch (e) { console.log(`[DBG] chat error: ${e.message}`); }
-          await new Promise(r => setTimeout(r, 350));
-        }
-      }
-
-      const logBefore = bot.actionLog.length;
-      for (const action of result.actions) {
-        await executeRevivalAction(bot, action.name, action.params);
-      }
-
-      // Debug mode: emit action results
-      if (bot.debugChat && bot.connected && !bot.despawned) {
-        const newEntries = bot.actionLog.slice(logBefore);
-        for (const entry of newEntries) {
-          const prefix = entry.type.includes('fail') ? '[FAIL]'
-            : entry.type.includes('success') ? '[OK]'
-            : entry.type.includes('partial') ? '[PARTIAL]'
-            : `[${entry.type}]`;
-          const dbgMsg = `${prefix} ${entry.detail}`.slice(0, 256);
-          console.log(`[DBG Chat] ${bot.username}: ${dbgMsg}`);
-          bot.bot.chat(dbgMsg);
-          await new Promise(r => setTimeout(r, 300));
-        }
-      }
-
-      // Keep the latest chat — will only be sent after the loop ends
-      if (result.chat) lastChat = result.chat;
-
-      // Chain if actions produced new log entries (results the LLM should see)
-      const newLogs = bot.actionLog.length - logBefore;
-      if (result.actions.length === 0 || newLogs === 0) break;
-      // Skip further chaining if owner sent a message mid-tick (handle it on next tick instead)
-      if (bot._abortIdleTick) {
-        console.log(`[Revival Tick] ${bot.username} breaking chain — owner message pending`);
-        break;
-      }
-      console.log(`[Revival Tick] ${bot.username} chaining step ${step + 1}/${MAX_STEPS} (${newLogs} new log entries)`);
-    }
-
-    // Send chat AFTER all chaining is done (so it reflects actual results)
-    if (lastChat && bot.connected && !bot.despawned) {
-      const delay = 500 + Math.random() * 1500;
-      console.log(`[Revival Chat] ${bot.username} (${Math.round(delay / 1000)}s): ${lastChat}`);
-      await new Promise(r => setTimeout(r, delay));
-      if (bot.connected && !bot.despawned) {
-        bot.chat(lastChat);
-        for (const sender of allSenders) {
-          cm.trackConversation(sender, bot.username);
-        }
-        // Fire-and-forget memory evaluation (mirrors regular bot behavior)
-        const recentMsgs = bot.actionLog.slice(-5).map(e => `[${e.type}] ${e.detail}`).join('\n');
-        const snippet = `${recentMsgs}\n<${bot.username}> ${lastChat}`;
-        cm.evaluateMemory(bot.username, snippet);
-      }
-    }
-  };
-}
-
-async function handleRevival(reviver, deadPlayer, pos) {
-  console.log(`[Revival] Handling revival: ${reviver} revived ${deadPlayer} at ${pos.x},${pos.y},${pos.z}`);
-
-  if (revivalBots.has(deadPlayer)) {
-    console.log(`[Revival] ${deadPlayer} already has an active revival bot`);
-    return;
-  }
-  if (revivalBots.size >= MAX_REVIVAL_BOTS) {
-    console.log(`[Revival] Max revival bots (${MAX_REVIVAL_BOTS}) reached`);
-    return;
-  }
-
-  const existingBot = botsByName.get(deadPlayer);
-  if (existingBot) {
-    console.log(`[Revival] Parking regular chatbot ${deadPlayer} for revival`);
-    existingBot.park(0);
-    migrateGlobalChatListener();
-  }
-
-  let profile;
-  try {
-    profile = await getPlayerProfile(deadPlayer);
-    console.log(`[Revival] Profile for ${deadPlayer}: ${profile.personality?.slice(0, 80)}...`);
-  } catch (err) {
-    console.error(`[Revival] Profile generation failed: ${err.message}`);
-    profile = {
-      personality: 'A confused player who just woke up from the dead.',
-      chatStyle: 'Short lowercase messages, dazed tone.',
-      samplePhrases: ['huh', 'where am i', 'what happened']
-    };
-  }
-
-  const rBot = new RevivalBot({
-    deadPlayer,
-    reviver,
-    pos,
-    profile,
-    conversationManager: cm,
-    config: botConfig
-  });
-
-  wireRevivalBot(rBot);
-  revivalBots.set(deadPlayer, rBot);
-  saveRevivalState();
-  rBot.connect();
-
-  // After connecting: teleport to ritual location, queue greeting for agent loop
-  const waitForConnect = setInterval(() => {
-    if (rBot.connected) {
-      clearInterval(waitForConnect);
-      const { x, y, z } = pos;
-      rcon(`tp ${deadPlayer} ${x} ${y} ${z}`).then(resp => {
-        console.log(`[Revival] Teleported ${deadPlayer} to ${x},${y},${z}: ${resp}`);
-        discordRevivalEmbed(deadPlayer, reviver);
-      }).catch(err => {
-        console.error(`[Revival] Teleport failed: ${err.message}`);
-      });
-      // Exempt revival bots from GrimAC
-      rcon(`lp user ${deadPlayer} permission set grim.exempt true`).catch(() => {});
-      // Start the agent loop so periodic ticks fire
-      rBot.startAgentLoop();
-
-      setTimeout(() => {
-        if (rBot.connected && !rBot.despawned) {
-          rBot.queueMessage('__system__', `You were just revived by ${reviver}. Greet them warmly but briefly, in your style.`);
-        }
-      }, 2000);
-    }
-    if (rBot.despawned) clearInterval(waitForConnect);
-  }, 1000);
-}
-
-// Restore revival bots from previous session
-async function restoreRevivals() {
-  const saved = loadRevivalState();
-  if (saved.length === 0) return;
-  console.log(`[Revival] Restoring ${saved.length} revival bot(s) from previous session`);
-
-  for (const s of saved) {
-    const existingBot = botsByName.get(s.deadPlayer);
-    if (existingBot) { existingBot.park(0); migrateGlobalChatListener(); }
-
-    const rBot = new RevivalBot({
-      deadPlayer: s.deadPlayer,
-      reviver: s.reviver,
-      pos: s.pos,
-      profile: s.profile,
-      conversationManager: cm,
-      config: botConfig
-    });
-
-    // Restore agent memory
-    if (s.objectives) rBot.objectives = s.objectives;
-    if (s.actionLog) rBot.actionLog = s.actionLog;
-    if (s.createdAt) rBot.revivalInfo.time = s.createdAt;
-
-    wireRevivalBot(rBot);
-    revivalBots.set(s.deadPlayer, rBot);
-
-    // If it was suspended, restore in suspended state (wait for owner to join)
-    if (s.suspended) {
-      rBot.suspended = true;
-      rBot._suspendPos = s.pos;
-      console.log(`[Revival] Restoring ${s.deadPlayer} as suspended (owner: ${s.reviver})`);
-      continue;
-    }
-
-    rBot.connect();
-
-    // Pardon + teleport after connect (in case server also restarted)
-    const waitForConnect = setInterval(() => {
-      if (rBot.connected) {
-        clearInterval(waitForConnect);
-        rcon(`pardon ${s.deadPlayer}`).catch(() => {});
-        rcon(`lp user ${s.deadPlayer} permission set grim.exempt true`).catch(() => {});
-        const { x, y, z } = s.pos;
-        rcon(`tp ${s.deadPlayer} ${x} ${y} ${z}`).then(resp => {
-          console.log(`[Revival] Restored & teleported ${s.deadPlayer}: ${resp}`);
-        }).catch(() => {});
-        rBot.startAgentLoop();
-        rBot.log('restored', `Reconnected after restart (owner: ${s.reviver})`);
-      }
-      if (rBot.despawned) clearInterval(waitForConnect);
-    }, 1000);
-
-    console.log(`[Revival] Restoring ${s.deadPlayer} (owner: ${s.reviver})`);
-  }
-}
-
-// ── Webhook server ───────────────────────────────────────────────────
-
-function setupWebhookServer() {
-  const port = parseInt(process.env.WEBHOOK_PORT) || 8765;
-  const secret = process.env.WEBHOOK_SECRET || '';
-
-  const server = createServer((req, res) => {
-    // GET /rblist — list active revival bots
-    if (req.method === 'GET' && req.url === '/rblist') {
-      const bots = [];
-      for (const [name, rBot] of revivalBots) {
-        bots.push({
-          name,
-          owner: rBot.owner,
-          state: rBot.state,
-          connected: rBot.connected,
-          objectives: rBot.objectives || [],
-          pending: rBot.pendingMessages.length,
-        });
-      }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ bots }, null, 2));
-      return;
-    }
-
-    // POST /rbsay — inject a message into a revival bot's queue
-    // { bot: "BotName", message: "follow me", as?: "OwnerName" }
-    if (req.method === 'POST' && req.url === '/rbsay') {
-      let body = '';
-      req.on('data', chunk => { body += chunk; });
-      req.on('end', () => {
-        try {
-          const data = JSON.parse(body);
-          const { bot: botName, message } = data;
-          if (!botName || !message) {
-            res.writeHead(400);
-            res.end(JSON.stringify({ error: 'Missing bot or message' }));
-            return;
-          }
-          // Find bot by case-insensitive match
-          let rBot;
-          for (const [name, rb] of revivalBots) {
-            if (name.toLowerCase() === botName.toLowerCase()) { rBot = rb; break; }
-          }
-          if (!rBot || !rBot.connected) {
-            res.writeHead(404);
-            res.end(JSON.stringify({ error: `No active revival bot "${botName}"`, available: [...revivalBots.keys()] }));
-            return;
-          }
-          const sender = data.as || rBot.owner;
-          rBot.queueMessage(sender, message);
-          cm.addMessage(sender, message);
-          console.log(`[Webhook] rbsay: ${sender} → ${rBot.username}: "${message}"`);
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ status: 'ok', bot: rBot.username, sender, message }));
-        } catch (err) {
-          res.writeHead(500);
-          res.end(JSON.stringify({ error: err.message }));
-        }
-      });
-      return;
-    }
-
-    if (req.method !== 'POST' || req.url !== '/revival') {
-      res.writeHead(404);
-      res.end('Not found');
-      return;
-    }
-
-    let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
-      try {
-        const data = JSON.parse(body);
-
-        // Verify secret
-        if (secret && data.secret !== secret) {
-          console.log('[Webhook] Invalid secret');
-          res.writeHead(403);
-          res.end('Forbidden');
-          return;
-        }
-
-        const { reviver, deadPlayer, x, y, z } = data;
-        if (!reviver || !deadPlayer) {
-          res.writeHead(400);
-          res.end('Missing fields');
-          return;
-        }
-        if (reviver === deadPlayer) {
-          console.log('[Webhook] Ignoring self-revival');
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ status: 'ignored', reason: 'self-revival' }));
-          return;
-        }
-
-        console.log(`[Webhook] Revival request: ${reviver} → ${deadPlayer} at ${x},${y},${z}`);
-        handleRevival(reviver, deadPlayer, { x, y, z });
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ status: 'ok' }));
-      } catch (err) {
-        console.error(`[Webhook] Error: ${err.message}`);
-        res.writeHead(500);
-        res.end('Server error');
-      }
-    });
-  });
-
-  server.listen(port, () => {
-    console.log(`[Webhook] Revival webhook listening on :${port}`);
-  });
-}
-
-// ── Revival action executor ─────────────────────────────────────────
-
-async function executeRevivalAction(rBot, actionName, params) {
-  console.log(`[Revival Action] ${rBot.username}: ${actionName}(${JSON.stringify(params)})`);
-  switch (actionName) {
-    case 'follow': rBot._cmdFollowPlayer(params.player || rBot.owner); break;
-    case 'come_here': rBot._cmdCome(); break;
-    case 'stop': rBot._cmdStop(); break;
-    case 'guard': rBot._cmdGuard(); break;
-    case 'mine': await rBot._cmdMine(params.block, params.count || 16); break;
-    case 'attack': await rBot._cmdAttack(params.mob, params.count || 1); break;
-    case 'drop':
-      if (params.item) rBot._cmdDrop(params.item, params.count);
-      else await rBot._cmdDropAll();
-      break;
-    case 'give': rBot._cmdGive(params.player, params.item, params.count); break;
-    case 'chest':
-      switch (params.action) {
-        case 'check': await rBot._cmdCheckChests(); break;
-        case 'take': await rBot._cmdTakeFromChest(params.item, params.count); break;
-        case 'deposit':
-          if (params.item) await rBot._cmdDepositInChest(params.item, params.count);
-          else await rBot._cmdDepositAll();
-          break;
-      }
-      break;
-    case 'craft': await rBot._cmdCraft(params.item, params.count || 1); break;
-    case 'equip': rBot._cmdEquip(params.item); break;
-    case 'smelt': await rBot._cmdSmelt(params.item, params.fuel || 'coal', params.count || 1); break;
-    case 'eat': await rBot._cmdEat(); break;
-    case 'sleep': await rBot._cmdSleep(); break;
-    case 'place': await rBot._cmdPlace(params.block, params.direction || 'forward'); break;
-    case 'whisper':
-      if (params.player && params.message) {
-        rBot.bot.chat(`/msg ${params.player} ${params.message}`);
-        rBot.log('whisper', `Whispered to ${params.player}: ${params.message}`);
-      }
-      break;
-    case 'dismiss': rBot._cmdDismiss(); break;
-    case 'remember':
-      if (params.text) cm.addMemory(rBot.username, params.text);
-      break;
-    case 'objective':
-      if (params.action === 'set') rBot.addObjective(params.text, params.priority || 'normal');
-      else if (params.action === 'complete') {
-        rBot.completeObjective(params.text);
-        cm.addMemory(rBot.username, `Completed objective: ${params.text}`);
-      }
-      else if (params.action === 'clear') rBot.clearObjectives();
-      break;
-    default: console.log(`[Revival Action] Unknown action: ${actionName}`);
-  }
-}
-
 // ── Player chat handler ─────────────────────────────────────────────
 
 async function handlePlayerChat(username, message) {
@@ -829,87 +299,6 @@ async function handlePlayerChat(username, message) {
   }
 
   if (botNames.includes(username)) return; // don't process bot messages here
-
-  // 0a. Debug toggle: "debug" or "debug <botname>" toggles debug chat for the owner's bot
-  const msgLower = message.toLowerCase();
-  if (msgLower === 'debug' || msgLower.startsWith('debug ')) {
-    // If "debug botname", find that specific bot; otherwise toggle all owned bots
-    const debugArg = msgLower.replace(/^debug\s*/, '').trim();
-    for (const [deadName, rBot] of revivalBots) {
-      if (rBot.owner !== username || !rBot.connected) continue;
-      if (debugArg) {
-        const nameClean = deadName.toLowerCase().replace(/[_\s]/g, '');
-        const argClean = debugArg.replace(/[_\s]/g, '');
-        if (!nameClean.includes(argClean) && !deadName.toLowerCase().includes(debugArg)) continue;
-      }
-      rBot.debugChat = !rBot.debugChat;
-      const status = rBot.debugChat ? 'ON' : 'OFF';
-      console.log(`[Debug] ${username} toggled debug for ${rBot.username}: ${status}`);
-      rBot.bot.chat(`[dbg] debug mode ${status}`);
-    }
-    return;
-  }
-
-  // 0. Revival bot interaction — queue message for agent tick
-  //    Fuzzy name matching: "pepperoni dude" matches "pepperoni_dude", "zold" matches "Zold_"
-  const ownedBots = [];
-  const mentionedBots = [];
-  for (const [deadName, rBot] of revivalBots) {
-    if (!rBot.connected) continue;
-    if (rBot.owner === username) ownedBots.push(rBot);
-    // Fuzzy match: check each word in the message against cleaned bot name variants
-    const nameClean = deadName.toLowerCase().replace(/[_\s]/g, '');
-    const nameLower = deadName.toLowerCase();
-    const msgWords = msgLower.split(/[\s,]+/);
-    const mentioned = msgWords.some(w => {
-      const wClean = w.replace(/[_\s]/g, '');
-      return wClean === nameClean || wClean === nameLower
-        || nameClean.startsWith(wClean) && wClean.length >= 3; // "brezzy" matches "brezzytracks"
-    }) || msgLower.includes(nameLower);
-    if (mentioned) mentionedBots.push(rBot);
-  }
-  // Routing rules:
-  // 1. Owner mentions a specific bot by name → route to that bot
-  // 2. Owner has only one bot → route to it
-  // 3. Owner has multiple bots but didn't mention one → route to all owned bots
-  // 4. Non-owner mentioning a bot by name → route to that bot
-  // Check if message mentions a regular chatbot — if so, skip revival routing for that message
-  const mentionsRegularBot = findMentionedBots(message, personalities).length > 0;
-
-  if (!mentionsRegularBot) {
-    if (ownedBots.length > 0) {
-      // Check if the owner mentioned a specific bot they own
-      const ownedMentioned = mentionedBots.filter(b => b.owner === username);
-      if (ownedMentioned.length > 0) {
-        for (const target of ownedMentioned) {
-          console.log(`[Revival] "${message}" → ${target.username} (owner+mention)`);
-          target.queueMessage(username, message);
-        }
-      } else if (ownedBots.length === 1) {
-        console.log(`[Revival] "${message}" → ${ownedBots[0].username} (owner)`);
-        ownedBots[0].queueMessage(username, message);
-      } else {
-        // Multiple bots, no mention — send to the most recently messaged one
-        const sorted = ownedBots.sort((a, b) => {
-          const aLast = a.pendingMessages.length > 0 ? a.pendingMessages[a.pendingMessages.length - 1].timestamp
-            : a.actionLog.length > 0 ? a.actionLog[a.actionLog.length - 1].timestamp : 0;
-          const bLast = b.pendingMessages.length > 0 ? b.pendingMessages[b.pendingMessages.length - 1].timestamp
-            : b.actionLog.length > 0 ? b.actionLog[b.actionLog.length - 1].timestamp : 0;
-          return bLast - aLast;
-        });
-        const target = sorted[0];
-        console.log(`[Revival] "${message}" → ${target.username} (owner, most recent)`);
-        target.queueMessage(username, message);
-      }
-      return;
-    }
-    if (mentionedBots.length > 0) {
-      const target = mentionedBots[0];
-      console.log(`[Revival] "${message}" → ${target.username} (mention)`);
-      target.queueMessage(username, message);
-      return;
-    }
-  }
 
   if (cm.isRateLimited()) return;
 
@@ -963,7 +352,7 @@ function attachGlobalChatListener(leader) {
     const parsed = parseChatFromSystem(text);
     if (!parsed) return;
 
-    const username = resolveUsername(leader, parsed.nickname);
+    const username = resolveUsername(leader.bot?.players, parsed.nickname);
     if (!username) return;
 
     handlePlayerChat(username, parsed.message);
@@ -1036,7 +425,7 @@ function setupBotToBotListener(currentBot) {
         if (!text || text.length < 3) return;
         const parsed = parseChatFromSystem(text);
         if (!parsed) return;
-        const username = resolveUsername(currentBot, parsed.nickname);
+        const username = resolveUsername(currentBot.bot?.players, parsed.nickname);
         handleBotToBot(username, parsed.message);
       });
     }
@@ -1125,7 +514,8 @@ function scaleBots() {
     }
   } else if (active.length < target && parked.length > 0) {
     // Unpark — randomly pick from parked bots (skip those with active revival bots)
-    const shuffled = [...parked].filter(b => !revivalBots.has(b.username) && !b.deathBanned).sort(() => Math.random() - 0.5);
+    const revivalNames = getRevivalBotNames();
+    const shuffled = [...parked].filter(b => !revivalNames.includes(b.username) && !b.deathBanned).sort(() => Math.random() - 0.5);
     const tounpark = shuffled.slice(0, target - active.length);
     if (tounpark.length > 0) {
       tounpark.forEach(b => b.unpark());
@@ -1171,9 +561,6 @@ setTimeout(() => {
   setupDeathListener();
   setupJoinLeaveListeners();
   bots.forEach(bot => setupBotToBotListener(bot));
-  setupWebhookServer();
-  // Restore revival bots from previous session (survives restarts)
-  restoreRevivals();
 }, 3000);
 
 setTimeout(() => {
@@ -1303,15 +690,6 @@ console.log('[HotReload] Watching prompts/ and personalities.json');
 
 function gracefulShutdown() {
   console.log('\nShutting down bots...');
-  // Save revival state before disconnecting so they survive restart
-  saveRevivalState();
-  // Disconnect revival bots (but state is already saved)
-  for (const [name, rBot] of revivalBots) {
-    rBot.despawned = true; // prevent _onDespawn from clearing saved state
-    if (rBot.bot && rBot.connected) {
-      try { rBot.bot.end(); } catch {}
-    }
-  }
   bots.forEach((bot, i) => {
     setTimeout(() => {
       if (bot.bot && bot.connected) {
