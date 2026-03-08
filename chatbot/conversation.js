@@ -18,12 +18,47 @@ const openaiClient = process.env.OPENAI_API_KEY
   : null;
 const REVIVAL_MODEL = 'gpt-5-mini';
 
+// OpenRouter client (access to grok, etc. without direct xAI credits)
+const openrouterClient = process.env.OPENROUTER_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENROUTER_API_KEY, baseURL: 'https://openrouter.ai/api/v1' })
+  : null;
+
 const ollamaBaseUrl = process.env.OLLAMA_URL?.replace(/\/v1\/?$/, ''); // strip /v1 — use native API
 const ollamaModel = process.env.OLLAMA_MODEL;
 const ollamaAuth = process.env.OLLAMA_AUTH;
 const ollamaEnabled = false; // disabled — Ollama API is down, using Grok only
 
 const GROK_MODEL = 'grok-4-1-fast-non-reasoning';
+
+// Models that should use OpenAI's API directly (free tier / direct key)
+const OPENAI_DIRECT_MODELS = new Set([
+  'gpt-5-mini', 'gpt-4.1-mini', 'gpt-4.1', 'gpt-4.1-nano', 'o3-mini', 'o4-mini',
+]);
+
+// Select revival LLM backend. Supports REVIVAL_MODEL env (model name) for flexible routing.
+function getRevivalBackend() {
+  const model = process.env.REVIVAL_MODEL;
+  if (model) {
+    // Route OpenAI-native models to openaiClient (free tier), everything else to OpenRouter
+    if (OPENAI_DIRECT_MODELS.has(model) && openaiClient) {
+      return { client: openaiClient, model, tag: `openai/${model}`,
+        extraParams: { max_completion_tokens: 4096 } };
+    }
+    if (openrouterClient) {
+      return { client: openrouterClient, model, tag: `openrouter/${model}`,
+        extraParams: { max_tokens: 4096, temperature: 0.6 } };
+    }
+    console.warn(`[RevivalBackend] Model ${model} requested but no suitable client`);
+  }
+
+  // Default: openai (gpt-5-mini) → openrouter → grok direct
+  if (openaiClient) return { client: openaiClient, model: REVIVAL_MODEL, tag: 'openai',
+    extraParams: { max_completion_tokens: 2048 } };
+  if (openrouterClient) return { client: openrouterClient, model: 'x-ai/grok-4.1-fast', tag: 'openrouter/grok',
+    extraParams: { max_tokens: 4096, temperature: 0.6 } };
+  return { client: grokClient, model: GROK_MODEL, tag: 'grok',
+    extraParams: { max_tokens: 4096, temperature: 0.6 } };
+}
 
 // Native Ollama /api/chat call with think:false
 async function ollamaChat(params) {
@@ -785,22 +820,18 @@ RECENT CHAT:
 ${history.map(h => h.content).join('\n')}`;
 
     try {
-      const revivalClient = openaiClient || grokClient;
-      const revivalModel = openaiClient ? REVIVAL_MODEL : GROK_MODEL;
-      const extraParams = openaiClient
-        ? { max_completion_tokens: 2048 }
-        : { max_tokens: 100, temperature: 0.6 };
-      const response = await revivalClient.chat.completions.create({
-        model: revivalModel,
+      const rb = getRevivalBackend();
+      const response = await rb.client.chat.completions.create({
+        model: rb.model,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `<${senderName}> ${message}` }
         ],
         tools: isOwner ? tools : [], // only give tools if owner is speaking
-        ...extraParams,
+        ...rb.extraParams,
       });
 
-      console.log(`[RevivalAction] ✓ ${openaiClient ? 'openai' : 'grok'}`);
+      console.log(`[RevivalAction] ✓ ${rb.tag}`);
       const choice = response.choices[0];
       const result = { actions: [], chat: null };
 
@@ -836,14 +867,10 @@ ${history.map(h => h.content).join('\n')}`;
 
   async generateRevivalStatus(rBot, actionResult) {
     const profile = rBot.profile || {};
-    const revivalClient = openaiClient || grokClient;
-    const revivalModel = openaiClient ? REVIVAL_MODEL : GROK_MODEL;
+    const rb = getRevivalBackend();
     try {
-      const extraParams = openaiClient
-        ? { max_completion_tokens: 1024 }
-        : { max_tokens: 30, temperature: 0.7 };
-      const response = await revivalClient.chat.completions.create({
-        model: revivalModel,
+      const response = await rb.client.chat.completions.create({
+        model: rb.model,
         messages: [
           {
             role: 'system',
@@ -852,7 +879,7 @@ Report this action result in 1-5 words, in character. Be natural and casual. No 
           },
           { role: 'user', content: actionResult }
         ],
-        ...extraParams,
+        ...rb.extraParams,
       });
       let reply = response.choices[0].message.content.trim();
       reply = reply.replace(/^["']|["']$/g, '');
@@ -1024,27 +1051,22 @@ RULES:
         { role: 'user', content: 'Tick. Decide what to do.' }
       ];
 
-      const revivalClient = openaiClient || grokClient;
-      const revivalModel = openaiClient ? REVIVAL_MODEL : GROK_MODEL;
-      const extraParams = openaiClient
-        ? { max_completion_tokens: 4096 }
-        : { max_tokens: 250, temperature: 0.6 };
-      const response = await revivalClient.chat.completions.create({
-        model: revivalModel,
+      const rb = getRevivalBackend();
+      const response = await rb.client.chat.completions.create({
+        model: rb.model,
         messages,
         tools,
-        ...extraParams,
+        ...rb.extraParams,
       });
 
       const choice = response.choices[0];
       const hasTools = !!choice.message.tool_calls?.length;
       const hasContent = !!choice.message.content?.trim();
       const msgCount = pendingMessages.length;
-      const llmTag = openaiClient ? 'openai' : 'grok';
       if (msgCount > 0 && !hasTools && !hasContent) {
-        console.log(`[RevivalTick] ⚠ ${llmTag} (${rBot.username}) — ${msgCount} messages but LLM returned empty. finish_reason=${choice.finish_reason}`);
+        console.log(`[RevivalTick] ⚠ ${rb.tag} (${rBot.username}) — ${msgCount} messages but LLM returned empty. finish_reason=${choice.finish_reason}`);
       } else {
-        console.log(`[RevivalTick] ✓ ${llmTag} (${rBot.username})${msgCount > 0 ? ` (${msgCount} msgs)` : ''}`);
+        console.log(`[RevivalTick] ✓ ${rb.tag} (${rBot.username})${msgCount > 0 ? ` (${msgCount} msgs)` : ''}`);
       }
       const result = { actions: [], chat: null, senders, rawThinking: null };
 

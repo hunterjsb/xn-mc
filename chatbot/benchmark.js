@@ -330,14 +330,30 @@ async function runBenchmark(benchId) {
 
 // ── Main ─────────────────────────────────────────────────────────────
 
+async function setRevivalModel(model) {
+  const { execSync } = await import('child_process');
+  if (model) {
+    console.log(`  Switching revival model to: ${model}`);
+    execSync(`REVIVAL_MODEL=${model} pm2 restart xandaris-revival --update-env`, { stdio: 'pipe' });
+  } else {
+    console.log(`  Restoring default revival model...`);
+    execSync(`REVIVAL_MODEL= pm2 restart xandaris-revival --update-env`, { stdio: 'pipe' });
+  }
+  await sleep(5000);
+}
+
 async function main() {
   const args = process.argv.slice(2);
   let benchIds = [];
   let runs = 1;
+  let model = null;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--runs' && args[i + 1]) {
       runs = parseInt(args[i + 1]);
+      i++;
+    } else if (args[i] === '--model' && args[i + 1]) {
+      model = args[i + 1];
       i++;
     } else if (args[i] === 'all') {
       benchIds = Object.keys(BENCHMARKS);
@@ -346,16 +362,20 @@ async function main() {
     } else {
       console.error(`Unknown benchmark or option: ${args[i]}`);
       console.error(`Available: ${Object.keys(BENCHMARKS).join(', ')}, all`);
+      console.error(`Options: --runs N, --model <model-name>`);
       process.exit(1);
     }
   }
 
   if (benchIds.length === 0) {
     console.log('Revival Bot Benchmarks');
-    console.log('Usage: node benchmark.js <bench> [<bench>...] [--runs N]');
+    console.log('Usage: node benchmark.js <bench> [<bench>...] [--runs N] [--model <model-name>]');
     console.log(`Available: ${Object.keys(BENCHMARKS).join(', ')}, all`);
+    console.log(`Models: gpt-5-mini (default), x-ai/grok-4.1-fast, anthropic/claude-sonnet-4-6, etc.`);
     process.exit(0);
   }
+
+  if (model) await setRevivalModel(model);
 
   const allResults = [];
 
@@ -369,12 +389,12 @@ async function main() {
     for (const id of benchIds) {
       try {
         const result = await runBenchmark(id);
+        result.model = model || 'gpt-5-mini';
         allResults.push(result);
       } catch (err) {
         console.error(`  ERROR: ${err.message}`);
-        allResults.push({ benchmark: id, success: false, error: err.message });
+        allResults.push({ benchmark: id, success: false, error: err.message, model: model || 'gpt-5-mini' });
       }
-      // Wait between benchmarks
       if (benchIds.length > 1) await sleep(5000);
     }
   }
@@ -382,7 +402,7 @@ async function main() {
   // Summary
   if (allResults.length > 1) {
     console.log(`\n${'='.repeat(60)}`);
-    console.log('  SUMMARY');
+    console.log(`  SUMMARY${model ? ` (${model})` : ''}`);
     console.log(`${'='.repeat(60)}`);
 
     const grouped = {};
@@ -399,13 +419,19 @@ async function main() {
       const avgTools = successes.length > 0
         ? Math.round(successes.reduce((s, r) => s + (r.toolCalls || 0), 0) / successes.length)
         : null;
+      const avgFailures = successes.length > 0
+        ? Math.round(successes.reduce((s, r) => s + (r.failures || 0), 0) / successes.length)
+        : null;
 
       console.log(`\n  ${BENCHMARKS[id]?.name || id}:`);
-      console.log(`    Success rate: ${successes.length}/${results.length} (${Math.round(100 * successes.length / results.length)}%)`);
-      if (avgTime) console.log(`    Avg time:     ${fmtTime(avgTime)}`);
-      if (avgTools) console.log(`    Avg tools:    ${avgTools} calls`);
+      console.log(`    Pass rate:  ${successes.length}/${results.length} (${Math.round(100 * successes.length / results.length)}%)`);
+      if (avgTime != null) console.log(`    Avg time:   ${fmtTime(avgTime)}`);
+      if (avgTools != null) console.log(`    Avg tools:  ${avgTools} calls`);
+      if (avgFailures != null) console.log(`    Avg fails:  ${avgFailures}`);
     }
   }
+
+  if (model) await setRevivalModel(null);
 
   console.log('\nDone.');
   process.exit(0);
