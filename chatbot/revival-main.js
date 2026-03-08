@@ -199,6 +199,10 @@ function wireRevivalBot(rBot) {
     saveRevivalState();
   };
 
+  // Benchmark event tracking
+  rBot._benchLog = [];
+  rBot._benchStart = null;
+
   // Agent loop tick
   rBot._onTick = async (bot) => {
     const MAX_STEPS = 3;
@@ -210,6 +214,17 @@ function wireRevivalBot(rBot) {
 
       const result = await cm.revivalTick(bot);
       if (step === 0) allSenders = result.senders;
+
+      // Bench tracking: log tool calls
+      for (const action of result.actions) {
+        bot._benchLog.push({ type: 'tool', name: action.name, params: action.params, t: Date.now() });
+      }
+      if (result.chat) {
+        bot._benchLog.push({ type: 'chat', text: result.chat, t: Date.now() });
+      }
+      if (result.actions.length === 0 && !result.chat) {
+        bot._benchLog.push({ type: 'idle', t: Date.now() });
+      }
 
       // Debug mode
       if (bot.debugChat && bot.connected && !bot.despawned) {
@@ -236,6 +251,11 @@ function wireRevivalBot(rBot) {
       const logBefore = bot.actionLog.length;
       for (const action of result.actions) {
         await executeRevivalAction(bot, action.name, action.params);
+      }
+
+      // Bench tracking: log action results
+      for (const entry of bot.actionLog.slice(logBefore)) {
+        bot._benchLog.push({ type: 'result', detail: entry.detail, result: entry.type, t: Date.now() });
       }
 
       // Debug mode: emit action results
@@ -377,7 +397,7 @@ async function handleRevival(reviver, deadPlayer, pos) {
   saveRevivalState();
   writeRevivalNames();
   // Pardon before connect so DeathBan doesn't kick on join
-  rcon(`pardon ${deadPlayer}`).catch(() => {});
+  await rcon(`pardon ${deadPlayer}`).catch(() => {});
   rBot.connect();
 
   const waitForConnect = setInterval(() => {
@@ -389,6 +409,8 @@ async function handleRevival(reviver, deadPlayer, pos) {
       attachOwnerReturnListener(rBot);
 
       const { x, y, z } = pos;
+      // Rapid pardon + gamemode to beat DeathBan's kick
+      rcon(`pardon ${deadPlayer}`).catch(() => {});
       rcon(`gamemode survival ${deadPlayer}`).catch(() => {});
       rcon(`tp ${deadPlayer} ${x} ${y} ${z}`).then(resp => {
         console.log(`[Revival] Teleported ${deadPlayer} to ${x},${y},${z}: ${resp}`);
@@ -491,6 +513,60 @@ function setupWebhookServer() {
       }
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ bots: list }, null, 2));
+      return;
+    }
+
+    // GET /bench/metrics?bot=NAME
+    if (req.method === 'GET' && req.url.startsWith('/bench/metrics')) {
+      const url = new URL(req.url, 'http://localhost');
+      const botName = url.searchParams.get('bot');
+      let rBot;
+      for (const [name, rb] of revivalBots) {
+        if (name.toLowerCase() === botName?.toLowerCase()) { rBot = rb; break; }
+      }
+      if (!rBot) {
+        res.writeHead(404);
+        res.end(JSON.stringify({ error: `No bot "${botName}"` }));
+        return;
+      }
+      const toolCalls = rBot._benchLog.filter(e => e.type === 'tool');
+      const chats = rBot._benchLog.filter(e => e.type === 'chat');
+      const idles = rBot._benchLog.filter(e => e.type === 'idle');
+      const results = rBot._benchLog.filter(e => e.type === 'result');
+      const failures = results.filter(e => e.result?.includes('fail'));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        bot: rBot.username,
+        benchStart: rBot._benchStart,
+        elapsed: rBot._benchStart ? Date.now() - rBot._benchStart : null,
+        state: rBot.state,
+        objectives: rBot.objectives,
+        totalToolCalls: toolCalls.length,
+        totalChats: chats.length,
+        totalIdles: idles.length,
+        totalFailures: failures.length,
+        log: rBot._benchLog,
+      }, null, 2));
+      return;
+    }
+
+    // POST /bench/reset?bot=NAME — clear bench log and start timer
+    if (req.method === 'POST' && req.url.startsWith('/bench/reset')) {
+      const url = new URL(req.url, 'http://localhost');
+      const botName = url.searchParams.get('bot');
+      let rBot;
+      for (const [name, rb] of revivalBots) {
+        if (name.toLowerCase() === botName?.toLowerCase()) { rBot = rb; break; }
+      }
+      if (!rBot) {
+        res.writeHead(404);
+        res.end(JSON.stringify({ error: `No bot "${botName}"` }));
+        return;
+      }
+      rBot._benchLog = [];
+      rBot._benchStart = Date.now();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'ok', benchStart: rBot._benchStart }));
       return;
     }
 

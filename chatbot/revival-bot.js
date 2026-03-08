@@ -360,6 +360,12 @@ export class RevivalBot {
     const stuckTime = now - this._lastPos.time;
     if (stuckTime < STUCK_THRESHOLD) return;
 
+    // Smelting and crafting are stationary — not stuck
+    if (this.state === 'smelting' || this.state === 'crafting') {
+      this._lastPos.time = now;
+      return;
+    }
+
     // Following near the owner is correct — not stuck
     if (this.state === 'following') {
       const ownerEnt = this.bot.players[this.owner]?.entity;
@@ -768,7 +774,7 @@ export class RevivalBot {
                 reject(new Error('interrupted'));
               }
             }, 250);
-            setTimeout(() => { clearInterval(check); reject(new Error('collect timeout')); }, 15000);
+            setTimeout(() => { clearInterval(check); reject(new Error('collect timeout')); }, 30000);
           })
         ]);
         mined++;
@@ -944,6 +950,12 @@ export class RevivalBot {
           setTimeout(onStop, 30000);
         });
         killed++;
+        // Walk toward drops and wait briefly for item pickup
+        if (target.position) {
+          this.bot.pathfinder.setGoal(new goals.GoalNear(target.position.x, target.position.y, target.position.z, 1));
+        }
+        await new Promise(r => setTimeout(r, 2000));
+        this.bot.pathfinder.setGoal(null);
       } catch (err) {
         this.log('action_failed', `Attack ${mobName}: ${err.message}`);
         break;
@@ -1331,12 +1343,19 @@ export class RevivalBot {
       }
 
       let crafted = 0;
-      for (let i = 0; i < count; i++) {
+      // count = desired number of items, not recipe batches
+      // Each recipe produces recipe.result.count items (e.g. sticks → 4 per batch)
+      const firstRecipes = this.bot.recipesFor(item.id, null, 1, craftingTable);
+      const outputPerBatch = firstRecipes.length > 0 ? (firstRecipes[0].result?.count || 1) : 1;
+      const batches = Math.ceil(count / outputPerBatch);
+      console.log(`[Craft Debug] ${this.username}: need ${count} items, ${outputPerBatch}/batch → ${batches} batches`);
+
+      for (let i = 0; i < batches; i++) {
         const recipes = this.bot.recipesFor(item.id, null, 1, craftingTable);
         if (recipes.length === 0) break;
         try {
           await this.bot.craft(recipes[0], 1, craftingTable);
-          crafted++;
+          crafted += outputPerBatch;
         } catch (err) {
           console.log(`[Craft Debug] ${this.username}: craft error: ${err.message}`);
           if (crafted === 0) {
@@ -1357,7 +1376,19 @@ export class RevivalBot {
   }
 
   async _cmdSmelt(itemName, fuelName = 'coal', count = 1) {
-    this.log('action', `Smelting ${count}x ${itemName} with ${fuelName}`);
+    // Fix common LLM item name mistakes (raw_porkchop → porkchop, raw_beef → beef, etc.)
+    const SMELT_ALIASES = {
+      raw_porkchop: 'porkchop', raw_beef: 'beef', raw_chicken: 'chicken',
+      raw_mutton: 'mutton', raw_rabbit: 'rabbit', raw_salmon: 'salmon',
+      raw_cod: 'cod', raw_iron: 'raw_iron', raw_gold: 'raw_gold',
+      raw_copper: 'raw_copper', log: 'oak_log', plank: 'oak_planks',
+    };
+    const resolvedName = SMELT_ALIASES[itemName] || itemName;
+    if (resolvedName !== itemName) {
+      console.log(`[Smelt] ${this.username}: aliased ${itemName} → ${resolvedName}`);
+    }
+
+    this.log('action', `Smelting ${count}x ${resolvedName} with ${fuelName}`);
     const prevState = this.state;
     this.state = 'smelting';
 
@@ -1383,9 +1414,9 @@ export class RevivalBot {
       }
 
       // Check we have the input item and fuel
-      const inputItem = this.bot.inventory.items().find(i => i.name.includes(itemName));
+      const inputItem = this.bot.inventory.items().find(i => i.name.includes(resolvedName));
       if (!inputItem) {
-        this.log('action_failed', `No ${itemName} in inventory`);
+        this.log('action_failed', `No ${resolvedName} in inventory`);
         return;
       }
       const fuelItem = this.bot.inventory.items().find(i => i.name.includes(fuelName));
@@ -1399,7 +1430,15 @@ export class RevivalBot {
 
       // Put fuel in first, then input
       if (!furnace.fuelItem()) {
-        const fuelNeeded = Math.ceil(smeltCount / 8); // coal smelts 8 items
+        // Items per fuel unit: coal=8, planks/logs=1.5, sticks=0.5, charcoal=8, blaze_rod=12
+        const FUEL_RATES = {
+          coal: 8, charcoal: 8, coal_block: 80, blaze_rod: 12, lava_bucket: 100,
+          oak_planks: 1.5, spruce_planks: 1.5, birch_planks: 1.5, jungle_planks: 1.5,
+          acacia_planks: 1.5, dark_oak_planks: 1.5, cherry_planks: 1.5, mangrove_planks: 1.5,
+          oak_log: 1.5, spruce_log: 1.5, birch_log: 1.5, stick: 0.5,
+        };
+        const rate = FUEL_RATES[fuelItem.name] || 1.5;
+        const fuelNeeded = Math.ceil(smeltCount / rate);
         await furnace.putFuel(fuelItem.type, null, Math.min(fuelNeeded, fuelItem.count));
       }
       await furnace.putInput(inputItem.type, null, smeltCount);
@@ -1529,38 +1568,76 @@ export class RevivalBot {
     const pos = this.bot.entity.position.floored();
     const Vec3 = this.bot.entity.position.constructor;
 
-    // Build candidate list: try requested direction first, then fallbacks
+    // Blocks that can be broken to make room for placement
+    const REPLACEABLE = new Set([
+      'short_grass', 'tall_grass', 'fern', 'large_fern', 'dead_bush',
+      'leaf_litter', 'seagrass', 'tall_seagrass', 'snow',
+      'vine', 'dandelion', 'poppy', 'blue_orchid', 'allium',
+      'azure_bluet', 'red_tulip', 'orange_tulip', 'white_tulip', 'pink_tulip',
+      'oxeye_daisy', 'cornflower', 'lily_of_the_valley', 'sunflower',
+      'lilac', 'rose_bush', 'peony', 'sweet_berry_bush',
+    ]);
+
+    // Clear replaceable block at a position if present
+    const clearIfReplaceable = async (targetPos) => {
+      const block = this.bot.blockAt(targetPos);
+      if (block && REPLACEABLE.has(block.name)) {
+        try { await this.bot.dig(block); } catch {}
+      }
+    };
+
+    // Check if a position is open (air or replaceable)
+    const isOpen = (targetPos) => {
+      const block = this.bot.blockAt(targetPos);
+      return block && (block.name === 'air' || REPLACEABLE.has(block.name));
+    };
+
+    // Build candidate list: try all directions, requested direction first
     const candidates = [];
     const belowRef = this.bot.blockAt(pos.offset(0, -1, 0));
-    const fwd = () => {
-      const yaw = this.bot.entity.yaw;
-      const dx = -Math.sin(yaw);
-      const dz = -Math.cos(yaw);
-      const c = Math.abs(dx) > Math.abs(dz)
-        ? { x: Math.sign(dx), z: 0 } : { x: 0, z: Math.sign(dz) };
-      for (const dist of [2, 1]) {
-        const tp = pos.offset(c.x * dist, 0, c.z * dist);
-        const tb = this.bot.blockAt(tp);
-        if (tb && tb.name === 'air') {
+
+    // Try placing on top of ground block in all 4 cardinal directions + diagonals
+    const tryDirection = (dx, dz) => {
+      for (const dist of [1, 2]) {
+        const tp = pos.offset(dx * dist, 0, dz * dist);
+        if (isOpen(tp)) {
           const bl = this.bot.blockAt(tp.offset(0, -1, 0));
-          if (bl && bl.name !== 'air') return { ref: bl, face: new Vec3(0, 1, 0) };
+          if (bl && bl.name !== 'air') return { ref: bl, face: new Vec3(0, 1, 0), clearPos: tp };
         }
       }
       return null;
     };
 
-    if (direction === 'below' && belowRef && belowRef.name !== 'air') {
-      candidates.push({ ref: belowRef, face: new Vec3(0, 1, 0) });
-    }
-    const fwdResult = fwd();
-    if (fwdResult) candidates.push(fwdResult);
-    // Always add below as fallback
-    if (belowRef && belowRef.name !== 'air' && direction !== 'below') {
-      candidates.push({ ref: belowRef, face: new Vec3(0, 1, 0) });
+    // Forward direction based on yaw
+    const yaw = this.bot.entity.yaw;
+    const fdx = -Math.sin(yaw);
+    const fdz = -Math.cos(yaw);
+    const fwdDir = Math.abs(fdx) > Math.abs(fdz)
+      ? { x: Math.sign(fdx), z: 0 } : { x: 0, z: Math.sign(fdz) };
+
+    // Prioritized direction order: requested first, then all others
+    const allDirs = [
+      { x: fwdDir.x, z: fwdDir.z },   // forward
+      { x: 1, z: 0 }, { x: -1, z: 0 }, { x: 0, z: 1 }, { x: 0, z: -1 }, // cardinals
+    ];
+    // Deduplicate
+    const seen = new Set();
+    const dirs = allDirs.filter(d => {
+      const key = `${d.x},${d.z}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    for (const d of dirs) {
+      const result = tryDirection(d.x, d.z);
+      if (result) candidates.push(result);
     }
 
-    for (const { ref, face } of candidates) {
+    for (const { ref, face, clearPos } of candidates) {
       try {
+        if (clearPos) await clearIfReplaceable(clearPos);
+        await this.bot.equip(item, 'hand'); // re-equip after digging
         await this.bot.placeBlock(ref, face);
         this.log('action_success', `Placed ${item.name}`);
         return;
