@@ -228,11 +228,10 @@
 
     .vchart {
       display: flex;
-      align-items: flex-end;
+      align-items: stretch;
       justify-content: center;
       gap: 0;
-      height: 220px;
-      padding-bottom: 0;
+      height: 260px;
       position: relative;
     }
 
@@ -242,10 +241,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
-      position: relative;
-      height: 100%;
-      justify-content: flex-end;
     }
 
     .vchart-bar-wrap {
@@ -259,7 +254,7 @@
     .vchart-bar {
       width: 48px;
       border-radius: 0.35rem 0.35rem 0 0;
-      transition: height 0.5s ease;
+      transition: height 0.5s ease, background 0.3s ease;
       position: relative;
       min-height: 2px;
     }
@@ -278,35 +273,15 @@
     .vchart-name {
       font-family: "Cascadia Code", "Fira Code", monospace;
       font-size: 0.65rem;
-      color: var(--text-muted);
       text-align: center;
       padding: 0.5rem 0.25rem 0;
       line-height: 1.2;
       word-break: break-all;
       max-width: 100%;
-    }
-
-    .vchart-legend {
+      height: 3rem;
       display: flex;
-      flex-wrap: wrap;
+      align-items: flex-start;
       justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .vchart-legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .vchart-legend-swatch {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      flex-shrink: 0;
     }
 
     /* ---------- Comparison Grid ---------- */
@@ -597,7 +572,6 @@
       <table>
         <thead>
           <tr>
-            <th>Model</th>
             <th>Benchmark</th>
             <th>Pass Rate</th>
             <th>Avg Time</th>
@@ -664,18 +638,24 @@
       return 'red';
     }
 
-    // Auto-assign colors from a palette
+    // Auto-assign label colors per model
     const MODEL_COLORS = [
-      '#22c55e', '#3b82f6', '#f59e0b', '#ef4444',
-      '#a855f7', '#ec4899', '#14b8a6', '#f97316',
-      '#6366f1', '#84cc16',
+      '#3b82f6', '#a855f7', '#f59e0b', '#ec4899',
+      '#14b8a6', '#f97316', '#6366f1', '#84cc16',
+      '#ef4444', '#22d3ee',
     ];
     const colorMap = {};
-    // Sort models by overall rate for consistent ordering
     const ranked = [...models].sort((a, b) =>
       (summary[b]?.overall?.rate || 0) - (summary[a]?.overall?.rate || 0)
     );
     ranked.forEach((m, i) => { colorMap[m] = MODEL_COLORS[i % MODEL_COLORS.length]; });
+
+    // Score-based bar color: green (good) → yellow → red (bad)
+    // normalizedScore: 0 = worst, 1 = best
+    function scoreColor(normalizedScore) {
+      const hue = Math.round(normalizedScore * 120); // 0=red, 120=green
+      return `hsl(${hue}, 70%, 50%)`;
+    }
 
     // ── At a Glance ──
     const glanceDesc = document.querySelector('#glance-section .description');
@@ -751,13 +731,11 @@
       }
       if (metric === 'rate') maxVal = 1; // always scale to 100%
 
-      let html = '';
-      for (const m of sorted) {
+      // Collect values for normalization
+      const entries = sorted.map(m => {
         const s = summary[m]?.[bench];
-        if (!s) continue;
-        const color = colorMap[m];
+        if (!s) return null;
         let val, label, heightPct;
-
         if (metric === 'rate') {
           val = s.rate || 0;
           label = `${Math.round(val * 100)}%`;
@@ -771,24 +749,39 @@
           label = val != null ? String(val) : '-';
           heightPct = (val != null && maxVal > 0) ? (val / maxVal) * 100 : 0;
         }
+        return { model: m, val, label, heightPct };
+      }).filter(Boolean);
+
+      // Compute normalized score (0=worst, 1=best) for bar coloring
+      const vals = entries.map(e => e.val).filter(v => v != null);
+      const minV = Math.min(...vals), maxV = Math.max(...vals);
+      const range = maxV - minV;
+
+      let html = '';
+      for (const e of entries) {
+        let score = 0.5;
+        if (e.val != null && range > 0) {
+          if (metric === 'rate') {
+            score = (e.val - minV) / range; // higher = better
+          } else {
+            score = 1 - (e.val - minV) / range; // lower = better for time & tools
+          }
+        } else if (e.val != null && metric === 'rate') {
+          score = e.val; // single value, use absolute
+        }
+        const barColor = scoreColor(score);
 
         html += `
           <div class="vchart-model">
             <div class="vchart-bar-wrap">
-              <div class="vchart-bar" style="height: ${Math.max(heightPct, 1)}%; background: ${color};">
-                <div class="vchart-bar-label">${label}</div>
+              <div class="vchart-bar" style="height: ${Math.max(e.heightPct, 1)}%; background: ${barColor};">
+                <div class="vchart-bar-label">${e.label}</div>
               </div>
             </div>
-            <div class="vchart-name">${m}</div>
+            <div class="vchart-name" style="color: ${colorMap[e.model]}">${e.model}</div>
           </div>`;
       }
       vchartEl.innerHTML = html;
-
-      // Legend
-      legendEl.innerHTML = sorted
-        .filter(m => summary[m]?.[bench])
-        .map(m => `<div class="vchart-legend-item"><div class="vchart-legend-swatch" style="background:${colorMap[m]}"></div>${m}</div>`)
-        .join('');
     }
 
     benchSelect.addEventListener('change', renderChart);
@@ -800,9 +793,12 @@
     let tableHTML = '';
     for (let mi = 0; mi < ranked.length; mi++) {
       const m = ranked[mi];
-      if (mi > 0) {
-        tableHTML += `<tr><td colspan="5" style="border-bottom-color: #3f3f46"></td></tr>`;
-      }
+      tableHTML += `
+        <tr>
+          <td colspan="4" style="padding-top: ${mi > 0 ? '1.25rem' : '0.5rem'}; border-bottom: none;">
+            <span class="model-tag" style="border-color:${colorMap[m]};color:${colorMap[m]}">${m}</span>
+          </td>
+        </tr>`;
       for (const bench of benchmarks) {
         const s = summary[m]?.[bench];
         if (!s) continue;
@@ -818,7 +814,6 @@
 
         tableHTML += `
           <tr>
-            <td><span class="model-tag" style="border-color:${colorMap[m]};color:${colorMap[m]}">${m}</span></td>
             <td>${name}</td>
             <td class="${rateTextClass(s.rate)}">${s.pass}/${s.total} (${pct}%)</td>
             <td${isBestTime ? ' class="best"' : ''}>${fmtTime(s.avgTime)}</td>
