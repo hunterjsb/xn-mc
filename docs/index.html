@@ -166,12 +166,12 @@
 
     .card .icon {
       margin-bottom: 0.75rem;
-      color: var(--primary);
     }
 
-    .card .icon svg {
-      width: 32px;
-      height: 32px;
+    .card .icon img {
+      width: 40px;
+      height: 40px;
+      image-rendering: pixelated;
     }
 
     .card h3 {
@@ -184,6 +184,62 @@
       color: var(--text-muted);
       font-size: 0.9rem;
       line-height: 1.5;
+    }
+
+    /* ---------- AI Rankings ---------- */
+    .rankings-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .rank-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.6rem 1rem;
+    }
+
+    .rank-pos {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #52525b;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      min-width: 1.2rem;
+      text-align: center;
+    }
+
+    .rank-name {
+      flex: 1;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rank-score {
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .rank-detail {
+      font-size: 0.7rem;
+      color: #52525b;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+    }
+
+    .rankings-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.85rem;
     }
 
     /* ---------- Vote Links ---------- */
@@ -266,6 +322,7 @@
       <a href="index.html" class="active">Home</a>
       <a href="ranks.html">Ranks</a>
       <a href="benchmarks.html">Benchmarks</a>
+      <a href="https://wiki.xandaris.space" target="_blank" rel="noopener">Wiki</a>
       <a href="https://xnmc.statuspage.io/" target="_blank" rel="noopener">Status</a>
     </div>
   </nav>
@@ -298,33 +355,42 @@
     <div class="features-grid">
       <div class="card">
         <div class="icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></svg>
+          <img src="https://minecraft.wiki/images/Invicon_Totem_of_Undying.png" alt="Totem of Undying">
         </div>
         <h3>Permadeath</h3>
         <p>You die, you're out. Hardcore mode — no second chances, no respawns.</p>
       </div>
       <div class="card">
         <div class="icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s1.5 2 2.1 4.7c.7 3.2-.2 5.8-.9 7.1A7 7 0 0 1 11 20Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+          <img src="https://minecraft.wiki/images/Invicon_Oak_Sapling.png" alt="Oak Sapling">
         </div>
         <h3>Vanilla Gameplay</h3>
         <p>No pay-to-win, no gameplay mods. The survival experience stays pure.</p>
       </div>
       <div class="card">
         <div class="icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="m16 16 3.5 3.5"/><path d="m19 19 1.5 1.5"/><path d="M9.5 6.5 21 18v3h-3L6.5 9.5"/><path d="M11 5l-6 6"/><path d="m8 8-3.5-3.5"/><path d="m5 5-1.5-1.5"/></svg>
+          <img src="https://minecraft.wiki/images/Invicon_Iron_Sword.png" alt="Iron Sword">
         </div>
         <h3>Anarchy</h3>
         <p>No rules, no bans, no admins playing favorites. True freedom.</p>
       </div>
       <div class="card">
         <div class="icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/></svg>
+          <img src="https://minecraft.wiki/images/Invicon_Bedrock.png" alt="Bedrock">
         </div>
         <h3>No Resets</h3>
         <p>The world persists forever. Your builds — and your ruins — endure.</p>
       </div>
     </div>
+  </section>
+
+  <!-- AI Rankings -->
+  <section>
+    <h2>Revival Bot Rankings</h2>
+    <div id="rankings" class="rankings-grid">
+      <p style="color:var(--text-muted);text-align:center;font-size:0.9rem">Loading rankings...</p>
+    </div>
+    <p class="rankings-link"><a href="benchmarks.html">Full benchmark results &rarr;</a></p>
   </section>
 
   <!-- Vote -->
@@ -352,10 +418,52 @@
       });
     }
 
-    // Allow keyboard activation on the IP box
     document.querySelector('.ip-box').addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyIP(); }
     });
+
+    // AI Rankings from benchmark data
+    (async () => {
+      try {
+        const res = await fetch('benchmark-data.json');
+        if (!res.ok) return;
+        const { models, benchmarks, summary } = await res.json();
+
+        const MODEL_COLORS = ['#d4a847', '#c87a3a', '#b85450', '#a8588a', '#c9944a', '#d46b5a'];
+        const ranked = [...models].sort((a, b) =>
+          (summary[b]?.overall?.rate || 0) - (summary[a]?.overall?.rate || 0)
+        );
+
+        const scores = ranked.map(m => {
+          let total = 0, n = 0;
+          for (const b of benchmarks) {
+            const s = summary[m]?.[b];
+            if (!s || s.avgTime == null) continue;
+            total += (1 - (s.rate || 0)) * (s.avgTime / 1000);
+            n++;
+          }
+          return { model: m, score: n > 0 ? Math.round(total / n) : 0 };
+        }).sort((a, b) => a.score - b.score);
+
+        const maxScore = Math.max(...scores.map(s => s.score));
+        let html = '';
+        scores.forEach((s, i) => {
+          const norm = maxScore > 0 ? 1 - s.score / maxScore : 0.5;
+          const sat = Math.round(norm * 50);
+          const light = 35 + Math.round(norm * 18);
+          const color = `hsl(145, ${sat}%, ${light}%)`;
+          const rate = summary[s.model]?.overall?.rate;
+          const pct = rate != null ? Math.round(rate * 100) + '% pass' : '';
+          html += '<div class="rank-row">' +
+            '<div class="rank-pos">' + (i + 1) + '</div>' +
+            '<div class="rank-name" style="color:' + MODEL_COLORS[i % MODEL_COLORS.length] + '">' + s.model + '</div>' +
+            '<div class="rank-detail">' + pct + '</div>' +
+            '<div class="rank-score" style="color:' + color + '">' + s.score + '</div>' +
+            '</div>';
+        });
+        document.getElementById('rankings').innerHTML = html;
+      } catch(e) {}
+    })();
   </script>
 
 </body>

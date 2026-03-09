@@ -111,12 +111,39 @@
       letter-spacing: 0.05em;
     }
 
+    /* ---------- Coming Soon Overlay ---------- */
+    .coming-soon-wrap {
+      position: relative;
+    }
+
+    .coming-soon-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 9, 11, 0.75);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      border-radius: 0.75rem;
+    }
+
+    .coming-soon-text {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
     /* ---------- Tier Cards ---------- */
     .tiers {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
-      align-items: start;
+      align-items: stretch;
     }
 
     .tier-card {
@@ -241,6 +268,7 @@
       <a href="index.html">Home</a>
       <a href="ranks.html" class="active">Ranks</a>
       <a href="benchmarks.html">Benchmarks</a>
+      <a href="https://wiki.xandaris.space" target="_blank" rel="noopener">Wiki</a>
       <a href="https://xnmc.statuspage.io/" target="_blank" rel="noopener">Status</a>
     </div>
   </nav>
@@ -253,40 +281,45 @@
 
   <!-- Tier Cards -->
   <section>
-    <div class="tiers">
-
-      <div class="tier-card tier-supporter">
-        <h3>Supporter</h3>
-        <span class="badge">$5 / month</span>
-        <ul>
-          <li>Colored name in chat</li>
-        </ul>
-        <a class="buy-btn" href="STORE_URL">Buy</a>
+    <div class="coming-soon-wrap">
+      <div class="coming-soon-overlay">
+        <span class="coming-soon-text">Coming Soon</span>
       </div>
+      <div class="tiers">
 
-      <div class="tier-card tier-champion">
-        <h3>Champion</h3>
-        <span class="badge">$30 one-time</span>
-        <ul>
-          <li>Colored name in chat</li>
-          <li>Custom nickname (<code>/nick</code>)</li>
-        </ul>
-        <a class="buy-btn" href="STORE_URL">Buy</a>
+        <div class="tier-card tier-supporter">
+          <h3>Supporter</h3>
+          <span class="badge">$5 / month</span>
+          <ul>
+            <li>Colored name in chat</li>
+          </ul>
+          <a class="buy-btn" href="#">Buy</a>
+        </div>
+
+        <div class="tier-card tier-champion">
+          <h3>Champion</h3>
+          <span class="badge">$30 one-time</span>
+          <ul>
+            <li>Colored name in chat</li>
+            <li>Custom nickname (<code>/nick</code>)</li>
+          </ul>
+          <a class="buy-btn" href="#">Buy</a>
+        </div>
+
+        <div class="tier-card tier-mythic">
+          <h3>Mythic</h3>
+          <span class="badge">$80 one-time</span>
+          <ul>
+            <li>Colored name in chat</li>
+            <li>Custom nickname (<code>/nick</code>)</li>
+            <li>Priority queue</li>
+            <li>Custom title</li>
+            <li>Emoticon</li>
+          </ul>
+          <a class="buy-btn" href="#">Buy</a>
+        </div>
+
       </div>
-
-      <div class="tier-card tier-mythic">
-        <h3>Mythic</h3>
-        <span class="badge">$80 one-time</span>
-        <ul>
-          <li>Colored name in chat</li>
-          <li>Custom nickname (<code>/nick</code>)</li>
-          <li>Priority queue</li>
-          <li>Custom title</li>
-          <li>Emoticon</li>
-        </ul>
-        <a class="buy-btn" href="STORE_URL">Buy</a>
-      </div>
-
     </div>
   </section>
 
