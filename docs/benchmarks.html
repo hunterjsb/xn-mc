@@ -118,60 +118,27 @@
       max-width: 700px;
     }
 
-    /* ---------- Benchmark Carousel ---------- */
-    .carousel-wrap {
-      position: relative;
+    /* ---------- Benchmark Cards ---------- */
+    .bench-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
       margin-bottom: 2rem;
     }
-
-    .carousel-track {
-      display: flex;
-      gap: 0.75rem;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding: 0.25rem 0;
-    }
-
-    .carousel-track::-webkit-scrollbar { display: none; }
-
-    .carousel-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: var(--card-bg);
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-      transition: border-color 0.2s, color 0.2s;
-    }
-
-    .carousel-btn:hover { border-color: #3f3f46; color: var(--text); }
-    .carousel-btn.left { left: -14px; }
-    .carousel-btn.right { right: -14px; }
 
     .bench-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 0.75rem;
-      padding: 1rem 1.25rem;
-      min-width: 180px;
-      flex-shrink: 0;
-      transition: border-color 0.2s, min-width 0.3s;
+      padding: 0.75rem 1rem;
+      flex: 1 1 140px;
+      max-width: 220px;
+      transition: border-color 0.2s;
       cursor: pointer;
     }
 
     .bench-card:hover { border-color: #3f3f46; }
-    .bench-card.expanded { min-width: 280px; border-color: #3f3f46; }
+    .bench-card.expanded { border-color: #3f3f46; flex-basis: 100%; max-width: 100%; }
 
     .bench-card .bench-desc {
       color: var(--text-muted);
@@ -602,11 +569,7 @@
   <section id="tasks-section">
     <h2>Benchmarks</h2>
     <p class="description">Each benchmark spawns a revival bot with a specific inventory and goal. The bot must plan and execute a multi-step crafting chain using tool calls — no human guidance.</p>
-    <div class="carousel-wrap">
-      <button class="carousel-btn left" id="carousel-left">&#8249;</button>
-      <div class="carousel-track" id="bench-carousel"></div>
-      <button class="carousel-btn right" id="carousel-right">&#8250;</button>
-    </div>
+    <div class="bench-grid" id="bench-grid"></div>
   </section>
 
   <!-- Dynamic sections rendered by JS -->
@@ -725,7 +688,7 @@
       return `https://minecraft.wiki/images/Invicon_${name}.png`;
     }
 
-    const carousel = document.getElementById('bench-carousel');
+    const benchGrid = document.getElementById('bench-grid');
     let cardsHTML = '';
     for (const b of benchmarks) {
       const meta = benchMeta[b] || {};
@@ -743,19 +706,12 @@
           ${desc ? `<div class="bench-desc">${desc}</div>` : ''}
         </div>`;
     }
-    carousel.innerHTML = cardsHTML;
+    benchGrid.innerHTML = cardsHTML;
 
-    carousel.addEventListener('click', (e) => {
+    benchGrid.addEventListener('click', (e) => {
       const card = e.target.closest('.bench-card');
       if (!card) return;
       card.classList.toggle('expanded');
-    });
-
-    document.getElementById('carousel-left').addEventListener('click', () => {
-      carousel.scrollBy({ left: -200, behavior: 'smooth' });
-    });
-    document.getElementById('carousel-right').addEventListener('click', () => {
-      carousel.scrollBy({ left: 200, behavior: 'smooth' });
     });
 
     // Bar gradient: grey base → green tip for high scores
