@@ -427,23 +427,25 @@
       try {
         const res = await fetch('benchmark-data.json');
         if (!res.ok) return;
-        const { models, benchmarks, summary } = await res.json();
+        const { models, benchmarks, summary, benchTimeouts } = await res.json();
 
         const MODEL_COLORS = ['#d4a847', '#c87a3a', '#b85450', '#a8588a', '#c9944a', '#d46b5a'];
-        const ranked = [...models].sort((a, b) =>
-          (summary[b]?.overall?.rate || 0) - (summary[a]?.overall?.rate || 0)
-        );
 
-        const scores = ranked.map(m => {
+        function computeScore(model) {
           let total = 0, n = 0;
           for (const b of benchmarks) {
-            const s = summary[m]?.[b];
-            if (!s || s.avgTime == null) continue;
-            total += (1 - (s.rate || 0)) * (s.avgTime / 1000);
+            const s = summary[model]?.[b];
+            if (!s || s.total === 0) continue;
+            const timeoutSec = (benchTimeouts?.[b] || 300000) / 1000;
+            const avgSec = s.avgTime != null ? s.avgTime / 1000 : timeoutSec;
+            total += (1 - (s.rate || 0)) * timeoutSec + (s.rate || 0) * avgSec;
             n++;
           }
-          return { model: m, score: n > 0 ? Math.round(total / n) : 0 };
-        }).sort((a, b) => a.score - b.score);
+          return n > 0 ? Math.round(total / n) : 999;
+        }
+
+        const scores = models.map(m => ({ model: m, score: computeScore(m) }))
+          .sort((a, b) => a.score - b.score);
 
         const maxScore = Math.max(...scores.map(s => s.score));
         let html = '';
