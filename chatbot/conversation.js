@@ -28,6 +28,12 @@ const ollamaModel = process.env.OLLAMA_MODEL;
 const ollamaAuth = process.env.OLLAMA_AUTH;
 const ollamaEnabled = false; // disabled — Ollama API is down, using Grok only
 
+// Ollama OpenAI-compatible client for local models via ngrok
+const ollamaClient = process.env.OLLAMA_URL
+  ? new OpenAI({ apiKey: 'ollama', baseURL: process.env.OLLAMA_URL,
+      defaultHeaders: { 'ngrok-skip-browser-warning': 'true' } })
+  : null;
+
 const GROK_MODEL = 'grok-4-1-fast-non-reasoning';
 
 // Models that should use OpenAI's API directly (free tier / direct key)
@@ -39,6 +45,12 @@ const OPENAI_DIRECT_MODELS = new Set([
 function getRevivalBackend() {
   const model = process.env.REVIVAL_MODEL;
   if (model) {
+    // Route local/ prefixed models to Ollama via ngrok (OpenAI-compatible endpoint)
+    if (model.startsWith('local/') && ollamaClient) {
+      const ollamaModelName = model.slice('local/'.length);
+      return { client: ollamaClient, model: ollamaModelName, tag: `local/${ollamaModelName}`,
+        extraParams: { max_tokens: 4096, temperature: 0.6 } };
+    }
     // Route OpenAI-native models to openaiClient (free tier), everything else to OpenRouter
     if (OPENAI_DIRECT_MODELS.has(model) && openaiClient) {
       return { client: openaiClient, model, tag: `openai/${model}`,
