@@ -1,11 +1,12 @@
 {
-  "generated": "2026-03-09T01:39:25.637Z",
-  "totalRuns": 88,
+  "generated": "2026-03-09T02:03:58.539Z",
+  "totalRuns": 108,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
     "minimax-m2.5",
-    "anthropic/claude-haiku-4.5"
+    "anthropic/claude-haiku-4.5",
+    "google/gemini-3.1-flash-lite-preview"
   ],
   "benchmarks": [
     "pick",
@@ -182,6 +183,47 @@
         "avgTime": 52416,
         "avgTools": 14,
         "avgFailures": 3
+      }
+    },
+    "google/gemini-3.1-flash-lite-preview": {
+      "overall": {
+        "pass": 0,
+        "total": 20,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null
+      },
+      "pick": {
+        "pass": 0,
+        "total": 5,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
+      },
+      "food": {
+        "pass": 0,
+        "total": 5,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
+      },
+      "shears": {
+        "pass": 0,
+        "total": 5,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
+      },
+      "diamonds": {
+        "pass": 0,
+        "total": 5,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
       }
     }
   },
@@ -977,6 +1019,186 @@
       "toolCalls": 0,
       "failures": 0,
       "ts": "2026-03-09T01:34:40.602Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 13135,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:45:38.232Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 40327,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:45:56.778Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "food",
+      "success": false,
+      "elapsed": 265888,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:50:16.983Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "food",
+      "success": false,
+      "elapsed": 301321,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:50:17.024Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 299683,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:50:17.071Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 306319,
+      "toolCalls": 4,
+      "failures": 2,
+      "ts": "2026-03-09T01:50:32.555Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 0,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:52:48.556Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 399906,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:52:48.769Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "food",
+      "success": false,
+      "elapsed": 302275,
+      "toolCalls": 1,
+      "failures": 0,
+      "ts": "2026-03-09T01:55:32.150Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 303597,
+      "toolCalls": 1,
+      "failures": 0,
+      "ts": "2026-03-09T01:55:33.141Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 304543,
+      "toolCalls": 1,
+      "failures": 0,
+      "ts": "2026-03-09T01:55:38.607Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 0,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:57:57.715Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "food",
+      "success": false,
+      "elapsed": 0,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:57:57.717Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 0,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:57:57.719Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 305456,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:58:04.672Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 300314,
+      "toolCalls": 1,
+      "failures": 0,
+      "ts": "2026-03-09T01:58:04.680Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 300124,
+      "toolCalls": 20,
+      "failures": 2,
+      "ts": "2026-03-09T02:03:12.203Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "food",
+      "success": false,
+      "elapsed": 302786,
+      "toolCalls": 14,
+      "failures": 1,
+      "ts": "2026-03-09T02:03:13.307Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 304053,
+      "toolCalls": 19,
+      "failures": 1,
+      "ts": "2026-03-09T02:03:28.401Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 301335,
+      "toolCalls": 19,
+      "failures": 2,
+      "ts": "2026-03-09T02:03:58.536Z"
     }
   ]
 }
