@@ -118,37 +118,69 @@
       max-width: 700px;
     }
 
-    /* ---------- Benchmark Cards ---------- */
-    .bench-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
+    /* ---------- Benchmark Carousel ---------- */
+    .carousel-wrap {
+      position: relative;
       margin-bottom: 2rem;
     }
+
+    .carousel-track {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 0.25rem 0;
+    }
+
+    .carousel-track::-webkit-scrollbar { display: none; }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .carousel-btn:hover { border-color: #3f3f46; color: var(--text); }
+    .carousel-btn.left { left: -14px; }
+    .carousel-btn.right { right: -14px; }
 
     .bench-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 0.75rem;
-      padding: 1.25rem;
+      padding: 1rem 1.25rem;
+      min-width: 180px;
+      flex-shrink: 0;
       transition: border-color 0.2s;
     }
 
     .bench-card:hover { border-color: #3f3f46; }
 
-    .bench-card .card-header {
-      margin-bottom: 0.25rem;
-    }
-
     .bench-card .bench-name {
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: var(--primary);
+      margin-bottom: 0.2rem;
     }
 
-    .bench-card .bench-goal {
+    .bench-card .bench-detail {
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-family: "Cascadia Code", "Fira Code", monospace;
     }
 
@@ -319,19 +351,37 @@
       font-family: "Cascadia Code", "Fira Code", monospace;
     }
 
-    .score-bar-area {
+    .score-mini-bars {
+      display: flex;
+      gap: 3px;
       flex: 2;
-      height: 8px;
-      background: #18181b;
-      border-radius: 4px;
-      overflow: hidden;
+      align-items: flex-end;
+      height: 28px;
     }
 
-    .score-bar-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    .score-mini-bar {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      min-width: 0;
+      position: relative;
+      transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     }
+
+    .score-mini-label {
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.5rem;
+      color: #52525b;
+      white-space: nowrap;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .score-row:hover .score-mini-label { opacity: 1; }
 
     .score-value {
       font-size: 1.4rem;
@@ -470,9 +520,13 @@
 
   <!-- Benchmark Definitions (rendered from data) -->
   <section id="tasks-section">
-    <h2>The Tasks</h2>
+    <h2>Benchmarks</h2>
     <p class="description">Each benchmark spawns a revival bot with a specific inventory and goal. The bot must plan and execute a multi-step crafting chain using tool calls — no human guidance.</p>
-    <div id="bench-grid" class="bench-grid"></div>
+    <div class="carousel-wrap">
+      <button class="carousel-btn left" id="carousel-left">&#8249;</button>
+      <div class="carousel-track" id="bench-carousel"></div>
+      <button class="carousel-btn right" id="carousel-right">&#8250;</button>
+    </div>
   </section>
 
   <!-- Dynamic sections rendered by JS -->
@@ -575,23 +629,28 @@
     );
     ranked.forEach((m, i) => { colorMap[m] = MODEL_COLORS[i % MODEL_COLORS.length]; });
 
-    // ── Task Cards (rendered from data) ──
-    const benchGrid = document.getElementById('bench-grid');
+    // ── Benchmark Carousel ──
+    const carousel = document.getElementById('bench-carousel');
     let cardsHTML = '';
     for (const b of benchmarks) {
       const name = benchNames[b] || b;
       const totalAll = models.reduce((sum, m) => sum + (summary[m]?.[b]?.total || 0), 0);
       const modelCount = models.filter(m => (summary[m]?.[b]?.total || 0) > 0).length;
-      const detail = totalAll > 0 ? `${totalAll} runs across ${modelCount} models` : 'no runs yet';
+      const detail = totalAll > 0 ? `${totalAll} runs \u00B7 ${modelCount} models` : 'no runs yet';
       cardsHTML += `
         <div class="bench-card">
-          <div class="card-header">
-            <div class="bench-name">${name}</div>
-          </div>
-          <div class="bench-goal">${detail}</div>
+          <div class="bench-name">${name}</div>
+          <div class="bench-detail">${detail}</div>
         </div>`;
     }
-    benchGrid.innerHTML = cardsHTML;
+    carousel.innerHTML = cardsHTML;
+
+    document.getElementById('carousel-left').addEventListener('click', () => {
+      carousel.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+    document.getElementById('carousel-right').addEventListener('click', () => {
+      carousel.scrollBy({ left: 200, behavior: 'smooth' });
+    });
 
     // Bar gradient: grey base → green tip for high scores
     // score 0 = flat grey, score 1 = grey base with bright green top
@@ -626,22 +685,28 @@
     const maxScore = Math.max(...scores.map(s => s.score));
     let glanceHTML = '';
     scores.forEach((s, i) => {
-      const pct = maxScore > 0 ? (s.score / maxScore) * 100 : 0;
-      // Best (low score) = green bar, worst (high score) = grey bar
-      // But bar width = score proportion, so best has shortest bar
-      // Color: shorter bar = greener (better)
       const norm = maxScore > 0 ? 1 - s.score / maxScore : 0.5;
-      const barSat = Math.round((1 - norm) * 20 + 10); // worst gets more saturation (penalty bar)
-      const barLight = 28 + Math.round((1 - norm) * 12);
-      const barColor = `hsl(0, ${barSat}%, ${barLight}%)`; // red-ish penalty bar
-      // Score text: green for best, fades to grey-red for worst
       const textSat = Math.round(norm * 50);
       const textLight = 35 + Math.round(norm * 18);
       const textColor = `hsl(145, ${textSat}%, ${textLight}%)`;
       const passRate = summary[s.model]?.overall?.rate;
       const pctStr = passRate != null ? `${Math.round(passRate * 100)}% pass` : '';
       const avgT = summary[s.model]?.overall?.avgTime;
-      const detail = [pctStr, avgT != null ? fmtTime(avgT) + ' avg' : ''].filter(Boolean).join(' · ');
+      const detail = [pctStr, avgT != null ? fmtTime(avgT) + ' avg' : ''].filter(Boolean).join(' \u00B7 ');
+
+      // Per-benchmark mini bars
+      let miniBarsHTML = '';
+      for (const b of benchmarks) {
+        const bs = summary[s.model]?.[b];
+        const rate = bs?.rate || 0;
+        const hPct = Math.max(rate * 100, 3); // min 3% so empty bars are visible
+        const hue = Math.round(rate * 120); // 0=red, 120=green
+        const sat = 15 + Math.round(rate * 40);
+        const light = 25 + Math.round(rate * 22);
+        const bg = `hsl(${hue}, ${sat}%, ${light}%)`;
+        const abbr = (benchNames[b] || b).slice(0, 4);
+        miniBarsHTML += `<div class="score-mini-bar" style="height: ${hPct}%; background: ${bg};" title="${benchNames[b] || b}: ${Math.round(rate * 100)}%"><div class="score-mini-label">${abbr}</div></div>`;
+      }
 
       glanceHTML += `
         <div class="score-row">
@@ -650,9 +715,7 @@
             <div class="score-model-name" style="color: ${colorMap[s.model]}">${s.model}</div>
             <div class="score-model-detail">${detail}</div>
           </div>
-          <div class="score-bar-area">
-            <div class="score-bar-fill" style="width: ${pct}%; background: ${barColor};"></div>
-          </div>
+          <div class="score-mini-bars">${miniBarsHTML}</div>
           <div class="score-value" style="color: ${textColor}">${s.score}</div>
         </div>`;
     });
