@@ -121,8 +121,8 @@
     /* ---------- Benchmark Cards ---------- */
     .bench-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
       margin-bottom: 2rem;
     }
 
@@ -130,7 +130,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 0.75rem;
-      padding: 1.5rem;
+      padding: 1.25rem;
       transition: border-color 0.2s;
     }
 
@@ -139,54 +139,52 @@
     .bench-card .card-header {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
+      gap: 0.6rem;
+      margin-bottom: 0.4rem;
     }
 
-    .bench-card .bench-icon {
-      width: 48px;
-      height: 48px;
+    .bench-card .bench-emoji {
+      font-size: 1.6rem;
+      line-height: 1;
       flex-shrink: 0;
-      image-rendering: pixelated;
     }
 
     .bench-card .bench-name {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--primary);
     }
 
     .bench-card .bench-goal {
       color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-bottom: 1rem;
+      font-size: 0.82rem;
+      margin-bottom: 0.75rem;
       font-style: italic;
     }
 
     .bench-card .bench-steps {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.35rem;
-      margin-bottom: 1rem;
+      gap: 0.3rem;
     }
 
     .bench-card .step {
       background: #18181b;
       border: 1px solid var(--border);
       border-radius: 0.35rem;
-      padding: 0.2rem 0.5rem;
-      font-size: 0.75rem;
+      padding: 0.15rem 0.45rem;
+      font-size: 0.72rem;
       font-family: "Cascadia Code", "Fira Code", monospace;
       color: var(--text-muted);
     }
 
-    .bench-card .inventory {
-      font-size: 0.8rem;
+    .bench-card .bench-inv {
+      font-size: 0.75rem;
       color: #52525b;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
     }
 
-    .bench-card .inventory span {
+    .bench-card .bench-inv span {
       color: var(--text-muted);
     }
 
@@ -226,6 +224,7 @@
       padding: 1.5rem 1.5rem 1rem;
       margin-bottom: 2rem;
       position: relative;
+      overflow-x: auto;
     }
 
     .vchart {
@@ -236,6 +235,7 @@
       height: 280px;
       position: relative;
       border-bottom: 1px solid #1e1e22;
+      min-width: fit-content;
     }
 
     .vchart-gridlines {
@@ -255,6 +255,7 @@
 
     .vchart-model {
       flex: 1;
+      min-width: 80px;
       max-width: 160px;
       display: flex;
       flex-direction: column;
@@ -421,6 +422,26 @@
       padding: 0.15rem 0.5rem;
     }
 
+    .model-header {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .model-header:hover td { background: rgba(255, 215, 0, 0.03); }
+
+    .model-chevron {
+      display: inline-block;
+      transition: transform 0.2s ease;
+      margin-right: 0.4rem;
+      font-size: 0.7rem;
+      color: #52525b;
+    }
+
+    .model-header.expanded .model-chevron { transform: rotate(90deg); }
+
+    .model-bench-row { transition: opacity 0.15s ease; }
+    .model-bench-row.collapsed { display: none; }
+
     /* ---------- Methodology ---------- */
     .method-list {
       list-style: none;
@@ -483,114 +504,11 @@
     <p>Measuring how well AI agents complete Minecraft survival tasks autonomously — from chopping wood to smelting iron.</p>
   </div>
 
-  <!-- Benchmark Definitions -->
-  <section>
+  <!-- Benchmark Definitions (rendered from data) -->
+  <section id="tasks-section">
     <h2>The Tasks</h2>
     <p class="description">Each benchmark spawns a revival bot with a specific inventory and goal. The bot must plan and execute a multi-step crafting chain using tool calls — no human guidance.</p>
-
-    <div class="bench-grid">
-      <div class="bench-card">
-        <div class="card-header">
-          <!-- Wooden Pickaxe pixel art -->
-          <svg class="bench-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-            <rect x="6" y="0" width="2" height="2" fill="#C4A46C"/>
-            <rect x="8" y="0" width="2" height="2" fill="#C4A46C"/>
-            <rect x="10" y="0" width="2" height="2" fill="#C4A46C"/>
-            <rect x="4" y="2" width="2" height="2" fill="#C4A46C"/>
-            <rect x="10" y="2" width="2" height="2" fill="#C4A46C"/>
-            <rect x="10" y="4" width="2" height="2" fill="#8B6914"/>
-            <rect x="8" y="6" width="2" height="2" fill="#8B6914"/>
-            <rect x="6" y="8" width="2" height="2" fill="#8B6914"/>
-            <rect x="4" y="10" width="2" height="2" fill="#8B6914"/>
-            <rect x="2" y="12" width="2" height="2" fill="#8B6914"/>
-          </svg>
-          <div class="bench-name">Wooden Pickaxe</div>
-        </div>
-        <div class="bench-goal">Craft a wooden pickaxe from nothing</div>
-        <div class="inventory">Start: <span>empty inventory</span></div>
-        <div class="bench-steps">
-          <span class="step">mine oak_log</span>
-          <span class="step">craft planks</span>
-          <span class="step">craft crafting_table</span>
-          <span class="step">place table</span>
-          <span class="step">craft sticks</span>
-          <span class="step">craft pickaxe</span>
-        </div>
-      </div>
-
-      <div class="bench-card">
-        <div class="card-header">
-          <!-- Cooked Steak pixel art -->
-          <svg class="bench-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="2" width="2" height="2" fill="#8B4513"/>
-            <rect x="6" y="2" width="2" height="2" fill="#A0522D"/>
-            <rect x="8" y="2" width="2" height="2" fill="#8B4513"/>
-            <rect x="2" y="4" width="2" height="2" fill="#8B4513"/>
-            <rect x="4" y="4" width="2" height="2" fill="#CD853F"/>
-            <rect x="6" y="4" width="2" height="2" fill="#D2691E"/>
-            <rect x="8" y="4" width="2" height="2" fill="#CD853F"/>
-            <rect x="10" y="4" width="2" height="2" fill="#8B4513"/>
-            <rect x="2" y="6" width="2" height="2" fill="#A0522D"/>
-            <rect x="4" y="6" width="2" height="2" fill="#D2691E"/>
-            <rect x="6" y="6" width="2" height="2" fill="#F4A460"/>
-            <rect x="8" y="6" width="2" height="2" fill="#D2691E"/>
-            <rect x="10" y="6" width="2" height="2" fill="#A0522D"/>
-            <rect x="2" y="8" width="2" height="2" fill="#8B4513"/>
-            <rect x="4" y="8" width="2" height="2" fill="#CD853F"/>
-            <rect x="6" y="8" width="2" height="2" fill="#D2691E"/>
-            <rect x="8" y="8" width="2" height="2" fill="#CD853F"/>
-            <rect x="10" y="8" width="2" height="2" fill="#8B4513"/>
-            <rect x="4" y="10" width="2" height="2" fill="#8B4513"/>
-            <rect x="6" y="10" width="2" height="2" fill="#A0522D"/>
-            <rect x="8" y="10" width="2" height="2" fill="#8B4513"/>
-          </svg>
-          <div class="bench-name">Cooked Food</div>
-        </div>
-        <div class="bench-goal">Kill an animal and cook the meat</div>
-        <div class="inventory">Start: <span>wooden tools, cobblestone, planks, crafting table</span></div>
-        <div class="bench-steps">
-          <span class="step">craft furnace</span>
-          <span class="step">place furnace</span>
-          <span class="step">kill animal</span>
-          <span class="step">smelt meat</span>
-        </div>
-      </div>
-
-      <div class="bench-card">
-        <div class="card-header">
-          <!-- Shears pixel art -->
-          <svg class="bench-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="0" width="2" height="2" fill="#C0C0C0"/>
-            <rect x="10" y="0" width="2" height="2" fill="#C0C0C0"/>
-            <rect x="4" y="2" width="2" height="2" fill="#A8A8A8"/>
-            <rect x="10" y="2" width="2" height="2" fill="#A8A8A8"/>
-            <rect x="4" y="4" width="2" height="2" fill="#C0C0C0"/>
-            <rect x="6" y="4" width="2" height="2" fill="#A8A8A8"/>
-            <rect x="8" y="4" width="2" height="2" fill="#A8A8A8"/>
-            <rect x="10" y="4" width="2" height="2" fill="#C0C0C0"/>
-            <rect x="6" y="6" width="2" height="2" fill="#D3D3D3"/>
-            <rect x="8" y="6" width="2" height="2" fill="#D3D3D3"/>
-            <rect x="4" y="8" width="2" height="2" fill="#C0C0C0"/>
-            <rect x="6" y="8" width="2" height="2" fill="#A8A8A8"/>
-            <rect x="8" y="8" width="2" height="2" fill="#A8A8A8"/>
-            <rect x="10" y="8" width="2" height="2" fill="#C0C0C0"/>
-            <rect x="4" y="10" width="2" height="2" fill="#808080"/>
-            <rect x="10" y="10" width="2" height="2" fill="#808080"/>
-            <rect x="4" y="12" width="2" height="2" fill="#696969"/>
-            <rect x="10" y="12" width="2" height="2" fill="#696969"/>
-          </svg>
-          <div class="bench-name">Iron Shears</div>
-        </div>
-        <div class="bench-goal">Mine iron, smelt ingots, craft shears</div>
-        <div class="inventory">Start: <span>stone pickaxe, furnace, food, planks</span></div>
-        <div class="bench-steps">
-          <span class="step">mine iron_ore</span>
-          <span class="step">place furnace</span>
-          <span class="step">smelt raw_iron</span>
-          <span class="step">craft shears</span>
-        </div>
-      </div>
-    </div>
+    <div id="bench-grid" class="bench-grid"></div>
   </section>
 
   <!-- Dynamic sections rendered by JS -->
@@ -669,6 +587,37 @@
 
     const { models, benchmarks, benchNames, summary, totalRuns, generated } = data;
 
+    // ── Task Card Metadata ──
+    const BENCH_META = {
+      pick:     { emoji: '\u26CF\uFE0F', goal: 'Craft a wooden pickaxe from nothing', inv: 'empty inventory', steps: ['mine oak_log', 'craft planks', 'craft crafting_table', 'place table', 'craft sticks', 'craft pickaxe'] },
+      food:     { emoji: '\uD83E\uDD69', goal: 'Kill an animal and cook the meat', inv: 'wooden tools, cobblestone, planks, crafting table', steps: ['craft furnace', 'place furnace', 'kill animal', 'smelt meat'] },
+      shears:   { emoji: '\u2702\uFE0F', goal: 'Mine iron, smelt ingots, craft shears', inv: 'stone pickaxe, furnace, food, planks', steps: ['mine iron_ore', 'place furnace', 'smelt raw_iron', 'craft shears'] },
+      diamonds: { emoji: '\uD83D\uDC8E', goal: 'Find diamonds and craft full diamond armor', inv: 'empty inventory (chest nearby)', steps: ['open chest', 'craft armor pieces'] },
+    };
+    const DEFAULT_META = { emoji: '\u2753', goal: '', inv: 'varies', steps: [] };
+
+    // Render task cards from data
+    const benchGrid = document.getElementById('bench-grid');
+    let cardsHTML = '';
+    for (const b of benchmarks) {
+      const meta = BENCH_META[b] || DEFAULT_META;
+      const name = benchNames[b] || b;
+      const goal = meta.goal || name;
+      cardsHTML += `
+        <div class="bench-card">
+          <div class="card-header">
+            <div class="bench-emoji">${meta.emoji}</div>
+            <div class="bench-name">${name}</div>
+          </div>
+          <div class="bench-goal">${goal}</div>
+          <div class="bench-inv">Start: <span>${meta.inv}</span></div>
+          <div class="bench-steps">
+            ${meta.steps.map(s => `<span class="step">${s}</span>`).join('')}
+          </div>
+        </div>`;
+    }
+    benchGrid.innerHTML = cardsHTML;
+
     // ── Helpers ──
     function fmtTime(ms) {
       if (ms == null) return '-';
@@ -680,12 +629,6 @@
       if (rate >= 1) return 'pass';
       if (rate < 0.4) return 'fail';
       return 'partial-text';
-    }
-
-    function rateColorClass(rate) {
-      if (rate >= 0.8) return 'green';
-      if (rate >= 0.5) return 'orange';
-      return 'red';
     }
 
     // Warm label palette: yellow → orange → red → magenta (muted)
@@ -768,7 +711,6 @@
     const benchSelect = document.getElementById('bench-select');
     const metricSelect = document.getElementById('metric-select');
     const vchartEl = document.getElementById('vchart');
-    const legendEl = document.getElementById('vchart-legend');
 
     // Populate benchmark dropdown
     for (const b of benchmarks) {
@@ -871,15 +813,17 @@
     metricSelect.addEventListener('change', renderChart);
     renderChart();
 
-    // ── Detailed Table ──
+    // ── Detailed Table (collapsible) ──
     const tbody = document.getElementById('results-tbody');
     let tableHTML = '';
     for (let mi = 0; mi < ranked.length; mi++) {
       const m = ranked[mi];
+      const groupId = `model-group-${mi}`;
+      const expanded = mi === 0; // first model expanded by default
       tableHTML += `
-        <tr>
+        <tr class="model-header ${expanded ? 'expanded' : ''}" data-group="${groupId}">
           <td colspan="4" style="padding-top: ${mi > 0 ? '1.25rem' : '0.5rem'}; border-bottom: none;">
-            <span class="model-tag" style="border-color:${colorMap[m]};color:${colorMap[m]}">${m}</span>
+            <span class="model-chevron">\u25B6</span><span class="model-tag" style="border-color:${colorMap[m]};color:${colorMap[m]}">${m}</span>
           </td>
         </tr>`;
       for (const bench of benchmarks) {
@@ -896,7 +840,7 @@
         const isBestTime = s.avgTime != null && s.avgTime <= bestTime;
 
         tableHTML += `
-          <tr>
+          <tr class="model-bench-row ${groupId} ${expanded ? '' : 'collapsed'}">
             <td>${name}</td>
             <td class="${rateTextClass(s.rate)}">${s.pass}/${s.total} (${pct}%)</td>
             <td${isBestTime ? ' class="best"' : ''}>${fmtTime(s.avgTime)}</td>
@@ -905,6 +849,17 @@
       }
     }
     tbody.innerHTML = tableHTML;
+
+    // Toggle collapse on model header click
+    tbody.addEventListener('click', (e) => {
+      const header = e.target.closest('.model-header');
+      if (!header) return;
+      const groupId = header.dataset.group;
+      const isExpanded = header.classList.toggle('expanded');
+      tbody.querySelectorAll(`.${groupId}`).forEach(row => {
+        row.classList.toggle('collapsed', !isExpanded);
+      });
+    });
 
     // ── Last updated ──
     const ts = new Date(generated);
