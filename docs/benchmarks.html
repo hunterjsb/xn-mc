@@ -713,30 +713,37 @@
     }
 
     // ── Weighted Scores ──
-    // Score = sum across benchmarks of (avgTime_seconds * solveRate). Lower = better.
+    // Score = Σ((1 - rate) * avgTime_sec) / n — lower is better (fast + high pass rate = low score)
     const scores = ranked.map(m => {
-      let total = 0;
+      let total = 0, n = 0;
       for (const b of benchmarks) {
         const s = summary[m]?.[b];
         if (!s || s.avgTime == null) continue;
-        total += (s.avgTime / 1000) * (s.rate || 0);
+        total += (1 - (s.rate || 0)) * (s.avgTime / 1000);
+        n++;
       }
-      return { model: m, score: Math.round(total) };
+      return { model: m, score: n > 0 ? Math.round(total / n) : 0 };
     }).sort((a, b) => a.score - b.score); // lower is better
 
     const glanceDesc = document.querySelector('#glance-section .description');
-    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = \u03A3(avg_time \u00D7 solve_rate) — lower is better.`;
+    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = \u03A3((1 \u2212 rate) \u00D7 time) / n \u2014 lower is better.`;
 
     const glanceGrid = document.getElementById('glance-grid');
     const maxScore = Math.max(...scores.map(s => s.score));
     let glanceHTML = '';
     scores.forEach((s, i) => {
       const pct = maxScore > 0 ? (s.score / maxScore) * 100 : 0;
-      // Best = green, worst = grey
+      // Best (low score) = green bar, worst (high score) = grey bar
+      // But bar width = score proportion, so best has shortest bar
+      // Color: shorter bar = greener (better)
       const norm = maxScore > 0 ? 1 - s.score / maxScore : 0.5;
-      const barSat = Math.round(norm * 50);
-      const barLight = 30 + Math.round(norm * 20);
-      const barColor = `hsl(145, ${barSat}%, ${barLight}%)`;
+      const barSat = Math.round((1 - norm) * 20 + 10); // worst gets more saturation (penalty bar)
+      const barLight = 28 + Math.round((1 - norm) * 12);
+      const barColor = `hsl(0, ${barSat}%, ${barLight}%)`; // red-ish penalty bar
+      // Score text: green for best, fades to grey-red for worst
+      const textSat = Math.round(norm * 50);
+      const textLight = 35 + Math.round(norm * 18);
+      const textColor = `hsl(145, ${textSat}%, ${textLight}%)`;
       const passRate = summary[s.model]?.overall?.rate;
       const pctStr = passRate != null ? `${Math.round(passRate * 100)}% pass` : '';
       const avgT = summary[s.model]?.overall?.avgTime;
@@ -752,7 +759,7 @@
           <div class="score-bar-area">
             <div class="score-bar-fill" style="width: ${pct}%; background: ${barColor};"></div>
           </div>
-          <div class="score-value" style="color: ${barColor}">${s.score}s</div>
+          <div class="score-value" style="color: ${textColor}">${s.score}s</div>
         </div>`;
     });
     glanceGrid.innerHTML = glanceHTML;
