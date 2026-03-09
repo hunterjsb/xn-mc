@@ -733,7 +733,8 @@
       const passRate = summary[s.model]?.overall?.rate;
       const pctStr = passRate != null ? `${Math.round(passRate * 100)}% pass` : '';
       const avgT = summary[s.model]?.overall?.avgTime;
-      const detail = [pctStr, avgT != null ? fmtTime(avgT) + ' avg' : ''].filter(Boolean).join(' \u00B7 ');
+      const totalSamples = summary[s.model]?.overall?.total || 0;
+      const detail = [pctStr, avgT != null ? fmtTime(avgT) + ' avg' : '', `n=${totalSamples}`].filter(Boolean).join(' \u00B7 ');
 
       // Per-benchmark mini bars
       let miniBarsHTML = '';

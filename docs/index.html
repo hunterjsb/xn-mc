@@ -42,6 +42,7 @@
     .hero {
       text-align: center;
       padding: 5rem 1.5rem 3rem;
+      max-width: none;
       background: linear-gradient(180deg, #1a1400 0%, #09090b 100%);
     }
 
@@ -456,10 +457,12 @@
           const color = `hsl(145, ${sat}%, ${light}%)`;
           const rate = summary[s.model]?.overall?.rate;
           const pct = rate != null ? Math.round(rate * 100) + '% pass' : '';
+          const totalSamples = summary[s.model]?.overall?.total || 0;
+          const detailParts = [pct, 'n=' + totalSamples].filter(Boolean).join(' \u00B7 ');
           html += '<div class="rank-row">' +
             '<div class="rank-pos">' + (i + 1) + '</div>' +
             '<div class="rank-name" style="color:' + MODEL_COLORS[i % MODEL_COLORS.length] + '">' + s.model + '</div>' +
-            '<div class="rank-detail">' + pct + '</div>' +
+            '<div class="rank-detail">' + detailParts + '</div>' +
             '<div class="rank-score" style="color:' + color + '">' + s.score + '</div>' +
             '</div>';
         });
