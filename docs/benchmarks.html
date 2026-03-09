@@ -351,13 +351,27 @@
       font-family: "Cascadia Code", "Fira Code", monospace;
     }
 
+    .score-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .score-col-label {
+      font-size: 0.55rem;
+      color: #3f3f46;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      margin-bottom: 0.2rem;
+    }
+
     .score-mini-bars {
       display: flex;
       gap: 2px;
       align-items: flex-end;
-      height: 36px;
-      width: 80px;
-      flex-shrink: 0;
+      height: 32px;
     }
 
     .score-mini-bar {
@@ -387,8 +401,6 @@
       font-size: 1.4rem;
       font-weight: 700;
       font-family: "Cascadia Code", "Fira Code", monospace;
-      min-width: 4.5rem;
-      text-align: right;
     }
 
     /* ---------- Results Table ---------- */
@@ -715,8 +727,14 @@
             <div class="score-model-name" style="color: ${colorMap[s.model]}">${s.model}</div>
             <div class="score-model-detail">${detail}</div>
           </div>
-          <div class="score-mini-bars">${miniBarsHTML}</div>
-          <div class="score-value" style="color: ${textColor}">${s.score}</div>
+          <div class="score-col">
+            <div class="score-col-label">pass rate</div>
+            <div class="score-mini-bars">${miniBarsHTML}</div>
+          </div>
+          <div class="score-col">
+            <div class="score-col-label">score</div>
+            <div class="score-value" style="color: ${textColor}">${s.score}</div>
+          </div>
         </div>`;
     });
     glanceGrid.innerHTML = glanceHTML;
