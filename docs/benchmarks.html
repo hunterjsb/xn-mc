@@ -937,9 +937,9 @@
 
           const bg = barGradient(score, heightPct);
           const showLabel = metrics.length <= 3;
-          const border = multi ? `border-left:2px solid ${METRIC_COLORS[metric]};` : '';
+          const indicator = multi ? `box-shadow:inset 0 -3px 0 ${METRIC_COLORS[metric]};` : '';
 
-          barsHTML += `<div class="vchart-bar" style="width:${barW}px;height:${Math.max(heightPct, 1)}%;background:${bg};${border}${groupGap ? `margin:0 ${groupGap/2}px` : ''}">${showLabel ? `<div class="vchart-bar-label">${label}</div>` : ''}</div>`;
+          barsHTML += `<div class="vchart-bar" style="width:${barW}px;height:${Math.max(heightPct, 1)}%;background:${bg};${indicator}${groupGap ? `margin:0 ${groupGap/2}px` : ''}">${showLabel ? `<div class="vchart-bar-label">${label}</div>` : ''}</div>`;
         }
 
         html += `
