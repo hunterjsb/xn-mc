@@ -821,9 +821,6 @@
     const vchartEl = document.getElementById('vchart');
     const legendEl = document.getElementById('vchart-legend');
 
-    // Benchmark bar colors (one per benchmark)
-    const BENCH_COLORS = ['#5cb85c', '#3b82f6', '#f59e0b', '#a855f7', '#ef4444', '#06b6d4', '#ec4899', '#84cc16'];
-
     // Populate benchmark pills (all active by default)
     const selectedBenches = new Set(benchmarks);
     for (const b of benchmarks) {
@@ -842,13 +839,16 @@
       benchPills.appendChild(btn);
     }
 
-    // Metric pills (single-select / radio)
-    let selectedMetric = 'rate';
+    // Metric pills (multi-select, min 1)
+    const selectedMetrics = new Set(['rate']);
     metricPills.querySelectorAll('.pill').forEach(btn => {
       btn.addEventListener('click', () => {
-        metricPills.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        selectedMetric = btn.dataset.value;
+        const v = btn.dataset.value;
+        if (selectedMetrics.has(v)) {
+          if (selectedMetrics.size > 1) { selectedMetrics.delete(v); btn.classList.remove('active'); }
+        } else {
+          selectedMetrics.add(v); btn.classList.add('active');
+        }
         renderChart();
       });
     });
@@ -860,42 +860,49 @@
       return s.avgTools;
     }
 
+    const METRIC_LABELS = { rate: 'Pass Rate', time: 'Avg Time', tools: 'Tool Calls' };
+    const METRIC_COLORS = { rate: '#5cb85c', time: '#3b82f6', tools: '#f59e0b' };
+
+    // Aggregate a metric across selected benchmarks for a model
+    function aggVal(model, metric, activeBenches) {
+      const vals = [];
+      for (const b of activeBenches) {
+        const v = getVal(summary[model]?.[b], metric);
+        if (v != null) vals.push(v);
+      }
+      if (vals.length === 0) return null;
+      return vals.reduce((a, b) => a + b, 0) / vals.length;
+    }
+
     function renderChart() {
       const activeBenches = benchmarks.filter(b => selectedBenches.has(b));
-      const metric = selectedMetric;
-      const multi = activeBenches.length > 1;
+      const metrics = ['rate', 'time', 'tools'].filter(m => selectedMetrics.has(m));
+      const multi = metrics.length > 1;
 
-      // Sort models by first selected benchmark metric
+      // Sort models by first selected metric (aggregated across benchmarks)
+      const primaryMetric = metrics[0];
       const sorted = [...ranked].sort((a, b) => {
-        // Average across selected benchmarks for sorting
-        const avgA = activeBenches.reduce((s, bench) => s + (getVal(summary[a]?.[bench], metric) ?? 9999), 0) / activeBenches.length;
-        const avgB = activeBenches.reduce((s, bench) => s + (getVal(summary[b]?.[bench], metric) ?? 9999), 0) / activeBenches.length;
-        return metric === 'rate' ? avgB - avgA : avgA - avgB;
+        const va = aggVal(a, primaryMetric, activeBenches) ?? 9999;
+        const vb = aggVal(b, primaryMetric, activeBenches) ?? 9999;
+        return primaryMetric === 'rate' ? vb - va : va - vb;
       });
 
-      // Find global max for scaling
-      let maxVal = 0;
-      for (const m of sorted) {
-        for (const bench of activeBenches) {
-          const v = getVal(summary[m]?.[bench], metric);
-          if (v != null && v > maxVal) maxVal = v;
+      // Compute per-metric scaling (each metric has its own max/min/range)
+      const metricStats = {};
+      for (const metric of metrics) {
+        let maxV = 0, allVals = [];
+        for (const m of sorted) {
+          const v = aggVal(m, metric, activeBenches);
+          if (v != null) { allVals.push(v); if (v > maxV) maxV = v; }
         }
+        if (metric === 'rate') maxV = 1;
+        const minV = allVals.length ? Math.min(...allVals) : 0;
+        const range = (allVals.length ? Math.max(...allVals) : 0) - minV;
+        metricStats[metric] = { maxV, minV, range };
       }
-      if (metric === 'rate') maxVal = 1;
 
-      // Global min/max for color normalization
-      const allVals = [];
-      for (const m of sorted) {
-        for (const bench of activeBenches) {
-          const v = getVal(summary[m]?.[bench], metric);
-          if (v != null) allVals.push(v);
-        }
-      }
-      const minV = Math.min(...allVals), maxV = Math.max(...allVals);
-      const range = maxV - minV;
-
-      // Bar width scales with number of benchmarks
-      const barW = multi ? Math.max(Math.round(36 / activeBenches.length), 8) : 44;
+      // Bar width scales with number of metrics
+      const barW = multi ? Math.max(Math.round(40 / metrics.length), 10) : 44;
       const groupGap = multi ? 2 : 0;
 
       // Gridlines
@@ -905,22 +912,22 @@
 
       for (const m of sorted) {
         let barsHTML = '';
-        for (let bi = 0; bi < activeBenches.length; bi++) {
-          const bench = activeBenches[bi];
-          const s = summary[m]?.[bench];
-          const v = getVal(s, metric);
+        for (const metric of metrics) {
+          const v = aggVal(m, metric, activeBenches);
+          const { maxV, minV, range } = metricStats[metric];
           let label, heightPct;
           if (metric === 'rate') {
             label = v != null ? `${Math.round(v * 100)}%` : '-';
             heightPct = (v || 0) * 100;
           } else if (metric === 'time') {
-            label = fmtTime(v);
-            heightPct = (v != null && maxVal > 0) ? (v / maxVal) * 100 : 0;
+            label = fmtTime(v != null ? Math.round(v) : null);
+            heightPct = (v != null && maxV > 0) ? (v / maxV) * 100 : 0;
           } else {
-            label = v != null ? String(v) : '-';
-            heightPct = (v != null && maxVal > 0) ? (v / maxVal) * 100 : 0;
+            label = v != null ? String(Math.round(v)) : '-';
+            heightPct = (v != null && maxV > 0) ? (v / maxV) * 100 : 0;
           }
 
+          // Normalized score for gradient (0=worst, 1=best)
           let score = 0.5;
           if (v != null && range > 0) {
             score = metric === 'rate' ? (v - minV) / range : 1 - (v - minV) / range;
@@ -928,12 +935,11 @@
             score = v;
           }
 
-          const bg = multi
-            ? BENCH_COLORS[benchmarks.indexOf(bench) % BENCH_COLORS.length]
-            : barGradient(score, heightPct);
-          const showLabel = !multi || activeBenches.length <= 2;
+          const bg = barGradient(score, heightPct);
+          const showLabel = metrics.length <= 3;
+          const border = multi ? `border-left:2px solid ${METRIC_COLORS[metric]};` : '';
 
-          barsHTML += `<div class="vchart-bar" style="width:${barW}px;height:${Math.max(heightPct, 1)}%;background:${bg};${groupGap ? `margin:0 ${groupGap/2}px` : ''}">${showLabel ? `<div class="vchart-bar-label">${label}</div>` : ''}</div>`;
+          barsHTML += `<div class="vchart-bar" style="width:${barW}px;height:${Math.max(heightPct, 1)}%;background:${bg};${border}${groupGap ? `margin:0 ${groupGap/2}px` : ''}">${showLabel ? `<div class="vchart-bar-label">${label}</div>` : ''}</div>`;
         }
 
         html += `
@@ -946,10 +952,10 @@
       }
       vchartEl.innerHTML = html;
 
-      // Legend (only when multi-benchmark)
+      // Legend (when multiple metrics selected)
       if (multi) {
-        legendEl.innerHTML = activeBenches.map((b, i) =>
-          `<div class="vchart-legend-item"><div class="vchart-legend-swatch" style="background:${BENCH_COLORS[benchmarks.indexOf(b) % BENCH_COLORS.length]}"></div>${benchNames[b] || b}</div>`
+        legendEl.innerHTML = metrics.map(metric =>
+          `<div class="vchart-legend-item"><div class="vchart-legend-swatch" style="background:${METRIC_COLORS[metric]}"></div>${METRIC_LABELS[metric]}</div>`
         ).join('');
       } else {
         legendEl.innerHTML = '';
