@@ -1,21 +1,24 @@
 {
-  "generated": "2026-03-08T23:43:44.336Z",
-  "totalRuns": 60,
+  "generated": "2026-03-09T01:18:55.007Z",
+  "totalRuns": 80,
   "models": [
     "grok-4.1-fast",
     "gpt-5-mini",
     "minimax-m2.5",
-    "anthropic/claude-haiku-4.5"
+    "anthropic/claude-haiku-4.5",
+    "x-ai/grok-4.1-fast"
   ],
   "benchmarks": [
     "pick",
     "food",
-    "shears"
+    "shears",
+    "diamonds"
   ],
   "benchNames": {
     "pick": "Wooden Pickaxe",
     "food": "Cooked Food",
-    "shears": "Iron Shears"
+    "shears": "Iron Shears",
+    "diamonds": "Diamond Armor"
   },
   "summary": {
     "grok-4.1-fast": {
@@ -49,38 +52,54 @@
         "avgTime": 98000,
         "avgTools": 6,
         "avgFailures": 0
+      },
+      "diamonds": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
       }
     },
     "gpt-5-mini": {
       "overall": {
-        "pass": 9,
-        "total": 15,
-        "rate": 0.6,
-        "avgTime": 172333,
-        "avgTools": 7
+        "pass": 15,
+        "total": 26,
+        "rate": 0.5769230769230769,
+        "avgTime": 160251,
+        "avgTools": 8
       },
       "pick": {
         "pass": 3,
-        "total": 5,
-        "rate": 0.6,
+        "total": 6,
+        "rate": 0.5,
         "avgTime": 190000,
         "avgTools": 9,
         "avgFailures": 0
       },
       "food": {
-        "pass": 3,
-        "total": 5,
-        "rate": 0.6,
-        "avgTime": 185000,
+        "pass": 4,
+        "total": 6,
+        "rate": 0.6666666666666666,
+        "avgTime": 178810,
         "avgTools": 8,
         "avgFailures": 0
       },
       "shears": {
-        "pass": 3,
-        "total": 5,
-        "rate": 0.6,
-        "avgTime": 142000,
+        "pass": 4,
+        "total": 6,
+        "rate": 0.6666666666666666,
+        "avgTime": 138908,
         "avgTools": 5,
+        "avgFailures": 0
+      },
+      "diamonds": {
+        "pass": 4,
+        "total": 8,
+        "rate": 0.5,
+        "avgTime": 140724,
+        "avgTools": 11,
         "avgFailures": 0
       }
     },
@@ -115,15 +134,23 @@
         "avgTime": 85000,
         "avgTools": 6,
         "avgFailures": 0
+      },
+      "diamonds": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
       }
     },
     "anthropic/claude-haiku-4.5": {
       "overall": {
-        "pass": 11,
-        "total": 15,
-        "rate": 0.7333333333333333,
-        "avgTime": 72636,
-        "avgTools": 7
+        "pass": 13,
+        "total": 17,
+        "rate": 0.7647058823529411,
+        "avgTime": 69525,
+        "avgTools": 8
       },
       "pick": {
         "pass": 4,
@@ -148,6 +175,55 @@
         "avgTime": 67750,
         "avgTools": 5,
         "avgFailures": 0
+      },
+      "diamonds": {
+        "pass": 2,
+        "total": 2,
+        "rate": 1,
+        "avgTime": 52416,
+        "avgTools": 14,
+        "avgFailures": 3
+      }
+    },
+    "x-ai/grok-4.1-fast": {
+      "overall": {
+        "pass": 3,
+        "total": 7,
+        "rate": 0.42857142857142855,
+        "avgTime": 118418,
+        "avgTools": 13
+      },
+      "pick": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
+      },
+      "food": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
+      },
+      "shears": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
+      },
+      "diamonds": {
+        "pass": 3,
+        "total": 7,
+        "rate": 0.42857142857142855,
+        "avgTime": 118418,
+        "avgTools": 13,
+        "avgFailures": 1
       }
     }
   },
@@ -691,6 +767,186 @@
       "toolCalls": 5,
       "failures": 0,
       "ts": "2026-03-08T23:36:03Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 303006,
+      "toolCalls": 11,
+      "failures": 5,
+      "ts": "2026-03-08T23:51:11.792Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 303616,
+      "toolCalls": 14,
+      "failures": 1,
+      "ts": "2026-03-08T23:58:49.264Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 15544,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T00:11:09.932Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 149293,
+      "toolCalls": 10,
+      "failures": 0,
+      "ts": "2026-03-09T00:14:10.036Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 301856,
+      "toolCalls": 12,
+      "failures": 1,
+      "ts": "2026-03-09T00:43:05.044Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 129631,
+      "toolCalls": 5,
+      "failures": 0,
+      "ts": "2026-03-09T00:49:50.452Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": true,
+      "elapsed": 160240,
+      "toolCalls": 7,
+      "failures": 1,
+      "ts": "2026-03-09T00:50:21.242Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 303375,
+      "toolCalls": 11,
+      "failures": 4,
+      "ts": "2026-03-09T00:52:44.728Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 129892,
+      "toolCalls": 11,
+      "failures": 1,
+      "ts": "2026-03-09T01:04:55.304Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 300098,
+      "toolCalls": 5,
+      "failures": 1,
+      "ts": "2026-03-09T01:07:45.497Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 300137,
+      "toolCalls": 5,
+      "failures": 0,
+      "ts": "2026-03-09T01:07:45.515Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 180614,
+      "toolCalls": 10,
+      "failures": 0,
+      "ts": "2026-03-09T01:08:07.305Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 103095,
+      "toolCalls": 11,
+      "failures": 0,
+      "ts": "2026-03-09T01:09:39.932Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 35010,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:10:37.987Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 46422,
+      "toolCalls": 9,
+      "failures": 0,
+      "ts": "2026-03-09T01:10:49.810Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 65736,
+      "toolCalls": 10,
+      "failures": 1,
+      "ts": "2026-03-09T01:11:55.400Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 243095,
+      "toolCalls": 21,
+      "failures": 3,
+      "ts": "2026-03-09T01:14:06.140Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 300102,
+      "toolCalls": 14,
+      "failures": 0,
+      "ts": "2026-03-09T01:16:01.604Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 27664,
+      "toolCalls": 10,
+      "failures": 1,
+      "ts": "2026-03-09T01:17:31.856Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 77167,
+      "toolCalls": 17,
+      "failures": 4,
+      "ts": "2026-03-09T01:18:21.649Z"
     }
   ]
 }
