@@ -166,10 +166,24 @@
       padding: 1rem 1.25rem;
       min-width: 180px;
       flex-shrink: 0;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, min-width 0.3s;
+      cursor: pointer;
     }
 
     .bench-card:hover { border-color: #3f3f46; }
+    .bench-card.expanded { min-width: 280px; border-color: #3f3f46; }
+
+    .bench-card .bench-desc {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+      margin-top: 0.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .bench-card.expanded .bench-desc { max-height: 8rem; }
 
     .bench-card .card-header {
       display: flex;
@@ -707,6 +721,14 @@
       food: 'https://minecraft.wiki/images/Invicon_Cooked_Beef.png',
       shears: 'https://minecraft.wiki/images/Invicon_Shears.png',
       diamonds: 'https://minecraft.wiki/images/Invicon_Diamond_Chestplate.png',
+      collect: 'https://minecraft.wiki/images/Invicon_Iron_Pickaxe.png',
+    };
+    const BENCH_DESCS = {
+      pick: 'Start with nothing. Chop logs, craft planks, sticks, a crafting table, and a wooden pickaxe.',
+      food: 'Given basic wood tools & cobblestone. Craft a furnace, hunt an animal, and cook the meat.',
+      shears: 'Given stone tools & a furnace. Mine iron ore, smelt it into ingots, and craft shears.',
+      diamonds: 'Start with nothing. Mine all the way to diamonds and craft a full set of diamond armor.',
+      collect: 'Given iron tools. Gather 16 dirt, 8 logs (any type), and 16 cobblestone.',
     };
     const carousel = document.getElementById('bench-carousel');
     let cardsHTML = '';
@@ -717,13 +739,21 @@
       const detail = totalAll > 0 ? `${totalAll} runs \u00B7 ${modelCount} models` : 'no runs yet';
       const icon = BENCH_ICONS[b];
       const iconHTML = icon ? `<img class="bench-icon" src="${icon}" alt="${name}">` : '';
+      const desc = BENCH_DESCS[b] || '';
       cardsHTML += `
-        <div class="bench-card">
+        <div class="bench-card" data-bench="${b}">
           <div class="card-header">${iconHTML}<div class="bench-name">${name}</div></div>
           <div class="bench-detail">${detail}</div>
+          ${desc ? `<div class="bench-desc">${desc}</div>` : ''}
         </div>`;
     }
     carousel.innerHTML = cardsHTML;
+
+    carousel.addEventListener('click', (e) => {
+      const card = e.target.closest('.bench-card');
+      if (!card) return;
+      card.classList.toggle('expanded');
+    });
 
     document.getElementById('carousel-left').addEventListener('click', () => {
       carousel.scrollBy({ left: -200, behavior: 'smooth' });
