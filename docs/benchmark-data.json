@@ -1,12 +1,13 @@
 {
-  "generated": "2026-03-09T02:03:58.539Z",
-  "totalRuns": 108,
+  "generated": "2026-03-09T02:27:55.236Z",
+  "totalRuns": 128,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
     "minimax-m2.5",
     "anthropic/claude-haiku-4.5",
-    "google/gemini-3.1-flash-lite-preview"
+    "google/gemini-3.1-flash-lite-preview",
+    "qwen/qwen3.5-flash-02-23"
   ],
   "benchmarks": [
     "pick",
@@ -19,6 +20,12 @@
     "food": "Cooked Food",
     "shears": "Iron Shears",
     "diamonds": "Diamond Armor"
+  },
+  "benchTimeouts": {
+    "pick": 300000,
+    "food": 300000,
+    "shears": 300000,
+    "diamonds": 300000
   },
   "summary": {
     "x-ai/grok-4.1-fast": {
@@ -224,6 +231,47 @@
         "avgTime": null,
         "avgTools": null,
         "avgFailures": null
+      }
+    },
+    "qwen/qwen3.5-flash-02-23": {
+      "overall": {
+        "pass": 4,
+        "total": 20,
+        "rate": 0.2,
+        "avgTime": 136217,
+        "avgTools": 10
+      },
+      "pick": {
+        "pass": 0,
+        "total": 5,
+        "rate": 0,
+        "avgTime": null,
+        "avgTools": null,
+        "avgFailures": null
+      },
+      "food": {
+        "pass": 2,
+        "total": 5,
+        "rate": 0.4,
+        "avgTime": 98246,
+        "avgTools": 7,
+        "avgFailures": 2
+      },
+      "shears": {
+        "pass": 1,
+        "total": 5,
+        "rate": 0.2,
+        "avgTime": 122475,
+        "avgTools": 7,
+        "avgFailures": 1
+      },
+      "diamonds": {
+        "pass": 1,
+        "total": 5,
+        "rate": 0.2,
+        "avgTime": 225903,
+        "avgTools": 19,
+        "avgFailures": 4
       }
     }
   },
@@ -1199,6 +1247,186 @@
       "toolCalls": 19,
       "failures": 2,
       "ts": "2026-03-09T02:03:58.536Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": true,
+      "elapsed": 131077,
+      "toolCalls": 7,
+      "failures": 2,
+      "ts": "2026-03-09T02:08:33.557Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": true,
+      "elapsed": 65414,
+      "toolCalls": 7,
+      "failures": 1,
+      "ts": "2026-03-09T02:09:51.649Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 225903,
+      "toolCalls": 19,
+      "failures": 4,
+      "ts": "2026-03-09T02:10:05.958Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 303757,
+      "toolCalls": 19,
+      "failures": 8,
+      "ts": "2026-03-09T02:11:26.621Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 301601,
+      "toolCalls": 16,
+      "failures": 3,
+      "ts": "2026-03-09T02:11:27.756Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 301203,
+      "toolCalls": 19,
+      "failures": 3,
+      "ts": "2026-03-09T02:11:28.850Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 122475,
+      "toolCalls": 7,
+      "failures": 1,
+      "ts": "2026-03-09T02:12:07.652Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": false,
+      "elapsed": 57926,
+      "toolCalls": 6,
+      "failures": 4,
+      "ts": "2026-03-09T02:12:38.384Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 54321,
+      "toolCalls": 3,
+      "failures": 0,
+      "ts": "2026-03-09T02:12:39.986Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 143019,
+      "toolCalls": 9,
+      "failures": 4,
+      "ts": "2026-03-09T02:12:41.230Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 59308,
+      "toolCalls": 5,
+      "failures": 3,
+      "ts": "2026-03-09T02:12:41.713Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 24878,
+      "toolCalls": 2,
+      "failures": 0,
+      "ts": "2026-03-09T02:13:23.425Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 24537,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T02:13:25.080Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": false,
+      "elapsed": 32375,
+      "toolCalls": 5,
+      "failures": 4,
+      "ts": "2026-03-09T02:13:25.836Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 359052,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T02:19:36.628Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 419379,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T02:19:36.631Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": false,
+      "elapsed": 357946,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T02:19:36.634Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 374256,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T02:19:36.673Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 329719,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T02:19:36.686Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 0,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T02:22:05.423Z"
     }
   ]
 }

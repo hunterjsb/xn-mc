@@ -700,20 +700,27 @@
     }
 
     // ── Weighted Scores ──
-    // Score = Σ((1 - rate) * avgTime_sec) / n — lower is better (fast + high pass rate = low score)
-    const scores = ranked.map(m => {
+    // Expected time per attempt: failures cost the full timeout, successes cost avg time.
+    // Score = Σ((1 - rate) × timeout + rate × avgTime) / n — lower is better.
+    const benchTimeouts = data.benchTimeouts || {};
+    function computeScore(model) {
       let total = 0, n = 0;
       for (const b of benchmarks) {
-        const s = summary[m]?.[b];
-        if (!s || s.avgTime == null) continue;
-        total += (1 - (s.rate || 0)) * (s.avgTime / 1000);
+        const s = summary[model]?.[b];
+        if (!s || s.total === 0) continue;
+        const timeoutSec = (benchTimeouts[b] || 300_000) / 1000;
+        const avgSec = s.avgTime != null ? s.avgTime / 1000 : timeoutSec;
+        total += (1 - (s.rate || 0)) * timeoutSec + (s.rate || 0) * avgSec;
         n++;
       }
-      return { model: m, score: n > 0 ? Math.round(total / n) : 0 };
-    }).sort((a, b) => a.score - b.score); // lower is better
+      return n > 0 ? Math.round(total / n) : 999;
+    }
+
+    const scores = ranked.map(m => ({ model: m, score: computeScore(m) }))
+      .sort((a, b) => a.score - b.score); // lower is better
 
     const glanceDesc = document.querySelector('#glance-section .description');
-    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = \u03A3((1 \u2212 rate) \u00D7 time) / n \u2014 lower is better.`;
+    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = expected time per attempt (lower is better).`;
 
     const glanceGrid = document.getElementById('glance-grid');
     const maxScore = Math.max(...scores.map(s => s.score));

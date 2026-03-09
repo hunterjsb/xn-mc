@@ -16,11 +16,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RESULTS_PATH = path.join(__dirname, 'benchmarks', 'results.jsonl');
 const OUTPUT_PATH = path.join(__dirname, '..', 'docs', 'benchmark-data.json');
 
-const BENCH_NAMES = {
-  pick: 'Wooden Pickaxe',
-  food: 'Cooked Food',
-  shears: 'Iron Shears',
-  diamonds: 'Diamond Armor',
+const BENCH_META = {
+  pick:     { name: 'Wooden Pickaxe',  timeout: 300_000 },
+  food:     { name: 'Cooked Food',     timeout: 300_000 },
+  shears:   { name: 'Iron Shears',     timeout: 300_000 },
+  diamonds: { name: 'Diamond Armor',   timeout: 300_000 },
 };
 
 export function compileBenchmarks({ check = false } = {}) {
@@ -95,7 +95,8 @@ export function compileBenchmarks({ check = false } = {}) {
     totalRuns: runs.length,
     models,
     benchmarks,
-    benchNames: BENCH_NAMES,
+    benchNames: Object.fromEntries(Object.entries(BENCH_META).map(([id, m]) => [id, m.name])),
+    benchTimeouts: Object.fromEntries(Object.entries(BENCH_META).map(([id, m]) => [id, m.timeout])),
     summary,
     runs: compactRuns,
   };
