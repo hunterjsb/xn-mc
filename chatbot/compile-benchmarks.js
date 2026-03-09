@@ -12,16 +12,11 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { BENCHMARKS } from './benchmark.js';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RESULTS_PATH = path.join(__dirname, 'benchmarks', 'results.jsonl');
 const OUTPUT_PATH = path.join(__dirname, '..', 'docs', 'benchmark-data.json');
-
-const BENCH_META = {
-  pick:     { name: 'Wooden Pickaxe',  timeout: 300_000 },
-  food:     { name: 'Cooked Food',     timeout: 300_000 },
-  shears:   { name: 'Iron Shears',     timeout: 300_000 },
-  diamonds: { name: 'Diamond Armor',   timeout: 300_000 },
-};
 
 export function compileBenchmarks({ check = false } = {}) {
   if (!fs.existsSync(RESULTS_PATH)) {
@@ -90,13 +85,32 @@ export function compileBenchmarks({ check = false } = {}) {
     ts: r.ts,
   }));
 
+  // Build benchMeta from BENCHMARKS definitions
+  const benchMeta = {};
+  for (const id of benchmarks) {
+    const def = BENCHMARKS[id];
+    if (def) {
+      benchMeta[id] = {
+        name: def.name,
+        timeout: def.timeout,
+        goal: def.goal,
+        successItems: def.successItems || (def.successCounts ? Object.keys(def.successCounts) : []),
+        startItems: (def.startItems || []).map(s => s.split(' ')[0]),
+      };
+    } else {
+      benchMeta[id] = { name: id, timeout: 300_000, goal: '', successItems: [], startItems: [] };
+    }
+  }
+
   const output = {
     generated: new Date().toISOString(),
     totalRuns: runs.length,
     models,
     benchmarks,
-    benchNames: Object.fromEntries(Object.entries(BENCH_META).map(([id, m]) => [id, m.name])),
-    benchTimeouts: Object.fromEntries(Object.entries(BENCH_META).map(([id, m]) => [id, m.timeout])),
+    benchMeta,
+    // Legacy compat
+    benchNames: Object.fromEntries(Object.entries(benchMeta).map(([id, m]) => [id, m.name])),
+    benchTimeouts: Object.fromEntries(Object.entries(benchMeta).map(([id, m]) => [id, m.timeout])),
     summary,
     runs: compactRuns,
   };

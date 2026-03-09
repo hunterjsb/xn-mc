@@ -716,30 +716,26 @@
     ranked.forEach((m, i) => { colorMap[m] = MODEL_COLORS[i % MODEL_COLORS.length]; });
 
     // ── Benchmark Carousel ──
-    const BENCH_ICONS = {
-      pick: 'https://minecraft.wiki/images/Invicon_Wooden_Pickaxe.png',
-      food: 'https://minecraft.wiki/images/Invicon_Cooked_Beef.png',
-      shears: 'https://minecraft.wiki/images/Invicon_Shears.png',
-      diamonds: 'https://minecraft.wiki/images/Invicon_Diamond_Chestplate.png',
-      collect: 'https://minecraft.wiki/images/Invicon_Iron_Pickaxe.png',
-    };
-    const BENCH_DESCS = {
-      pick: 'Start with nothing. Chop logs, craft planks, sticks, a crafting table, and a wooden pickaxe.',
-      food: 'Given basic wood tools & cobblestone. Craft a furnace, hunt an animal, and cook the meat.',
-      shears: 'Given stone tools & a furnace. Mine iron ore, smelt it into ingots, and craft shears.',
-      diamonds: 'Start with nothing. Mine all the way to diamonds and craft a full set of diamond armor.',
-      collect: 'Given iron tools. Gather 16 dirt, 8 logs (any type), and 16 cobblestone.',
-    };
+    const benchMeta = data.benchMeta || {};
+
+    // Derive icon URL from first success item: minecraft_id → Invicon_Title_Case.png
+    function itemToIcon(itemId) {
+      if (!itemId) return null;
+      const name = itemId.replace(/^minecraft:/, '').split('_').map(w => w[0].toUpperCase() + w.slice(1)).join('_');
+      return `https://minecraft.wiki/images/Invicon_${name}.png`;
+    }
+
     const carousel = document.getElementById('bench-carousel');
     let cardsHTML = '';
     for (const b of benchmarks) {
-      const name = benchNames[b] || b;
+      const meta = benchMeta[b] || {};
+      const name = meta.name || benchNames[b] || b;
       const totalAll = models.reduce((sum, m) => sum + (summary[m]?.[b]?.total || 0), 0);
       const modelCount = models.filter(m => (summary[m]?.[b]?.total || 0) > 0).length;
       const detail = totalAll > 0 ? `${totalAll} runs \u00B7 ${modelCount} models` : 'no runs yet';
-      const icon = BENCH_ICONS[b];
-      const iconHTML = icon ? `<img class="bench-icon" src="${icon}" alt="${name}">` : '';
-      const desc = BENCH_DESCS[b] || '';
+      const iconUrl = itemToIcon((meta.successItems || [])[0]);
+      const iconHTML = iconUrl ? `<img class="bench-icon" src="${iconUrl}" alt="${name}">` : '';
+      const desc = meta.goal || '';
       cardsHTML += `
         <div class="bench-card" data-bench="${b}">
           <div class="card-header">${iconHTML}<div class="bench-name">${name}</div></div>
