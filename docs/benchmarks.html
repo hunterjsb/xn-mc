@@ -306,46 +306,74 @@
       opacity: 0.85;
     }
 
-    /* ---------- Comparison Grid ---------- */
-    .compare-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+    /* ---------- Score Grid ---------- */
+    .score-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
       margin-bottom: 2rem;
     }
 
-    .stat-card {
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 0.75rem;
-      padding: 1.25rem;
+      padding: 1rem 1.25rem;
+    }
+
+    .score-rank {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #52525b;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      min-width: 1.5rem;
       text-align: center;
     }
 
-    .stat-card .stat-value {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--primary);
-      line-height: 1;
-      margin-bottom: 0.25rem;
+    .score-model {
+      flex: 1;
+      min-width: 0;
     }
 
-    .stat-card .stat-value.green { color: var(--green); }
-    .stat-card .stat-value.orange { color: var(--orange); }
-    .stat-card .stat-value.red { color: var(--red); }
-
-    .stat-card .stat-label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .stat-card .stat-model {
-      font-size: 0.7rem;
-      color: #52525b;
+    .score-model-name {
       font-family: "Cascadia Code", "Fira Code", monospace;
-      margin-top: 0.25rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .score-model-detail {
+      font-size: 0.72rem;
+      color: #52525b;
+      margin-top: 0.15rem;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+    }
+
+    .score-bar-area {
+      flex: 2;
+      height: 8px;
+      background: #18181b;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .score-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      min-width: 4.5rem;
+      text-align: right;
     }
 
     /* ---------- Results Table ---------- */
@@ -567,9 +595,9 @@
 
   <!-- Dynamic sections rendered by JS -->
   <section id="glance-section">
-    <h2>At a Glance</h2>
+    <h2>Weighted Scores</h2>
     <p class="description">Loading results...</p>
-    <div id="glance-grid" class="compare-grid"></div>
+    <div id="glance-grid" class="score-grid"></div>
   </section>
 
   <section id="results-section">
@@ -684,32 +712,49 @@
       return `linear-gradient(to top, ${base} 0%, ${tip} 100%)`;
     }
 
-    // ── At a Glance ──
+    // ── Weighted Scores ──
+    // Score = sum across benchmarks of (avgTime_seconds * solveRate). Lower = better.
+    const scores = ranked.map(m => {
+      let total = 0;
+      for (const b of benchmarks) {
+        const s = summary[m]?.[b];
+        if (!s || s.avgTime == null) continue;
+        total += (s.avgTime / 1000) * (s.rate || 0);
+      }
+      return { model: m, score: Math.round(total) };
+    }).sort((a, b) => a.score - b.score); // lower is better
+
     const glanceDesc = document.querySelector('#glance-section .description');
-    glanceDesc.textContent = `${totalRuns} total runs across ${models.length} models.`;
+    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = \u03A3(avg_time \u00D7 solve_rate) — lower is better.`;
 
     const glanceGrid = document.getElementById('glance-grid');
-    const topModels = ranked.slice(0, 2);
+    const maxScore = Math.max(...scores.map(s => s.score));
     let glanceHTML = '';
-    for (const m of topModels) {
-      const o = summary[m].overall;
-      const pct = Math.round(o.rate * 100);
+    scores.forEach((s, i) => {
+      const pct = maxScore > 0 ? (s.score / maxScore) * 100 : 0;
+      // Best = green, worst = grey
+      const norm = maxScore > 0 ? 1 - s.score / maxScore : 0.5;
+      const barSat = Math.round(norm * 50);
+      const barLight = 30 + Math.round(norm * 20);
+      const barColor = `hsl(145, ${barSat}%, ${barLight}%)`;
+      const passRate = summary[s.model]?.overall?.rate;
+      const pctStr = passRate != null ? `${Math.round(passRate * 100)}% pass` : '';
+      const avgT = summary[s.model]?.overall?.avgTime;
+      const detail = [pctStr, avgT != null ? fmtTime(avgT) + ' avg' : ''].filter(Boolean).join(' · ');
+
       glanceHTML += `
-        <div class="stat-card">
-          <div class="stat-value ${rateColorClass(o.rate)}">${pct}%</div>
-          <div class="stat-label">Overall Pass Rate</div>
-          <div class="stat-model">${m}</div>
+        <div class="score-row">
+          <div class="score-rank">${i + 1}</div>
+          <div class="score-model">
+            <div class="score-model-name" style="color: ${colorMap[s.model]}">${s.model}</div>
+            <div class="score-model-detail">${detail}</div>
+          </div>
+          <div class="score-bar-area">
+            <div class="score-bar-fill" style="width: ${pct}%; background: ${barColor};"></div>
+          </div>
+          <div class="score-value" style="color: ${barColor}">${s.score}s</div>
         </div>`;
-    }
-    for (const m of topModels) {
-      const o = summary[m].overall;
-      glanceHTML += `
-        <div class="stat-card">
-          <div class="stat-value">${fmtTime(o.avgTime)}</div>
-          <div class="stat-label">Avg Completion Time</div>
-          <div class="stat-model">${m}</div>
-        </div>`;
-    }
+    });
     glanceGrid.innerHTML = glanceHTML;
 
     // ── Vertical Bar Chart ──
