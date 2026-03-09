@@ -3,15 +3,17 @@
  * Revival Bot Benchmark Runner
  *
  * Benchmarks:
- *   pick   — From empty inventory, craft a wooden_pickaxe
- *   food   — From wooden tools, kill an animal and cook food
- *   shears — From wooden tools + food, mine iron, smelt, craft shears
+ *   pick     — From empty inventory, craft a wooden_pickaxe
+ *   food     — From wooden tools, kill an animal and cook food
+ *   shears   — From wooden tools + food, mine iron, smelt, craft shears
+ *   diamonds — From empty, find diamonds in a chest and craft full armor
  *
  * Usage:
- *   node benchmark.js pick          # run one benchmark
- *   node benchmark.js pick food     # run multiple
- *   node benchmark.js all           # run all three
- *   node benchmark.js pick --runs 3 # run 3 times for avg
+ *   node benchmark.js pick              # run one benchmark
+ *   node benchmark.js all               # run all
+ *   node benchmark.js all --runs 5      # 5 runs each
+ *   node benchmark.js all --parallel 3  # 3 bots at once
+ *   node benchmark.js all --runs 5 --parallel 5 --model x-ai/grok-4.1-fast
  */
 
 import fs from 'fs';
@@ -24,12 +26,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RESULTS_PATH = path.join(__dirname, 'benchmarks', 'results.jsonl');
 
 const API = 'http://localhost:8765';
-const BOT_NAME = 'BenchBot';
 const OWNER = 'BrezzyTracks';
 
 // ── Benchmark definitions ────────────────────────────────────────────
 
-const BENCHMARKS = {
+export const BENCHMARKS = {
   pick: {
     name: 'Wooden Pickaxe',
     startItems: [],
@@ -56,6 +57,14 @@ const BENCHMARKS = {
     ],
     goal: 'mine 2 iron_ore, place the furnace, smelt the raw_iron with oak_planks as fuel, craft shears',
     successItems: ['shears'],
+    timeout: 300_000,
+  },
+  diamonds: {
+    name: 'Diamond Armor',
+    startItems: [],
+    goal: 'get diamonds and craft a full set of diamond armor',
+    successItems: ['diamond_helmet', 'diamond_chestplate', 'diamond_leggings', 'diamond_boots'],
+    successAll: true,  // require ALL items, not just one
     timeout: 300_000,
   },
 };
@@ -98,8 +107,9 @@ async function getInventory(player) {
   return items;
 }
 
-async function hasItem(player, itemNames) {
+async function hasItem(player, itemNames, requireAll = false) {
   const inv = await getInventory(player);
+  if (requireAll) return itemNames.every(name => inv.some(i => i.name === name));
   return inv.some(i => itemNames.includes(i.name));
 }
 
@@ -121,9 +131,6 @@ function fmtTime(ms) {
 
 // ── Spawn location ──────────────────────────────────────────────────
 
-// Generate random x,z coords. The bot will be tp'd after connecting, and the
-// server places entities on the surface. We use spreadplayers on the connected
-// bot to find a safe non-ocean location.
 function randomCoords() {
   return {
     x: Math.floor(Math.random() * 2500) - 1250,
@@ -133,35 +140,38 @@ function randomCoords() {
 
 // ── Run a single benchmark ──────────────────────────────────────────
 
-async function runBenchmark(benchId) {
+async function runBenchmark(benchId, botName) {
   const bench = BENCHMARKS[benchId];
   if (!bench) throw new Error(`Unknown benchmark: ${benchId}`);
+  const tag = `[${botName}/${benchId}]`;
 
-  console.log(`\n${'='.repeat(60)}`);
-  console.log(`  BENCHMARK: ${bench.name} (${benchId})`);
-  console.log(`${'='.repeat(60)}`);
+  console.log(`\n${tag} ${'='.repeat(50)}`);
+  console.log(`${tag}  BENCHMARK: ${bench.name}`);
+  console.log(`${tag} ${'='.repeat(50)}`);
 
   // 1. Clean up any existing bot
-  try { await rcon(`kick ${BOT_NAME}`); } catch {}
+  try { await rcon(`kick ${botName}`); } catch {}
   await sleep(3000);
 
   // 2. Pardon + OP (deathban.immune) + spawn bot at world spawn first
-  try { await rcon(`pardon ${BOT_NAME}`); } catch {}
-  try { await rcon(`op ${BOT_NAME}`); } catch {}
+  try { await rcon(`pardon ${botName}`); } catch {}
+  try { await rcon(`op ${botName}`); } catch {}
   // Spawn at world spawn (loaded chunks), then spreadplayers to random location
-  await api('POST', '/revival', { reviver: OWNER, deadPlayer: BOT_NAME, x: 0, y: 70, z: 0 });
+  await api('POST', '/revival', { reviver: OWNER, deadPlayer: botName, x: 0, y: 70, z: 0 });
 
   // 3. Wait for connection
-  await waitForBot(BOT_NAME);
-  console.log(`  Connected!`);
+  await waitForBot(botName);
+  console.log(`${tag}  Connected!`);
+  // Re-send OP after connection (pre-connect OP may not take effect)
+  try { await rcon(`op ${botName}`); } catch {}
   await sleep(2000);
 
   // 4. Teleport to random safe location using spreadplayers (avoids oceans)
-  const { x: cx, z: cz } = randomCoords();
-  await rcon(`spreadplayers ${cx} ${cz} 100 1250 false ${BOT_NAME}`);
+  const { x: sx, z: sz } = randomCoords();
+  await rcon(`spreadplayers ${sx} ${sz} 100 1250 false ${botName}`);
   await sleep(1000);
-  const pos = await getPlayerPos(BOT_NAME);
-  console.log(`  Spawned at ${pos.x}, ${pos.y}, ${pos.z}`);
+  const pos = await getPlayerPos(botName);
+  console.log(`${tag}  Spawned at ${pos.x}, ${pos.y}, ${pos.z}`);
 
   // 5. Set time to day, set up environment, set up inventory
   await rcon('time set day');
@@ -173,7 +183,6 @@ async function runBenchmark(benchId) {
   }
   // (food cows spawned later, after greeting cycle)
   if (benchId === 'shears') {
-    // Place iron_ore blocks spaced apart so each is individually reachable
     const orePositions = [
       [pos.x + 3, pos.y, pos.z],
       [pos.x - 3, pos.y, pos.z],
@@ -185,8 +194,15 @@ async function runBenchmark(benchId) {
       await rcon(`setblock ${ox} ${oy - 1} ${oz} minecraft:stone`);
     }
   }
+  if (benchId === 'diamonds') {
+    const cx = pos.x + 3, cy = pos.y, cz = pos.z;
+    await rcon(`setblock ${cx} ${cy} ${cz} minecraft:chest`);
+    await rcon(`item replace block ${cx} ${cy} ${cz} container.0 with minecraft:diamond 24`);
+    await rcon(`item replace block ${cx} ${cy} ${cz} container.1 with minecraft:crafting_table 1`);
+    await rcon(`setblock ${cx} ${cy + 1} ${cz} minecraft:air`);
+    await rcon(`setblock ${cx} ${cy - 1} ${cz} minecraft:stone`);
+  }
   if (benchId === 'pick') {
-    // Clear a flat area and plant oak log columns nearby
     for (let dx = -2; dx <= 2; dx++) {
       for (let dz = -2; dz <= 2; dz++) {
         for (let dy = 0; dy <= 2; dy++) {
@@ -200,24 +216,24 @@ async function runBenchmark(benchId) {
       await rcon(`setblock ${pos.x - 2} ${pos.y + y} ${pos.z} minecraft:oak_log`);
     }
   }
-  await rcon(`clear ${BOT_NAME}`);
+  await rcon(`clear ${botName}`);
   for (const item of bench.startItems) {
     const [name, count] = item.split(' ');
-    await rcon(`give ${BOT_NAME} minecraft:${name} ${count || 1}`);
+    await rcon(`give ${botName} minecraft:${name} ${count || 1}`);
   }
-  console.log(`  Inventory: ${bench.startItems.length > 0 ? bench.startItems.join(', ') : 'empty'}`);
+  console.log(`${tag}  Inventory: ${bench.startItems.length > 0 ? bench.startItems.join(', ') : 'empty'}`);
 
   // 6. Wait for greeting cycle to finish
-  console.log(`  Waiting for greeting cycle...`);
+  console.log(`${tag}  Waiting for greeting cycle...`);
   for (let i = 0; i < 15; i++) {
     await sleep(2000);
     const { bots } = await api('GET', '/rblist');
-    const bot = bots.find(b => b.name === BOT_NAME);
+    const bot = bots.find(b => b.name === botName);
     if (bot && bot.state === 'idle' && bot.pending === 0) break;
   }
 
   // 6b. Teleport bot back to spawn point (may have wandered during greeting)
-  await rcon(`tp ${BOT_NAME} ${pos.x} ${pos.y} ${pos.z}`);
+  await rcon(`tp ${botName} ${pos.x} ${pos.y} ${pos.z}`);
   await sleep(1000);
 
   // 6c. Spawn animals for food bench (right before goal so they don't wander)
@@ -227,16 +243,15 @@ async function runBenchmark(benchId) {
     await rcon(`summon pig ${pos.x} ${pos.y} ${pos.z + 3}`);
   }
 
-  // 6. Reset bench metrics and send goal
-  await api('POST', `/bench/reset?bot=${BOT_NAME}`);
-  console.log(`  Goal: ${bench.goal}`);
-  await api('POST', '/rbsay', { bot: BOT_NAME, message: bench.goal, as: OWNER });
+  // 7. Reset bench metrics and send goal
+  await api('POST', `/bench/reset?bot=${botName}`);
+  console.log(`${tag}  Goal: ${bench.goal}`);
+  await api('POST', '/rbsay', { bot: botName, message: bench.goal, as: OWNER });
   const startTime = Date.now();
-  console.log(`  Started at ${new Date().toLocaleTimeString()}`);
-  console.log(`  Timeout: ${fmtTime(bench.timeout)}`);
-  console.log(`  Waiting...`);
+  console.log(`${tag}  Started at ${new Date().toLocaleTimeString()}`);
+  console.log(`${tag}  Timeout: ${fmtTime(bench.timeout)}`);
 
-  // 7. Poll for completion
+  // 8. Poll for completion
   let success = false;
   let lastState = '';
   let retries = 0;
@@ -246,7 +261,7 @@ async function runBenchmark(benchId) {
 
     // Check inventory for success item
     try {
-      if (await hasItem(BOT_NAME, bench.successItems)) {
+      if (await hasItem(botName, bench.successItems, bench.successAll)) {
         success = true;
         break;
       }
@@ -255,14 +270,14 @@ async function runBenchmark(benchId) {
     // Check if bot is still alive
     try {
       const { bots } = await api('GET', '/rblist');
-      const bot = bots.find(b => b.name === BOT_NAME);
+      const bot = bots.find(b => b.name === botName);
       if (!bot || !bot.connected) {
-        console.log(`  Bot disconnected!`);
+        console.log(`${tag}  Bot disconnected!`);
         break;
       }
       const stateStr = `${bot.state} | obj: ${bot.objectives?.map(o => o.text).join(', ') || 'none'}`;
       if (stateStr !== lastState) {
-        console.log(`  [${fmtTime(Date.now() - startTime)}] ${stateStr}`);
+        console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] ${stateStr}`);
         lastState = stateStr;
       }
 
@@ -271,8 +286,8 @@ async function runBenchmark(benchId) {
         lastToolTime = Date.now();
       } else if (Date.now() - lastToolTime > 20_000 && retries < 4) {
         retries++;
-        console.log(`  [${fmtTime(Date.now() - startTime)}] Bot stuck idle, resending goal (retry ${retries}/4)...`);
-        await api('POST', '/rbsay', { bot: BOT_NAME, message: bench.goal, as: OWNER });
+        console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] Resending goal (retry ${retries}/4)...`);
+        await api('POST', '/rbsay', { bot: botName, message: bench.goal, as: OWNER });
         lastToolTime = Date.now();
       }
     } catch {}
@@ -280,20 +295,20 @@ async function runBenchmark(benchId) {
 
   const elapsed = Date.now() - startTime;
 
-  // 8. Collect metrics
+  // 9. Collect metrics
   let metrics = {};
   try {
-    metrics = await api('GET', `/bench/metrics?bot=${BOT_NAME}`);
+    metrics = await api('GET', `/bench/metrics?bot=${botName}`);
   } catch {}
 
-  // 9. Get final inventory
+  // 10. Get final inventory
   let finalInv = [];
-  try { finalInv = await getInventory(BOT_NAME); } catch {}
+  try { finalInv = await getInventory(botName); } catch {}
 
-  // 10. Clean up
-  try { await rcon(`kick ${BOT_NAME}`); } catch {}
+  // 11. Clean up
+  try { await rcon(`kick ${botName}`); } catch {}
 
-  // 11. Build result
+  // 12. Build result
   const result = {
     benchmark: benchId,
     name: bench.name,
@@ -309,23 +324,20 @@ async function runBenchmark(benchId) {
     pos,
   };
 
-  // 12. Print result
-  console.log(`\n  ${'─'.repeat(40)}`);
-  console.log(`  Result: ${success ? 'SUCCESS' : 'FAIL'}`);
-  console.log(`  Time:   ${result.elapsedStr}`);
-  console.log(`  Tools:  ${result.toolCalls} calls (${result.failures} failed)`);
-  console.log(`  Chat:   ${result.chatMessages} messages`);
-  console.log(`  Idles:  ${result.idleTicks} wasted ticks`);
-  console.log(`  Final inventory: ${result.inventory.join(', ') || 'empty'}`);
+  // 13. Print result
+  console.log(`${tag}  ${'─'.repeat(40)}`);
+  console.log(`${tag}  Result: ${success ? 'SUCCESS' : 'FAIL'}`);
+  console.log(`${tag}  Time:   ${result.elapsedStr}`);
+  console.log(`${tag}  Tools:  ${result.toolCalls} calls (${result.failures} failed)`);
+  console.log(`${tag}  Inventory: ${result.inventory.join(', ') || 'empty'}`);
 
-  // Print tool call sequence
   const toolLog = result.log.filter(e => e.type === 'tool');
   if (toolLog.length > 0) {
-    console.log(`\n  Tool sequence:`);
+    console.log(`${tag}  Tool sequence:`);
     for (const e of toolLog) {
       const params = Object.keys(e.params || {}).length > 0 ? JSON.stringify(e.params) : '';
       const t = result.log[0] ? Math.round((e.t - result.log[0].t) / 1000) : 0;
-      console.log(`    +${t}s  ${e.name}(${params})`);
+      console.log(`${tag}    +${t}s  ${e.name}(${params})`);
     }
   }
 
@@ -371,11 +383,15 @@ async function main() {
   const args = process.argv.slice(2);
   let benchIds = [];
   let runs = 1;
+  let parallel = 1;
   let model = null;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--runs' && args[i + 1]) {
       runs = parseInt(args[i + 1]);
+      i++;
+    } else if (args[i] === '--parallel' && args[i + 1]) {
+      parallel = parseInt(args[i + 1]);
       i++;
     } else if (args[i] === '--model' && args[i + 1]) {
       model = args[i + 1];
@@ -387,48 +403,63 @@ async function main() {
     } else {
       console.error(`Unknown benchmark or option: ${args[i]}`);
       console.error(`Available: ${Object.keys(BENCHMARKS).join(', ')}, all`);
-      console.error(`Options: --runs N, --model <model-name>`);
+      console.error(`Options: --runs N, --parallel N, --model <model-name>`);
       process.exit(1);
     }
   }
 
   if (benchIds.length === 0) {
     console.log('Revival Bot Benchmarks');
-    console.log('Usage: node benchmark.js <bench> [<bench>...] [--runs N] [--model <model-name>]');
+    console.log('Usage: node benchmark.js <bench> [<bench>...] [--runs N] [--parallel N] [--model <model-name>]');
     console.log(`Available: ${Object.keys(BENCHMARKS).join(', ')}, all`);
-    console.log(`Models: gpt-5-mini (default), x-ai/grok-4.1-fast, anthropic/claude-sonnet-4-6, etc.`);
+    console.log(`Models: gpt-5-mini (default), x-ai/grok-4.1-fast, anthropic/claude-haiku-4.5, etc.`);
     process.exit(0);
   }
 
   if (model) await setRevivalModel(model);
 
-  const allResults = [];
-
+  // Build job queue: [{benchId, run}]
+  const jobs = [];
   for (let run = 0; run < runs; run++) {
-    if (runs > 1) {
-      console.log(`\n${'#'.repeat(60)}`);
-      console.log(`  RUN ${run + 1}/${runs}`);
-      console.log(`${'#'.repeat(60)}`);
-    }
-
     for (const id of benchIds) {
-      const m = model || 'gpt-5-mini';
+      jobs.push({ benchId: id, run });
+    }
+  }
+
+  const m = model || 'gpt-5-mini';
+  const allResults = [];
+  let jobIdx = 0;
+
+  console.log(`\n  ${jobs.length} jobs, ${parallel} parallel workers, model: ${m}`);
+
+  // Worker: pulls jobs from queue, runs them with assigned bot name
+  async function worker(workerId) {
+    const botName = parallel > 1 ? `Bench${workerId}` : 'BenchBot';
+    while (jobIdx < jobs.length) {
+      const idx = jobIdx++;
+      const job = jobs[idx];
+      console.log(`\n  [Worker ${workerId}] Job ${idx + 1}/${jobs.length}: ${job.benchId} (run ${job.run + 1})`);
       try {
-        const result = await runBenchmark(id);
+        const result = await runBenchmark(job.benchId, botName);
         result.model = m;
         allResults.push(result);
         saveResult(result, m);
       } catch (err) {
-        console.error(`  ERROR: ${err.message}`);
-        const failResult = { benchmark: id, success: false, error: err.message, model: m };
+        console.error(`  [Worker ${workerId}] ERROR: ${err.message}`);
+        const failResult = { benchmark: job.benchId, success: false, error: err.message, model: m };
         allResults.push(failResult);
         saveResult(failResult, m);
       }
-      // Recompile summary after each run
       try { compileBenchmarks(); } catch {}
-      if (benchIds.length > 1) await sleep(5000);
     }
   }
+
+  // Launch workers
+  const workers = [];
+  for (let i = 0; i < parallel; i++) {
+    workers.push(worker(i));
+  }
+  await Promise.all(workers);
 
   // Summary
   if (allResults.length > 1) {
@@ -468,4 +499,8 @@ async function main() {
   process.exit(0);
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+// Only run CLI when executed directly (not imported)
+const __benchmark_filename = fileURLToPath(import.meta.url);
+if (process.argv[1] === __benchmark_filename) {
+  main().catch(err => { console.error(err); process.exit(1); });
+}
