@@ -63,6 +63,14 @@ export function compileBenchmarks({ check = false } = {}) {
       const benchRuns = modelRuns.filter(r => r.bench === bench);
       const benchPasses = benchRuns.filter(r => r.success);
 
+      // Aggregate tool usage across all runs for this model+bench
+      const toolCounts = {};
+      for (const r of benchRuns) {
+        for (const t of (r.toolLog || [])) {
+          toolCounts[t.name] = (toolCounts[t.name] || 0) + 1;
+        }
+      }
+
       summary[model][bench] = {
         pass: benchPasses.length,
         total: benchRuns.length,
@@ -70,11 +78,13 @@ export function compileBenchmarks({ check = false } = {}) {
         avgTime: avg(benchPasses, 'elapsed'),
         avgTools: avg(benchPasses, 'toolCalls'),
         avgFailures: avg(benchPasses, 'failures'),
+        avgOwnerInteractions: avg(benchRuns, 'ownerInteractions'),
+        toolCounts,
       };
     }
   }
 
-  // Compact per-run records (strip inventory to keep it small)
+  // Compact per-run records
   const compactRuns = runs.map(r => ({
     model: r.model,
     bench: r.bench,
@@ -82,6 +92,8 @@ export function compileBenchmarks({ check = false } = {}) {
     elapsed: r.elapsed,
     toolCalls: r.toolCalls,
     failures: r.failures,
+    ownerInteractions: r.ownerInteractions || 0,
+    toolLog: r.toolLog || [],
     ts: r.ts,
   }));
 

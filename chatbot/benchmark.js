@@ -19,14 +19,20 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import OpenAI from 'openai';
 import { rcon } from './shared.js';
 import { compileBenchmarks } from './compile-benchmarks.js';
+import './env.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RESULTS_PATH = path.join(__dirname, 'benchmarks', 'results.jsonl');
 
 const API = 'http://localhost:8765';
 const OWNER = 'BrezzyTracks';
+const OWNER_MODEL = 'gpt-5-mini';
+
+// Owner LLM client (always gpt-5-mini via OpenAI)
+const ownerClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // ── Benchmark definitions ────────────────────────────────────────────
 
@@ -65,6 +71,15 @@ export const BENCHMARKS = {
     goal: 'get diamonds and craft a full set of diamond armor',
     successItems: ['diamond_helmet', 'diamond_chestplate', 'diamond_leggings', 'diamond_boots'],
     successAll: true,  // require ALL items, not just one
+    timeout: 300_000,
+  },
+  collect: {
+    name: 'Resource Collection',
+    startItems: [
+      'iron_pickaxe 1', 'iron_axe 1', 'iron_shovel 1', 'bread 8',
+    ],
+    goal: 'dig 16 dirt, chop 8 of any type of log (oak birch spruce etc), and mine 16 stone to get cobblestone',
+    successCounts: { dirt: 16, _log: 8, cobblestone: 16 },
     timeout: 300_000,
   },
 };
@@ -115,6 +130,18 @@ async function hasItem(player, itemNames, requireAll = false) {
   return inv.some(i => itemNames.includes(i.name));
 }
 
+async function hasRequiredCounts(player, counts) {
+  const inv = await getInventory(player);
+  for (const [key, need] of Object.entries(counts)) {
+    // Keys starting with _ are suffix matches (e.g. _log matches oak_log, birch_log, etc.)
+    const total = key.startsWith('_')
+      ? inv.filter(i => i.name.endsWith(key)).reduce((s, i) => s + i.count, 0)
+      : inv.filter(i => i.name === key).reduce((s, i) => s + i.count, 0);
+    if (total < need) return false;
+  }
+  return true;
+}
+
 async function getPlayerPos(player) {
   try {
     const resp = await rcon(`data get entity ${player} Pos`);
@@ -129,6 +156,34 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 function fmtTime(ms) {
   const s = Math.round(ms / 1000);
   return s >= 60 ? `${Math.floor(s / 60)}m${s % 60}s` : `${s}s`;
+}
+
+// ── Owner simulation ─────────────────────────────────────────────────
+
+async function ownerReply(botMessage, goal, chatHistory) {
+  try {
+    const messages = [
+      {
+        role: 'system',
+        content: `You are BrezzyTracks, a Minecraft player. Your bot is working on a task you gave it. Answer questions briefly and helpfully (1-2 sentences max). Be specific with Minecraft item/block IDs when relevant.\n\nTask you assigned: ${goal}`,
+      },
+      ...chatHistory.map(m => ({
+        role: m.from === 'owner' ? 'assistant' : 'user',
+        content: m.text,
+      })),
+      { role: 'user', content: botMessage },
+    ];
+    const res = await ownerClient.chat.completions.create({
+      model: OWNER_MODEL,
+      messages,
+      max_tokens: 100,
+      temperature: 0.3,
+    });
+    return res.choices[0]?.message?.content?.trim() || '';
+  } catch (err) {
+    console.error(`  Owner LLM error: ${err.message}`);
+    return '';
+  }
 }
 
 // ── Spawn location ──────────────────────────────────────────────────
@@ -258,18 +313,23 @@ async function runBenchmark(benchId, botName) {
   let lastState = '';
   let retries = 0;
   let lastToolTime = startTime;
+  let lastLogIdx = 0;  // track how far we've scanned the bench log
+  const ownerChat = [];  // {from: 'bot'|'owner', text, t}
   while (Date.now() - startTime < bench.timeout) {
     await sleep(5000);
 
-    // Check inventory for success item
+    // Check inventory for success
     try {
-      if (await hasItem(botName, bench.successItems, bench.successAll)) {
+      const passed = bench.successCounts
+        ? await hasRequiredCounts(botName, bench.successCounts)
+        : await hasItem(botName, bench.successItems, bench.successAll);
+      if (passed) {
         success = true;
         break;
       }
     } catch {}
 
-    // Check if bot is still alive
+    // Check if bot is still alive + detect whispers for owner replies
     try {
       const { bots } = await api('GET', '/rblist');
       const bot = bots.find(b => b.name === botName);
@@ -282,6 +342,28 @@ async function runBenchmark(benchId, botName) {
         console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] ${stateStr}`);
         lastState = stateStr;
       }
+
+      // Scan for new whisper tool calls → owner replies
+      try {
+        const metrics = await api('GET', `/bench/metrics?bot=${botName}`);
+        const log = metrics.log || [];
+        for (let i = lastLogIdx; i < log.length; i++) {
+          const e = log[i];
+          if (e.type === 'tool' && e.name === 'whisper' && e.params?.player === OWNER && e.params?.message) {
+            const botMsg = e.params.message;
+            console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] Bot asks: "${botMsg}"`);
+            ownerChat.push({ from: 'bot', text: botMsg, t: Date.now() - startTime });
+            const reply = await ownerReply(botMsg, bench.goal, ownerChat);
+            if (reply) {
+              console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] Owner replies: "${reply}"`);
+              ownerChat.push({ from: 'owner', text: reply, t: Date.now() - startTime });
+              await api('POST', '/rbsay', { bot: botName, message: reply, as: OWNER });
+              lastToolTime = Date.now();  // reset idle timer
+            }
+          }
+        }
+        lastLogIdx = log.length;
+      } catch {}
 
       // If bot is idle for 20s, resend goal (max 4 retries)
       if (bot.state !== 'idle') {
@@ -311,6 +393,7 @@ async function runBenchmark(benchId, botName) {
   try { await rcon(`kick ${botName}`); } catch {}
 
   // 12. Build result
+  const toolLog = (metrics.log || []).filter(e => e.type === 'tool');
   const result = {
     benchmark: benchId,
     name: bench.name,
@@ -323,6 +406,10 @@ async function runBenchmark(benchId, botName) {
     failures: metrics.totalFailures || 0,
     inventory: finalInv.map(i => `${i.name} x${i.count}`),
     log: metrics.log || [],
+    toolLog: toolLog.map(e => ({ name: e.name, params: e.params, t: e.t })),
+    ownerModel: OWNER_MODEL,
+    ownerInteractions: ownerChat.filter(m => m.from === 'bot').length,
+    ownerChat,
     pos,
   };
 
@@ -331,9 +418,11 @@ async function runBenchmark(benchId, botName) {
   console.log(`${tag}  Result: ${success ? 'SUCCESS' : 'FAIL'}`);
   console.log(`${tag}  Time:   ${result.elapsedStr}`);
   console.log(`${tag}  Tools:  ${result.toolCalls} calls (${result.failures} failed)`);
+  if (result.ownerInteractions > 0) {
+    console.log(`${tag}  Owner:  ${result.ownerInteractions} questions answered`);
+  }
   console.log(`${tag}  Inventory: ${result.inventory.join(', ') || 'empty'}`);
 
-  const toolLog = result.log.filter(e => e.type === 'tool');
   if (toolLog.length > 0) {
     console.log(`${tag}  Tool sequence:`);
     for (const e of toolLog) {
@@ -358,6 +447,10 @@ function saveResult(result, model) {
     failures: result.failures || 0,
     chatMessages: result.chatMessages || 0,
     idleTicks: result.idleTicks || 0,
+    ownerModel: result.ownerModel || OWNER_MODEL,
+    ownerInteractions: result.ownerInteractions || 0,
+    ownerChat: result.ownerChat || [],
+    toolLog: result.toolLog || [],
     inventory: result.inventory || [],
     pos: result.pos || { x: 0, y: 70, z: 0 },
     ts: new Date().toISOString(),

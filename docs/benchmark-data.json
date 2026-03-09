@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-09T03:09:19.808Z",
-  "totalRuns": 133,
+  "generated": "2026-03-09T03:24:58.232Z",
+  "totalRuns": 128,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -13,8 +13,7 @@
     "pick",
     "food",
     "shears",
-    "diamonds",
-    "collect"
+    "diamonds"
   ],
   "benchMeta": {
     "pick": {
@@ -77,37 +76,19 @@
         "diamond_boots"
       ],
       "startItems": []
-    },
-    "collect": {
-      "name": "Resource Collection",
-      "timeout": 300000,
-      "goal": "dig 16 dirt, chop 8 of any type of log (oak birch spruce etc), and mine 16 stone to get cobblestone",
-      "successItems": [
-        "dirt",
-        "_log",
-        "cobblestone"
-      ],
-      "startItems": [
-        "iron_pickaxe",
-        "iron_axe",
-        "iron_shovel",
-        "bread"
-      ]
     }
   },
   "benchNames": {
     "pick": "Wooden Pickaxe",
     "food": "Cooked Food",
     "shears": "Iron Shears",
-    "diamonds": "Diamond Armor",
-    "collect": "Resource Collection"
+    "diamonds": "Diamond Armor"
   },
   "benchTimeouts": {
     "pick": 300000,
     "food": 300000,
     "shears": 300000,
-    "diamonds": 300000,
-    "collect": 300000
+    "diamonds": 300000
   },
   "summary": {
     "x-ai/grok-4.1-fast": {
@@ -124,7 +105,9 @@
         "rate": 1,
         "avgTime": 102000,
         "avgTools": 9,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "food": {
         "pass": 2,
@@ -132,7 +115,9 @@
         "rate": 0.4,
         "avgTime": 90000,
         "avgTools": 7,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "shears": {
         "pass": 5,
@@ -140,7 +125,9 @@
         "rate": 1,
         "avgTime": 98000,
         "avgTools": 6,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "diamonds": {
         "pass": 3,
@@ -148,22 +135,16 @@
         "rate": 0.42857142857142855,
         "avgTime": 118418,
         "avgTools": 13,
-        "avgFailures": 1
-      },
-      "collect": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
+        "avgFailures": 1,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       }
     },
     "gpt-5-mini": {
       "overall": {
         "pass": 15,
-        "total": 31,
-        "rate": 0.4838709677419355,
+        "total": 26,
+        "rate": 0.5769230769230769,
         "avgTime": 160251,
         "avgTools": 8
       },
@@ -173,7 +154,9 @@
         "rate": 0.5,
         "avgTime": 190000,
         "avgTools": 9,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "food": {
         "pass": 4,
@@ -181,7 +164,9 @@
         "rate": 0.6666666666666666,
         "avgTime": 178810,
         "avgTools": 8,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "shears": {
         "pass": 4,
@@ -189,7 +174,9 @@
         "rate": 0.6666666666666666,
         "avgTime": 138908,
         "avgTools": 5,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "diamonds": {
         "pass": 4,
@@ -197,15 +184,9 @@
         "rate": 0.5,
         "avgTime": 140724,
         "avgTools": 11,
-        "avgFailures": 0
-      },
-      "collect": {
-        "pass": 0,
-        "total": 5,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       }
     },
     "minimax-m2.5": {
@@ -222,7 +203,9 @@
         "rate": 0.4,
         "avgTime": 210000,
         "avgTools": 13,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "food": {
         "pass": 1,
@@ -230,7 +213,9 @@
         "rate": 0.2,
         "avgTime": 108000,
         "avgTools": 7,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "shears": {
         "pass": 3,
@@ -238,7 +223,9 @@
         "rate": 0.6,
         "avgTime": 85000,
         "avgTools": 6,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "diamonds": {
         "pass": 0,
@@ -246,15 +233,9 @@
         "rate": 0,
         "avgTime": null,
         "avgTools": null,
-        "avgFailures": null
-      },
-      "collect": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
+        "avgFailures": null,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       }
     },
     "anthropic/claude-haiku-4.5": {
@@ -271,7 +252,9 @@
         "rate": 0.8,
         "avgTime": 82000,
         "avgTools": 9,
-        "avgFailures": 1
+        "avgFailures": 1,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "food": {
         "pass": 3,
@@ -279,7 +262,9 @@
         "rate": 0.6,
         "avgTime": 66667,
         "avgTools": 7,
-        "avgFailures": 1
+        "avgFailures": 1,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "shears": {
         "pass": 4,
@@ -287,7 +272,9 @@
         "rate": 0.8,
         "avgTime": 67750,
         "avgTools": 5,
-        "avgFailures": 0
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "diamonds": {
         "pass": 2,
@@ -295,15 +282,9 @@
         "rate": 0.4,
         "avgTime": 52416,
         "avgTools": 14,
-        "avgFailures": 3
-      },
-      "collect": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
+        "avgFailures": 3,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       }
     },
     "google/gemini-3.1-flash-lite-preview": {
@@ -320,7 +301,9 @@
         "rate": 0,
         "avgTime": null,
         "avgTools": null,
-        "avgFailures": null
+        "avgFailures": null,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "food": {
         "pass": 0,
@@ -328,7 +311,9 @@
         "rate": 0,
         "avgTime": null,
         "avgTools": null,
-        "avgFailures": null
+        "avgFailures": null,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "shears": {
         "pass": 0,
@@ -336,7 +321,9 @@
         "rate": 0,
         "avgTime": null,
         "avgTools": null,
-        "avgFailures": null
+        "avgFailures": null,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "diamonds": {
         "pass": 0,
@@ -344,15 +331,9 @@
         "rate": 0,
         "avgTime": null,
         "avgTools": null,
-        "avgFailures": null
-      },
-      "collect": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
+        "avgFailures": null,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       }
     },
     "qwen/qwen3.5-flash-02-23": {
@@ -369,7 +350,9 @@
         "rate": 0,
         "avgTime": null,
         "avgTools": null,
-        "avgFailures": null
+        "avgFailures": null,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "food": {
         "pass": 2,
@@ -377,7 +360,9 @@
         "rate": 0.4,
         "avgTime": 98246,
         "avgTools": 7,
-        "avgFailures": 2
+        "avgFailures": 2,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "shears": {
         "pass": 1,
@@ -385,7 +370,9 @@
         "rate": 0.2,
         "avgTime": 122475,
         "avgTools": 7,
-        "avgFailures": 1
+        "avgFailures": 1,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       },
       "diamonds": {
         "pass": 1,
@@ -393,15 +380,9 @@
         "rate": 0.2,
         "avgTime": 225903,
         "avgTools": 19,
-        "avgFailures": 4
-      },
-      "collect": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
+        "avgFailures": 4,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
       }
     }
   },
@@ -413,6 +394,8 @@
       "elapsed": 102000,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:00:00Z"
     },
     {
@@ -422,6 +405,8 @@
       "elapsed": 102000,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:01:00Z"
     },
     {
@@ -431,6 +416,8 @@
       "elapsed": 102000,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:02:00Z"
     },
     {
@@ -440,6 +427,8 @@
       "elapsed": 102000,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:03:00Z"
     },
     {
@@ -449,6 +438,8 @@
       "elapsed": 102000,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:04:00Z"
     },
     {
@@ -458,6 +449,8 @@
       "elapsed": 90000,
       "toolCalls": 7,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:05:00Z"
     },
     {
@@ -467,6 +460,8 @@
       "elapsed": 90000,
       "toolCalls": 7,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:06:00Z"
     },
     {
@@ -476,6 +471,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:07:00Z"
     },
     {
@@ -485,6 +482,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:08:00Z"
     },
     {
@@ -494,6 +493,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:09:00Z"
     },
     {
@@ -503,6 +504,8 @@
       "elapsed": 98000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:10:00Z"
     },
     {
@@ -512,6 +515,8 @@
       "elapsed": 98000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:11:00Z"
     },
     {
@@ -521,6 +526,8 @@
       "elapsed": 98000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:12:00Z"
     },
     {
@@ -530,6 +537,8 @@
       "elapsed": 98000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:13:00Z"
     },
     {
@@ -539,6 +548,8 @@
       "elapsed": 98000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:14:00Z"
     },
     {
@@ -548,6 +559,8 @@
       "elapsed": 190000,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:15:00Z"
     },
     {
@@ -557,6 +570,8 @@
       "elapsed": 190000,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:16:00Z"
     },
     {
@@ -566,6 +581,8 @@
       "elapsed": 190000,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:17:00Z"
     },
     {
@@ -575,6 +592,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:18:00Z"
     },
     {
@@ -584,6 +603,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:19:00Z"
     },
     {
@@ -593,6 +614,8 @@
       "elapsed": 185000,
       "toolCalls": 8,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:20:00Z"
     },
     {
@@ -602,6 +625,8 @@
       "elapsed": 185000,
       "toolCalls": 8,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:21:00Z"
     },
     {
@@ -611,6 +636,8 @@
       "elapsed": 185000,
       "toolCalls": 8,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:22:00Z"
     },
     {
@@ -620,6 +647,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:23:00Z"
     },
     {
@@ -629,6 +658,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:24:00Z"
     },
     {
@@ -638,6 +669,8 @@
       "elapsed": 142000,
       "toolCalls": 5,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:25:00Z"
     },
     {
@@ -647,6 +680,8 @@
       "elapsed": 142000,
       "toolCalls": 5,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:26:00Z"
     },
     {
@@ -656,6 +691,8 @@
       "elapsed": 142000,
       "toolCalls": 5,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:27:00Z"
     },
     {
@@ -665,6 +702,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:28:00Z"
     },
     {
@@ -674,6 +713,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:29:00Z"
     },
     {
@@ -683,6 +724,8 @@
       "elapsed": 210000,
       "toolCalls": 13,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:30:00Z"
     },
     {
@@ -692,6 +735,8 @@
       "elapsed": 210000,
       "toolCalls": 13,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:31:00Z"
     },
     {
@@ -701,6 +746,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:32:00Z"
     },
     {
@@ -710,6 +757,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:33:00Z"
     },
     {
@@ -719,6 +768,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:34:00Z"
     },
     {
@@ -728,6 +779,8 @@
       "elapsed": 108000,
       "toolCalls": 7,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:35:00Z"
     },
     {
@@ -737,6 +790,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:36:00Z"
     },
     {
@@ -746,6 +801,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:37:00Z"
     },
     {
@@ -755,6 +812,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:38:00Z"
     },
     {
@@ -764,6 +823,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:39:00Z"
     },
     {
@@ -773,6 +834,8 @@
       "elapsed": 85000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:40:00Z"
     },
     {
@@ -782,6 +845,8 @@
       "elapsed": 85000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:41:00Z"
     },
     {
@@ -791,6 +856,8 @@
       "elapsed": 85000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:42:00Z"
     },
     {
@@ -800,6 +867,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:43:00Z"
     },
     {
@@ -809,6 +878,8 @@
       "elapsed": 300000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T00:44:00Z"
     },
     {
@@ -818,6 +889,8 @@
       "elapsed": 51000,
       "toolCalls": 7,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:08:17Z"
     },
     {
@@ -827,6 +900,8 @@
       "elapsed": 87000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:09:25Z"
     },
     {
@@ -836,6 +911,8 @@
       "elapsed": 72000,
       "toolCalls": 6,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:11:08Z"
     },
     {
@@ -845,6 +922,8 @@
       "elapsed": 57000,
       "toolCalls": 7,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:12:37Z"
     },
     {
@@ -854,6 +933,8 @@
       "elapsed": 72000,
       "toolCalls": 7,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:13:50Z"
     },
     {
@@ -863,6 +944,8 @@
       "elapsed": 82000,
       "toolCalls": 5,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:15:18Z"
     },
     {
@@ -872,6 +955,8 @@
       "elapsed": 51000,
       "toolCalls": 8,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:16:57Z"
     },
     {
@@ -881,6 +966,8 @@
       "elapsed": 5000,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:18:05Z"
     },
     {
@@ -890,6 +977,8 @@
       "elapsed": 303000,
       "toolCalls": 22,
       "failures": 6,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:18:26Z"
     },
     {
@@ -899,6 +988,8 @@
       "elapsed": 169000,
       "toolCalls": 15,
       "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:23:46Z"
     },
     {
@@ -908,6 +999,8 @@
       "elapsed": 56000,
       "toolCalls": 7,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:26:51Z"
     },
     {
@@ -917,6 +1010,8 @@
       "elapsed": 56000,
       "toolCalls": 5,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:28:04Z"
     },
     {
@@ -926,6 +1021,8 @@
       "elapsed": 302000,
       "toolCalls": 13,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:29:17Z"
     },
     {
@@ -935,6 +1032,8 @@
       "elapsed": 72000,
       "toolCalls": 7,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:34:35Z"
     },
     {
@@ -944,6 +1043,8 @@
       "elapsed": 61000,
       "toolCalls": 5,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:36:03Z"
     },
     {
@@ -953,6 +1054,8 @@
       "elapsed": 303006,
       "toolCalls": 11,
       "failures": 5,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:51:11.792Z"
     },
     {
@@ -962,6 +1065,8 @@
       "elapsed": 303616,
       "toolCalls": 14,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-08T23:58:49.264Z"
     },
     {
@@ -971,6 +1076,8 @@
       "elapsed": 15544,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T00:11:09.932Z"
     },
     {
@@ -980,6 +1087,8 @@
       "elapsed": 149293,
       "toolCalls": 10,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T00:14:10.036Z"
     },
     {
@@ -989,6 +1098,8 @@
       "elapsed": 301856,
       "toolCalls": 12,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T00:43:05.044Z"
     },
     {
@@ -998,6 +1109,8 @@
       "elapsed": 129631,
       "toolCalls": 5,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T00:49:50.452Z"
     },
     {
@@ -1007,6 +1120,8 @@
       "elapsed": 160240,
       "toolCalls": 7,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T00:50:21.242Z"
     },
     {
@@ -1016,6 +1131,8 @@
       "elapsed": 303375,
       "toolCalls": 11,
       "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T00:52:44.728Z"
     },
     {
@@ -1025,6 +1142,8 @@
       "elapsed": 129892,
       "toolCalls": 11,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:04:55.304Z"
     },
     {
@@ -1034,6 +1153,8 @@
       "elapsed": 300098,
       "toolCalls": 5,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:07:45.497Z"
     },
     {
@@ -1043,6 +1164,8 @@
       "elapsed": 300137,
       "toolCalls": 5,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:07:45.515Z"
     },
     {
@@ -1052,6 +1175,8 @@
       "elapsed": 180614,
       "toolCalls": 10,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:08:07.305Z"
     },
     {
@@ -1061,6 +1186,8 @@
       "elapsed": 103095,
       "toolCalls": 11,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:09:39.932Z"
     },
     {
@@ -1070,6 +1197,8 @@
       "elapsed": 35010,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:10:37.987Z"
     },
     {
@@ -1079,6 +1208,8 @@
       "elapsed": 46422,
       "toolCalls": 9,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:10:49.810Z"
     },
     {
@@ -1088,6 +1219,8 @@
       "elapsed": 65736,
       "toolCalls": 10,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:11:55.400Z"
     },
     {
@@ -1097,6 +1230,8 @@
       "elapsed": 243095,
       "toolCalls": 21,
       "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:14:06.140Z"
     },
     {
@@ -1106,6 +1241,8 @@
       "elapsed": 300102,
       "toolCalls": 14,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:16:01.604Z"
     },
     {
@@ -1115,6 +1252,8 @@
       "elapsed": 27664,
       "toolCalls": 10,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:17:31.856Z"
     },
     {
@@ -1124,6 +1263,8 @@
       "elapsed": 77167,
       "toolCalls": 17,
       "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:18:21.649Z"
     },
     {
@@ -1133,6 +1274,8 @@
       "elapsed": 302723,
       "toolCalls": 13,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:22:08.810Z"
     },
     {
@@ -1142,6 +1285,8 @@
       "elapsed": 302735,
       "toolCalls": 17,
       "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:22:46.143Z"
     },
     {
@@ -1151,6 +1296,8 @@
       "elapsed": 303628,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:23:36.843Z"
     },
     {
@@ -1160,6 +1307,8 @@
       "elapsed": 302609,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:29:26.349Z"
     },
     {
@@ -1169,6 +1318,8 @@
       "elapsed": 302781,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:29:26.493Z"
     },
     {
@@ -1178,6 +1329,8 @@
       "elapsed": 302812,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:29:26.591Z"
     },
     {
@@ -1187,6 +1340,8 @@
       "elapsed": 302678,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:34:40.444Z"
     },
     {
@@ -1196,6 +1351,8 @@
       "elapsed": 302602,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:34:40.602Z"
     },
     {
@@ -1205,6 +1362,8 @@
       "elapsed": 13135,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:45:38.232Z"
     },
     {
@@ -1214,6 +1373,8 @@
       "elapsed": 40327,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:45:56.778Z"
     },
     {
@@ -1223,6 +1384,8 @@
       "elapsed": 265888,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:50:16.983Z"
     },
     {
@@ -1232,6 +1395,8 @@
       "elapsed": 301321,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:50:17.024Z"
     },
     {
@@ -1241,6 +1406,8 @@
       "elapsed": 299683,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:50:17.071Z"
     },
     {
@@ -1250,6 +1417,8 @@
       "elapsed": 306319,
       "toolCalls": 4,
       "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:50:32.555Z"
     },
     {
@@ -1259,6 +1428,8 @@
       "elapsed": 0,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:52:48.556Z"
     },
     {
@@ -1268,6 +1439,8 @@
       "elapsed": 399906,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:52:48.769Z"
     },
     {
@@ -1277,6 +1450,8 @@
       "elapsed": 302275,
       "toolCalls": 1,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:55:32.150Z"
     },
     {
@@ -1286,6 +1461,8 @@
       "elapsed": 303597,
       "toolCalls": 1,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:55:33.141Z"
     },
     {
@@ -1295,6 +1472,8 @@
       "elapsed": 304543,
       "toolCalls": 1,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:55:38.607Z"
     },
     {
@@ -1304,6 +1483,8 @@
       "elapsed": 0,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:57:57.715Z"
     },
     {
@@ -1313,6 +1494,8 @@
       "elapsed": 0,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:57:57.717Z"
     },
     {
@@ -1322,6 +1505,8 @@
       "elapsed": 0,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:57:57.719Z"
     },
     {
@@ -1331,6 +1516,8 @@
       "elapsed": 305456,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:58:04.672Z"
     },
     {
@@ -1340,6 +1527,8 @@
       "elapsed": 300314,
       "toolCalls": 1,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T01:58:04.680Z"
     },
     {
@@ -1349,6 +1538,8 @@
       "elapsed": 300124,
       "toolCalls": 20,
       "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:03:12.203Z"
     },
     {
@@ -1358,6 +1549,8 @@
       "elapsed": 302786,
       "toolCalls": 14,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:03:13.307Z"
     },
     {
@@ -1367,6 +1560,8 @@
       "elapsed": 304053,
       "toolCalls": 19,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:03:28.401Z"
     },
     {
@@ -1376,6 +1571,8 @@
       "elapsed": 301335,
       "toolCalls": 19,
       "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:03:58.536Z"
     },
     {
@@ -1385,6 +1582,8 @@
       "elapsed": 131077,
       "toolCalls": 7,
       "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:08:33.557Z"
     },
     {
@@ -1394,6 +1593,8 @@
       "elapsed": 65414,
       "toolCalls": 7,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:09:51.649Z"
     },
     {
@@ -1403,6 +1604,8 @@
       "elapsed": 225903,
       "toolCalls": 19,
       "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:10:05.958Z"
     },
     {
@@ -1412,6 +1615,8 @@
       "elapsed": 303757,
       "toolCalls": 19,
       "failures": 8,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:11:26.621Z"
     },
     {
@@ -1421,6 +1626,8 @@
       "elapsed": 301601,
       "toolCalls": 16,
       "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:11:27.756Z"
     },
     {
@@ -1430,6 +1637,8 @@
       "elapsed": 301203,
       "toolCalls": 19,
       "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:11:28.850Z"
     },
     {
@@ -1439,6 +1648,8 @@
       "elapsed": 122475,
       "toolCalls": 7,
       "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:12:07.652Z"
     },
     {
@@ -1448,6 +1659,8 @@
       "elapsed": 57926,
       "toolCalls": 6,
       "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:12:38.384Z"
     },
     {
@@ -1457,6 +1670,8 @@
       "elapsed": 54321,
       "toolCalls": 3,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:12:39.986Z"
     },
     {
@@ -1466,6 +1681,8 @@
       "elapsed": 143019,
       "toolCalls": 9,
       "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:12:41.230Z"
     },
     {
@@ -1475,6 +1692,8 @@
       "elapsed": 59308,
       "toolCalls": 5,
       "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:12:41.713Z"
     },
     {
@@ -1484,6 +1703,8 @@
       "elapsed": 24878,
       "toolCalls": 2,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:13:23.425Z"
     },
     {
@@ -1493,6 +1714,8 @@
       "elapsed": 24537,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:13:25.080Z"
     },
     {
@@ -1502,6 +1725,8 @@
       "elapsed": 32375,
       "toolCalls": 5,
       "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:13:25.836Z"
     },
     {
@@ -1511,6 +1736,8 @@
       "elapsed": 359052,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:19:36.628Z"
     },
     {
@@ -1520,6 +1747,8 @@
       "elapsed": 419379,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:19:36.631Z"
     },
     {
@@ -1529,6 +1758,8 @@
       "elapsed": 357946,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:19:36.634Z"
     },
     {
@@ -1538,6 +1769,8 @@
       "elapsed": 374256,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:19:36.673Z"
     },
     {
@@ -1547,6 +1780,8 @@
       "elapsed": 329719,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:19:36.686Z"
     },
     {
@@ -1556,52 +1791,9 @@
       "elapsed": 0,
       "toolCalls": 0,
       "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
       "ts": "2026-03-09T02:22:05.423Z"
-    },
-    {
-      "model": "gpt-5-mini",
-      "bench": "collect",
-      "success": false,
-      "elapsed": 102911,
-      "toolCalls": 0,
-      "failures": 0,
-      "ts": "2026-03-09T02:42:58.227Z"
-    },
-    {
-      "model": "gpt-5-mini",
-      "bench": "collect",
-      "success": false,
-      "elapsed": 304658,
-      "toolCalls": 9,
-      "failures": 4,
-      "ts": "2026-03-09T02:48:18.496Z"
-    },
-    {
-      "model": "gpt-5-mini",
-      "bench": "collect",
-      "success": false,
-      "elapsed": 303246,
-      "toolCalls": 9,
-      "failures": 2,
-      "ts": "2026-03-09T02:53:45.695Z"
-    },
-    {
-      "model": "gpt-5-mini",
-      "bench": "collect",
-      "success": false,
-      "elapsed": 303394,
-      "toolCalls": 11,
-      "failures": 3,
-      "ts": "2026-03-09T02:59:22.550Z"
-    },
-    {
-      "model": "gpt-5-mini",
-      "bench": "collect",
-      "success": false,
-      "elapsed": 304785,
-      "toolCalls": 13,
-      "failures": 2,
-      "ts": "2026-03-09T03:04:51.401Z"
     }
   ]
 }
