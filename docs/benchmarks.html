@@ -171,11 +171,24 @@
 
     .bench-card:hover { border-color: #3f3f46; }
 
+    .bench-card .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .bench-card .bench-icon {
+      width: 32px;
+      height: 32px;
+      image-rendering: pixelated;
+      flex-shrink: 0;
+    }
+
     .bench-card .bench-name {
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 0.2rem;
     }
 
     .bench-card .bench-detail {
@@ -642,6 +655,12 @@
     ranked.forEach((m, i) => { colorMap[m] = MODEL_COLORS[i % MODEL_COLORS.length]; });
 
     // ── Benchmark Carousel ──
+    const BENCH_ICONS = {
+      pick: 'https://minecraft.wiki/images/Invicon_Wooden_Pickaxe.png',
+      food: 'https://minecraft.wiki/images/Invicon_Cooked_Beef.png',
+      shears: 'https://minecraft.wiki/images/Invicon_Shears.png',
+      diamonds: 'https://minecraft.wiki/images/Invicon_Diamond_Chestplate.png',
+    };
     const carousel = document.getElementById('bench-carousel');
     let cardsHTML = '';
     for (const b of benchmarks) {
@@ -649,9 +668,11 @@
       const totalAll = models.reduce((sum, m) => sum + (summary[m]?.[b]?.total || 0), 0);
       const modelCount = models.filter(m => (summary[m]?.[b]?.total || 0) > 0).length;
       const detail = totalAll > 0 ? `${totalAll} runs \u00B7 ${modelCount} models` : 'no runs yet';
+      const icon = BENCH_ICONS[b];
+      const iconHTML = icon ? `<img class="bench-icon" src="${icon}" alt="${name}">` : '';
       cardsHTML += `
         <div class="bench-card">
-          <div class="bench-name">${name}</div>
+          <div class="card-header">${iconHTML}<div class="bench-name">${name}</div></div>
           <div class="bench-detail">${detail}</div>
         </div>`;
     }
