@@ -12,16 +12,16 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { BENCHMARKS } from './benchmark.js';
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RESULTS_PATH = path.join(__dirname, 'benchmarks', 'results.jsonl');
 const OUTPUT_PATH = path.join(__dirname, '..', 'docs', 'benchmark-data.json');
 
-// Derive display names from benchmark definitions — no hardcoded map needed
-const BENCH_NAMES = Object.fromEntries(
-  Object.entries(BENCHMARKS).map(([id, def]) => [id, def.name || id])
-);
+const BENCH_NAMES = {
+  pick: 'Wooden Pickaxe',
+  food: 'Cooked Food',
+  shears: 'Iron Shears',
+  diamonds: 'Diamond Armor',
+};
 
 export function compileBenchmarks({ check = false } = {}) {
   if (!fs.existsSync(RESULTS_PATH)) {

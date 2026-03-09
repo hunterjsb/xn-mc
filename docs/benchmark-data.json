@@ -1,12 +1,11 @@
 {
-  "generated": "2026-03-09T01:18:55.007Z",
-  "totalRuns": 80,
+  "generated": "2026-03-09T01:39:25.637Z",
+  "totalRuns": 88,
   "models": [
-    "grok-4.1-fast",
+    "x-ai/grok-4.1-fast",
     "gpt-5-mini",
     "minimax-m2.5",
-    "anthropic/claude-haiku-4.5",
-    "x-ai/grok-4.1-fast"
+    "anthropic/claude-haiku-4.5"
   ],
   "benchmarks": [
     "pick",
@@ -21,13 +20,13 @@
     "diamonds": "Diamond Armor"
   },
   "summary": {
-    "grok-4.1-fast": {
+    "x-ai/grok-4.1-fast": {
       "overall": {
-        "pass": 12,
-        "total": 15,
-        "rate": 0.8,
-        "avgTime": 98333,
-        "avgTools": 7
+        "pass": 15,
+        "total": 22,
+        "rate": 0.6818181818181818,
+        "avgTime": 102350,
+        "avgTools": 9
       },
       "pick": {
         "pass": 5,
@@ -54,12 +53,12 @@
         "avgFailures": 0
       },
       "diamonds": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
+        "pass": 3,
+        "total": 7,
+        "rate": 0.42857142857142855,
+        "avgTime": 118418,
+        "avgTools": 13,
+        "avgFailures": 1
       }
     },
     "gpt-5-mini": {
@@ -106,8 +105,8 @@
     "minimax-m2.5": {
       "overall": {
         "pass": 6,
-        "total": 15,
-        "rate": 0.4,
+        "total": 20,
+        "rate": 0.3,
         "avgTime": 130500,
         "avgTools": 9
       },
@@ -137,7 +136,7 @@
       },
       "diamonds": {
         "pass": 0,
-        "total": 0,
+        "total": 5,
         "rate": 0,
         "avgTime": null,
         "avgTools": null,
@@ -147,8 +146,8 @@
     "anthropic/claude-haiku-4.5": {
       "overall": {
         "pass": 13,
-        "total": 17,
-        "rate": 0.7647058823529411,
+        "total": 20,
+        "rate": 0.65,
         "avgTime": 69525,
         "avgTools": 8
       },
@@ -178,58 +177,17 @@
       },
       "diamonds": {
         "pass": 2,
-        "total": 2,
-        "rate": 1,
+        "total": 5,
+        "rate": 0.4,
         "avgTime": 52416,
         "avgTools": 14,
         "avgFailures": 3
-      }
-    },
-    "x-ai/grok-4.1-fast": {
-      "overall": {
-        "pass": 3,
-        "total": 7,
-        "rate": 0.42857142857142855,
-        "avgTime": 118418,
-        "avgTools": 13
-      },
-      "pick": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
-      },
-      "food": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
-      },
-      "shears": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTools": null,
-        "avgFailures": null
-      },
-      "diamonds": {
-        "pass": 3,
-        "total": 7,
-        "rate": 0.42857142857142855,
-        "avgTime": 118418,
-        "avgTools": 13,
-        "avgFailures": 1
       }
     }
   },
   "runs": [
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "pick",
       "success": true,
       "elapsed": 102000,
@@ -238,7 +196,7 @@
       "ts": "2026-03-08T00:00:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "pick",
       "success": true,
       "elapsed": 102000,
@@ -247,7 +205,7 @@
       "ts": "2026-03-08T00:01:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "pick",
       "success": true,
       "elapsed": 102000,
@@ -256,7 +214,7 @@
       "ts": "2026-03-08T00:02:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "pick",
       "success": true,
       "elapsed": 102000,
@@ -265,7 +223,7 @@
       "ts": "2026-03-08T00:03:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "pick",
       "success": true,
       "elapsed": 102000,
@@ -274,7 +232,7 @@
       "ts": "2026-03-08T00:04:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "food",
       "success": true,
       "elapsed": 90000,
@@ -283,7 +241,7 @@
       "ts": "2026-03-08T00:05:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "food",
       "success": true,
       "elapsed": 90000,
@@ -292,7 +250,7 @@
       "ts": "2026-03-08T00:06:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "food",
       "success": false,
       "elapsed": 300000,
@@ -301,7 +259,7 @@
       "ts": "2026-03-08T00:07:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "food",
       "success": false,
       "elapsed": 300000,
@@ -310,7 +268,7 @@
       "ts": "2026-03-08T00:08:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "food",
       "success": false,
       "elapsed": 300000,
@@ -319,7 +277,7 @@
       "ts": "2026-03-08T00:09:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "shears",
       "success": true,
       "elapsed": 98000,
@@ -328,7 +286,7 @@
       "ts": "2026-03-08T00:10:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "shears",
       "success": true,
       "elapsed": 98000,
@@ -337,7 +295,7 @@
       "ts": "2026-03-08T00:11:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "shears",
       "success": true,
       "elapsed": 98000,
@@ -346,7 +304,7 @@
       "ts": "2026-03-08T00:12:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "shears",
       "success": true,
       "elapsed": 98000,
@@ -355,7 +313,7 @@
       "ts": "2026-03-08T00:13:00Z"
     },
     {
-      "model": "grok-4.1-fast",
+      "model": "x-ai/grok-4.1-fast",
       "bench": "shears",
       "success": true,
       "elapsed": 98000,
@@ -947,6 +905,78 @@
       "toolCalls": 17,
       "failures": 4,
       "ts": "2026-03-09T01:18:21.649Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 302723,
+      "toolCalls": 13,
+      "failures": 0,
+      "ts": "2026-03-09T01:22:08.810Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 302735,
+      "toolCalls": 17,
+      "failures": 2,
+      "ts": "2026-03-09T01:22:46.143Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 303628,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:23:36.843Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 302609,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:29:26.349Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 302781,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:29:26.493Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 302812,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:29:26.591Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 302678,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:34:40.444Z"
+    },
+    {
+      "model": "minimax-m2.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 302602,
+      "toolCalls": 0,
+      "failures": 0,
+      "ts": "2026-03-09T01:34:40.602Z"
     }
   ]
 }

@@ -96,13 +96,15 @@ async function waitForBot(name, timeoutMs = 30_000) {
 
 async function getInventory(player) {
   const items = [];
-  for (let i = 0; i < 36; i++) {
+  // Slots 0-35 = main inventory, 100-103 = armor (boots, leggings, chestplate, helmet)
+  const slots = [...Array(36).keys(), 100, 101, 102, 103];
+  for (const i of slots) {
     try {
       const resp = await rcon(`data get entity ${player} Inventory[{Slot:${i}b}]`);
       if (resp.includes('No elements') || resp.includes('Found no')) continue;
       const m = resp.match(/id: "minecraft:(\w+)".*?count: (\d+)/);
       if (m) items.push({ name: m[1], count: parseInt(m[2]) });
-    } catch { break; }
+    } catch { continue; }
   }
   return items;
 }
