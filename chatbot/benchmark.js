@@ -176,8 +176,7 @@ async function ownerReply(botMessage, goal, chatHistory) {
     const res = await ownerClient.chat.completions.create({
       model: OWNER_MODEL,
       messages,
-      max_tokens: 100,
-      temperature: 0.3,
+      max_completion_tokens: 100,
     });
     return res.choices[0]?.message?.content?.trim() || '';
   } catch (err) {
