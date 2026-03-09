@@ -206,25 +206,65 @@
       flex-wrap: wrap;
     }
 
-    .vchart-controls select {
-      appearance: none;
+    .pill-group {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .pill-group-label {
+      font-size: 0.6rem;
+      color: #3f3f46;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      margin-bottom: 0.2rem;
+    }
+
+    .pill {
       background: #111113;
-      color: #d4d4d8;
+      color: #71717a;
       border: 1px solid #222226;
-      border-radius: 0.5rem;
-      padding: 0.45rem 2rem 0.45rem 0.75rem;
-      font-size: 0.8rem;
+      border-radius: 2rem;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
       font-family: "Cascadia Code", "Fira Code", monospace;
       cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2371717a'%3E%3Cpath d='M2 3l3 4 3-4'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.6rem center;
-      transition: border-color 0.2s, background 0.2s;
+      transition: all 0.15s ease;
+      user-select: none;
       letter-spacing: -0.01em;
     }
 
-    .vchart-controls select:hover { border-color: #3f3f46; background: #18181b; }
-    .vchart-controls select:focus { outline: none; border-color: #52525b; }
+    .pill:hover { border-color: #3f3f46; color: #a1a1aa; }
+
+    .pill.active {
+      background: #1a1a1f;
+      border-color: #52525b;
+      color: #e4e4e7;
+    }
+
+    .vchart-legend {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .vchart-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      color: #71717a;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+    }
+
+    .vchart-legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
 
     .vchart-container {
       background: var(--card-bg);
@@ -281,8 +321,8 @@
     }
 
     .vchart-bar {
-      width: 44px;
-      border-radius: 0.5rem 0.5rem 0 0;
+      width: 44px; /* default, overridden inline for grouped bars */
+      border-radius: 0.35rem 0.35rem 0 0;
       transition: height 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
       position: relative;
       min-height: 2px;
@@ -567,12 +607,18 @@
     <p class="description">Each model runs every benchmark multiple times at random surface locations. Success = target item in inventory before 5-minute timeout.</p>
 
     <div class="vchart-controls">
-      <select id="bench-select"></select>
-      <select id="metric-select">
-        <option value="rate">Pass Rate</option>
-        <option value="time">Avg Time</option>
-        <option value="tools">Tool Calls</option>
-      </select>
+      <div>
+        <div class="pill-group-label">Benchmarks</div>
+        <div class="pill-group" id="bench-pills"></div>
+      </div>
+      <div>
+        <div class="pill-group-label">Metric</div>
+        <div class="pill-group" id="metric-pills">
+          <button class="pill active" data-value="rate">Pass Rate</button>
+          <button class="pill" data-value="time">Avg Time</button>
+          <button class="pill" data-value="tools">Tool Calls</button>
+        </div>
+      </div>
     </div>
     <div class="vchart-container">
       <div id="vchart" class="vchart"></div>
@@ -770,109 +816,146 @@
     glanceGrid.innerHTML = glanceHTML;
 
     // ── Vertical Bar Chart ──
-    const benchSelect = document.getElementById('bench-select');
-    const metricSelect = document.getElementById('metric-select');
+    const benchPills = document.getElementById('bench-pills');
+    const metricPills = document.getElementById('metric-pills');
     const vchartEl = document.getElementById('vchart');
+    const legendEl = document.getElementById('vchart-legend');
 
-    // Populate benchmark dropdown
+    // Benchmark bar colors (one per benchmark)
+    const BENCH_COLORS = ['#5cb85c', '#3b82f6', '#f59e0b', '#a855f7', '#ef4444', '#06b6d4', '#ec4899', '#84cc16'];
+
+    // Populate benchmark pills (all active by default)
+    const selectedBenches = new Set(benchmarks);
     for (const b of benchmarks) {
-      const opt = document.createElement('option');
-      opt.value = b;
-      opt.textContent = benchNames[b] || b;
-      benchSelect.appendChild(opt);
+      const btn = document.createElement('button');
+      btn.className = 'pill active';
+      btn.dataset.value = b;
+      btn.textContent = benchNames[b] || b;
+      btn.addEventListener('click', () => {
+        if (selectedBenches.has(b)) {
+          if (selectedBenches.size > 1) { selectedBenches.delete(b); btn.classList.remove('active'); }
+        } else {
+          selectedBenches.add(b); btn.classList.add('active');
+        }
+        renderChart();
+      });
+      benchPills.appendChild(btn);
+    }
+
+    // Metric pills (single-select / radio)
+    let selectedMetric = 'rate';
+    metricPills.querySelectorAll('.pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        metricPills.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        selectedMetric = btn.dataset.value;
+        renderChart();
+      });
+    });
+
+    function getVal(s, metric) {
+      if (!s) return null;
+      if (metric === 'rate') return s.rate || 0;
+      if (metric === 'time') return s.avgTime;
+      return s.avgTools;
     }
 
     function renderChart() {
-      const bench = benchSelect.value;
-      const metric = metricSelect.value;
+      const activeBenches = benchmarks.filter(b => selectedBenches.has(b));
+      const metric = selectedMetric;
+      const multi = activeBenches.length > 1;
 
-      // Sort: rate descending, time ascending, tools ascending
+      // Sort models by first selected benchmark metric
       const sorted = [...ranked].sort((a, b) => {
-        const sa = summary[a]?.[bench], sb = summary[b]?.[bench];
-        if (!sa || !sb) return 0;
-        if (metric === 'rate') return (sb.rate || 0) - (sa.rate || 0);
-        if (metric === 'time') {
-          if (sa.avgTime == null) return 1;
-          if (sb.avgTime == null) return -1;
-          return sa.avgTime - sb.avgTime;
-        }
-        if (sa.avgTools == null) return 1;
-        if (sb.avgTools == null) return -1;
-        return sa.avgTools - sb.avgTools;
+        // Average across selected benchmarks for sorting
+        const avgA = activeBenches.reduce((s, bench) => s + (getVal(summary[a]?.[bench], metric) ?? 9999), 0) / activeBenches.length;
+        const avgB = activeBenches.reduce((s, bench) => s + (getVal(summary[b]?.[bench], metric) ?? 9999), 0) / activeBenches.length;
+        return metric === 'rate' ? avgB - avgA : avgA - avgB;
       });
 
-      // Find max for scaling
+      // Find global max for scaling
       let maxVal = 0;
       for (const m of sorted) {
-        const s = summary[m]?.[bench];
-        if (!s) continue;
-        let v = 0;
-        if (metric === 'rate') v = s.rate || 0;
-        else if (metric === 'time') v = s.avgTime || 0;
-        else v = s.avgTools || 0;
-        if (v > maxVal) maxVal = v;
-      }
-      if (metric === 'rate') maxVal = 1; // always scale to 100%
-
-      // Collect values for normalization
-      const entries = sorted.map(m => {
-        const s = summary[m]?.[bench];
-        if (!s) return null;
-        let val, label, heightPct;
-        if (metric === 'rate') {
-          val = s.rate || 0;
-          label = `${Math.round(val * 100)}%`;
-          heightPct = val * 100;
-        } else if (metric === 'time') {
-          val = s.avgTime;
-          label = fmtTime(val);
-          heightPct = (val != null && maxVal > 0) ? (val / maxVal) * 100 : 0;
-        } else {
-          val = s.avgTools;
-          label = val != null ? String(val) : '-';
-          heightPct = (val != null && maxVal > 0) ? (val / maxVal) * 100 : 0;
+        for (const bench of activeBenches) {
+          const v = getVal(summary[m]?.[bench], metric);
+          if (v != null && v > maxVal) maxVal = v;
         }
-        return { model: m, val, label, heightPct };
-      }).filter(Boolean);
+      }
+      if (metric === 'rate') maxVal = 1;
 
-      // Compute normalized score (0=worst, 1=best) for bar coloring
-      const vals = entries.map(e => e.val).filter(v => v != null);
-      const minV = Math.min(...vals), maxV = Math.max(...vals);
+      // Global min/max for color normalization
+      const allVals = [];
+      for (const m of sorted) {
+        for (const bench of activeBenches) {
+          const v = getVal(summary[m]?.[bench], metric);
+          if (v != null) allVals.push(v);
+        }
+      }
+      const minV = Math.min(...allVals), maxV = Math.max(...allVals);
       const range = maxV - minV;
 
-      // Gridlines (5 lines)
+      // Bar width scales with number of benchmarks
+      const barW = multi ? Math.max(Math.round(36 / activeBenches.length), 8) : 44;
+      const groupGap = multi ? 2 : 0;
+
+      // Gridlines
       let html = '<div class="vchart-gridlines">';
       for (let i = 0; i < 5; i++) html += '<div class="vchart-gridline"></div>';
       html += '</div>';
 
-      for (const e of entries) {
-        let score = 0.5;
-        if (e.val != null && range > 0) {
+      for (const m of sorted) {
+        let barsHTML = '';
+        for (let bi = 0; bi < activeBenches.length; bi++) {
+          const bench = activeBenches[bi];
+          const s = summary[m]?.[bench];
+          const v = getVal(s, metric);
+          let label, heightPct;
           if (metric === 'rate') {
-            score = (e.val - minV) / range; // higher = better
+            label = v != null ? `${Math.round(v * 100)}%` : '-';
+            heightPct = (v || 0) * 100;
+          } else if (metric === 'time') {
+            label = fmtTime(v);
+            heightPct = (v != null && maxVal > 0) ? (v / maxVal) * 100 : 0;
           } else {
-            score = 1 - (e.val - minV) / range; // lower = better for time & tools
+            label = v != null ? String(v) : '-';
+            heightPct = (v != null && maxVal > 0) ? (v / maxVal) * 100 : 0;
           }
-        } else if (e.val != null && metric === 'rate') {
-          score = e.val; // single value, use absolute
+
+          let score = 0.5;
+          if (v != null && range > 0) {
+            score = metric === 'rate' ? (v - minV) / range : 1 - (v - minV) / range;
+          } else if (v != null && metric === 'rate') {
+            score = v;
+          }
+
+          const bg = multi
+            ? BENCH_COLORS[benchmarks.indexOf(bench) % BENCH_COLORS.length]
+            : barGradient(score, heightPct);
+          const showLabel = !multi || activeBenches.length <= 2;
+
+          barsHTML += `<div class="vchart-bar" style="width:${barW}px;height:${Math.max(heightPct, 1)}%;background:${bg};${groupGap ? `margin:0 ${groupGap/2}px` : ''}">${showLabel ? `<div class="vchart-bar-label">${label}</div>` : ''}</div>`;
         }
-        const bg = barGradient(score, e.heightPct);
 
         html += `
           <div class="vchart-model">
-            <div class="vchart-bar-wrap">
-              <div class="vchart-bar" style="height: ${Math.max(e.heightPct, 1)}%; background: ${bg};">
-                <div class="vchart-bar-label">${e.label}</div>
-              </div>
+            <div class="vchart-bar-wrap" style="gap:0;">
+              ${barsHTML}
             </div>
-            <div class="vchart-name" style="color: ${colorMap[e.model]}">${e.model}</div>
+            <div class="vchart-name" style="color: ${colorMap[m]}">${m}</div>
           </div>`;
       }
       vchartEl.innerHTML = html;
+
+      // Legend (only when multi-benchmark)
+      if (multi) {
+        legendEl.innerHTML = activeBenches.map((b, i) =>
+          `<div class="vchart-legend-item"><div class="vchart-legend-swatch" style="background:${BENCH_COLORS[benchmarks.indexOf(b) % BENCH_COLORS.length]}"></div>${benchNames[b] || b}</div>`
+        ).join('');
+      } else {
+        legendEl.innerHTML = '';
+      }
     }
 
-    benchSelect.addEventListener('change', renderChart);
-    metricSelect.addEventListener('change', renderChart);
     renderChart();
 
     // ── Detailed Table (collapsible) ──
