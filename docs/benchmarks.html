@@ -551,24 +551,6 @@
 
     const { models, benchmarks, benchNames, summary, totalRuns, generated } = data;
 
-    // Render task cards from data
-    const benchGrid = document.getElementById('bench-grid');
-    let cardsHTML = '';
-    for (const b of benchmarks) {
-      const name = benchNames[b] || b;
-      const s = summary[ranked[0]]?.[b]; // use top model's stats as representative
-      const totalAll = models.reduce((sum, m) => sum + (summary[m]?.[b]?.total || 0), 0);
-      const detail = totalAll > 0 ? `${totalAll} runs across ${models.filter(m => (summary[m]?.[b]?.total || 0) > 0).length} models` : 'no runs yet';
-      cardsHTML += `
-        <div class="bench-card">
-          <div class="card-header">
-            <div class="bench-name">${name}</div>
-          </div>
-          <div class="bench-goal">${detail}</div>
-        </div>`;
-    }
-    benchGrid.innerHTML = cardsHTML;
-
     // ── Helpers ──
     function fmtTime(ms) {
       if (ms == null) return '-';
@@ -592,6 +574,24 @@
       (summary[b]?.overall?.rate || 0) - (summary[a]?.overall?.rate || 0)
     );
     ranked.forEach((m, i) => { colorMap[m] = MODEL_COLORS[i % MODEL_COLORS.length]; });
+
+    // ── Task Cards (rendered from data) ──
+    const benchGrid = document.getElementById('bench-grid');
+    let cardsHTML = '';
+    for (const b of benchmarks) {
+      const name = benchNames[b] || b;
+      const totalAll = models.reduce((sum, m) => sum + (summary[m]?.[b]?.total || 0), 0);
+      const modelCount = models.filter(m => (summary[m]?.[b]?.total || 0) > 0).length;
+      const detail = totalAll > 0 ? `${totalAll} runs across ${modelCount} models` : 'no runs yet';
+      cardsHTML += `
+        <div class="bench-card">
+          <div class="card-header">
+            <div class="bench-name">${name}</div>
+          </div>
+          <div class="bench-goal">${detail}</div>
+        </div>`;
+    }
+    benchGrid.innerHTML = cardsHTML;
 
     // Bar gradient: grey base → green tip for high scores
     // score 0 = flat grey, score 1 = grey base with bright green top
