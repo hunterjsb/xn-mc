@@ -201,22 +201,23 @@
 
     .vchart-controls select {
       appearance: none;
-      background: #18181b;
-      color: var(--text);
-      border: 1px solid var(--border);
+      background: #111113;
+      color: #d4d4d8;
+      border: 1px solid #222226;
       border-radius: 0.5rem;
-      padding: 0.5rem 2rem 0.5rem 0.75rem;
-      font-size: 0.85rem;
-      font-family: inherit;
+      padding: 0.45rem 2rem 0.45rem 0.75rem;
+      font-size: 0.8rem;
+      font-family: "Cascadia Code", "Fira Code", monospace;
       cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a1a1aa'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2371717a'%3E%3Cpath d='M2 3l3 4 3-4'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 0.6rem center;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background 0.2s;
+      letter-spacing: -0.01em;
     }
 
-    .vchart-controls select:hover { border-color: #3f3f46; }
-    .vchart-controls select:focus { outline: none; border-color: var(--primary); }
+    .vchart-controls select:hover { border-color: #3f3f46; background: #18181b; }
+    .vchart-controls select:focus { outline: none; border-color: #52525b; }
 
     .vchart-container {
       background: var(--card-bg);
@@ -224,6 +225,7 @@
       border-radius: 0.75rem;
       padding: 1.5rem 1.5rem 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
     .vchart {
@@ -231,13 +233,29 @@
       align-items: stretch;
       justify-content: center;
       gap: 0;
-      height: 260px;
+      height: 280px;
       position: relative;
+      border-bottom: 1px solid #1e1e22;
+    }
+
+    .vchart-gridlines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 3rem; /* match label area */
+    }
+
+    .vchart-gridline {
+      border-top: 1px solid #18181b;
+      width: 100%;
     }
 
     .vchart-model {
       flex: 1;
-      max-width: 140px;
+      max-width: 160px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -249,30 +267,33 @@
       justify-content: center;
       flex: 1;
       align-items: flex-end;
+      padding: 0 0.25rem;
     }
 
     .vchart-bar {
-      width: 48px;
-      border-radius: 0.35rem 0.35rem 0 0;
-      transition: height 0.5s ease, background 0.3s ease;
+      width: 44px;
+      border-radius: 0.5rem 0.5rem 0 0;
+      transition: height 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
       position: relative;
       min-height: 2px;
     }
 
     .vchart-bar-label {
       position: absolute;
-      top: -1.4rem;
+      top: -1.5rem;
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--text);
+      font-weight: 600;
+      color: #d4d4d8;
       white-space: nowrap;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      letter-spacing: -0.02em;
     }
 
     .vchart-name {
       font-family: "Cascadia Code", "Fira Code", monospace;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       text-align: center;
       padding: 0.5rem 0.25rem 0;
       line-height: 1.2;
@@ -282,6 +303,7 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
+      opacity: 0.85;
     }
 
     /* ---------- Comparison Grid ---------- */
@@ -638,11 +660,10 @@
       return 'red';
     }
 
-    // Auto-assign label colors per model
+    // Warm label palette: yellow → orange → red → magenta (muted)
     const MODEL_COLORS = [
-      '#3b82f6', '#a855f7', '#f59e0b', '#ec4899',
-      '#14b8a6', '#f97316', '#6366f1', '#84cc16',
-      '#ef4444', '#22d3ee',
+      '#d4a847', '#c87a3a', '#b85450', '#a8588a',
+      '#c9944a', '#d46b5a', '#9e6aad', '#bf7060',
     ];
     const colorMap = {};
     const ranked = [...models].sort((a, b) =>
@@ -650,11 +671,17 @@
     );
     ranked.forEach((m, i) => { colorMap[m] = MODEL_COLORS[i % MODEL_COLORS.length]; });
 
-    // Score-based bar color: green (good) → yellow → red (bad)
-    // normalizedScore: 0 = worst, 1 = best
-    function scoreColor(normalizedScore) {
-      const hue = Math.round(normalizedScore * 120); // 0=red, 120=green
-      return `hsl(${hue}, 70%, 50%)`;
+    // Bar gradient: grey base → green tip for high scores
+    // score 0 = flat grey, score 1 = grey base with bright green top
+    function barGradient(score, heightPct) {
+      // Base: neutral grey, desaturated
+      const baseL = 28 + score * 6;  // slightly lighter base when scoring well
+      const base = `hsl(0, 0%, ${baseL}%)`;
+      // Tip: blend from grey to green based on score
+      const tipSat = Math.round(score * 55);  // 0% → 55% saturation
+      const tipLight = 32 + Math.round(score * 22);  // 32% → 54% lightness
+      const tip = `hsl(145, ${tipSat}%, ${tipLight}%)`;
+      return `linear-gradient(to top, ${base} 0%, ${tip} 100%)`;
     }
 
     // ── At a Glance ──
@@ -757,7 +784,11 @@
       const minV = Math.min(...vals), maxV = Math.max(...vals);
       const range = maxV - minV;
 
-      let html = '';
+      // Gridlines (5 lines)
+      let html = '<div class="vchart-gridlines">';
+      for (let i = 0; i < 5; i++) html += '<div class="vchart-gridline"></div>';
+      html += '</div>';
+
       for (const e of entries) {
         let score = 0.5;
         if (e.val != null && range > 0) {
@@ -769,12 +800,12 @@
         } else if (e.val != null && metric === 'rate') {
           score = e.val; // single value, use absolute
         }
-        const barColor = scoreColor(score);
+        const bg = barGradient(score, e.heightPct);
 
         html += `
           <div class="vchart-model">
             <div class="vchart-bar-wrap">
-              <div class="vchart-bar" style="height: ${Math.max(e.heightPct, 1)}%; background: ${barColor};">
+              <div class="vchart-bar" style="height: ${Math.max(e.heightPct, 1)}%; background: ${bg};">
                 <div class="vchart-bar-label">${e.label}</div>
               </div>
             </div>
