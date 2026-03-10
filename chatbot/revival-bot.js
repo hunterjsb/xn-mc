@@ -207,6 +207,19 @@ export class RevivalBot {
     const rawDim = this.bot.game?.dimension || 'unknown';
     const dimension = rawDim.replace(/^minecraft:/, '');
 
+    // Nearby utility blocks (crafting table, furnace, chest, etc.)
+    const utilityBlocks = [];
+    const UTILITY_BLOCK_IDS = ['crafting_table', 'furnace', 'chest', 'anvil', 'enchanting_table', 'smithing_table', 'blast_furnace', 'smoker'];
+    for (const name of UTILITY_BLOCK_IDS) {
+      const blockId = this._mcData?.blocksByName[name]?.id;
+      if (blockId == null) continue;
+      const found = this.bot.findBlock({ matching: blockId, maxDistance: 8 });
+      if (found) {
+        const dist = Math.round(pos.distanceTo(found.position));
+        utilityBlocks.push(`${name}(${dist}m)`);
+      }
+    }
+
     return {
       position: `${Math.round(pos.x)}, ${Math.round(pos.y)}, ${Math.round(pos.z)}`,
       health: Math.round(health),
@@ -216,6 +229,7 @@ export class RevivalBot {
       inventory: inventory.length > 0 ? inventory.join(', ') : 'empty',
       ownerDistance: ownerDist !== null ? `${ownerDist}m` : 'not visible',
       nearbyEntities: nearby.length > 0 ? nearby.slice(0, 15).join(', ') : 'none',
+      nearbyBlocks: utilityBlocks.length > 0 ? utilityBlocks.join(', ') : 'none',
       currentState: this.state
     };
   }
