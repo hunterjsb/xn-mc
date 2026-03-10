@@ -686,11 +686,22 @@
       font-family: "Cascadia Code", "Fira Code", monospace;
     }
 
-    .score-col-overall {
-      background: #161619;
+    .score-col-clickable {
+      cursor: pointer;
       border-radius: 0.5rem;
-      padding: 0.4rem 0.75rem;
+      padding: 0.4rem 0.5rem;
+      transition: background 0.15s, transform 0.15s;
     }
+
+    .score-col-clickable:hover { background: #161619; }
+
+    .score-col-active {
+      background: #161619;
+      transform: scale(1.15);
+    }
+
+    .score-col-active .score-value { font-size: 1.4rem !important; }
+    .score-col-clickable:not(.score-col-active) .score-value { font-size: 1rem !important; }
 
     /* ---------- Results Table ---------- */
     .results-wrap {
@@ -1066,82 +1077,110 @@
       return { score: Math.round(100 * total / modelRuns.length), n: modelRuns.length };
     }
 
-    const scores = ranked.map(m => {
+    const scoreData = ranked.map(m => {
       const s5 = computeScore(m, 300_000);
       const s10 = computeScore(m, 600_000);
       const overall = computeScore(m);
       return { model: m, s5, s10, score: overall?.score || 0 };
-    }).sort((a, b) => b.score - a.score);
+    });
 
     const glanceDesc = document.querySelector('#glance-section .description');
     glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = 100/n × Σ r(1 − t/T). Higher is better.`;
 
     const glanceGrid = document.getElementById('glance-grid');
-    const maxScore = Math.max(...scores.map(s => s.score), 1);
-    let glanceHTML = '';
-    scores.forEach((s, i) => {
-      const norm = maxScore > 0 ? s.score / maxScore : 0.5;
-      const textSat = Math.round(norm * 50);
-      const textLight = 35 + Math.round(norm * 18);
-      const textColor = `hsl(145, ${textSat}%, ${textLight}%)`;
-      const passRate = summary[s.model]?.overall?.rate;
-      const pctStr = passRate != null ? `${Math.round(passRate * 100)}% pass` : '';
-      const avgT = summary[s.model]?.overall?.avgTime;
-      const totalSamples = summary[s.model]?.overall?.total || 0;
-      const detail = [pctStr, avgT != null ? fmtTime(avgT) + ' avg' : '', `n=${totalSamples}`].filter(Boolean).join(' \u00B7 ');
+    let activeCol = 'overall'; // 'overall' | '5m' | '10m'
 
-      // Per-benchmark mini bars
-      let miniBarsHTML = '';
-      for (const b of benchmarks) {
-        const bs = summary[s.model]?.[b];
-        const rate = bs?.rate || 0;
-        const hPct = Math.max(rate * 100, 3);
-        const hue = Math.round(rate * 120);
-        const sat = 15 + Math.round(rate * 40);
-        const light = 25 + Math.round(rate * 22);
-        const bg = `hsl(${hue}, ${sat}%, ${light}%)`;
-        const abbr = (benchNames[b] || b).charAt(0).toUpperCase();
-        miniBarsHTML += `<div class="score-mini-bar" style="height: ${hPct}%; background: ${bg};" title="${benchNames[b] || b}: ${Math.round(rate * 100)}%"><div class="score-mini-label">${abbr}</div></div>`;
+    function scoreColor(norm) {
+      return `hsl(145, ${Math.round(norm * 50)}%, ${35 + Math.round(norm * 18)}%)`;
+    }
+
+    function renderScores() {
+      const sorted = [...scoreData].sort((a, b) => {
+        if (activeCol === '5m') return (b.s5?.score || 0) - (a.s5?.score || 0);
+        if (activeCol === '10m') return (b.s10?.score || 0) - (a.s10?.score || 0);
+        return b.score - a.score;
+      });
+      const maxScore = Math.max(...sorted.map(s => s.score), 1);
+
+      let html = '';
+      sorted.forEach((s, i) => {
+        const passRate = summary[s.model]?.overall?.rate;
+        const pctStr = passRate != null ? `${Math.round(passRate * 100)}% pass` : '';
+        const avgT = summary[s.model]?.overall?.avgTime;
+        const totalSamples = summary[s.model]?.overall?.total || 0;
+        const detail = [pctStr, avgT != null ? fmtTime(avgT) + ' avg' : '', `n=${totalSamples}`].filter(Boolean).join(' \u00B7 ');
+
+        let miniBarsHTML = '';
+        for (const b of benchmarks) {
+          const bs = summary[s.model]?.[b];
+          const rate = bs?.rate || 0;
+          const hPct = Math.max(rate * 100, 3);
+          const hue = Math.round(rate * 120);
+          const sat = 15 + Math.round(rate * 40);
+          const light = 25 + Math.round(rate * 22);
+          const bg = `hsl(${hue}, ${sat}%, ${light}%)`;
+          const abbr = (benchNames[b] || b).charAt(0).toUpperCase();
+          miniBarsHTML += `<div class="score-mini-bar" style="height: ${hPct}%; background: ${bg};" title="${benchNames[b] || b}: ${Math.round(rate * 100)}%"><div class="score-mini-label">${abbr}</div></div>`;
+        }
+
+        const s5str = s.s5 ? `${s.s5.score}` : '-';
+        const s10str = s.s10 ? `${s.s10.score}` : '-';
+        const s5n = s.s5 ? `n=${s.s5.n}` : '';
+        const s10n = s.s10 ? `n=${s.s10.n}` : '';
+        const s5color = scoreColor(s.s5 ? s.s5.score / 100 : 0);
+        const s10color = scoreColor(s.s10 ? s.s10.score / 100 : 0);
+        const overallNorm = maxScore > 0 ? s.score / maxScore : 0.5;
+        const overallColor = scoreColor(overallNorm);
+
+        const a5 = activeCol === '5m' ? ' score-col-active' : '';
+        const a10 = activeCol === '10m' ? ' score-col-active' : '';
+        const aO = activeCol === 'overall' ? ' score-col-active' : '';
+
+        html += `
+          <div class="score-row" data-model="${s.model}">
+            <div class="score-rank">${i + 1}</div>
+            <div class="score-model">
+              <div class="score-model-name" style="color: ${colorMap[s.model]}">${s.model}</div>
+              <div class="score-model-detail">${detail}</div>
+            </div>
+            <div class="score-col">
+              <div class="score-col-label">pass rate</div>
+              <div class="score-mini-bars">${miniBarsHTML}</div>
+            </div>
+            <div class="score-col score-col-clickable${a5}" data-sort="5m">
+              <div class="score-col-label">5m</div>
+              <div class="score-value" style="color: ${s5color}">${s5str}</div>
+              <div class="score-col-label">${s5n}</div>
+            </div>
+            <div class="score-col score-col-clickable${a10}" data-sort="10m">
+              <div class="score-col-label">10m</div>
+              <div class="score-value" style="color: ${s10color}">${s10str}</div>
+              <div class="score-col-label">${s10n}</div>
+            </div>
+            <div class="score-col score-col-clickable${aO}" data-sort="overall">
+              <div class="score-col-label">overall</div>
+              <div class="score-value" style="color: ${overallColor}">${s.score}</div>
+            </div>
+          </div>`;
+      });
+      glanceGrid.innerHTML = html;
+    }
+
+    renderScores();
+
+    glanceGrid.addEventListener('click', (e) => {
+      const col = e.target.closest('.score-col-clickable');
+      if (col) {
+        const sort = col.dataset.sort;
+        if (sort && sort !== activeCol) {
+          activeCol = sort;
+          renderScores();
+        }
+        return;
       }
-
-      // Score columns: 5m and 10m
-      const s5str = s.s5 ? `${s.s5.score}` : '-';
-      const s10str = s.s10 ? `${s.s10.score}` : '-';
-      const s5n = s.s5 ? `n=${s.s5.n}` : '';
-      const s10n = s.s10 ? `n=${s.s10.n}` : '';
-      const s5norm = s.s5 ? s.s5.score / 100 : 0;
-      const s10norm = s.s10 ? s.s10.score / 100 : 0;
-      const s5color = `hsl(145, ${Math.round(s5norm * 50)}%, ${35 + Math.round(s5norm * 18)}%)`;
-      const s10color = `hsl(145, ${Math.round(s10norm * 50)}%, ${35 + Math.round(s10norm * 18)}%)`;
-
-      glanceHTML += `
-        <div class="score-row">
-          <div class="score-rank">${i + 1}</div>
-          <div class="score-model">
-            <div class="score-model-name" style="color: ${colorMap[s.model]}">${s.model}</div>
-            <div class="score-model-detail">${detail}</div>
-          </div>
-          <div class="score-col">
-            <div class="score-col-label">pass rate</div>
-            <div class="score-mini-bars">${miniBarsHTML}</div>
-          </div>
-          <div class="score-col">
-            <div class="score-col-label">5m</div>
-            <div class="score-value" style="color: ${s5color}; font-size: 1.1rem">${s5str}</div>
-            <div class="score-col-label">${s5n}</div>
-          </div>
-          <div class="score-col">
-            <div class="score-col-label">10m</div>
-            <div class="score-value" style="color: ${s10color}; font-size: 1.1rem">${s10str}</div>
-            <div class="score-col-label">${s10n}</div>
-          </div>
-          <div class="score-col score-col-overall">
-            <div class="score-col-label">overall</div>
-            <div class="score-value" style="color: ${textColor}">${s.score}</div>
-          </div>
-        </div>`;
+      const row = e.target.closest('.score-row');
+      if (row) openModelModal(row.dataset.model);
     });
-    glanceGrid.innerHTML = glanceHTML;
 
     // ── Model Detail Modal ──
     const modelModalBackdrop = document.getElementById('model-modal');
@@ -1229,13 +1268,6 @@
       modelModalBackdrop.classList.add('open');
     }
 
-    glanceGrid.addEventListener('click', (e) => {
-      const row = e.target.closest('.score-row');
-      if (!row) return;
-      const nameEl = row.querySelector('.score-model-name');
-      if (!nameEl) return;
-      openModelModal(nameEl.textContent);
-    });
 
     modelModalBackdrop.addEventListener('click', (e) => {
       if (e.target === modelModalBackdrop) modelModalBackdrop.classList.remove('open');
