@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-10T02:28:49.334Z",
-  "totalRuns": 596,
+  "generated": "2026-03-10T02:35:24.589Z",
+  "totalRuns": 597,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -311,29 +311,29 @@
     "minimax/minimax-m2.5": {
       "overall": {
         "pass": 36,
-        "total": 76,
-        "rate": 0.47368421052631576,
+        "total": 77,
+        "rate": 0.4675324675324675,
         "avgTime": 155847,
         "avgTools": 9
       },
       "pick": {
         "pass": 8,
-        "total": 16,
-        "rate": 0.5,
+        "total": 17,
+        "rate": 0.47058823529411764,
         "avgTime": 229057,
-        "avgTimeout": 37500,
+        "avgTimeout": 70588,
         "avgTools": 13,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
           "whisper": 2,
-          "mine": 25,
-          "objective": 14,
-          "craft": 67,
+          "mine": 27,
+          "objective": 15,
+          "craft": 74,
           "guard": 4,
-          "place": 17,
+          "place": 23,
           "follow": 1,
-          "chest": 4,
+          "chest": 10,
           "stop": 2
         }
       },
@@ -32828,6 +32828,185 @@
         }
       ],
       "ts": "2026-03-10T02:28:45.706Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 604342,
+      "timeout": 600000,
+      "toolCalls": 22,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773109327132
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Follow BrezzyTracks' instructions: mine 4 oak_log → craft planks → craft crafting_table → place it → craft sticks → craft wooden_pickaxe"
+          },
+          "t": 1773109333526
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773109333526
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773109356208
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773109357858
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773109374020
+        },
+        {
+          "name": "craft",
+          "params": {
+            "count": 4,
+            "item": "stick"
+          },
+          "t": 1773109376680
+        },
+        {
+          "name": "craft",
+          "params": {
+            "count": 4,
+            "item": "sticks"
+          },
+          "t": 1773109393777
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773109415861
+        },
+        {
+          "name": "craft",
+          "params": {
+            "count": 8,
+            "item": "oak_planks"
+          },
+          "t": 1773109486837
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773109498632
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773109509033
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773109537928
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109584403
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "below"
+          },
+          "t": 1773109617925
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109659329
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109691541
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "apple"
+          },
+          "t": 1773109716385
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109766648
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "below"
+          },
+          "t": 1773109809291
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109859731
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "above"
+          },
+          "t": 1773109895428
+        }
+      ],
+      "ts": "2026-03-10T02:32:07.505Z"
     }
   ]
 }

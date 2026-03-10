@@ -597,11 +597,11 @@
     .score-row {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.5rem;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 0.75rem;
-      padding: 1rem 1.25rem;
+      padding: 1rem 1.5rem;
     }
 
     .score-rank {
@@ -652,14 +652,14 @@
 
     .score-mini-bars {
       display: flex;
-      gap: 2px;
+      gap: 3px;
       align-items: flex-end;
       height: 32px;
     }
 
     .score-mini-bar {
-      width: 6px;
-      border-radius: 1.5px 1.5px 0 0;
+      width: 10px;
+      border-radius: 2px 2px 0 0;
       position: relative;
       transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     }
@@ -684,6 +684,12 @@
       font-size: 1.4rem;
       font-weight: 700;
       font-family: "Cascadia Code", "Fira Code", monospace;
+    }
+
+    .score-col-overall {
+      background: #161619;
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.75rem;
     }
 
     /* ---------- Results Table ---------- */
@@ -1094,7 +1100,7 @@
         const sat = 15 + Math.round(rate * 40);
         const light = 25 + Math.round(rate * 22);
         const bg = `hsl(${hue}, ${sat}%, ${light}%)`;
-        const abbr = (benchNames[b] || b).slice(0, 4);
+        const abbr = (benchNames[b] || b).charAt(0).toUpperCase();
         miniBarsHTML += `<div class="score-mini-bar" style="height: ${hPct}%; background: ${bg};" title="${benchNames[b] || b}: ${Math.round(rate * 100)}%"><div class="score-mini-label">${abbr}</div></div>`;
       }
 
@@ -1129,7 +1135,7 @@
             <div class="score-value" style="color: ${s10color}; font-size: 1.1rem">${s10str}</div>
             <div class="score-col-label">${s10n}</div>
           </div>
-          <div class="score-col">
+          <div class="score-col score-col-overall">
             <div class="score-col-label">overall</div>
             <div class="score-value" style="color: ${textColor}">${s.score}</div>
           </div>
