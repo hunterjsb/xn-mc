@@ -1046,19 +1046,18 @@
     }
 
     // ── Weighted Scores ──
-    // Score = 100 × rate × (1 - avgTime/avgTimeout) — higher is better (0-100 scale).
-    // Uses per-model per-bench avgTimeout so mixed 5m/10m runs score fairly.
+    // Per-run scoring: success = (1 - elapsed/timeout), fail = 0. Averaged across all runs.
+    // Each run scored against its own timeout, so mixed 5m/10m runs score fairly.
+    const allRuns = data.runs || [];
     function computeScore(model) {
-      let total = 0, n = 0;
-      for (const b of benchmarks) {
-        const s = summary[model]?.[b];
-        if (!s || s.total === 0) continue;
-        const timeoutMs = s.avgTimeout || 300_000;
-        const avgMs = s.avgTime != null ? s.avgTime : timeoutMs;
-        total += (s.rate || 0) * (1 - avgMs / timeoutMs);
-        n++;
-      }
-      return n > 0 ? Math.round(100 * total / n) : 0;
+      const modelRuns = allRuns.filter(r => r.model === model);
+      if (modelRuns.length === 0) return 0;
+      const total = modelRuns.reduce((sum, r) => {
+        if (!r.success) return sum;
+        const t = r.timeout || 300_000;
+        return sum + Math.max(0, 1 - r.elapsed / t);
+      }, 0);
+      return Math.round(100 * total / modelRuns.length);
     }
 
     const scores = ranked.map(m => ({ model: m, score: computeScore(m) }))

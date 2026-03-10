@@ -456,21 +456,21 @@
       try {
         const res = await fetch('benchmark-data.json');
         if (!res.ok) return;
-        const { models, benchmarks, summary, benchTimeouts } = await res.json();
+        const data = await res.json();
+        const { models, benchmarks, summary } = data;
+        const allRuns = data.runs || [];
 
         const MODEL_COLORS = ['#d4a847', '#c87a3a', '#b85450', '#a8588a', '#c9944a', '#d46b5a'];
 
         function computeScore(model) {
-          let total = 0, n = 0;
-          for (const b of benchmarks) {
-            const s = summary[model]?.[b];
-            if (!s || s.total === 0) continue;
-            const timeoutMs = s.avgTimeout || 300000;
-            const avgMs = s.avgTime != null ? s.avgTime : timeoutMs;
-            total += (s.rate || 0) * (1 - avgMs / timeoutMs);
-            n++;
-          }
-          return n > 0 ? Math.round(100 * total / n) : 0;
+          const modelRuns = allRuns.filter(r => r.model === model);
+          if (modelRuns.length === 0) return 0;
+          const total = modelRuns.reduce((sum, r) => {
+            if (!r.success) return sum;
+            const t = r.timeout || 300_000;
+            return sum + Math.max(0, 1 - r.elapsed / t);
+          }, 0);
+          return Math.round(100 * total / modelRuns.length);
         }
 
         const scores = models.map(m => ({ model: m, score: computeScore(m) }))

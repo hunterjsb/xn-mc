@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-10T01:41:57.748Z",
-  "totalRuns": 554,
+  "generated": "2026-03-10T01:46:27.231Z",
+  "totalRuns": 564,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -114,18 +114,18 @@
   "summary": {
     "x-ai/grok-4.1-fast": {
       "overall": {
-        "pass": 39,
-        "total": 72,
-        "rate": 0.5416666666666666,
-        "avgTime": 96060,
-        "avgTools": 9
+        "pass": 40,
+        "total": 76,
+        "rate": 0.5263157894736842,
+        "avgTime": 93816,
+        "avgTools": 8
       },
       "pick": {
         "pass": 12,
-        "total": 15,
-        "rate": 0.8,
+        "total": 17,
+        "rate": 0.7058823529411765,
         "avgTime": 98669,
-        "avgTimeout": 0,
+        "avgTimeout": 70588,
         "avgTools": 9,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
@@ -138,10 +138,10 @@
       },
       "food": {
         "pass": 9,
-        "total": 15,
-        "rate": 0.6,
+        "total": 16,
+        "rate": 0.5625,
         "avgTime": 80618,
-        "avgTimeout": 0,
+        "avgTimeout": 37500,
         "avgTools": 8,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
@@ -157,11 +157,11 @@
         }
       },
       "shears": {
-        "pass": 10,
-        "total": 15,
-        "rate": 0.6666666666666666,
-        "avgTime": 95428,
-        "avgTimeout": 0,
+        "pass": 11,
+        "total": 16,
+        "rate": 0.6875,
+        "avgTime": 87325,
+        "avgTimeout": 37500,
         "avgTools": 6,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
@@ -213,10 +213,10 @@
     },
     "gpt-5-mini": {
       "overall": {
-        "pass": 55,
-        "total": 101,
-        "rate": 0.5445544554455446,
-        "avgTime": 185207,
+        "pass": 59,
+        "total": 107,
+        "rate": 0.5514018691588785,
+        "avgTime": 189494,
         "avgTools": 8
       },
       "pick": {
@@ -257,46 +257,46 @@
         }
       },
       "shears": {
-        "pass": 12,
-        "total": 20,
-        "rate": 0.6,
-        "avgTime": 147938,
-        "avgTimeout": 120000,
-        "avgTools": 5,
-        "avgFailures": 0,
+        "pass": 14,
+        "total": 22,
+        "rate": 0.6363636363636364,
+        "avgTime": 166234,
+        "avgTimeout": 163636,
+        "avgTools": 6,
+        "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 12,
-          "mine": 11,
-          "place": 22,
+          "objective": 16,
+          "mine": 13,
+          "place": 28,
           "chest": 4,
-          "craft": 11,
-          "smelt": 8
+          "craft": 21,
+          "smelt": 10
         }
       },
       "diamonds": {
-        "pass": 12,
-        "total": 22,
-        "rate": 0.5454545454545454,
-        "avgTime": 181939,
-        "avgTimeout": 109091,
+        "pass": 14,
+        "total": 24,
+        "rate": 0.5833333333333334,
+        "avgTime": 187501,
+        "avgTimeout": 150000,
         "avgTools": 11,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 20,
+          "objective": 24,
           "mine": 3,
-          "chest": 31,
-          "craft": 49,
-          "place": 9
+          "chest": 39,
+          "craft": 57,
+          "place": 11
         }
       },
       "collect": {
         "pass": 6,
-        "total": 14,
-        "rate": 0.42857142857142855,
+        "total": 16,
+        "rate": 0.375,
         "avgTime": 236058,
-        "avgTimeout": 171429,
+        "avgTimeout": 225000,
         "avgTools": 5,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
@@ -29088,6 +29088,494 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-10T01:41:57.737Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 221193,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "get 24 diamonds and craft a full set of diamond armor",
+            "priority": "high"
+          },
+          "t": 1773106763381
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773106770448
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773106780961
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773106780961
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773106796536
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773106813193
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft a full set of diamond armor (helmet, leggings, boots)",
+            "priority": "high"
+          },
+          "t": 1773106825656
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773106853746
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773106895252
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773106915058
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773106941879
+        }
+      ],
+      "ts": "2026-03-10T01:42:25.447Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 220543,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "get 24 diamonds and craft a full set of diamond armor",
+            "priority": "high"
+          },
+          "t": 1773106763381
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773106770448
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773106780961
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773106780961
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773106796536
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773106813193
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft a full set of diamond armor (helmet, leggings, boots)",
+            "priority": "high"
+          },
+          "t": 1773106825656
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773106853746
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773106895252
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773106915058
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773106941879
+        }
+      ],
+      "ts": "2026-03-10T01:42:25.622Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 276286,
+      "timeout": 600000,
+      "toolCalls": 12,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "mine 2 iron_ore, place furnace, smelt raw_iron with oak_planks as fuel, craft shears",
+            "priority": "high"
+          },
+          "t": 1773106734616
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773106744353
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773106769421
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773106781552
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773106792087
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773106803427
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773106815158
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773106843266
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "mine 2 iron_ore, place furnace, smelt raw_iron with oak_planks as fuel, craft shears",
+            "priority": "high"
+          },
+          "t": 1773106859653
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773106884461
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773106921790
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773106963441
+        }
+      ],
+      "ts": "2026-03-10T01:42:48.051Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 275740,
+      "timeout": 600000,
+      "toolCalls": 12,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "mine 2 iron_ore, place furnace, smelt raw_iron with oak_planks as fuel, craft shears",
+            "priority": "high"
+          },
+          "t": 1773106734616
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773106744353
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773106769421
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773106781552
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773106792087
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773106803427
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773106815158
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773106843266
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "mine 2 iron_ore, place furnace, smelt raw_iron with oak_planks as fuel, craft shears",
+            "priority": "high"
+          },
+          "t": 1773106859653
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773106884461
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773106921790
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773106963441
+        }
+      ],
+      "ts": "2026-03-10T01:42:48.133Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 222893,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-10T01:43:12.342Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 234967,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-10T01:43:18.287Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 6291,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-10T01:43:29.050Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-10T01:43:41.869Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "food",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-10T01:45:53.088Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-10T01:45:53.116Z"
     }
   ]
 }
