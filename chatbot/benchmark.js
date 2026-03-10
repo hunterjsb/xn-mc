@@ -28,6 +28,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RESULTS_PATH = path.join(__dirname, 'benchmarks', 'results.jsonl');
 
 const API = 'http://localhost:8765';
+
+const BENCH_NAMES = [
+  'Archaeo', 'Basalt', 'Calcite', 'Diorite', 'Elytra',
+  'Flint', 'Gravel', 'Hopper', 'Ignite', 'Jasper',
+  'Kelp', 'Lapis', 'Magma', 'Nether', 'Obsidian',
+  'Prism', 'Quartz', 'Redstone', 'Shulker', 'Tundra',
+];
 const OWNER = 'BrezzyTracks';
 const OWNER_MODEL = 'gpt-5-mini';
 
@@ -42,7 +49,7 @@ export const BENCHMARKS = {
     startItems: [],
     goal: 'mine 4 oak_log, craft planks, craft crafting_table, place it, craft sticks, craft wooden_pickaxe',
     successItems: ['wooden_pickaxe'],
-    timeout: 300_000,
+    timeout: 600_000,
   },
   food: {
     name: 'Cooked Food',
@@ -52,7 +59,7 @@ export const BENCHMARKS = {
     ],
     goal: 'craft a furnace, place it, kill a cow or pig, smelt the raw meat with oak_planks as fuel',
     successItems: ['cooked_beef', 'cooked_porkchop', 'cooked_chicken', 'cooked_mutton', 'cooked_rabbit'],
-    timeout: 300_000,
+    timeout: 600_000,
   },
   shears: {
     name: 'Iron Shears',
@@ -63,7 +70,7 @@ export const BENCHMARKS = {
     ],
     goal: 'mine 2 iron_ore, place the furnace, smelt the raw_iron with oak_planks as fuel, craft shears',
     successItems: ['shears'],
-    timeout: 300_000,
+    timeout: 600_000,
   },
   diamonds: {
     name: 'Diamond Armor',
@@ -71,7 +78,7 @@ export const BENCHMARKS = {
     goal: 'get diamonds and craft a full set of diamond armor',
     successItems: ['diamond_helmet', 'diamond_chestplate', 'diamond_leggings', 'diamond_boots'],
     successAll: true,  // require ALL items, not just one
-    timeout: 300_000,
+    timeout: 600_000,
   },
   collect: {
     name: 'Resource Collection',
@@ -80,7 +87,7 @@ export const BENCHMARKS = {
     ],
     goal: 'dig 16 dirt, chop 8 of any type of log (oak birch spruce etc), and mine 16 stone to get cobblestone',
     successCounts: { dirt: 16, _log: 8, cobblestone: 16 },
-    timeout: 300_000,
+    timeout: 600_000,
   },
 };
 
@@ -176,7 +183,7 @@ async function ownerReply(botMessage, goal, chatHistory) {
     const res = await ownerClient.chat.completions.create({
       model: OWNER_MODEL,
       messages,
-      max_completion_tokens: 100,
+      max_completion_tokens: 1000,
     });
     return res.choices[0]?.message?.content?.trim() || '';
   } catch (err) {
@@ -348,7 +355,7 @@ async function runBenchmark(benchId, botName) {
         const log = metrics.log || [];
         for (let i = lastLogIdx; i < log.length; i++) {
           const e = log[i];
-          if (e.type === 'tool' && e.name === 'whisper' && e.params?.player === OWNER && e.params?.message) {
+          if (e.type === 'tool' && e.name === 'whisper' && e.params?.player?.toLowerCase() === OWNER.toLowerCase() && e.params?.message) {
             const botMsg = e.params.message;
             console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] Bot asks: "${botMsg}"`);
             ownerChat.push({ from: 'bot', text: botMsg, t: Date.now() - startTime });
@@ -398,6 +405,7 @@ async function runBenchmark(benchId, botName) {
     name: bench.name,
     success,
     elapsed,
+    timeout: bench.timeout,
     elapsedStr: fmtTime(elapsed),
     toolCalls: metrics.totalToolCalls || 0,
     chatMessages: metrics.totalChats || 0,
@@ -442,6 +450,7 @@ function saveResult(result, model) {
     bench: result.benchmark,
     success: result.success,
     elapsed: result.elapsed || 0,
+    timeout: result.timeout || 300_000,
     toolCalls: result.toolCalls || 0,
     failures: result.failures || 0,
     chatMessages: result.chatMessages || 0,
@@ -528,7 +537,7 @@ async function main() {
 
   // Worker: pulls jobs from queue, runs them with assigned bot name
   async function worker(workerId) {
-    const botName = parallel > 1 ? `Bench${workerId}` : 'BenchBot';
+    const botName = BENCH_NAMES[workerId % BENCH_NAMES.length];
     while (jobIdx < jobs.length) {
       const idx = jobIdx++;
       const job = jobs[idx];
@@ -540,7 +549,7 @@ async function main() {
         saveResult(result, m);
       } catch (err) {
         console.error(`  [Worker ${workerId}] ERROR: ${err.message}`);
-        const failResult = { benchmark: job.benchId, success: false, error: err.message, model: m };
+        const failResult = { benchmark: job.benchId, success: false, error: err.message, model: m, timeout: BENCHMARKS[job.benchId]?.timeout || 300_000 };
         allResults.push(failResult);
         saveResult(failResult, m);
       }

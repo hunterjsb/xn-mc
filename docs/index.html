@@ -465,21 +465,21 @@
           for (const b of benchmarks) {
             const s = summary[model]?.[b];
             if (!s || s.total === 0) continue;
-            const timeoutSec = (benchTimeouts?.[b] || 300000) / 1000;
-            const avgSec = s.avgTime != null ? s.avgTime / 1000 : timeoutSec;
-            total += (1 - (s.rate || 0)) * timeoutSec + (s.rate || 0) * avgSec;
+            const timeoutMs = s.avgTimeout || 300000;
+            const avgMs = s.avgTime != null ? s.avgTime : timeoutMs;
+            total += (s.rate || 0) * (1 - avgMs / timeoutMs);
             n++;
           }
-          return n > 0 ? Math.round(total / n) : 999;
+          return n > 0 ? Math.round(100 * total / n) : 0;
         }
 
         const scores = models.map(m => ({ model: m, score: computeScore(m) }))
-          .sort((a, b) => a.score - b.score);
+          .sort((a, b) => b.score - a.score);
 
-        const maxScore = Math.max(...scores.map(s => s.score));
+        const maxScore = Math.max(...scores.map(s => s.score), 1);
         let html = '';
         scores.forEach((s, i) => {
-          const norm = maxScore > 0 ? 1 - s.score / maxScore : 0.5;
+          const norm = maxScore > 0 ? s.score / maxScore : 0.5;
           const sat = Math.round(norm * 50);
           const light = 35 + Math.round(norm * 18);
           const color = `hsl(145, ${sat}%, ${light}%)`;

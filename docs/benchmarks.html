@@ -230,6 +230,177 @@
       color: var(--text);
     }
 
+    .bench-modal .modal-tools {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .bench-modal .modal-tool-pill {
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 0.7rem;
+      background: #1a1a2e;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 0.25rem 0.6rem;
+      color: var(--text-muted);
+    }
+
+    .bench-modal .modal-tool-pill .tool-count {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ---------- Model Detail Modal ---------- */
+    .model-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 3vh;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      overflow-y: auto;
+    }
+
+    .model-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .model-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem 2rem 2rem;
+      max-width: 700px;
+      width: 92%;
+      margin-bottom: 3vh;
+      transform: translateY(10px) scale(0.97);
+      transition: transform 0.2s ease;
+    }
+
+    .model-modal-backdrop.open .model-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .model-modal .mm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .model-modal .mm-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+    }
+
+    .model-modal .mm-close {
+      cursor: pointer;
+      color: #52525b;
+      font-size: 1.3rem;
+      padding: 0.25rem;
+    }
+
+    .model-modal .mm-close:hover { color: var(--text); }
+
+    .model-modal .mm-bench-section {
+      margin-bottom: 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .model-modal .mm-bench-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: #111118;
+      cursor: pointer;
+    }
+
+    .model-modal .mm-bench-header:hover { background: #16161e; }
+
+    .model-modal .mm-bench-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+    }
+
+    .model-modal .mm-bench-stats {
+      font-size: 0.72rem;
+      color: #52525b;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+    }
+
+    .model-modal .mm-bench-body {
+      display: none;
+      padding: 0.75rem 1rem;
+    }
+
+    .model-modal .mm-bench-section.expanded .mm-bench-body {
+      display: block;
+    }
+
+    .model-modal .mm-label {
+      font-size: 0.6rem;
+      color: #3f3f46;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      margin-top: 0.6rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .model-modal .mm-label:first-child { margin-top: 0; }
+
+    .model-modal .mm-tool-seq {
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .model-modal .mm-tool-seq .tool-name {
+      color: var(--primary);
+    }
+
+    .model-modal .mm-tool-seq .tool-time {
+      color: #52525b;
+    }
+
+    .model-modal .mm-run-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+      gap: 4px;
+      margin-top: 0.3rem;
+    }
+
+    .model-modal .mm-run-cell {
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 0.62rem;
+      text-align: center;
+      padding: 0.3rem 0.15rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+
+    .model-modal .mm-run-cell.pass { background: #0a2e1a; color: #4ade80; }
+    .model-modal .mm-run-cell.fail { background: #2e0a0a; color: #f87171; }
+
+    .score-row { cursor: pointer; transition: border-color 0.15s; }
+    .score-row:hover { border-color: #52525b; }
+
     .bench-card .card-header {
       display: flex;
       align-items: center;
@@ -717,6 +888,11 @@
     <div class="bench-modal" id="bench-modal-content"></div>
   </div>
 
+  <!-- Model Detail Modal -->
+  <div class="model-modal-backdrop" id="model-modal">
+    <div class="model-modal" id="model-modal-content"></div>
+  </div>
+
   <!-- Footer -->
   <footer>
     <p>&copy; 2025-2026 Xandaris Hardcore &middot; <a href="https://github.com/hunterjsb/xn-mc" target="_blank" rel="noopener">GitHub</a></p>
@@ -805,6 +981,23 @@
       const passes = models.reduce((sum, m) => sum + (summary[m]?.[benchId]?.pass || 0), 0);
       const overallRate = totalAll > 0 ? Math.round(passes / totalAll * 100) : 0;
 
+      // Aggregate top tools across all models for this benchmark
+      const allToolCounts = {};
+      for (const m of models) {
+        const tc = summary[m]?.[benchId]?.toolCounts || {};
+        for (const [tool, cnt] of Object.entries(tc)) {
+          allToolCounts[tool] = (allToolCounts[tool] || 0) + cnt;
+        }
+      }
+      const topTools = Object.entries(allToolCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3);
+      const toolsHTML = topTools.length > 0
+        ? `<div class="modal-tools">${topTools.map(([t, c]) =>
+            `<span class="modal-tool-pill">${t} <span class="tool-count">×${c}</span></span>`
+          ).join('')}</div>`
+        : '';
+
       modalContent.innerHTML = `
         <div class="modal-header">
           ${iconUrl ? `<img class="modal-icon" src="${iconUrl}" alt="${name}">` : ''}
@@ -818,7 +1011,8 @@
           <div class="modal-stat"><div class="modal-stat-label">Pass Rate</div><div class="modal-stat-value">${overallRate}%</div></div>
           <div class="modal-stat"><div class="modal-stat-label">Timeout</div><div class="modal-stat-value">${timeout}</div></div>
           <div class="modal-stat"><div class="modal-stat-label">Start</div><div class="modal-stat-value">${startItems}</div></div>
-        </div>`;
+        </div>
+        ${toolsHTML}`;
       modalBackdrop.classList.add('open');
     }
 
@@ -852,33 +1046,32 @@
     }
 
     // ── Weighted Scores ──
-    // Expected time per attempt: failures cost the full timeout, successes cost avg time.
-    // Score = Σ((1 - rate) × timeout + rate × avgTime) / n — lower is better.
-    const benchTimeouts = data.benchTimeouts || {};
+    // Score = 100 × rate × (1 - avgTime/avgTimeout) — higher is better (0-100 scale).
+    // Uses per-model per-bench avgTimeout so mixed 5m/10m runs score fairly.
     function computeScore(model) {
       let total = 0, n = 0;
       for (const b of benchmarks) {
         const s = summary[model]?.[b];
         if (!s || s.total === 0) continue;
-        const timeoutSec = (benchTimeouts[b] || 300_000) / 1000;
-        const avgSec = s.avgTime != null ? s.avgTime / 1000 : timeoutSec;
-        total += (1 - (s.rate || 0)) * timeoutSec + (s.rate || 0) * avgSec;
+        const timeoutMs = s.avgTimeout || 300_000;
+        const avgMs = s.avgTime != null ? s.avgTime : timeoutMs;
+        total += (s.rate || 0) * (1 - avgMs / timeoutMs);
         n++;
       }
-      return n > 0 ? Math.round(total / n) : 999;
+      return n > 0 ? Math.round(100 * total / n) : 0;
     }
 
     const scores = ranked.map(m => ({ model: m, score: computeScore(m) }))
-      .sort((a, b) => a.score - b.score); // lower is better
+      .sort((a, b) => b.score - a.score); // higher is better
 
     const glanceDesc = document.querySelector('#glance-section .description');
-    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = expected time per attempt (lower is better).`;
+    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = rate × time saved (higher is better, 0-100).`;
 
     const glanceGrid = document.getElementById('glance-grid');
-    const maxScore = Math.max(...scores.map(s => s.score));
+    const maxScore = Math.max(...scores.map(s => s.score), 1);
     let glanceHTML = '';
     scores.forEach((s, i) => {
-      const norm = maxScore > 0 ? 1 - s.score / maxScore : 0.5;
+      const norm = maxScore > 0 ? s.score / maxScore : 0.5;
       const textSat = Math.round(norm * 50);
       const textLight = 35 + Math.round(norm * 18);
       const textColor = `hsl(145, ${textSat}%, ${textLight}%)`;
@@ -920,6 +1113,108 @@
         </div>`;
     });
     glanceGrid.innerHTML = glanceHTML;
+
+    // ── Model Detail Modal ──
+    const modelModalBackdrop = document.getElementById('model-modal');
+    const modelModalContent = document.getElementById('model-modal-content');
+    const runs = data.runs || [];
+
+    function openModelModal(modelName) {
+      const modelRuns = runs.filter(r => r.model === modelName);
+      const color = colorMap[modelName] || '#d4a847';
+
+      let sectionsHTML = '';
+      for (const b of benchmarks) {
+        const bRuns = modelRuns.filter(r => r.bench === b);
+        if (bRuns.length === 0) continue;
+        const bName = benchNames[b] || b;
+        const passes = bRuns.filter(r => r.success);
+        const rate = Math.round(passes.length / bRuns.length * 100);
+        const avgTime = passes.length > 0
+          ? fmtTime(Math.round(passes.reduce((s, r) => s + r.elapsed, 0) / passes.length))
+          : '-';
+
+        // Run cells
+        const runCellsHTML = bRuns.map(r =>
+          `<div class="mm-run-cell ${r.success ? 'pass' : 'fail'}">${r.success ? fmtTime(r.elapsed) : 'FAIL'}</div>`
+        ).join('');
+
+        // Fastest successful run
+        const fastest = passes.length > 0
+          ? passes.reduce((a, b) => a.elapsed < b.elapsed ? a : b)
+          : null;
+        const fastestSeqHTML = fastest
+          ? (() => {
+              const tl = fastest.toolLog || [];
+              const t0 = tl.length > 0 ? tl[0].t : 0;
+              return tl.map(t =>
+                `<span class="tool-time">+${Math.round((t.t - t0) / 1000)}s</span> <span class="tool-name">${t.name}</span>`
+              ).join('<br>');
+            })()
+          : '<span style="color:#52525b">No successful runs</span>';
+
+        // Average tool frequency across all runs for this bench
+        const toolFreq = {};
+        for (const r of bRuns) {
+          for (const t of (r.toolLog || [])) {
+            toolFreq[t.name] = (toolFreq[t.name] || 0) + 1;
+          }
+        }
+        const avgToolSeq = Object.entries(toolFreq)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 8)
+          .map(([name, cnt]) =>
+            `<span class="tool-name">${name}</span> <span class="tool-time">×${(cnt / bRuns.length).toFixed(1)}</span>`
+          ).join('<br>');
+
+        sectionsHTML += `
+          <div class="mm-bench-section">
+            <div class="mm-bench-header" onclick="this.parentElement.classList.toggle('expanded')">
+              <span class="mm-bench-name">${bName}</span>
+              <span class="mm-bench-stats">${rate}% · ${avgTime} avg · n=${bRuns.length}</span>
+            </div>
+            <div class="mm-bench-body">
+              <div class="mm-label">Runs</div>
+              <div class="mm-run-grid">${runCellsHTML}</div>
+              <div class="mm-label">Avg Tool Usage (per run)</div>
+              <div class="mm-tool-seq">${avgToolSeq || '<span style="color:#52525b">No tool data</span>'}</div>
+              <div class="mm-label">Fastest Solve${fastest ? ' (' + fmtTime(fastest.elapsed) + ')' : ''}</div>
+              <div class="mm-tool-seq">${fastestSeqHTML}</div>
+            </div>
+          </div>`;
+      }
+
+      const overall = summary[modelName]?.overall;
+      const overallRate = overall ? Math.round(overall.rate * 100) : 0;
+      const overallAvg = overall?.avgTime ? fmtTime(overall.avgTime) : '-';
+
+      modelModalContent.innerHTML = `
+        <div class="mm-header">
+          <span class="mm-title" style="color: ${color}">${modelName}</span>
+          <span class="mm-close" onclick="document.getElementById('model-modal').classList.remove('open')">&times;</span>
+        </div>
+        <div style="font-size:0.75rem;color:#52525b;margin:-0.75rem 0 1rem;font-family:'Cascadia Code',monospace">
+          ${overallRate}% pass · ${overallAvg} avg · ${modelRuns.length} runs
+        </div>
+        ${sectionsHTML}`;
+      modelModalBackdrop.classList.add('open');
+    }
+
+    glanceGrid.addEventListener('click', (e) => {
+      const row = e.target.closest('.score-row');
+      if (!row) return;
+      const nameEl = row.querySelector('.score-model-name');
+      if (!nameEl) return;
+      openModelModal(nameEl.textContent);
+    });
+
+    modelModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modelModalBackdrop) modelModalBackdrop.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') modelModalBackdrop.classList.remove('open');
+    });
 
     // ── Vertical Bar Chart ──
     const benchPills = document.getElementById('bench-pills');
