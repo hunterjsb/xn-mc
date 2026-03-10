@@ -467,10 +467,11 @@
           if (modelRuns.length === 0) return 0;
           const total = modelRuns.reduce((sum, r) => {
             if (!r.success) return sum;
-            const t = r.timeout || 300_000;
-            return sum + Math.max(0, 1 - r.elapsed / t);
+            const T = (r.timeout || 300_000) / 1000;
+            const t = r.elapsed / 1000;
+            return sum + (T - t);
           }, 0);
-          return Math.round(100 * total / modelRuns.length);
+          return Math.round(total / modelRuns.length);
         }
 
         const scores = models.map(m => ({ model: m, score: computeScore(m) }))

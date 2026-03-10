@@ -1046,25 +1046,25 @@
     }
 
     // ── Weighted Scores ──
-    // Per-run scoring: success = (1 - elapsed/timeout), fail = 0. Averaged across all runs.
-    // Each run scored against its own timeout, so mixed 5m/10m runs score fairly.
+    // score = Σ r×(T-t) / n — avg time saved per run (seconds). Higher = better.
     const allRuns = data.runs || [];
     function computeScore(model) {
       const modelRuns = allRuns.filter(r => r.model === model);
       if (modelRuns.length === 0) return 0;
       const total = modelRuns.reduce((sum, r) => {
         if (!r.success) return sum;
-        const t = r.timeout || 300_000;
-        return sum + Math.max(0, 1 - r.elapsed / t);
+        const T = (r.timeout || 300_000) / 1000;
+        const t = r.elapsed / 1000;
+        return sum + (T - t);
       }, 0);
-      return Math.round(100 * total / modelRuns.length);
+      return Math.round(total / modelRuns.length);
     }
 
     const scores = ranked.map(m => ({ model: m, score: computeScore(m) }))
       .sort((a, b) => b.score - a.score); // higher is better
 
     const glanceDesc = document.querySelector('#glance-section .description');
-    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = rate × time saved (higher is better, 0-100).`;
+    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = avg time saved per run (higher is better).`;
 
     const glanceGrid = document.getElementById('glance-grid');
     const maxScore = Math.max(...scores.map(s => s.score), 1);
