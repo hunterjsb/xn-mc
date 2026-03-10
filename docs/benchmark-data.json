@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-10T02:27:29.149Z",
-  "totalRuns": 594,
+  "generated": "2026-03-10T02:28:49.334Z",
+  "totalRuns": 596,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -311,8 +311,8 @@
     "minimax/minimax-m2.5": {
       "overall": {
         "pass": 36,
-        "total": 74,
-        "rate": 0.4864864864864865,
+        "total": 76,
+        "rate": 0.47368421052631576,
         "avgTime": 155847,
         "avgTools": 9
       },
@@ -339,23 +339,24 @@
       },
       "food": {
         "pass": 8,
-        "total": 16,
-        "rate": 0.5,
+        "total": 17,
+        "rate": 0.47058823529411764,
         "avgTime": 140763,
-        "avgTimeout": 37500,
+        "avgTimeout": 70588,
         "avgTools": 8,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "craft": 20,
-          "objective": 11,
-          "place": 22,
+          "craft": 22,
+          "objective": 15,
+          "place": 24,
           "attack": 15,
           "smelt": 10,
           "eat": 2,
-          "chest": 10,
-          "mine": 7,
-          "move": 7
+          "chest": 12,
+          "mine": 13,
+          "move": 7,
+          "whisper": 1
         }
       },
       "shears": {
@@ -401,18 +402,20 @@
       },
       "collect": {
         "pass": 1,
-        "total": 10,
-        "rate": 0.1,
+        "total": 11,
+        "rate": 0.09090909090909091,
         "avgTime": 123300,
-        "avgTimeout": 0,
+        "avgTimeout": 54545,
         "avgTools": 5,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 7,
-          "mine": 26,
-          "chest": 8,
-          "eat": 2
+          "objective": 10,
+          "mine": 36,
+          "chest": 11,
+          "eat": 3,
+          "come_here": 3,
+          "whisper": 1
         }
       }
     },
@@ -32514,6 +32517,317 @@
         }
       ],
       "ts": "2026-03-10T02:26:30.302Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 603376,
+      "timeout": 600000,
+      "toolCalls": 17,
+      "failures": 2,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "whisper",
+          "params": {
+            "player": "BrezzyTracks",
+            "message": "hey, where are the trees? im still stuck on the log objective"
+          },
+          "t": 1773109127597
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773109133372
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Chop 8 oak logs"
+          },
+          "t": 1773109155081
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773109167634
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Chop 8 oak logs"
+          },
+          "t": 1773109252489
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 1
+          },
+          "t": 1773109268792
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773109278990
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 1
+          },
+          "t": 1773109288524
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109316842
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft furnace, place it, kill cow, smelt meat"
+          },
+          "t": 1773109475311
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 1
+          },
+          "t": 1773109525709
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109550042
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 1
+          },
+          "t": 1773109575968
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773109625293
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773109647290
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773109686464
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "grass_block",
+            "count": 1
+          },
+          "t": 1773109717631
+        }
+      ],
+      "ts": "2026-03-10T02:28:45.408Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 603848,
+      "timeout": 600000,
+      "toolCalls": 21,
+      "failures": 3,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "dig 16 dirt, chop 8 logs, mine 16 stone",
+            "priority": "high"
+          },
+          "t": 1773109130845
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773109138170
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109147916
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773109172337
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 16
+          },
+          "t": 1773109220267
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "dig 16 dirt (done), chop 8 logs, mine 16 cobblestone",
+            "priority": "high"
+          },
+          "t": 1773109235339
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773109248258
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773109301689
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773109323279
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109353524
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773109380816
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773109408857
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773109437131
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773109459586
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773109490069
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773109518022
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773109550412
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773109580968
+        },
+        {
+          "name": "whisper",
+          "params": {
+            "player": "BrezzyTracks",
+            "message": "hey i still need 8 logs for my objective but i cant find any trees around. do you know where a forest is?"
+          },
+          "t": 1773109614628
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "explore to find forest or village for 8 logs",
+            "priority": "high"
+          },
+          "t": 1773109641306
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773109695323
+        }
+      ],
+      "ts": "2026-03-10T02:28:45.706Z"
     }
   ]
 }

@@ -1046,24 +1046,29 @@
     }
 
     // ── Weighted Scores ──
-    // score = 100/n × Σ r×(1 - t/T) — higher is better (0-100).
+    // score = 100/n × Σ r×(1 - t/T) — higher is better (0-100). Split by timeout era.
     const allRuns = data.runs || [];
-    function computeScore(model) {
-      const modelRuns = allRuns.filter(r => r.model === model);
-      if (modelRuns.length === 0) return 0;
+    function computeScore(model, timeoutFilter) {
+      let modelRuns = allRuns.filter(r => r.model === model);
+      if (timeoutFilter) modelRuns = modelRuns.filter(r => (r.timeout || 300_000) === timeoutFilter);
+      if (modelRuns.length === 0) return null;
       const total = modelRuns.reduce((sum, r) => {
         if (!r.success) return sum;
         const T = r.timeout || 300_000;
         return sum + (1 - r.elapsed / T);
       }, 0);
-      return Math.round(100 * total / modelRuns.length);
+      return { score: Math.round(100 * total / modelRuns.length), n: modelRuns.length };
     }
 
-    const scores = ranked.map(m => ({ model: m, score: computeScore(m) }))
-      .sort((a, b) => b.score - a.score); // higher is better
+    const scores = ranked.map(m => {
+      const s5 = computeScore(m, 300_000);
+      const s10 = computeScore(m, 600_000);
+      const overall = computeScore(m);
+      return { model: m, s5, s10, score: overall?.score || 0 };
+    }).sort((a, b) => b.score - a.score);
 
     const glanceDesc = document.querySelector('#glance-section .description');
-    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = 100 × avg(1 - t/T) per run. Higher is better.`;
+    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = 100/n × Σ r(1 − t/T). Higher is better.`;
 
     const glanceGrid = document.getElementById('glance-grid');
     const maxScore = Math.max(...scores.map(s => s.score), 1);
@@ -1084,14 +1089,24 @@
       for (const b of benchmarks) {
         const bs = summary[s.model]?.[b];
         const rate = bs?.rate || 0;
-        const hPct = Math.max(rate * 100, 3); // min 3% so empty bars are visible
-        const hue = Math.round(rate * 120); // 0=red, 120=green
+        const hPct = Math.max(rate * 100, 3);
+        const hue = Math.round(rate * 120);
         const sat = 15 + Math.round(rate * 40);
         const light = 25 + Math.round(rate * 22);
         const bg = `hsl(${hue}, ${sat}%, ${light}%)`;
         const abbr = (benchNames[b] || b).slice(0, 4);
         miniBarsHTML += `<div class="score-mini-bar" style="height: ${hPct}%; background: ${bg};" title="${benchNames[b] || b}: ${Math.round(rate * 100)}%"><div class="score-mini-label">${abbr}</div></div>`;
       }
+
+      // Score columns: 5m and 10m
+      const s5str = s.s5 ? `${s.s5.score}` : '-';
+      const s10str = s.s10 ? `${s.s10.score}` : '-';
+      const s5n = s.s5 ? `n=${s.s5.n}` : '';
+      const s10n = s.s10 ? `n=${s.s10.n}` : '';
+      const s5norm = s.s5 ? s.s5.score / 100 : 0;
+      const s10norm = s.s10 ? s.s10.score / 100 : 0;
+      const s5color = `hsl(145, ${Math.round(s5norm * 50)}%, ${35 + Math.round(s5norm * 18)}%)`;
+      const s10color = `hsl(145, ${Math.round(s10norm * 50)}%, ${35 + Math.round(s10norm * 18)}%)`;
 
       glanceHTML += `
         <div class="score-row">
@@ -1105,7 +1120,17 @@
             <div class="score-mini-bars">${miniBarsHTML}</div>
           </div>
           <div class="score-col">
-            <div class="score-col-label">score</div>
+            <div class="score-col-label">5m</div>
+            <div class="score-value" style="color: ${s5color}; font-size: 1.1rem">${s5str}</div>
+            <div class="score-col-label">${s5n}</div>
+          </div>
+          <div class="score-col">
+            <div class="score-col-label">10m</div>
+            <div class="score-value" style="color: ${s10color}; font-size: 1.1rem">${s10str}</div>
+            <div class="score-col-label">${s10n}</div>
+          </div>
+          <div class="score-col">
+            <div class="score-col-label">overall</div>
             <div class="score-value" style="color: ${textColor}">${s.score}</div>
           </div>
         </div>`;
