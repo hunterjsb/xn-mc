@@ -313,6 +313,7 @@ async function executeRevivalAction(rBot, actionName, params) {
     case 'guard': rBot._cmdGuard(); break;
     case 'mine': await rBot._cmdMine(params.block, params.count || 16); break;
     case 'attack': await rBot._cmdAttack(params.mob, params.count || 1); break;
+    case 'pickup': await rBot._cmdPickup(params.item); break;
     case 'drop':
       if (params.item) rBot._cmdDrop(params.item, params.count);
       else await rBot._cmdDropAll();

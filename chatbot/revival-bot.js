@@ -184,7 +184,7 @@ export class RevivalBot {
       ? Math.round(pos.distanceTo(ownerEntity.position))
       : null;
 
-    // Nearby entities (all living entities within 24 blocks)
+    // Nearby entities (all living entities + item drops within 24 blocks)
     const nearby = [];
     for (const entity of Object.values(this.bot.entities)) {
       if (!entity || entity === this.bot.entity) continue;
@@ -192,6 +192,11 @@ export class RevivalBot {
       if (dist > 24) continue;
       if (entity.type === 'player') {
         nearby.push(`player:${entity.username}(${Math.round(dist)}m)`);
+      } else if (entity.name === 'item') {
+        // Dropped item — show what it is
+        const droppedItem = entity.getDroppedItem?.();
+        const itemName = droppedItem?.name || 'unknown';
+        nearby.push(`dropped:${itemName}(${Math.round(dist)}m)`);
       } else if (entity.name) {
         // Include all named entities: mobs, animals, hostiles, etc.
         nearby.push(`${entity.name}(${Math.round(dist)}m)`);
@@ -969,6 +974,46 @@ export class RevivalBot {
     }
   }
 
+  async _cmdPickup(itemName) {
+    const pos = this.bot.entity.position;
+    const items = [];
+    for (const entity of Object.values(this.bot.entities)) {
+      if (!entity || entity.name !== 'item') continue;
+      const dist = pos.distanceTo(entity.position);
+      if (dist > 24) continue;
+      const droppedItem = entity.getDroppedItem?.();
+      if (!droppedItem) continue;
+      if (itemName && !droppedItem.name.toLowerCase().includes(itemName.toLowerCase())) continue;
+      items.push({ entity, name: droppedItem.name, dist });
+    }
+
+    if (items.length === 0) {
+      this.log('action_failed', `No ${itemName || 'items'} on the ground nearby`);
+      return;
+    }
+
+    // Sort by distance, pick up closest first
+    items.sort((a, b) => a.dist - b.dist);
+    this.state = 'collecting';
+    let picked = 0;
+
+    for (const item of items.slice(0, 5)) {
+      if (!this.connected || this.despawned) break;
+      try {
+        this.bot.pathfinder.setGoal(new goals.GoalNear(
+          item.entity.position.x, item.entity.position.y, item.entity.position.z, 0
+        ));
+        await new Promise(r => setTimeout(r, 3000));
+        this.bot.pathfinder.setGoal(null);
+        picked++;
+      } catch {}
+    }
+
+    if (this.state === 'collecting') this.state = 'idle';
+    this.log(picked > 0 ? 'action_success' : 'action_failed',
+      picked > 0 ? `Picked up ${picked} item(s)` : `Failed to pick up items`);
+  }
+
   _cmdDrop(itemName, count) {
     const item = this.bot.inventory.items().find(i =>
       i.name.toLowerCase().includes(itemName.toLowerCase())
@@ -1592,11 +1637,7 @@ export class RevivalBot {
       return block && (block.name === 'air' || REPLACEABLE.has(block.name));
     };
 
-    // Build candidate list: try all directions, requested direction first
-    const candidates = [];
-    const belowRef = this.bot.blockAt(pos.offset(0, -1, 0));
-
-    // Try placing on top of ground block in all 4 cardinal directions + diagonals
+    // Try placing on top of ground block in a cardinal direction
     const tryDirection = (dx, dz) => {
       for (const dist of [1, 2]) {
         const tp = pos.offset(dx * dist, 0, dz * dist);
@@ -1629,6 +1670,7 @@ export class RevivalBot {
       return true;
     });
 
+    const candidates = [];
     for (const d of dirs) {
       const result = tryDirection(d.x, d.z);
       if (result) candidates.push(result);

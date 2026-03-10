@@ -1037,6 +1037,7 @@ RULES:
       { type: 'function', function: { name: 'guard', description: 'Guard current position — attack hostile mobs', parameters: { type: 'object', properties: {}, required: [] } } },
       { type: 'function', function: { name: 'mine', description: 'Find and mine blocks nearby. For underground ores, automatically strip-mines at optimal Y.', parameters: { type: 'object', properties: { block: { type: 'string', description: 'Minecraft block ID (e.g. oak_log, diamond_ore, cobblestone)' }, count: { type: 'integer', description: 'How many to mine (default 16)' } }, required: ['block'] } } },
       { type: 'function', function: { name: 'attack', description: 'Attack nearby mobs of a type.', parameters: { type: 'object', properties: { mob: { type: 'string', description: 'Mob name (e.g. chicken, zombie)' }, count: { type: 'integer', description: 'How many to kill (default 1)' } }, required: ['mob'] } } },
+      { type: 'function', function: { name: 'pickup', description: 'Walk to and pick up items dropped on the ground. Check nearbyEntities for "dropped:item_name" entries.', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name filter (e.g. raw_beef, diamond). Omit to pick up everything nearby.' } }, required: [] } } },
       { type: 'function', function: { name: 'drop', description: 'Drop items. Omit item to drop everything.', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name (omit to drop all)' }, count: { type: 'integer', description: 'How many (omit for all of that item)' } }, required: [] } } },
       { type: 'function', function: { name: 'give', description: 'Walk to a player and give them an item', parameters: { type: 'object', properties: { player: { type: 'string' }, item: { type: 'string' }, count: { type: 'integer' } }, required: ['player', 'item'] } } },
       { type: 'function', function: { name: 'chest', description: 'Interact with nearby chests/containers.', parameters: { type: 'object', properties: { action: { type: 'string', enum: ['check', 'take', 'deposit'], description: 'check = scan contents, take = grab item, deposit = store item (omit item to store all)' }, item: { type: 'string', description: 'Item name (required for take, optional for deposit)' }, count: { type: 'integer', description: 'How many (omit for all)' } }, required: ['action'] } } },
@@ -1081,6 +1082,11 @@ RULES:
         console.log(`[RevivalTick] ✓ ${rb.tag} (${rBot.username})${msgCount > 0 ? ` (${msgCount} msgs)` : ''}`);
       }
       const result = { actions: [], chat: null, senders, rawThinking: null };
+
+      // Debug: log reasoning/thinking from the LLM
+      if (choice.message.reasoning) {
+        console.log(`[RevivalTick] 💭 ${rBot.username}: ${choice.message.reasoning.slice(0, 200)}`);
+      }
 
       if (choice.message.tool_calls) {
         for (const tc of choice.message.tool_calls) {
