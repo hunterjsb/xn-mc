@@ -57,8 +57,9 @@ const FOOD_ITEMS = new Set([
 ]);
 
 export class RevivalBot {
-  constructor({ deadPlayer, reviver, pos, profile, conversationManager, config = {} }) {
-    this.username = deadPlayer;
+  constructor({ deadPlayer, botName, reviver, pos, profile, conversationManager, config = {} }) {
+    this.username = botName || deadPlayer;  // name the bot connects as
+    this.deadPlayer = deadPlayer;            // who was actually revived
     this.owner = reviver;
     this.spawnPos = pos;
     this.profile = profile;

@@ -33,6 +33,29 @@ const chatbotNames = new Set(
 const MAX_REVIVAL_BOTS = 5;
 const REVIVAL_STATE_FILE = './revival-state.json';
 const REVIVAL_NAMES_FILE = './revival-names.json';
+const NAME_POOL_FILE = './revival-name-pool.json';
+
+// ── Name pool for revival bots ───────────────────────────────────────
+const namePool = JSON.parse(readFileSync(new URL(NAME_POOL_FILE, import.meta.url), 'utf-8'));
+const usedNames = new Set(); // tracks names in use this session
+
+function pickRevivalName() {
+  // Filter out names currently in use (active bots) or already used this session
+  const activeBotNames = new Set([...revivalBots.values()].map(b => b.username));
+  const available = namePool.filter(n => !activeBotNames.has(n) && !usedNames.has(n) && !chatbotNames.has(n.toLowerCase()));
+  if (available.length === 0) {
+    // Fallback: reset used names and try again (only exclude currently active)
+    usedNames.clear();
+    const retry = namePool.filter(n => !activeBotNames.has(n) && !chatbotNames.has(n.toLowerCase()));
+    if (retry.length === 0) return null;
+    const name = retry[Math.floor(Math.random() * retry.length)];
+    usedNames.add(name);
+    return name;
+  }
+  const name = available[Math.floor(Math.random() * available.length)];
+  usedNames.add(name);
+  return name;
+}
 
 const botConfig = {
   host: process.env.MC_HOST || 'localhost',
@@ -53,7 +76,8 @@ console.log(`Config: ${botConfig.host}:${botConfig.port}`);
 
 function writeRevivalNames() {
   try {
-    writeFileSync(REVIVAL_NAMES_FILE, JSON.stringify([...revivalBots.keys()]));
+    const botNames = [...revivalBots.values()].map(b => b.username);
+    writeFileSync(REVIVAL_NAMES_FILE, JSON.stringify(botNames));
   } catch {}
 }
 
@@ -64,7 +88,8 @@ function saveRevivalState() {
   for (const [name, rBot] of revivalBots) {
     if (rBot.despawned) continue;
     state.push({
-      deadPlayer: rBot.username,
+      deadPlayer: rBot.deadPlayer,
+      botName: rBot.username,
       reviver: rBot.owner,
       pos: rBot._suspendPos || rBot.spawnPos,
       profile: rBot.profile,
@@ -185,13 +210,13 @@ function attachOwnerReturnListener(rBot) {
 function wireRevivalBot(rBot) {
   rBot._onDespawn = (username, reason) => {
     console.log(`[Revival] Cleaning up ${username} (${reason})`);
-    revivalBots.delete(username);
+    revivalBots.delete(rBot.deadPlayer);
     saveRevivalState();
     writeRevivalNames();
     rcon(`lp user ${offlineUUID(username)} permission unset grim.exempt`).catch(() => {});
-    // Re-pardon after bot death so DeathBan doesn't re-ban the real player
+    // Re-pardon the original dead player after bot death so DeathBan doesn't keep them banned
     if (reason === 'death') {
-      rcon(`pardon ${username}`).catch(() => {});
+      rcon(`pardon ${rBot.deadPlayer}`).catch(() => {});
     }
   };
 
@@ -359,7 +384,7 @@ async function executeRevivalAction(rBot, actionName, params) {
 
 // ── Handle a new revival ──────────────────────────────────────────────
 
-async function handleRevival(reviver, deadPlayer, pos) {
+async function handleRevival(reviver, deadPlayer, pos, opts = {}) {
   console.log(`[Revival] Handling revival: ${reviver} revived ${deadPlayer} at ${pos.x},${pos.y},${pos.z}`);
 
   if (revivalBots.has(deadPlayer)) {
@@ -371,21 +396,35 @@ async function handleRevival(reviver, deadPlayer, pos) {
     return;
   }
 
+  // Allow callers (e.g. benchmarks) to specify the bot name directly
+  const botName = opts.botName || pickRevivalName();
+  if (!botName) {
+    console.error(`[Revival] No available names in pool!`);
+    return;
+  }
+  console.log(`[Revival] ${opts.botName ? 'Using explicit' : 'Picked'} name "${botName}" for ${deadPlayer}'s revival`);
+
+  // Allow callers to provide a pre-built profile (skip LLM distillation)
   let profile;
-  try {
-    profile = await getPlayerProfile(deadPlayer);
-    console.log(`[Revival] Profile for ${deadPlayer}: ${profile.personality?.slice(0, 80)}...`);
-  } catch (err) {
-    console.error(`[Revival] Profile generation failed: ${err.message}`);
-    profile = {
-      personality: 'A confused player who just woke up from the dead.',
-      chatStyle: 'Short lowercase messages, dazed tone.',
-      samplePhrases: ['huh', 'where am i', 'what happened']
-    };
+  if (opts.profile) {
+    profile = opts.profile;
+  } else {
+    try {
+      profile = await getPlayerProfile(deadPlayer);
+      console.log(`[Revival] Profile for ${deadPlayer}: ${profile.personality?.slice(0, 80)}...`);
+    } catch (err) {
+      console.error(`[Revival] Profile generation failed: ${err.message}`);
+      profile = {
+        personality: 'A confused player who just woke up from the dead.',
+        chatStyle: 'Short lowercase messages, dazed tone.',
+        samplePhrases: ['huh', 'where am i', 'what happened']
+      };
+    }
   }
 
   const rBot = new RevivalBot({
     deadPlayer,
+    botName,
     reviver,
     pos,
     profile,
@@ -397,8 +436,6 @@ async function handleRevival(reviver, deadPlayer, pos) {
   revivalBots.set(deadPlayer, rBot);
   saveRevivalState();
   writeRevivalNames();
-  // Pardon before connect so DeathBan doesn't kick on join
-  await rcon(`pardon ${deadPlayer}`).catch(() => {});
   rBot.connect();
 
   const waitForConnect = setInterval(() => {
@@ -410,16 +447,14 @@ async function handleRevival(reviver, deadPlayer, pos) {
       attachOwnerReturnListener(rBot);
 
       const { x, y, z } = pos;
-      // Rapid pardon + gamemode to beat DeathBan's kick
-      rcon(`pardon ${deadPlayer}`).catch(() => {});
-      rcon(`gamemode survival ${deadPlayer}`).catch(() => {});
-      rcon(`tp ${deadPlayer} ${x} ${y} ${z}`).then(resp => {
-        console.log(`[Revival] Teleported ${deadPlayer} to ${x},${y},${z}: ${resp}`);
+      rcon(`gamemode survival ${botName}`).catch(() => {});
+      rcon(`tp ${botName} ${x} ${y} ${z}`).then(resp => {
+        console.log(`[Revival] Teleported ${botName} (revival of ${deadPlayer}) to ${x},${y},${z}: ${resp}`);
         discordRevivalEmbed(deadPlayer, reviver);
       }).catch(err => {
         console.error(`[Revival] Teleport failed: ${err.message}`);
       });
-      rcon(`lp user ${offlineUUID(deadPlayer)} permission set grim.exempt true`).catch(() => {});
+      rcon(`lp user ${offlineUUID(botName)} permission set grim.exempt true`).catch(() => {});
       rBot.startAgentLoop();
 
       setTimeout(() => {
@@ -440,8 +475,13 @@ async function restoreRevivals() {
   console.log(`[Revival] Restoring ${saved.length} revival bot(s) from previous session`);
 
   for (const s of saved) {
+    // Use saved botName, or pick a new one if restoring old-format state
+    const botName = s.botName || pickRevivalName() || s.deadPlayer;
+    if (s.botName) usedNames.add(s.botName);
+
     const rBot = new RevivalBot({
       deadPlayer: s.deadPlayer,
+      botName,
       reviver: s.reviver,
       pos: s.pos,
       profile: s.profile,
@@ -459,7 +499,7 @@ async function restoreRevivals() {
     if (s.suspended) {
       rBot.suspended = true;
       rBot._suspendPos = s.pos;
-      console.log(`[Revival] Restoring ${s.deadPlayer} as suspended (owner: ${s.reviver})`);
+      console.log(`[Revival] Restoring ${s.deadPlayer} as ${botName} (suspended, owner: ${s.reviver})`);
       continue;
     }
 
@@ -473,12 +513,11 @@ async function restoreRevivals() {
         attachChatListener(rBot);
         attachOwnerReturnListener(rBot);
 
-        rcon(`pardon ${s.deadPlayer}`).catch(() => {});
-        rcon(`gamemode survival ${s.deadPlayer}`).catch(() => {});
-        rcon(`lp user ${offlineUUID(s.deadPlayer)} permission set grim.exempt true`).catch(() => {});
+        rcon(`gamemode survival ${botName}`).catch(() => {});
+        rcon(`lp user ${offlineUUID(botName)} permission set grim.exempt true`).catch(() => {});
         const { x, y, z } = s.pos;
-        rcon(`tp ${s.deadPlayer} ${x} ${y} ${z}`).then(resp => {
-          console.log(`[Revival] Restored & teleported ${s.deadPlayer}: ${resp}`);
+        rcon(`tp ${botName} ${x} ${y} ${z}`).then(resp => {
+          console.log(`[Revival] Restored & teleported ${botName} (revival of ${s.deadPlayer}): ${resp}`);
         }).catch(() => {});
         rBot.startAgentLoop();
         rBot.log('restored', `Reconnected after restart (owner: ${s.reviver})`);
@@ -486,7 +525,7 @@ async function restoreRevivals() {
       if (rBot.despawned) clearInterval(waitForConnect);
     }, 1000);
 
-    console.log(`[Revival] Restoring ${s.deadPlayer} (owner: ${s.reviver})`);
+    console.log(`[Revival] Restoring ${s.deadPlayer} as ${botName} (owner: ${s.reviver})`);
   }
 
   writeRevivalNames();
@@ -502,9 +541,10 @@ function setupWebhookServer() {
     // GET /rblist
     if (req.method === 'GET' && req.url === '/rblist') {
       const list = [];
-      for (const [name, rBot] of revivalBots) {
+      for (const [deadPlayer, rBot] of revivalBots) {
         list.push({
-          name,
+          name: rBot.username,
+          deadPlayer,
           owner: rBot.owner,
           state: rBot.state,
           connected: rBot.connected,
@@ -523,7 +563,7 @@ function setupWebhookServer() {
       const botName = url.searchParams.get('bot');
       let rBot;
       for (const [name, rb] of revivalBots) {
-        if (name.toLowerCase() === botName?.toLowerCase()) { rBot = rb; break; }
+        if (name.toLowerCase() === botName?.toLowerCase() || rb.username.toLowerCase() === botName?.toLowerCase()) { rBot = rb; break; }
       }
       if (!rBot) {
         res.writeHead(404);
@@ -557,7 +597,7 @@ function setupWebhookServer() {
       const botName = url.searchParams.get('bot');
       let rBot;
       for (const [name, rb] of revivalBots) {
-        if (name.toLowerCase() === botName?.toLowerCase()) { rBot = rb; break; }
+        if (name.toLowerCase() === botName?.toLowerCase() || rb.username.toLowerCase() === botName?.toLowerCase()) { rBot = rb; break; }
       }
       if (!rBot) {
         res.writeHead(404);
@@ -589,12 +629,17 @@ function setupWebhookServer() {
             return;
           }
           let rBot;
-          for (const [name, rb] of revivalBots) {
-            if (name.toLowerCase() === botName.toLowerCase()) { rBot = rb; break; }
+          for (const [deadName, rb] of revivalBots) {
+            // Match by dead player name or bot username
+            if (deadName.toLowerCase() === botName.toLowerCase()
+                || rb.username.toLowerCase() === botName.toLowerCase()) {
+              rBot = rb; break;
+            }
           }
           if (!rBot || !rBot.connected) {
             res.writeHead(404);
-            res.end(JSON.stringify({ error: `No active revival bot "${botName}"`, available: [...revivalBots.keys()] }));
+            const available = [...revivalBots.values()].map(b => `${b.username} (${b.deadPlayer})`);
+            res.end(JSON.stringify({ error: `No active revival bot "${botName}"`, available }));
             return;
           }
           const sender = data.as || rBot.owner;
@@ -631,7 +676,7 @@ function setupWebhookServer() {
           return;
         }
 
-        const { reviver, deadPlayer, x, y, z } = data;
+        const { reviver, deadPlayer, x, y, z, botName, profile } = data;
         if (!reviver || !deadPlayer) {
           res.writeHead(400);
           res.end('Missing fields');
@@ -644,8 +689,8 @@ function setupWebhookServer() {
           return;
         }
 
-        console.log(`[Webhook] Revival request: ${reviver} → ${deadPlayer} at ${x},${y},${z}`);
-        handleRevival(reviver, deadPlayer, { x, y, z });
+        console.log(`[Webhook] Revival request: ${reviver} → ${deadPlayer} at ${x},${y},${z}${botName ? ` (as ${botName})` : ''}`);
+        handleRevival(reviver, deadPlayer, { x, y, z }, { botName, profile });
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: 'ok' }));
       } catch (err) {

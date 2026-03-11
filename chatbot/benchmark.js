@@ -38,6 +38,20 @@ const BENCH_NAMES = [
 const OWNER = 'BrezzyTracks';
 const OWNER_MODEL = 'gpt-5-mini';
 
+// Diverse speech styles for benchmarks — randomly assigned to each run
+const CHAT_STYLES = [
+  { chatStyle: 'Short lowercase messages, no punctuation', samplePhrases: ['yo', 'got it', 'done', 'whats next'] },
+  { chatStyle: 'Enthusiastic and energetic, lots of exclamation marks', samplePhrases: ['lets go!', 'awesome!', 'on it!', 'heck yeah!'] },
+  { chatStyle: 'Calm and measured, proper grammar', samplePhrases: ['Understood.', 'Working on it now.', 'I have completed the task.', 'What would you like next?'] },
+  { chatStyle: 'Terse military-style responses', samplePhrases: ['copy', 'roger', 'affirmative', 'moving out'] },
+  { chatStyle: 'Chill surfer vibe, laid back', samplePhrases: ['duude', 'no worries', 'totally', 'vibin'] },
+  { chatStyle: 'Slightly confused but trying their best', samplePhrases: ['uhh ok', 'i think i got it', 'wait which one', 'lemme try'] },
+  { chatStyle: 'Overly polite and formal', samplePhrases: ['Of course!', 'Right away, sir.', 'It would be my pleasure.', 'Certainly.'] },
+  { chatStyle: 'Gen-Z internet speak, abbreviations', samplePhrases: ['bet', 'ngl', 'fr fr', 'say less'] },
+  { chatStyle: 'Grumpy but competent', samplePhrases: ['fine', 'whatever', 'yeah yeah', 'there happy now'] },
+  { chatStyle: 'Pirate speak', samplePhrases: ['aye aye', 'arrr', 'ye want me to what', 'shiver me timbers'] },
+];
+
 // Owner LLM client (always gpt-5-mini via OpenAI)
 const ownerClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -258,8 +272,17 @@ async function runBenchmark(benchId, botName) {
   // 2. Pardon + OP (deathban.immune) + spawn bot at world spawn first
   try { await rcon(`pardon ${botName}`); } catch {}
   try { await rcon(`op ${botName}`); } catch {}
+  // Random speech style for this run
+  const style = CHAT_STYLES[Math.floor(Math.random() * CHAT_STYLES.length)];
+  const profile = {
+    personality: `A revived Minecraft player named ${botName}. Focused and task-oriented.`,
+    chatStyle: style.chatStyle,
+    samplePhrases: style.samplePhrases,
+  };
+  console.log(`${tag}  Chat style: ${style.chatStyle}`);
   // Spawn at world spawn (loaded chunks), then spreadplayers to random location
-  await api('POST', '/revival', { reviver: OWNER, deadPlayer: botName, x: 0, y: 70, z: 0 });
+  // Pass botName explicitly so revival system uses our name (not the random pool)
+  await api('POST', '/revival', { reviver: OWNER, deadPlayer: botName, x: 0, y: 70, z: 0, botName, profile });
 
   // 3. Wait for connection
   await waitForBot(botName);
@@ -275,12 +298,7 @@ async function runBenchmark(benchId, botName) {
   const pos = await getPlayerPos(botName);
   console.log(`${tag}  Spawned at ${pos.x}, ${pos.y}, ${pos.z}`);
 
-  // 5. Set time, set up environment, set up inventory
-  if (benchId === 'sleep') {
-    await rcon('time set 14000'); // dusk — mobs start spawning
-  } else {
-    await rcon('time set day');
-  }
+  // 5. Set up environment and inventory (time is set at batch level, not per-bot)
   // Ensure solid ground at spawn for all benchmarks
   for (let dx = -1; dx <= 1; dx++) {
     for (let dz = -1; dz <= 1; dz++) {
@@ -364,30 +382,27 @@ async function runBenchmark(benchId, botName) {
     await rcon(`summon cow ${pos.x - 3} ${pos.y} ${pos.z}`);
     await rcon(`summon pig ${pos.x} ${pos.y} ${pos.z + 3}`);
   }
-  if (benchId === 'sleep') {
-    await rcon('time set midnight');
-  }
-
   // 7. Reset bench metrics and send goal
   await api('POST', `/bench/reset?bot=${botName}`);
   // Food bench: drain hunger AFTER reset, right before goal
-  // Target: food level ~3-6 (hungry enough to need food, but won't die from starvation)
+  // Two-phase hunger drain: first burn saturation buffer, then drain food level
   if (benchId === 'food') {
     console.log(`${tag}  Draining hunger...`);
-    // Resistance prevents starvation death while bot works on cooking (covers full timeout)
-    await rcon(`effect give ${botName} resistance 600 255 true`);
-    // Lower amplifier (50) = slower drain = better control over target food level
-    const rHun = await rcon(`effect give ${botName} hunger 15 50 true`);
-    console.log(`${tag}  Hunger effect: ${rHun}`);
-    // Poll until food drops to target range (3-5), then clear hunger
+    // Phase 1: Clear saturation with max amplifier (3s is enough for 20 sat points)
+    await rcon(`effect give ${botName} hunger 3 255 true`);
+    await sleep(3500);
+    await rcon(`effect clear ${botName} hunger`);
+    // Phase 2: Controlled drain with amplifier 100 (~3 food/sec), poll every 500ms for precision
+    await rcon(`effect give ${botName} hunger 30 100 true`);
     for (let i = 1; i <= 30; i++) {
-      await sleep(1000);
+      await sleep(500);
       const fl = await getFoodLevel(botName);
       if (fl >= 0 && fl <= 5) break;
     }
     await rcon(`effect clear ${botName} hunger`);
     const fl = await getFoodLevel(botName);
     console.log(`${tag}  Food level: ${fl}`);
+    if (fl > 10) console.log(`${tag}  WARNING: Hunger drain may not have worked properly`);
   }
   console.log(`${tag}  Goal: ${bench.goal}`);
   await api('POST', '/rbsay', { bot: botName, message: bench.goal, as: OWNER });
@@ -415,18 +430,22 @@ async function runBenchmark(benchId, botName) {
         const fl = await getFoodLevel(botName);
         passed = fl > 0 && fl >= 7;  // -1 = error, don't pass on error
       } else if (bench.successCheck === 'slept') {
-        // Check if bot is currently sleeping OR time is now morning (sleeping skips to ~23460)
+        // Check if bot actually slept: SleepTimer > 0 OR used 'sleep' tool and time is morning
         try {
           const sleepResp = await rcon(`data get entity ${botName} SleepTimer`);
           const sleeping = sleepResp.match(/(\d+)/);
           if (sleeping && parseInt(sleeping[1]) > 0) { passed = true; }
         } catch {}
         if (!passed) {
-          const timeResp = await rcon('time query daytime');
-          const m = timeResp.match(/(\d+)/);
-          const daytime = m ? parseInt(m[1]) : 18000;
-          // Started at 18000 (midnight), sleeping advances to ~23460 or 0 (dawn)
-          passed = daytime < 2000 || daytime > 23000;
+          // Only count as success if bot used the sleep tool (not just time passively changed)
+          const metrics = await api('GET', `/bench/metrics?bot=${botName}`);
+          const usedSleepTool = (metrics.log || []).some(e => e.type === 'tool' && e.name === 'sleep');
+          if (usedSleepTool) {
+            const timeResp = await rcon('time query daytime');
+            const m = timeResp.match(/(\d+)/);
+            const daytime = m ? parseInt(m[1]) : 18000;
+            passed = daytime < 2000 || daytime > 23000;
+          }
         }
       } else if (bench.successCounts) {
         passed = await hasRequiredCounts(botName, bench.successCounts);
@@ -515,6 +534,7 @@ async function runBenchmark(benchId, botName) {
     chatMessages: metrics.totalChats || 0,
     idleTicks: metrics.totalIdles || 0,
     failures: metrics.totalFailures || 0,
+    chatStyle: style.chatStyle,
     inventory: finalInv.map(i => `${i.name} x${i.count}`),
     log: metrics.log || [],
     toolLog: toolLog.map(e => ({ name: e.name, params: e.params, t: e.t })),
@@ -561,6 +581,7 @@ function saveResult(result, model) {
     idleTicks: result.idleTicks || 0,
     ownerModel: result.ownerModel || OWNER_MODEL,
     ownerInteractions: result.ownerInteractions || 0,
+    chatStyle: result.chatStyle || null,
     ownerChat: result.ownerChat || [],
     toolLog: result.toolLog || [],
     inventory: result.inventory || [],
@@ -637,6 +658,24 @@ async function main() {
   const allResults = [];
   let jobIdx = 0;
 
+  // Set global time based on benchmarks in queue (sleep needs night, others are time-agnostic)
+  const hasSleep = jobs.some(j => j.benchId === 'sleep');
+  const hasNonSleep = jobs.some(j => j.benchId !== 'sleep');
+  if (hasSleep && !hasNonSleep) {
+    // All sleep benchmarks — set to night once
+    await rcon('time set 14000');
+    console.log('  Time: set to dusk (sleep benchmarks)');
+  } else if (!hasSleep) {
+    await rcon('time set day');
+    console.log('  Time: set to day');
+  } else {
+    // Mixed benchmarks — run non-sleep first, then sleep
+    // Reorder jobs: non-sleep first, sleep last
+    jobs.sort((a, b) => (a.benchId === 'sleep' ? 1 : 0) - (b.benchId === 'sleep' ? 1 : 0));
+    await rcon('time set day');
+    console.log('  Time: set to day (sleep benchmarks will run last with time change)');
+  }
+
   console.log(`\n  ${jobs.length} jobs, ${parallel} parallel workers, model: ${m}`);
 
   // Worker: pulls jobs from queue, runs them with assigned bot name
@@ -645,6 +684,10 @@ async function main() {
     while (jobIdx < jobs.length) {
       const idx = jobIdx++;
       const job = jobs[idx];
+      // For sleep benchmarks in mixed mode, set time to night (only first sleep job does this)
+      if (job.benchId === 'sleep' && hasNonSleep) {
+        await rcon('time set 14000');
+      }
       console.log(`\n  [Worker ${workerId}] Job ${idx + 1}/${jobs.length}: ${job.benchId} (run ${job.run + 1})`);
       try {
         const result = await runBenchmark(job.benchId, botName);
