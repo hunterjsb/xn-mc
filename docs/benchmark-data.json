@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-11T05:12:17.625Z",
-  "totalRuns": 1015,
+  "generated": "2026-03-11T13:57:00.182Z",
+  "totalRuns": 1019,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -87,9 +87,9 @@
       ]
     },
     "sleep": {
-      "name": "Survive & Sleep",
+      "name": "Craft Bed & Sleep",
       "timeout": 300000,
-      "goal": "it is nighttime and monsters are spawning! find the nearby bed and sleep in it to survive the night",
+      "goal": "it is nighttime and dangerous! check the nearby chest for wool and planks, craft a bed, place it, and sleep in it",
       "successItems": [],
       "startItems": [
         "wooden_sword",
@@ -103,7 +103,7 @@
     "shears": "Iron Shears",
     "diamonds": "Diamond Armor",
     "collect": "Resource Collection",
-    "sleep": "Survive & Sleep"
+    "sleep": "Craft Bed & Sleep"
   },
   "benchTimeouts": {
     "pick": 600000,
@@ -237,45 +237,45 @@
     },
     "gpt-5-mini": {
       "overall": {
-        "pass": 91,
-        "total": 157,
-        "rate": 0.5796178343949044,
-        "avgTime": 191956,
+        "pass": 95,
+        "total": 161,
+        "rate": 0.5900621118012422,
+        "avgTime": 192173,
         "avgTools": 8
       },
       "pick": {
-        "pass": 20,
-        "total": 33,
-        "rate": 0.6060606060606061,
-        "avgTime": 213526,
-        "avgTimeout": 309091,
+        "pass": 22,
+        "total": 35,
+        "rate": 0.6285714285714286,
+        "avgTime": 216110,
+        "avgTimeout": 325714,
         "avgTools": 10,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 41,
-          "mine": 47,
+          "objective": 44,
+          "mine": 52,
           "chest": 17,
-          "craft": 99,
-          "place": 37,
+          "craft": 109,
+          "place": 39,
           "pickup": 1
         }
       },
       "food": {
-        "pass": 20,
-        "total": 30,
-        "rate": 0.6666666666666666,
-        "avgTime": 174311,
-        "avgTimeout": 280000,
+        "pass": 21,
+        "total": 31,
+        "rate": 0.6774193548387096,
+        "avgTime": 173487,
+        "avgTimeout": 290323,
         "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 29,
-          "craft": 44,
-          "place": 41,
-          "attack": 21,
-          "smelt": 21,
+          "objective": 30,
+          "craft": 46,
+          "place": 43,
+          "attack": 22,
+          "smelt": 22,
           "equip": 1,
           "mine": 9,
           "chest": 4,
@@ -284,21 +284,21 @@
         }
       },
       "shears": {
-        "pass": 20,
-        "total": 31,
-        "rate": 0.6451612903225806,
-        "avgTime": 199352,
-        "avgTimeout": 290323,
+        "pass": 21,
+        "total": 32,
+        "rate": 0.65625,
+        "avgTime": 196887,
+        "avgTimeout": 300000,
         "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 27,
-          "mine": 23,
-          "place": 41,
+          "objective": 28,
+          "mine": 25,
+          "place": 42,
           "chest": 7,
-          "craft": 27,
-          "smelt": 17,
+          "craft": 28,
+          "smelt": 18,
           "equip": 2,
           "pickup": 4,
           "whisper": 1
@@ -65951,6 +65951,322 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-11T04:59:16.534Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 299476,
+      "timeout": 600000,
+      "toolCalls": 12,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Mine 4 oak_log, craft planks, craft crafting_table, place it, craft sticks, craft wooden_pickaxe",
+            "priority": "high"
+          },
+          "t": 1773236828140
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773236836395
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773236878807
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773236909442
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773236932169
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773236952499
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773236977796
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 8
+          },
+          "t": 1773236997429
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773237006984
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773237034610
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Mine 4 oak_log, craft planks, craft crafting_table, place it, craft sticks, craft wooden_pickaxe",
+            "priority": "high"
+          },
+          "t": 1773237079828
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773237106437
+        }
+      ],
+      "ts": "2026-03-11T13:51:50.862Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 147592,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773237241071
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "mine 2 iron_ore, place the furnace, smelt the raw_iron with oak_planks as fuel, craft shears",
+            "priority": "high"
+          },
+          "t": 1773237291952
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773237296398
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773237330058
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773237349952
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773237379139
+        }
+      ],
+      "ts": "2026-03-11T13:56:23.521Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": true,
+      "elapsed": 157003,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a furnace, place it, kill a cow or pig, smelt the raw meat with oak_planks as fuel, then eat the cooked food",
+            "priority": "high"
+          },
+          "t": 1773237263186
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773237277729
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773237286818
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773237300284
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773237314106
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "pig",
+            "count": 1
+          },
+          "t": 1773237326952
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_porkchop",
+            "fuel": "oak_planks",
+            "count": 3
+          },
+          "t": 1773237349729
+        }
+      ],
+      "ts": "2026-03-11T13:56:35.972Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 184427,
+      "timeout": 600000,
+      "toolCalls": 8,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft wooden_pickaxe: mine 4 oak_log → craft planks → craft crafting_table → place crafting_table → craft sticks → craft wooden_pickaxe",
+            "priority": "high"
+          },
+          "t": 1773237281470
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773237290130
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773237315101
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 16
+          },
+          "t": 1773237346291
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773237356272
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773237371766
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773237404026
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773237414697
+        }
+      ],
+      "ts": "2026-03-11T13:57:00.158Z"
     }
   ]
 }

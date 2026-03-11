@@ -94,13 +94,13 @@ export const BENCHMARKS = {
     timeout: 600_000,
   },
   sleep: {
-    name: 'Survive & Sleep',
+    name: 'Craft Bed & Sleep',
     startItems: [
       'wooden_sword 1', 'torch 4',
     ],
-    goal: 'it is nighttime and monsters are spawning! find the nearby bed and sleep in it to survive the night',
-    successCheck: 'slept', // custom: check if time advanced past night
-    timeout: 300_000, // 5 min — should be quick
+    goal: 'it is nighttime and dangerous! check the nearby chest for wool and planks, craft a bed, place it, and sleep in it',
+    successCheck: 'slept', // custom: check SleepTimer or bed_used advancement
+    timeout: 300_000, // 5 min
   },
   collect: {
     name: 'Resource Collection',
@@ -247,16 +247,27 @@ async function ownerReply(botMessage, goal, chatHistory) {
 
 // ── Spawn location ──────────────────────────────────────────────────
 
-function randomCoords() {
-  return {
-    x: Math.floor(Math.random() * 2500) - 1250,
-    z: Math.floor(Math.random() * 2500) - 1250,
-  };
+// Each worker gets a unique quadrant 10k+ blocks from spawn and from each other
+const WORKER_ORIGINS = [
+  { x:  10000, z:  10000 },
+  { x: -10000, z:  10000 },
+  { x:  10000, z: -10000 },
+  { x: -10000, z: -10000 },
+  { x:  20000, z:      0 },
+  { x: -20000, z:      0 },
+  { x:      0, z:  20000 },
+  { x:      0, z: -20000 },
+  { x:  15000, z:  15000 },
+  { x: -15000, z: -15000 },
+];
+
+function getWorkerOrigin(workerId) {
+  return WORKER_ORIGINS[workerId % WORKER_ORIGINS.length];
 }
 
 // ── Run a single benchmark ──────────────────────────────────────────
 
-async function runBenchmark(benchId, botName) {
+async function runBenchmark(benchId, botName, workerId = 0) {
   const bench = BENCHMARKS[benchId];
   if (!bench) throw new Error(`Unknown benchmark: ${benchId}`);
   const tag = `[${botName}/${benchId}]`;
@@ -265,14 +276,13 @@ async function runBenchmark(benchId, botName) {
   console.log(`${tag}  BENCHMARK: ${bench.name}`);
   console.log(`${tag} ${'='.repeat(50)}`);
 
-  // 1. Clean up any existing bot
+  // ── 1. Clean up any existing bot ──────────────────────────────────
   try { await rcon(`kick ${botName}`); } catch {}
   await sleep(3000);
 
-  // 2. Pardon + OP (deathban.immune) + spawn bot at world spawn first
+  // ── 2. Spawn bot via revival API ──────────────────────────────────
   try { await rcon(`pardon ${botName}`); } catch {}
   try { await rcon(`op ${botName}`); } catch {}
-  // Random speech style for this run
   const style = CHAT_STYLES[Math.floor(Math.random() * CHAT_STYLES.length)];
   const profile = {
     personality: `A revived Minecraft player named ${botName}. Focused and task-oriented.`,
@@ -280,82 +290,81 @@ async function runBenchmark(benchId, botName) {
     samplePhrases: style.samplePhrases,
   };
   console.log(`${tag}  Chat style: ${style.chatStyle}`);
-  // Spawn at world spawn (loaded chunks), then spreadplayers to random location
-  // Pass botName explicitly so revival system uses our name (not the random pool)
+  // Spawn at 0,70,0 initially (loaded chunks), teleport to isolated area after connect
   await api('POST', '/revival', { reviver: OWNER, deadPlayer: botName, x: 0, y: 70, z: 0, botName, profile });
 
-  // 3. Wait for connection
+  // ── 3. Wait for connection ────────────────────────────────────────
   await waitForBot(botName);
   console.log(`${tag}  Connected!`);
-  // Re-send OP after connection (pre-connect OP may not take effect)
   try { await rcon(`op ${botName}`); } catch {}
   await sleep(2000);
 
-  // 4. Teleport to random safe location using spreadplayers (avoids oceans)
-  const { x: sx, z: sz } = randomCoords();
-  await rcon(`spreadplayers ${sx} ${sz} 100 1250 false ${botName}`);
-  await sleep(1000);
-  const pos = await getPlayerPos(botName);
+  // ── 4. Teleport to isolated area ──────────────────────────────────
+  // Each worker gets a unique quadrant far from spawn and other workers
+  const origin = getWorkerOrigin(workerId);
+  const spreadResp = await rcon(`spreadplayers ${origin.x} ${origin.z} 50 500 false ${botName}`);
+  await sleep(2000);
+  let pos = await getPlayerPos(botName);
+
+  // Verify bot actually moved — if still near 0,0 spreadplayers failed
+  if (Math.abs(pos.x) < 100 && Math.abs(pos.z) < 100) {
+    console.log(`${tag}  WARNING: spreadplayers may have failed (pos ${pos.x},${pos.z}), retrying...`);
+    await rcon(`tp ${botName} ${origin.x} 100 ${origin.z}`);
+    await sleep(1000);
+    await rcon(`spreadplayers ${origin.x} ${origin.z} 50 500 false ${botName}`);
+    await sleep(2000);
+    pos = await getPlayerPos(botName);
+  }
   console.log(`${tag}  Spawned at ${pos.x}, ${pos.y}, ${pos.z}`);
 
-  // 5. Set up environment and inventory (time is set at batch level, not per-bot)
-  // Ensure solid ground at spawn for all benchmarks
-  for (let dx = -1; dx <= 1; dx++) {
-    for (let dz = -1; dz <= 1; dz++) {
+  // ── 5. Build environment ──────────────────────────────────────────
+  // Clear a 5x5 platform and 3-high air space at spawn for ALL benchmarks
+  for (let dx = -2; dx <= 2; dx++) {
+    for (let dz = -2; dz <= 2; dz++) {
       await rcon(`setblock ${pos.x + dx} ${pos.y - 1} ${pos.z + dz} minecraft:grass_block`);
-    }
-  }
-  // (food cows spawned later, after greeting cycle)
-  if (benchId === 'shears') {
-    const orePositions = [
-      [pos.x + 3, pos.y, pos.z],
-      [pos.x - 3, pos.y, pos.z],
-      [pos.x, pos.y, pos.z + 3],
-    ];
-    for (const [ox, oy, oz] of orePositions) {
-      await rcon(`setblock ${ox} ${oy} ${oz} minecraft:iron_ore`);
-      await rcon(`setblock ${ox} ${oy + 1} ${oz} minecraft:air`);
-      await rcon(`setblock ${ox} ${oy - 1} ${oz} minecraft:stone`);
-    }
-  }
-  if (benchId === 'diamonds') {
-    const cx = pos.x + 3, cy = pos.y, cz = pos.z;
-    await rcon(`setblock ${cx} ${cy} ${cz} minecraft:chest`);
-    await rcon(`item replace block ${cx} ${cy} ${cz} container.0 with minecraft:diamond 24`);
-    await rcon(`item replace block ${cx} ${cy} ${cz} container.1 with minecraft:crafting_table 1`);
-    await rcon(`setblock ${cx} ${cy + 1} ${cz} minecraft:air`);
-    await rcon(`setblock ${cx} ${cy - 1} ${cz} minecraft:stone`);
-  }
-  if (benchId === 'pick') {
-    for (let dx = -2; dx <= 2; dx++) {
-      for (let dz = -2; dz <= 2; dz++) {
-        for (let dy = 0; dy <= 2; dy++) {
-          await rcon(`setblock ${pos.x + dx} ${pos.y + dy} ${pos.z + dz} minecraft:air`);
-        }
-        await rcon(`setblock ${pos.x + dx} ${pos.y - 1} ${pos.z + dz} minecraft:grass_block`);
+      for (let dy = 0; dy <= 2; dy++) {
+        await rcon(`setblock ${pos.x + dx} ${pos.y + dy} ${pos.z + dz} minecraft:air`);
       }
     }
+  }
+
+  // Benchmark-specific environment
+  if (benchId === 'pick') {
+    // Place oak logs nearby for mining
     for (let y = 0; y < 4; y++) {
-      await rcon(`setblock ${pos.x + 2} ${pos.y + y} ${pos.z} minecraft:oak_log`);
-      await rcon(`setblock ${pos.x - 2} ${pos.y + y} ${pos.z} minecraft:oak_log`);
+      await rcon(`setblock ${pos.x + 3} ${pos.y + y} ${pos.z} minecraft:oak_log`);
+      await rcon(`setblock ${pos.x - 3} ${pos.y + y} ${pos.z} minecraft:oak_log`);
     }
-  }
-  if (benchId === 'sleep') {
-    // Build a small shelter with a bed 5 blocks away
-    const bx = pos.x + 5, bz = pos.z;
-    // Clear space and place bed
-    for (let dy = 0; dy <= 2; dy++) {
-      await rcon(`setblock ${bx} ${pos.y + dy} ${bz} minecraft:air`);
-      await rcon(`setblock ${bx + 1} ${pos.y + dy} ${bz} minecraft:air`);
+  } else if (benchId === 'shears') {
+    // Place iron ore nearby with stone underneath
+    for (const [dx, dz] of [[3, 0], [-3, 0], [0, 3]]) {
+      const ox = pos.x + dx, oz = pos.z + dz;
+      await rcon(`setblock ${ox} ${pos.y - 1} ${oz} minecraft:stone`);
+      await rcon(`setblock ${ox} ${pos.y} ${oz} minecraft:iron_ore`);
+      await rcon(`setblock ${ox} ${pos.y + 1} ${oz} minecraft:air`);
     }
-    await rcon(`setblock ${bx} ${pos.y - 1} ${bz} minecraft:oak_planks`);
-    await rcon(`setblock ${bx + 1} ${pos.y - 1} ${bz} minecraft:oak_planks`);
-    await rcon(`setblock ${bx} ${pos.y} ${bz} minecraft:red_bed[part=foot,facing=east]`);
-    await rcon(`setblock ${bx + 1} ${pos.y} ${bz} minecraft:red_bed[part=head,facing=east]`);
-    // Place some torches so it's findable
-    await rcon(`setblock ${bx} ${pos.y + 1} ${bz + 1} minecraft:torch`);
-    await rcon(`setblock ${bx} ${pos.y + 1} ${bz - 1} minecraft:torch`);
+  } else if (benchId === 'diamonds') {
+    // Place chest with diamonds + crafting table
+    const cx = pos.x + 3, cz = pos.z;
+    await rcon(`setblock ${cx} ${pos.y - 1} ${cz} minecraft:stone`);
+    await rcon(`setblock ${cx} ${pos.y} ${cz} minecraft:chest`);
+    await rcon(`setblock ${cx} ${pos.y + 1} ${cz} minecraft:air`);
+    await rcon(`item replace block ${cx} ${pos.y} ${cz} container.0 with minecraft:diamond 24`);
+    await rcon(`item replace block ${cx} ${pos.y} ${cz} container.1 with minecraft:crafting_table 1`);
+  } else if (benchId === 'sleep') {
+    // Place chest with bed-crafting materials
+    const cx = pos.x + 3, cz = pos.z;
+    await rcon(`setblock ${cx} ${pos.y - 1} ${cz} minecraft:stone`);
+    await rcon(`setblock ${cx} ${pos.y} ${cz} minecraft:chest`);
+    await rcon(`setblock ${cx} ${pos.y + 1} ${cz} minecraft:air`);
+    await rcon(`item replace block ${cx} ${pos.y} ${cz} container.0 with minecraft:white_wool 3`);
+    await rcon(`item replace block ${cx} ${pos.y} ${cz} container.1 with minecraft:oak_planks 3`);
+    await rcon(`item replace block ${cx} ${pos.y} ${cz} container.2 with minecraft:crafting_table 1`);
+    // Revoke sleep advancement for detection
+    await rcon(`advancement revoke ${botName} only minecraft:adventure/sleep_in_bed`).catch(() => {});
   }
+
+  // ── 6. Set inventory ──────────────────────────────────────────────
   await rcon(`clear ${botName}`);
   for (const item of bench.startItems) {
     const [name, count] = item.split(' ');
@@ -363,7 +372,7 @@ async function runBenchmark(benchId, botName) {
   }
   console.log(`${tag}  Inventory: ${bench.startItems.length > 0 ? bench.startItems.join(', ') : 'empty'}`);
 
-  // 6. Wait for greeting cycle to finish
+  // ── 7. Wait for greeting cycle ────────────────────────────────────
   console.log(`${tag}  Waiting for greeting cycle...`);
   for (let i = 0; i < 15; i++) {
     await sleep(2000);
@@ -372,28 +381,29 @@ async function runBenchmark(benchId, botName) {
     if (bot && bot.state === 'idle' && bot.pending === 0) break;
   }
 
-  // 6b. Teleport bot back to spawn point (may have wandered during greeting)
+  // Teleport bot back (may have wandered during greeting)
   await rcon(`tp ${botName} ${pos.x} ${pos.y} ${pos.z}`);
   await sleep(1000);
 
-  // 6c. Bench-specific pre-goal setup
+  // ── 8. Pre-goal setup ─────────────────────────────────────────────
   if (benchId === 'food') {
+    // Spawn animals nearby
     await rcon(`summon cow ${pos.x + 3} ${pos.y} ${pos.z}`);
     await rcon(`summon cow ${pos.x - 3} ${pos.y} ${pos.z}`);
     await rcon(`summon pig ${pos.x} ${pos.y} ${pos.z + 3}`);
   }
-  // 7. Reset bench metrics and send goal
+
+  // Reset bench metrics
   await api('POST', `/bench/reset?bot=${botName}`);
-  // Food bench: drain hunger AFTER reset, right before goal
-  // Two-phase hunger drain: blast saturation buffer, then controlled food drain
+
+  // Drain hunger for food benchmark
   if (benchId === 'food') {
     console.log(`${tag}  Draining hunger...`);
-    // Phase 1: Burn saturation buffer (20→0 takes ~3s at amp 255)
+    // Phase 1: Burn saturation buffer (~3s at amp 255)
     await rcon(`effect give ${botName} hunger 3 255 true`);
-    await sleep(3000);
+    await sleep(3500);
     await rcon(`effect clear ${botName} hunger`);
-    await sleep(500); // ensure effect is fully cleared
-    // Phase 2: Slow drain for food level (amp 50 = ~1.5 food/sec, poll every 1s)
+    // Phase 2: Controlled food drain (amp 50 ≈ 1.5 food/sec)
     await rcon(`effect give ${botName} hunger 30 50 true`);
     for (let i = 1; i <= 20; i++) {
       await sleep(1000);
@@ -403,8 +413,15 @@ async function runBenchmark(benchId, botName) {
     await rcon(`effect clear ${botName} hunger`);
     const fl = await getFoodLevel(botName);
     console.log(`${tag}  Food level: ${fl}`);
-    if (fl > 10) console.log(`${tag}  WARNING: Hunger drain may not have worked properly`);
+    if (fl > 10) console.log(`${tag}  WARNING: Hunger drain incomplete`);
   }
+
+  // Set time for sleep benchmark
+  if (benchId === 'sleep') {
+    await rcon('time set midnight');
+  }
+
+  // ── 9. Send goal ──────────────────────────────────────────────────
   console.log(`${tag}  Goal: ${bench.goal}`);
   await api('POST', '/rbsay', { bot: botName, message: bench.goal, as: OWNER });
   const startTime = Date.now();
@@ -431,23 +448,11 @@ async function runBenchmark(benchId, botName) {
         const fl = await getFoodLevel(botName);
         passed = fl > 0 && fl >= 7;  // -1 = error, don't pass on error
       } else if (bench.successCheck === 'slept') {
-        // Check if bot actually slept: SleepTimer > 0 OR used 'sleep' tool and time is morning
+        // Check if bot actually slept using the "Sweet Dreams" advancement (most reliable)
         try {
-          const sleepResp = await rcon(`data get entity ${botName} SleepTimer`);
-          const sleeping = sleepResp.match(/(\d+)/);
-          if (sleeping && parseInt(sleeping[1]) > 0) { passed = true; }
+          const resp = await rcon(`execute if entity @a[name=${botName},advancements={minecraft:adventure/sleep_in_bed=true}]`);
+          if (resp.includes('Test passed')) { passed = true; }
         } catch {}
-        if (!passed) {
-          // Only count as success if bot used the sleep tool (not just time passively changed)
-          const metrics = await api('GET', `/bench/metrics?bot=${botName}`);
-          const usedSleepTool = (metrics.log || []).some(e => e.type === 'tool' && e.name === 'sleep');
-          if (usedSleepTool) {
-            const timeResp = await rcon('time query daytime');
-            const m = timeResp.match(/(\d+)/);
-            const daytime = m ? parseInt(m[1]) : 18000;
-            passed = daytime < 2000 || daytime > 23000;
-          }
-        }
       } else if (bench.successCounts) {
         passed = await hasRequiredCounts(botName, bench.successCounts);
       } else if (bench.successItems) {
@@ -659,23 +664,8 @@ async function main() {
   const allResults = [];
   let jobIdx = 0;
 
-  // Set global time based on benchmarks in queue (sleep needs night, others are time-agnostic)
-  const hasSleep = jobs.some(j => j.benchId === 'sleep');
-  const hasNonSleep = jobs.some(j => j.benchId !== 'sleep');
-  if (hasSleep && !hasNonSleep) {
-    // All sleep benchmarks — set to night once
-    await rcon('time set 14000');
-    console.log('  Time: set to dusk (sleep benchmarks)');
-  } else if (!hasSleep) {
-    await rcon('time set day');
-    console.log('  Time: set to day');
-  } else {
-    // Mixed benchmarks — run non-sleep first, then sleep
-    // Reorder jobs: non-sleep first, sleep last
-    jobs.sort((a, b) => (a.benchId === 'sleep' ? 1 : 0) - (b.benchId === 'sleep' ? 1 : 0));
-    await rcon('time set day');
-    console.log('  Time: set to day (sleep benchmarks will run last with time change)');
-  }
+  // Set time to day (sleep benchmarks set time to midnight individually before their goal)
+  await rcon('time set day');
 
   console.log(`\n  ${jobs.length} jobs, ${parallel} parallel workers, model: ${m}`);
 
@@ -685,13 +675,9 @@ async function main() {
     while (jobIdx < jobs.length) {
       const idx = jobIdx++;
       const job = jobs[idx];
-      // For sleep benchmarks in mixed mode, set time to night (only first sleep job does this)
-      if (job.benchId === 'sleep' && hasNonSleep) {
-        await rcon('time set 14000');
-      }
       console.log(`\n  [Worker ${workerId}] Job ${idx + 1}/${jobs.length}: ${job.benchId} (run ${job.run + 1})`);
       try {
-        const result = await runBenchmark(job.benchId, botName);
+        const result = await runBenchmark(job.benchId, botName, workerId);
         result.model = m;
         allResults.push(result);
         saveResult(result, m);
