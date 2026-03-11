@@ -1564,7 +1564,8 @@ export class RevivalBot {
           .map(i => `${i.name} x${i.count}`).join(', ') || 'empty';
         this.log('action_failed', `No recipe for ${itemName}. Your inventory: ${invSummary}`);
       } else {
-        this.log('action_success', `Crafted ${crafted}x ${itemName}`);
+        const isArmor = /helmet|chestplate|leggings|boots/.test(itemName);
+        this.log('action_success', `Crafted ${crafted}x ${itemName}` + (isArmor ? '. Use equip to put it on' : ''));
       }
     } finally {
       this.state = prevState;
