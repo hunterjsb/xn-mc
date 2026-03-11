@@ -113,8 +113,16 @@ export class RevivalBot {
   }
 
   addObjective(text, priority = 'normal') {
-    // Don't add duplicates
-    if (this.objectives.some(o => o.text === text)) return;
+    // Don't add duplicates (fuzzy — check if existing objective substantially overlaps)
+    const textLower = text.toLowerCase();
+    if (this.objectives.some(o => {
+      const oLower = o.text.toLowerCase();
+      return oLower === textLower || oLower.includes(textLower) || textLower.includes(oLower);
+    })) return;
+    // Cap at 3 objectives to prevent objective spam
+    if (this.objectives.length >= 3) {
+      this.objectives.shift(); // drop oldest
+    }
     this.objectives.push({ text, priority, timestamp: Date.now() });
     this.log('objective_added', text);
     console.log(`[Revival] ${this.username} objective+: ${text}`);
@@ -724,10 +732,26 @@ export class RevivalBot {
   }
 
   async _cmdMine(blockName, count) {
+    // Fix common LLM block name mistakes
+    const MINE_ALIASES = {
+      log: 'oak_log', logs: 'oak_log', wood: 'oak_log',
+      plank: 'oak_planks', planks: 'oak_planks',
+      cobble: 'stone', cobblestone: 'stone', stone: 'stone',
+      iron: 'iron_ore', gold: 'gold_ore', diamond: 'diamond_ore',
+      coal: 'coal_ore', copper: 'copper_ore', lapis: 'lapis_ore',
+      redstone: 'redstone_ore', emerald: 'emerald_ore',
+      dirt: 'dirt', sand: 'sand', gravel: 'gravel', clay: 'clay',
+    };
+    const resolvedBlock = MINE_ALIASES[blockName] || blockName;
+    if (resolvedBlock !== blockName) {
+      this.log('action', `Resolved mine name: ${blockName} → ${resolvedBlock}`);
+      blockName = resolvedBlock;
+    }
+
     this.state = 'mining';
     this.log('action', `Mining up to ${count}x ${blockName}`);
 
-    const blockType = this._mcData?.blocksByName[blockName];
+    let blockType = this._mcData?.blocksByName[blockName];
     if (!blockType) {
       this.state = 'idle';
       this.log('action_failed', `"${blockName}" is not a valid block name`);
@@ -736,6 +760,7 @@ export class RevivalBot {
 
     let mined = 0;
     let failReason = null;
+    let roamed = false;
 
     // Auto-equip best tool for the block type
     const bestTool = this.bot.pathfinder?.bestHarvestTool(this.bot.blockAt(this.bot.entity.position.offset(0, -1, 0)) || blockType)
@@ -767,7 +792,45 @@ export class RevivalBot {
           }
           break; // strip-mine handles its own loop
         }
-        failReason = `no ${blockName} found nearby`;
+
+        // For log blocks, try all wood variants before giving up
+        if (blockName.endsWith('_log')) {
+          const LOG_VARIANTS = ['oak_log', 'birch_log', 'spruce_log', 'dark_oak_log', 'jungle_log', 'acacia_log', 'mangrove_log', 'cherry_log'];
+          let found = false;
+          for (const variant of LOG_VARIANTS) {
+            if (variant === blockName) continue;
+            const variantType = this._mcData?.blocksByName[variant];
+            if (!variantType) continue;
+            const variantBlock = this.bot.findBlock({ matching: variantType.id, maxDistance: 64 });
+            if (variantBlock) {
+              this.log('action', `No ${blockName} nearby, switching to ${variant}`);
+              blockName = variant;
+              blockType = variantType;
+              found = true;
+              break;
+            }
+          }
+          if (found) continue; // restart the while loop with new block type
+        }
+
+        // Roam-and-retry for surface blocks — walk ~100 blocks and look again
+        if (!roamed) {
+          roamed = true;
+          this.log('action', `No ${blockName} nearby — roaming to search further`);
+          const angle = Math.random() * 2 * Math.PI;
+          const roamDist = 80 + Math.random() * 40;
+          const roamX = Math.round(this.bot.entity.position.x + Math.cos(angle) * roamDist);
+          const roamZ = Math.round(this.bot.entity.position.z + Math.sin(angle) * roamDist);
+          const roamY = Math.round(this.bot.entity.position.y);
+          this.bot.pathfinder.setGoal(new goals.GoalNear(roamX, roamY, roamZ, 8));
+          await new Promise(resolve => {
+            const timeout = setTimeout(() => { this.bot.pathfinder.setGoal(null); resolve(); }, 20000);
+            this.bot.once('goal_reached', () => { clearTimeout(timeout); resolve(); });
+          });
+          continue; // retry finding block after roam
+        }
+
+        failReason = `no ${blockName} found nearby (even after roaming)`;
         break;
       }
       try {
@@ -1359,6 +1422,28 @@ export class RevivalBot {
   }
 
   async _cmdCraft(itemName, count = 1) {
+    // Fix common LLM item name mistakes
+    const CRAFT_ALIASES = {
+      planks: 'oak_planks', oak_plank: 'oak_planks', plank: 'oak_planks',
+      birch_plank: 'birch_planks', spruce_plank: 'spruce_planks',
+      dark_oak_plank: 'dark_oak_planks', jungle_plank: 'jungle_planks',
+      acacia_plank: 'acacia_planks', mangrove_plank: 'mangrove_planks',
+      sticks: 'stick', wooden_stick: 'stick',
+      wooden_plank: 'oak_planks', wooden_planks: 'oak_planks',
+      log: 'oak_log', logs: 'oak_log', wood: 'oak_planks',
+      stone_pickaxe: 'stone_pickaxe', // valid — no alias needed
+      pickaxe: 'wooden_pickaxe', // bare "pickaxe" → cheapest
+      sword: 'wooden_sword',
+      axe: 'wooden_axe',
+      shovel: 'wooden_shovel',
+      hoe: 'wooden_hoe',
+    };
+    const resolvedName = CRAFT_ALIASES[itemName] || itemName;
+    if (resolvedName !== itemName) {
+      this.log('action', `Resolved craft name: ${itemName} → ${resolvedName}`);
+    }
+    itemName = resolvedName;
+
     this.log('action', `Crafting ${count}x ${itemName}`);
     const prevState = this.state;
     this.state = 'crafting';
@@ -1374,13 +1459,7 @@ export class RevivalBot {
       // Stop pathfinding during craft to avoid window click conflicts
       this.bot.pathfinder.setGoal(null);
 
-      // Debug: log inventory and recipe state
-      const invItems = this.bot.inventory.items().map(i => `${i.name}x${i.count}`).join(', ');
-      console.log(`[Craft Debug] ${this.username}: crafting ${count}x ${itemName} (id=${item.id})`);
-      console.log(`[Craft Debug] ${this.username}: inventory=[${invItems}]`);
-
       const recipes = this.bot.recipesFor(item.id, null, 1, null);
-      console.log(`[Craft Debug] ${this.username}: 2x2 recipes=${recipes.length}`);
       // Try with crafting table if no 2x2 recipe
       let craftingTable = null;
       if (recipes.length === 0) {
@@ -1398,6 +1477,14 @@ export class RevivalBot {
             });
           }
           craftingTable = tableBlock;
+        } else {
+          // No crafting table found — check if bot has one in inventory to hint the LLM
+          const hasTable = this.bot.inventory.items().some(i => i.name === 'crafting_table');
+          this.log('action_failed', hasTable
+            ? `${itemName} needs a crafting table (3×3 grid). Place your crafting_table first!`
+            : `${itemName} needs a crafting table but none found nearby and none in inventory`);
+          this.state = prevState;
+          return;
         }
       }
 
@@ -1407,7 +1494,6 @@ export class RevivalBot {
       const firstRecipes = this.bot.recipesFor(item.id, null, 1, craftingTable);
       const outputPerBatch = firstRecipes.length > 0 ? (firstRecipes[0].result?.count || 1) : 1;
       const batches = Math.ceil(count / outputPerBatch);
-      console.log(`[Craft Debug] ${this.username}: need ${count} items, ${outputPerBatch}/batch → ${batches} batches`);
 
       for (let i = 0; i < batches; i++) {
         const recipes = this.bot.recipesFor(item.id, null, 1, craftingTable);
@@ -1416,7 +1502,6 @@ export class RevivalBot {
           await this.bot.craft(recipes[0], 1, craftingTable);
           crafted += outputPerBatch;
         } catch (err) {
-          console.log(`[Craft Debug] ${this.username}: craft error: ${err.message}`);
           if (crafted === 0) {
             this.log('action_failed', `Craft ${itemName}: ${err.message}`);
             return;
@@ -1685,6 +1770,14 @@ export class RevivalBot {
     });
 
     const candidates = [];
+
+    // Try placing at feet (on block below) — most reliable placement
+    const belowBlock = this.bot.blockAt(pos.offset(0, -1, 0));
+    if (belowBlock && belowBlock.name !== 'air' && isOpen(pos)) {
+      candidates.push({ ref: belowBlock, face: new Vec3(0, 1, 0), clearPos: pos });
+    }
+
+    // Then try cardinal directions
     for (const d of dirs) {
       const result = tryDirection(d.x, d.z);
       if (result) candidates.push(result);
@@ -1698,7 +1791,7 @@ export class RevivalBot {
         this.log('action_success', `Placed ${item.name}`);
         return;
       } catch (err) {
-        console.log(`[Place] ${this.username}: failed against ${ref.name}@${ref.position}: ${err.message}`);
+        // Try next candidate
       }
     }
     this.log('action_failed', `Place ${item.name}: no valid placement found`)

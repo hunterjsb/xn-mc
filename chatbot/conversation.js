@@ -23,12 +23,7 @@ const openrouterClient = process.env.OPENROUTER_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENROUTER_API_KEY, baseURL: 'https://openrouter.ai/api/v1' })
   : null;
 
-const ollamaBaseUrl = process.env.OLLAMA_URL?.replace(/\/v1\/?$/, ''); // strip /v1 — use native API
-const ollamaModel = process.env.OLLAMA_MODEL;
-const ollamaAuth = process.env.OLLAMA_AUTH;
-const ollamaEnabled = false; // disabled — Ollama API is down, using Grok only
-
-// Ollama OpenAI-compatible client for local models via ngrok
+// Ollama OpenAI-compatible client for local models via ngrok (used by getRevivalBackend for local/ models)
 const ollamaClient = process.env.OLLAMA_URL
   ? new OpenAI({ apiKey: 'ollama', baseURL: process.env.OLLAMA_URL,
       defaultHeaders: { 'ngrok-skip-browser-warning': 'true' } })
@@ -72,40 +67,6 @@ function getRevivalBackend() {
     extraParams: { max_tokens: 4096, temperature: 0.6 } };
 }
 
-// Native Ollama /api/chat call with think:false
-async function ollamaChat(params) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (ollamaAuth) headers['Authorization'] = `Basic ${ollamaAuth}`;
-
-  const body = {
-    model: ollamaModel,
-    messages: params.messages,
-    stream: false,
-    think: false,
-    keep_alive: 0, // unload after responding — frees VRAM
-    options: {}
-  };
-  if (params.max_tokens) body.options.num_predict = Math.min(params.max_tokens, 50); // cap Ollama shorter
-  if (params.temperature != null) body.options.temperature = params.temperature;
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000); // 15s — if GPU is busy, fall back to Grok
-
-  try {
-    const res = await fetch(`${ollamaBaseUrl}/api/chat`, {
-      method: 'POST', headers, body: JSON.stringify(body), signal: controller.signal
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    // Return OpenAI-compatible shape so callers don't change
-    return {
-      choices: [{ message: { role: 'assistant', content: data.message?.content || '' } }]
-    };
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
 // ── Discord model logging ──────────────────────────────────────────
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 const DISCORD_LOG_CHANNEL = process.env.DISCORD_CHANNEL_ID;
@@ -143,10 +104,9 @@ export async function discordRevivalEmbed(deadPlayer, reviver) {
   } catch { /* non-critical */ }
 }
 
-async function callLLM(params, { label = 'LLM', lightweight = false, botName = '' } = {}) {
-  // Use OpenAI if available, otherwise Grok
+async function callLLM(params, { label = 'LLM' } = {}) {
+  // Use OpenAI (gpt-5-mini) if available, otherwise Grok
   if (openaiClient) {
-    // GPT-5 mini: max_tokens → max_completion_tokens, no custom temperature
     const { max_tokens, temperature, ...rest } = params;
     const openaiParams = {
       ...rest,
@@ -158,29 +118,9 @@ async function callLLM(params, { label = 'LLM', lightweight = false, botName = '
     return response;
   }
 
-  // Grok fallback
-  if (lightweight || !ollamaEnabled) {
-    const response = await grokClient.chat.completions.create({ ...params, model: GROK_MODEL });
-    console.log(`[${label}] ✓ grok`);
-    return response;
-  }
-
-  // Try Ollama first, fall back to Grok
-  try {
-    const response = await ollamaChat(params);
-    const tag = `ollama (${ollamaModel})`;
-    console.log(`[${label}] ✓ ${tag}`);
-    if (botName) discordLog(`\`[${label}] ${botName} via ${tag}\``);
-    response._fallback = false;
-    return response;
-  } catch (err) {
-    console.warn(`[${label}] Ollama failed (${err.message}), falling back to Grok`);
-    const response = await grokClient.chat.completions.create({ ...params, model: GROK_MODEL });
-    console.log(`[${label}] ✓ grok (fallback)`);
-    if (botName) discordLog(`\`[${label}] ${botName} via grok (fallback)\``);
-    response._fallback = true;
-    return response;
-  }
+  const response = await grokClient.chat.completions.create({ ...params, model: GROK_MODEL });
+  console.log(`[${label}] ✓ grok`);
+  return response;
 }
 
 // ── Prompt loader ────────────────────────────────────────────────────
@@ -201,7 +141,6 @@ const prompts = {
   orchestrator: loadPrompt('orchestrator'),
   memoryCompact: loadPrompt('memory-compact'),
   memoryEvaluate: loadPrompt('memory-evaluate'),
-  revivalResponse: loadPrompt('revival-response'),
 };
 let chatStyle = loadPrompt('style');
 let serverInfo = loadPrompt('server-info');
@@ -582,7 +521,7 @@ export class ConversationManager {
         this.evaluateMemory(bot.username, `${recentContext}\n<${bot.username}> ${reply}`);
       }
 
-      return reply ? { text: reply, fallback: !!response._fallback } : null;
+      return reply ? { text: reply } : null;
     } catch (err) {
       console.error(`[LLM Error] ${err.message}`);
       return null;
@@ -646,7 +585,7 @@ export class ConversationManager {
         }
       }
 
-      return reply ? { text: reply, fallback: !!response._fallback } : null;
+      return reply ? { text: reply } : null;
     } catch (err) {
       console.error(`[LLM Error] ${err.message}`);
       return null;
@@ -681,277 +620,9 @@ export class ConversationManager {
       let reply = stripThinking(response.choices[0].message.content.trim());
       reply = reply.replace(/^["']|["']$/g, '');
       reply = stripEmojis(reply);
-      return reply ? { text: reply, fallback: !!response._fallback } : null;
+      return reply ? { text: reply } : null;
     } catch (err) {
       console.error(`[LLM Error] ${err.message}`);
-      return null;
-    }
-  }
-
-  // ── Revival bot action layer (LLM tool-calling) ────────────────────
-
-  async generateRevivalAction(rBot, senderName, message) {
-    const history = this.chatHistory.slice(-8);
-    const profile = rBot.profile || {};
-    const isOwner = senderName === rBot.owner;
-
-    const tools = [
-      {
-        type: 'function',
-        function: {
-          name: 'follow_owner',
-          description: 'Follow the owner around, staying close to them',
-          parameters: { type: 'object', properties: {}, required: [] }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'come_here',
-          description: 'Walk to the owner\'s current position (one-time, not continuous following)',
-          parameters: { type: 'object', properties: {}, required: [] }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'stop',
-          description: 'Stop all current actions (following, mining, guarding, attacking)',
-          parameters: { type: 'object', properties: {}, required: [] }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'guard',
-          description: 'Guard current position — attack hostile mobs that come near',
-          parameters: { type: 'object', properties: {}, required: [] }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'mine',
-          description: 'Mine/collect a specific block type nearby',
-          parameters: {
-            type: 'object',
-            properties: {
-              block: { type: 'string', description: 'Minecraft block name (e.g. oak_log, cobblestone, iron_ore, diamond_ore)' },
-              count: { type: 'integer', description: 'How many to mine (default 1)', default: 1 }
-            },
-            required: ['block']
-          }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'attack',
-          description: 'Attack a specific mob type nearby',
-          parameters: {
-            type: 'object',
-            properties: {
-              mob: { type: 'string', description: 'Mob name (e.g. zombie, skeleton, creeper, cow, pig)' }
-            },
-            required: ['mob']
-          }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'drop_item',
-          description: 'Drop an item from inventory on the ground',
-          parameters: {
-            type: 'object',
-            properties: {
-              item: { type: 'string', description: 'Item name (e.g. cobblestone, oak_log, diamond)' },
-              count: { type: 'integer', description: 'How many to drop (omit for all)' }
-            },
-            required: ['item']
-          }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'give_item',
-          description: 'Walk to a player and give them an item',
-          parameters: {
-            type: 'object',
-            properties: {
-              player: { type: 'string', description: 'Player name to give to' },
-              item: { type: 'string', description: 'Item name' },
-              count: { type: 'integer', description: 'How many (omit for all)' }
-            },
-            required: ['player', 'item']
-          }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'dismiss',
-          description: 'Despawn/leave the server permanently. Only do this if explicitly told to leave/go away/dismiss.',
-          parameters: { type: 'object', properties: {}, required: [] }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'ask_clarification',
-          description: 'Ask the owner a clarifying question when the instruction is ambiguous. Use this when you\'re not sure what specific block/item/mob they mean, or when the request is unclear.',
-          parameters: {
-            type: 'object',
-            properties: {
-              question: { type: 'string', description: 'The clarifying question to ask, in character (short, casual)' }
-            },
-            required: ['question']
-          }
-        }
-      }
-    ];
-
-    const systemPrompt = `You are ${rBot.username}, a revived player bot on a Minecraft server. You were brought back by ${rBot.owner}.
-
-PERSONALITY: ${profile.personality || 'Unknown'}
-CHAT STYLE: ${profile.chatStyle || 'Short lowercase messages'}
-
-${isOwner ? `${senderName} is your OWNER who revived you. You follow their instructions.` : `${senderName} is NOT your owner. You can chat with them but only take action commands from your owner ${rBot.owner}.`}
-
-You have actions available as tools. If the message is an instruction/command (and from your owner), call the appropriate tool. You can also respond in chat — keep it SHORT (1-5 words), in character, casual. You can both call a tool AND respond.
-
-If the message is just casual chat (not a command), just respond naturally. Don't call any tools for casual conversation.
-
-IMPORTANT for mine/collect commands:
-- Block names must be exact Minecraft IDs. "logs" could be oak_log, birch_log, spruce_log, etc.
-- If the player says something vague like "logs", "wood", "stone", "ore" without specifying the exact type, use ask_clarification to ask what kind.
-- Common mappings: "cobble" = cobblestone, "dirt" = dirt, "sand" = sand, "gravel" = gravel, "coal" = coal_ore, "iron" = iron_ore, "diamonds" = diamond_ore
-
-RECENT CHAT:
-${history.map(h => h.content).join('\n')}`;
-
-    try {
-      const rb = getRevivalBackend();
-      const response = await rb.client.chat.completions.create({
-        model: rb.model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `<${senderName}> ${message}` }
-        ],
-        tools: isOwner ? tools : [], // only give tools if owner is speaking
-        ...rb.extraParams,
-      });
-
-      console.log(`[RevivalAction] ✓ ${rb.tag}`);
-      const choice = response.choices[0];
-      const result = { actions: [], chat: null };
-
-      // Extract tool calls
-      if (choice.message.tool_calls) {
-        for (const tc of choice.message.tool_calls) {
-          let args = {};
-          try { args = JSON.parse(tc.function.arguments || '{}'); } catch {}
-          result.actions.push({ name: tc.function.name, params: args });
-          console.log(`[RevivalAction] Tool: ${tc.function.name}(${JSON.stringify(args)})`);
-        }
-      }
-
-      // Extract chat message
-      if (choice.message.content) {
-        let reply = stripThinking(choice.message.content.trim());
-        reply = reply.replace(/^["']|["']$/g, '');
-        const nameEsc = rBot.username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        reply = reply.replace(new RegExp(`^<?\\[?${nameEsc}\\]?>?\\s*[:>\\-]?\\s*`, 'i'), '');
-        reply = stripEmojis(reply);
-        reply = trimToComplete(reply);
-        if (reply && !containsSlur(reply)) {
-          result.chat = reply;
-        }
-      }
-
-      return result;
-    } catch (err) {
-      console.error(`[RevivalAction Error] ${err.message}`);
-      return { actions: [], chat: null };
-    }
-  }
-
-  async generateRevivalStatus(rBot, actionResult) {
-    const profile = rBot.profile || {};
-    const rb = getRevivalBackend();
-    try {
-      const response = await rb.client.chat.completions.create({
-        model: rb.model,
-        messages: [
-          {
-            role: 'system',
-            content: `You are ${rBot.username} on a Minecraft server. Personality: ${profile.personality || 'casual'}. Chat style: ${profile.chatStyle || 'short lowercase'}.
-Report this action result in 1-5 words, in character. Be natural and casual. No emojis.`
-          },
-          { role: 'user', content: actionResult }
-        ],
-        ...rb.extraParams,
-      });
-      let reply = response.choices[0].message.content.trim();
-      reply = reply.replace(/^["']|["']$/g, '');
-      reply = stripEmojis(reply);
-      if (reply && !containsSlur(reply)) return reply;
-    } catch (err) {
-      console.error(`[RevivalStatus Error] ${err.message}`);
-    }
-    return null;
-  }
-
-  async generateRevivalResponse(rBot) {
-    const history = this.chatHistory.slice(-10);
-    const contextLine = this.compactSummary
-      ? `\nEARLIER CHAT (summary): ${this.compactSummary}\n`
-      : '';
-    const memoryBlock = this.getMemoryBlock(rBot.username);
-    const profile = rBot.profile || {};
-
-    const messages = [
-      {
-        role: 'system',
-        content: fillTemplate(prompts.revivalResponse, {
-          deadPlayer: rBot.username,
-          reviver: rBot.owner,
-          personality: profile.personality || 'Unknown personality',
-          chatStyle: profile.chatStyle || chatStyle,
-          samplePhrases: (profile.samplePhrases || []).join(', '),
-          memoryBlock,
-          contextLine,
-        })
-      },
-      ...history.map(h => ({ role: 'user', content: h.content })),
-      {
-        role: 'user',
-        content: `Respond as ${rBot.username} in the Minecraft chat. Keep it short and natural. Just give the chat message, nothing else.`
-      }
-    ];
-
-    try {
-      const response = await callLLM({
-        messages,
-        max_tokens: 80,
-        temperature: 0.75
-      }, { label: 'Revival', botName: rBot.username });
-      let reply = stripThinking(response.choices[0].message.content.trim());
-      reply = reply.replace(/^["']|["']$/g, '');
-      const nameEsc = rBot.username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      reply = reply.replace(new RegExp(`^<?\\[?${nameEsc}\\]?>?\\s*[:>\\-]?\\s*`, 'i'), '');
-      reply = stripEmojis(reply);
-      reply = trimToComplete(reply);
-
-      if (reply && containsSlur(reply)) {
-        console.log(`[Filter] Blocked slur from revival ${rBot.username}: ${reply}`);
-        return null;
-      }
-
-      return reply ? { text: reply, fallback: !!response._fallback } : null;
-    } catch (err) {
-      console.error(`[Revival LLM Error] ${err.message}`);
       return null;
     }
   }
@@ -964,8 +635,8 @@ Report this action result in 1-5 words, in character. Be natural and casual. No 
     const pendingMessages = rBot.pendingMessages.splice(0); // drain queue
     const senders = pendingMessages.map(m => m.sender).filter(s => s !== '__system__');
 
-    // Skip most idle ticks to save API calls
-    if (pendingMessages.length === 0 && rBot.objectives.length === 0 && rBot.state === 'idle') {
+    // Skip most idle ticks to save API calls (but not in benchmark mode)
+    if (!rBot._benchMode && pendingMessages.length === 0 && rBot.objectives.length === 0 && rBot.state === 'idle') {
       if (Math.random() > 0.3) return { actions: [], chat: null, senders: [] };
     }
 
@@ -988,12 +659,14 @@ Report this action result in 1-5 words, in character. Be natural and casual. No 
       ? pendingMessages.map(m => `  <${m.sender}> ${m.message}`).join('\n')
       : '  (no messages — idle tick)';
 
-    const systemPrompt = `You are ${rBot.username}, a revived player on a Minecraft server. You died and were brought back by ${rBot.owner} using an iron golem ritual.
+    const benchMode = !!rBot._benchMode;
 
+    const systemPrompt = `You are ${rBot.username}, a revived player on a Minecraft server. You died and were brought back by ${rBot.owner} using an iron golem ritual.
+${benchMode ? `\nBENCHMARK MODE: You are being tested on a specific task. ONLY work on what your owner tells you to do. Do NOT invent your own goals like "get diamond armor" — wait for instructions and follow them EXACTLY. Every tick should make progress on the assigned task.\n` : ''}
 PERSONALITY: ${profile.personality || 'Unknown'}
 CHAT STYLE: ${profile.chatStyle || 'Short lowercase messages'}
 ${profile.samplePhrases?.length ? `EXAMPLE PHRASES: ${profile.samplePhrases.join(', ')}` : ''}
-${this.getMemoryBlock(rBot.username)}
+${benchMode ? '' : this.getMemoryBlock(rBot.username)}
 
 WORLD STATE:
 ${worldSection}
@@ -1035,7 +708,7 @@ RULES:
       { type: 'function', function: { name: 'come_here', description: "Walk to the owner's position (one-time)", parameters: { type: 'object', properties: {}, required: [] } } },
       { type: 'function', function: { name: 'stop', description: 'Stop all current actions', parameters: { type: 'object', properties: {}, required: [] } } },
       { type: 'function', function: { name: 'guard', description: 'Guard current position — attack hostile mobs', parameters: { type: 'object', properties: {}, required: [] } } },
-      { type: 'function', function: { name: 'mine', description: 'Find and mine blocks nearby. For underground ores, automatically strip-mines at optimal Y.', parameters: { type: 'object', properties: { block: { type: 'string', description: 'Minecraft block ID (e.g. oak_log, diamond_ore, cobblestone)' }, count: { type: 'integer', description: 'How many to mine (default 16)' } }, required: ['block'] } } },
+      { type: 'function', function: { name: 'mine', description: 'Find and mine blocks nearby. For underground ores, automatically strip-mines at optimal Y. For logs, auto-tries all wood variants if the specified type is not found. Will roam to find blocks if none nearby.', parameters: { type: 'object', properties: { block: { type: 'string', description: 'Minecraft block ID (e.g. oak_log, stone, diamond_ore). Use "stone" to get cobblestone drops.' }, count: { type: 'integer', description: 'How many to mine (default 16)' } }, required: ['block'] } } },
       { type: 'function', function: { name: 'attack', description: 'Attack nearby mobs of a type.', parameters: { type: 'object', properties: { mob: { type: 'string', description: 'Mob name (e.g. chicken, zombie)' }, count: { type: 'integer', description: 'How many to kill (default 1)' } }, required: ['mob'] } } },
       { type: 'function', function: { name: 'pickup', description: 'Walk to and pick up items dropped on the ground. Check nearbyEntities for "dropped:item_name" entries.', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name filter (e.g. raw_beef, diamond). Omit to pick up everything nearby.' } }, required: [] } } },
       { type: 'function', function: { name: 'drop', description: 'Drop items. Omit item to drop everything.', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name (omit to drop all)' }, count: { type: 'integer', description: 'How many (omit for all of that item)' } }, required: [] } } },

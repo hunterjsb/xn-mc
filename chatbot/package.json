@@ -4,6 +4,9 @@
   "description": "AI chatbots for Xandaris Minecraft server",
   "main": "index.js",
   "type": "module",
+  "scripts": {
+    "postinstall": "node patches/pathfinder-pillar-fix.js"
+  },
   "dependencies": {
     "mineflayer": "^4.23.0",
     "mineflayer-pathfinder": "^2.4.5",

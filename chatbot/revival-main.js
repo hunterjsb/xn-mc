@@ -566,6 +566,10 @@ function setupWebhookServer() {
       }
       rBot._benchLog = [];
       rBot._benchStart = Date.now();
+      rBot._benchMode = true;    // benchmark mode — focuses LLM on task
+      rBot.clearObjectives();    // clear stale objectives from greeting/previous bench
+      rBot.actionLog.length = 0; // clear action log so LLM doesn't see stale context
+      rBot.tickHistory.length = 0;
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ status: 'ok', benchStart: rBot._benchStart }));
       return;
