@@ -385,19 +385,20 @@ async function runBenchmark(benchId, botName) {
   // 7. Reset bench metrics and send goal
   await api('POST', `/bench/reset?bot=${botName}`);
   // Food bench: drain hunger AFTER reset, right before goal
-  // Two-phase hunger drain: first burn saturation buffer, then drain food level
+  // Two-phase hunger drain: blast saturation buffer, then controlled food drain
   if (benchId === 'food') {
     console.log(`${tag}  Draining hunger...`);
-    // Phase 1: Clear saturation with max amplifier (3s is enough for 20 sat points)
+    // Phase 1: Burn saturation buffer (20→0 takes ~3s at amp 255)
     await rcon(`effect give ${botName} hunger 3 255 true`);
-    await sleep(3500);
+    await sleep(3000);
     await rcon(`effect clear ${botName} hunger`);
-    // Phase 2: Controlled drain with amplifier 100 (~3 food/sec), poll every 500ms for precision
-    await rcon(`effect give ${botName} hunger 30 100 true`);
-    for (let i = 1; i <= 30; i++) {
-      await sleep(500);
+    await sleep(500); // ensure effect is fully cleared
+    // Phase 2: Slow drain for food level (amp 50 = ~1.5 food/sec, poll every 1s)
+    await rcon(`effect give ${botName} hunger 30 50 true`);
+    for (let i = 1; i <= 20; i++) {
+      await sleep(1000);
       const fl = await getFoodLevel(botName);
-      if (fl >= 0 && fl <= 5) break;
+      if (fl >= 0 && fl <= 6) break;
     }
     await rcon(`effect clear ${botName} hunger`);
     const fl = await getFoodLevel(botName);
