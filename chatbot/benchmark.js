@@ -474,8 +474,25 @@ async function runBenchmark(benchId, botName, workerId = 0) {
       const { bots } = await api('GET', '/rblist');
       const bot = bots.find(b => b.name === botName);
       if (!bot || !bot.connected) {
-        console.log(`${tag}  Bot disconnected!`);
-        break;
+        // Wait up to 30s for auto-reconnect before giving up
+        let reconnected = false;
+        console.log(`${tag}  Bot disconnected — waiting for reconnect...`);
+        for (let w = 0; w < 6; w++) {
+          await sleep(5000);
+          try {
+            const { bots: bots2 } = await api('GET', '/rblist');
+            const bot2 = bots2.find(b => b.name === botName);
+            if (bot2 && bot2.connected) {
+              console.log(`${tag}  Bot reconnected!`);
+              reconnected = true;
+              break;
+            }
+          } catch {}
+        }
+        if (!reconnected) {
+          console.log(`${tag}  Bot failed to reconnect`);
+          break;
+        }
       }
       const stateStr = `${bot.state} | obj: ${bot.objectives?.map(o => o.text).join(', ') || 'none'}`;
       if (stateStr !== lastState) {
