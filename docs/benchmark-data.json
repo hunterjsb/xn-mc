@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-11T22:26:48.559Z",
-  "totalRuns": 1291,
+  "generated": "2026-03-11T23:09:35.019Z",
+  "totalRuns": 1311,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -762,95 +762,96 @@
     },
     "qwen/qwen3.5-flash-02-23": {
       "overall": {
-        "pass": 37,
-        "total": 99,
-        "rate": 0.37373737373737376,
-        "avgTime": 151508,
-        "avgTools": 10
+        "pass": 48,
+        "total": 119,
+        "rate": 0.40336134453781514,
+        "avgTime": 155111,
+        "avgTools": 9
       },
       "pick": {
-        "pass": 7,
-        "total": 21,
-        "rate": 0.3333333333333333,
-        "avgTime": 209809,
-        "avgTimeout": 171429,
-        "avgTools": 15,
+        "pass": 11,
+        "total": 26,
+        "rate": 0.4230769230769231,
+        "avgTime": 179541,
+        "avgTimeout": 253846,
+        "avgTools": 14,
         "avgFailures": 3,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 9,
-          "mine": 15,
-          "craft": 68,
-          "place": 18,
+          "objective": 16,
+          "mine": 22,
+          "craft": 109,
+          "place": 24,
           "chest": 2,
           "come_here": 1,
           "follow": 1
         }
       },
       "food": {
-        "pass": 8,
-        "total": 20,
-        "rate": 0.4,
-        "avgTime": 103334,
-        "avgTimeout": 150000,
-        "avgTools": 8,
+        "pass": 11,
+        "total": 25,
+        "rate": 0.44,
+        "avgTime": 110495,
+        "avgTimeout": 240000,
+        "avgTools": 7,
         "avgFailures": 2,
         "avgOwnerInteractions": 0,
         "toolCounts": {
           "mine": 9,
           "stop": 1,
-          "craft": 21,
-          "place": 19,
-          "attack": 10,
-          "objective": 11,
-          "smelt": 11,
+          "craft": 24,
+          "place": 20,
+          "attack": 13,
+          "objective": 12,
+          "smelt": 18,
           "chest": 1,
           "whisper": 1,
           "come_here": 1,
-          "pickup": 2,
-          "eat": 1
+          "pickup": 3,
+          "eat": 2
         }
       },
       "shears": {
-        "pass": 10,
-        "total": 21,
-        "rate": 0.47619047619047616,
-        "avgTime": 102033,
-        "avgTimeout": 171429,
+        "pass": 14,
+        "total": 26,
+        "rate": 0.5384615384615384,
+        "avgTime": 140344,
+        "avgTimeout": 253846,
         "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 14,
-          "mine": 24,
-          "smelt": 19,
-          "place": 21,
+          "objective": 19,
+          "mine": 31,
+          "smelt": 26,
+          "place": 24,
           "chest": 7,
-          "craft": 17,
+          "craft": 21,
           "attack": 1,
           "eat": 1
         }
       },
       "diamonds": {
         "pass": 6,
-        "total": 21,
-        "rate": 0.2857142857142857,
+        "total": 26,
+        "rate": 0.23076923076923078,
         "avgTime": 167193,
-        "avgTimeout": 171429,
+        "avgTimeout": 253846,
         "avgTools": 12,
         "avgFailures": 3,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 10,
+          "objective": 12,
           "mine": 9,
-          "chest": 16,
+          "chest": 30,
           "chat": 1,
-          "craft": 25,
-          "place": 7,
+          "craft": 37,
+          "place": 10,
           "come_here": 3,
           "whisper": 1,
           "attack": 2,
-          "follow": 1
+          "follow": 1,
+          "equip": 3
         }
       },
       "collect": {
@@ -83390,6 +83391,1326 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-11T22:22:27.377Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": false,
+      "elapsed": 110665,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T22:29:14.729Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 120042,
+      "timeout": 600000,
+      "toolCalls": 12,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773268061257
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773268061257
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773268090341
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 2
+          },
+          "t": 1773268093367
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 1
+          },
+          "t": 1773268112528
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268115252
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773268118238
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268120262
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773268133600
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773268133600
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773268154748
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773268158007
+        }
+      ],
+      "ts": "2026-03-11T22:29:19.200Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 114603,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T22:29:25.092Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": true,
+      "elapsed": 101163,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 1
+          },
+          "t": 1773268190075
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "beef"
+          },
+          "t": 1773268223077
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773268241969
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 2
+          },
+          "t": 1773268261509
+        }
+      ],
+      "ts": "2026-03-11T22:31:29.913Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 213492,
+      "timeout": 600000,
+      "toolCalls": 18,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773268180445
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773268180445
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773268199159
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 2
+          },
+          "t": 1773268201292
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268225311
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773268229813
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773268254309
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268268846
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268272436
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268276206
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 1
+          },
+          "t": 1773268290381
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773268294257
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 2
+          },
+          "t": 1773268314694
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268320332
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773268337672
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268352481
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773268368194
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268389096
+        }
+      ],
+      "ts": "2026-03-11T22:33:12.443Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 192287,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears - need iron ore and smelt",
+            "priority": "high"
+          },
+          "t": 1773268311500
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773268311500
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773268357066
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773268389942
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773268468885
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2
+          },
+          "t": 1773268477112
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773268499408
+        }
+      ],
+      "ts": "2026-03-11T22:35:01.857Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 92840,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773268524764
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773268524764
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 16
+          },
+          "t": 1773268552609
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773268555695
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268564733
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773268567644
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773268570327
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268586747
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773268605748
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773268609038
+        }
+      ],
+      "ts": "2026-03-11T22:36:54.792Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": true,
+      "elapsed": 126239,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 1
+          },
+          "t": 1773268648789
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 3
+          },
+          "t": 1773268679868
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773268699273
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 3
+          },
+          "t": 1773268730525
+        }
+      ],
+      "ts": "2026-03-11T22:39:34.110Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 605090,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773268172291
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773268192159
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773268213436
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773268234111
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773268254560
+        }
+      ],
+      "ts": "2026-03-11T22:39:36.290Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 167861,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears (need iron)",
+            "priority": "high"
+          },
+          "t": 1773268799946
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773268799946
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "count": 16
+          },
+          "t": 1773268896304
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773268900152
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "count": 16
+          },
+          "t": 1773268917161
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773268920564
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773268955321
+        }
+      ],
+      "ts": "2026-03-11T22:42:44.830Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 602223,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773268409664
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773268457947
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773268477940
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773268477940
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773268477940
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773268477940
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773268502338
+        }
+      ],
+      "ts": "2026-03-11T22:43:30.864Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 79912,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "priority": "high",
+            "text": "Make wooden pickaxe from scratch"
+          },
+          "t": 1773268987804
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773268987804
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 6
+          },
+          "t": 1773269011011
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773269014099
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773269026450
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773269030690
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773269033845
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773269052248
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773269057333
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773269060204
+        }
+      ],
+      "ts": "2026-03-11T22:44:25.326Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": false,
+      "elapsed": 60138,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T22:44:53.784Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 244364,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears - need to find and smelt iron",
+            "priority": "high"
+          },
+          "t": 1773269113600
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773269113600
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "coal_ore",
+            "count": 16
+          },
+          "t": 1773269188935
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "coal",
+            "count": 3
+          },
+          "t": 1773269275380
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773269323527
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft shears - need to find and smelt iron"
+          },
+          "t": 1773269325721
+        }
+      ],
+      "ts": "2026-03-11T22:48:49.969Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 601664,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773268799709
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773268820366
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773268820366
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773268840600
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773268862106
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773268882285
+        }
+      ],
+      "ts": "2026-03-11T22:50:00.397Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "food",
+      "success": true,
+      "elapsed": 161373,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 2
+          },
+          "t": 1773269427782
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 5
+          },
+          "t": 1773269474637
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "priority": "high",
+            "text": "Craft furnace, smelt beef, eat it"
+          },
+          "t": 1773269495291
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773269495291
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 5
+          },
+          "t": 1773269499742
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 5
+          },
+          "t": 1773269504413
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773269519108
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 5
+          },
+          "t": 1773269528249
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773269583138
+        }
+      ],
+      "ts": "2026-03-11T22:53:08.318Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 604926,
+      "timeout": 600000,
+      "toolCalls": 14,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Get diamonds from chest and craft diamond armor",
+            "priority": "high"
+          },
+          "t": 1773269117021
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773269117021
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773269120060
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773269123118
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773269135925
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773269138664
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773269147434
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773269155886
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773269158531
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773269160704
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773269177168
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773269193024
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773269198672
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Get diamonds from chest and craft diamond armor"
+          },
+          "t": 1773269221916
+        }
+      ],
+      "ts": "2026-03-11T22:55:18.274Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 339972,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears - need iron ore, smelt it, then craft",
+            "priority": "high"
+          },
+          "t": 1773269610689
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773269612961
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 27
+          },
+          "t": 1773269808970
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773269825715
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 27
+          },
+          "t": 1773269834406
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773269947129
+        }
+      ],
+      "ts": "2026-03-11T22:59:08.508Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 601327,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "priority": "high",
+            "text": "make wooden pickaxe from scratch"
+          },
+          "t": 1773269351821
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773269351821
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773269359204
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 2
+          },
+          "t": 1773269361588
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773269377177
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773269379796
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773269382846
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773269397793
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773269405795
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773269408925
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "make wooden pickaxe from scratch"
+          },
+          "t": 1773269422164
+        }
+      ],
+      "ts": "2026-03-11T22:59:10.460Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 603644,
+      "timeout": 600000,
+      "toolCalls": 2,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773270205992
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773270263240
+        }
+      ],
+      "ts": "2026-03-11T23:05:40.293Z"
     }
   ]
 }
