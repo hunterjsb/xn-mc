@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-11T18:11:59.458Z",
-  "totalRuns": 1121,
+  "generated": "2026-03-11T18:19:45.294Z",
+  "totalRuns": 1124,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1268,8 +1268,8 @@
     "moonshotai/kimi-k2.5": {
       "overall": {
         "pass": 6,
-        "total": 27,
-        "rate": 0.2222222222222222,
+        "total": 30,
+        "rate": 0.2,
         "avgTime": 205208,
         "avgTools": 8
       },
@@ -1309,18 +1309,18 @@
       },
       "shears": {
         "pass": 2,
-        "total": 4,
-        "rate": 0.5,
+        "total": 5,
+        "rate": 0.4,
         "avgTime": 313361,
         "avgTimeout": 600000,
         "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 4,
-          "mine": 3,
-          "place": 2,
-          "smelt": 4,
+          "objective": 5,
+          "mine": 6,
+          "place": 4,
+          "smelt": 8,
           "craft": 3,
           "chest": 2
         }
@@ -1338,19 +1338,22 @@
       },
       "collect": {
         "pass": 0,
-        "total": 4,
+        "total": 5,
         "rate": 0,
         "avgTime": null,
         "avgTimeout": 600000,
         "avgTools": null,
         "avgFailures": null,
         "avgOwnerInteractions": 0,
-        "toolCounts": {}
+        "toolCounts": {
+          "objective": 2,
+          "mine": 3
+        }
       },
       "sleep": {
         "pass": 2,
-        "total": 4,
-        "rate": 0.5,
+        "total": 5,
+        "rate": 0.4,
         "avgTime": 127397,
         "avgTimeout": 300000,
         "avgTools": 11,
@@ -1358,9 +1361,9 @@
         "avgOwnerInteractions": 0,
         "toolCounts": {
           "objective": 3,
-          "chest": 12,
-          "place": 5,
-          "craft": 6,
+          "chest": 16,
+          "place": 6,
+          "craft": 9,
           "sleep": 2
         }
       }
@@ -72917,6 +72920,233 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-11T18:11:06.646Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 600701,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "dig 16 dirt, chop 8 logs, mine 16 stone"
+          },
+          "t": 1773252185119
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773252185119
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773252215877
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773252245255
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "dig 16 dirt, chop 8 logs, mine 16 stone"
+          },
+          "t": 1773252299224
+        }
+      ],
+      "ts": "2026-03-11T18:13:02.908Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 304305,
+      "timeout": 300000,
+      "toolCalls": 8,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773252599755
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773252626487
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773252626487
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773252626487
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773252642285
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773252642285
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773252663045
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773252800919
+        }
+      ],
+      "ts": "2026-03-11T18:15:00.718Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 600490,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "mine 2 iron_ore, place furnace, smelt with oak_planks, craft shears",
+            "priority": "high"
+          },
+          "t": 1773252704058
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773252704058
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773252729138
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 1,
+            "fuel": "oak_planks"
+          },
+          "t": 1773252862010
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 1,
+            "fuel": "oak_planks"
+          },
+          "t": 1773252884373
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773252888899
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 1,
+            "fuel": "oak_planks"
+          },
+          "t": 1773252900929
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 1
+          },
+          "t": 1773252931646
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "count": 1,
+            "fuel": "oak_planks"
+          },
+          "t": 1773253075759
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 1
+          },
+          "t": 1773253165843
+        }
+      ],
+      "ts": "2026-03-11T18:19:33.308Z"
     }
   ]
 }
