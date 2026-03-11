@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-11T13:57:00.182Z",
-  "totalRuns": 1019,
+  "generated": "2026-03-11T15:16:06.687Z",
+  "totalRuns": 1038,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -9,7 +9,8 @@
     "google/gemini-3.1-flash-lite-preview",
     "qwen/qwen3.5-flash-02-23",
     "z-ai/glm-5",
-    "local/glm-4.7-flash:latest"
+    "local/glm-4.7-flash:latest",
+    "inception/mercury-2"
   ],
   "benchmarks": [
     "pick",
@@ -1138,6 +1139,107 @@
         "avgFailures": null,
         "avgOwnerInteractions": null,
         "toolCounts": {}
+      }
+    },
+    "inception/mercury-2": {
+      "overall": {
+        "pass": 6,
+        "total": 19,
+        "rate": 0.3157894736842105,
+        "avgTime": 93863,
+        "avgTools": 6
+      },
+      "pick": {
+        "pass": 1,
+        "total": 4,
+        "rate": 0.25,
+        "avgTime": 77485,
+        "avgTimeout": 600000,
+        "avgTools": 9,
+        "avgFailures": 2,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 1,
+          "mine": 1,
+          "craft": 5,
+          "place": 2
+        }
+      },
+      "food": {
+        "pass": 1,
+        "total": 3,
+        "rate": 0.3333333333333333,
+        "avgTime": 90548,
+        "avgTimeout": 600000,
+        "avgTools": 8,
+        "avgFailures": 1,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 2,
+          "attack": 1,
+          "craft": 2,
+          "place": 2,
+          "smelt": 1
+        }
+      },
+      "shears": {
+        "pass": 1,
+        "total": 3,
+        "rate": 0.3333333333333333,
+        "avgTime": 90117,
+        "avgTimeout": 600000,
+        "avgTools": 6,
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 2,
+          "mine": 1,
+          "place": 1,
+          "smelt": 1,
+          "craft": 1
+        }
+      },
+      "diamonds": {
+        "pass": 0,
+        "total": 3,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": 600000,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {}
+      },
+      "collect": {
+        "pass": 1,
+        "total": 3,
+        "rate": 0.3333333333333333,
+        "avgTime": 121839,
+        "avgTimeout": 600000,
+        "avgTools": 4,
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 1,
+          "mine": 3
+        }
+      },
+      "sleep": {
+        "pass": 2,
+        "total": 3,
+        "rate": 0.6666666666666666,
+        "avgTime": 91593,
+        "avgTimeout": 300000,
+        "avgTools": 6,
+        "avgFailures": 1,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 1,
+          "chest": 4,
+          "craft": 2,
+          "place": 2,
+          "sleep": 2
+        }
       }
     }
   },
@@ -66267,6 +66369,539 @@
         }
       ],
       "ts": "2026-03-11T13:57:00.158Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 77485,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "obtain wooden pickaxe",
+            "priority": "normal"
+          },
+          "t": 1773240489940
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 5
+          },
+          "t": 1773240491103
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_plank",
+            "count": 16
+          },
+          "t": 1773240515554
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773240534649
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773240535645
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773240536709
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773240553722
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773240555057
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773240562589
+        }
+      ],
+      "ts": "2026-03-11T14:49:24.701Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "food",
+      "success": true,
+      "elapsed": 90548,
+      "timeout": 600000,
+      "toolCalls": 8,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Get food: craft furnace, place, kill cow, smelt meat, eat",
+            "priority": "high"
+          },
+          "t": 1773240604326
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 1
+          },
+          "t": 1773240605494
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773240618779
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773240633738
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Get food: craft furnace, place, kill cow, smelt meat, eat",
+            "priority": "high"
+          },
+          "t": 1773240641411
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773240654441
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773240656090
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_beef",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773240663510
+        }
+      ],
+      "ts": "2026-03-11T14:51:33.509Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 408501,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T14:58:35.588Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:00:58.631Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 660440,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:00:58.880Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 659656,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:00:58.963Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 40082,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:01:52.627Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "food",
+      "success": false,
+      "elapsed": 40179,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:01:57.935Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 96197,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:02:47.328Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 64537,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:03:14.579Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 67746,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:03:20.439Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 59046,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:04:33.690Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 87234,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft and sleep in bed",
+            "priority": "high"
+          },
+          "t": 1773241409817
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773241410365
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773241411998
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773241425224
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773241426477
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773241427371
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773241429967
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773241437013
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773241438314
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773241451569
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773241471095
+        }
+      ],
+      "ts": "2026-03-11T15:04:35.667Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "food",
+      "success": false,
+      "elapsed": 15061,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:05:43.237Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 90117,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "mine 2 iron_ore, place furnace, smelt raw_iron with oak_planks, craft shears",
+            "priority": "normal"
+          },
+          "t": 1773241523290
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773241524937
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773241538363
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773241557428
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773241580357
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "mine 2 iron_ore, place furnace, smelt raw_iron with oak_planks, craft shears"
+          },
+          "t": 1773241581485
+        }
+      ],
+      "ts": "2026-03-11T15:06:27.164Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 95952,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:10:44.439Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 121839,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather resources: 16 dirt, 8 logs, 16 stone",
+            "priority": "normal"
+          },
+          "t": 1773241879293
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773241880169
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773241904130
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 7
+          },
+          "t": 1773241950016
+        }
+      ],
+      "ts": "2026-03-11T15:12:59.085Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 603659,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:13:42.911Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 604804,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T15:16:06.658Z"
     }
   ]
 }
