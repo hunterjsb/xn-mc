@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-11T20:59:19.683Z",
-  "totalRuns": 1251,
+  "generated": "2026-03-11T21:33:08.780Z",
+  "totalRuns": 1271,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -248,89 +248,89 @@
     },
     "gpt-5-mini": {
       "overall": {
-        "pass": 99,
-        "total": 164,
-        "rate": 0.6036585365853658,
-        "avgTime": 196265,
+        "pass": 115,
+        "total": 184,
+        "rate": 0.625,
+        "avgTime": 193245,
         "avgTools": 9
       },
       "pick": {
-        "pass": 22,
-        "total": 35,
-        "rate": 0.6285714285714286,
-        "avgTime": 216110,
-        "avgTimeout": 325714,
+        "pass": 26,
+        "total": 40,
+        "rate": 0.65,
+        "avgTime": 216746,
+        "avgTimeout": 360000,
         "avgTools": 10,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 44,
-          "mine": 52,
-          "chest": 17,
-          "craft": 109,
+          "objective": 51,
+          "mine": 60,
+          "chest": 19,
+          "craft": 134,
           "place": 39,
           "pickup": 1
         }
       },
       "food": {
-        "pass": 21,
-        "total": 31,
-        "rate": 0.6774193548387096,
-        "avgTime": 173487,
-        "avgTimeout": 290323,
+        "pass": 24,
+        "total": 36,
+        "rate": 0.6666666666666666,
+        "avgTime": 167351,
+        "avgTimeout": 333333,
         "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 30,
-          "craft": 46,
-          "place": 43,
-          "attack": 22,
-          "smelt": 22,
+          "objective": 33,
+          "craft": 50,
+          "place": 46,
+          "attack": 24,
+          "smelt": 25,
           "equip": 1,
           "mine": 9,
           "chest": 4,
-          "pickup": 3,
+          "pickup": 5,
           "eat": 2
         }
       },
       "shears": {
-        "pass": 21,
-        "total": 32,
-        "rate": 0.65625,
-        "avgTime": 196887,
-        "avgTimeout": 300000,
+        "pass": 26,
+        "total": 37,
+        "rate": 0.7027027027027027,
+        "avgTime": 186022,
+        "avgTimeout": 340541,
         "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 28,
-          "mine": 25,
-          "place": 42,
-          "chest": 7,
-          "craft": 28,
-          "smelt": 18,
+          "objective": 33,
+          "mine": 30,
+          "place": 46,
+          "chest": 12,
+          "craft": 35,
+          "smelt": 23,
           "equip": 2,
           "pickup": 4,
           "whisper": 1
         }
       },
       "diamonds": {
-        "pass": 17,
-        "total": 33,
-        "rate": 0.5151515151515151,
-        "avgTime": 194657,
-        "avgTimeout": 272727,
+        "pass": 21,
+        "total": 38,
+        "rate": 0.5526315789473685,
+        "avgTime": 197429,
+        "avgTimeout": 315789,
         "avgTools": 12,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 38,
+          "objective": 51,
           "mine": 6,
-          "chest": 66,
-          "craft": 76,
-          "place": 13,
-          "equip": 14
+          "chest": 80,
+          "craft": 96,
+          "place": 14,
+          "equip": 30
         }
       },
       "collect": {
@@ -80399,6 +80399,1482 @@
         }
       ],
       "ts": "2026-03-11T20:54:21.843Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": true,
+      "elapsed": 120978,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "cook meat and eat it",
+            "priority": "high"
+          },
+          "t": 1773262823860
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773262843546
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "pig",
+            "count": 1
+          },
+          "t": 1773262860124
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "porkchop"
+          },
+          "t": 1773262890140
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "porkchop",
+            "fuel": "oak_planks",
+            "count": 1
+          },
+          "t": 1773262905496
+        }
+      ],
+      "ts": "2026-03-11T21:02:07.370Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 133559,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears: obtain and smelt 2 iron ingots, then craft shears",
+            "priority": "high"
+          },
+          "t": 1773262842652
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773262850772
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773262864315
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773262890927
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773262925056
+        }
+      ],
+      "ts": "2026-03-11T21:02:14.469Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 156740,
+      "timeout": 600000,
+      "toolCalls": 14,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773262964920
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773262964920
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773262987916
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773262987916
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773263005600
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773263024134
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773263039324
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773263058159
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773263069947
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773263101760
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773263101760
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773263101760
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773263101760
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft full diamond armor and equip it"
+          },
+          "t": 1773263101760
+        }
+      ],
+      "ts": "2026-03-11T21:05:05.769Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 325575,
+      "timeout": 600000,
+      "toolCalls": 14,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "make wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773262820924
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773262828984
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773262837754
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773262861396
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773262880680
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick"
+          },
+          "t": 1773262893663
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773262920082
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "make wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773262931978
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773262953699
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773262983845
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773263012689
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773263042941
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773263085655
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773263117705
+        }
+      ],
+      "ts": "2026-03-11T21:05:26.480Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 191142,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773262977627
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773262989416
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773263007777
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773263018995
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773263039997
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773263052037
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773263062333
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773263090764
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773263127237
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773263137983
+        }
+      ],
+      "ts": "2026-03-11T21:05:49.125Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": false,
+      "elapsed": 85758,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T21:07:00.900Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 150178,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears: find and smelt iron",
+            "priority": "high"
+          },
+          "t": 1773263190382
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773263197262
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773263207317
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773263241210
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773263261459
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773263295532
+        }
+      ],
+      "ts": "2026-03-11T21:08:19.457Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": false,
+      "elapsed": 10052,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T21:08:53.339Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 212629,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773263262842
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773263272720
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773263285505
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 8
+          },
+          "t": 1773263307895
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773263320691
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773263336403
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773263348228
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773263372783
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773263388549
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773263425316
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773263446246
+        }
+      ],
+      "ts": "2026-03-11T21:10:54.216Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 290132,
+      "timeout": 600000,
+      "toolCalls": 15,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773263197555
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773263206979
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773263220016
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773263235743
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773263251135
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773263271868
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773263287081
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773263287081
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773263298778
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773263323993
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773263351940
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773263383090
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773263410278
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773263432813
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773263455052
+        }
+      ],
+      "ts": "2026-03-11T21:11:01.523Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 141291,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears: obtain and smelt 2 iron ingots, then craft shears",
+            "priority": "high"
+          },
+          "t": 1773263378940
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773263386185
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773263399054
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773263416699
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773263441321
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773263489215
+        }
+      ],
+      "ts": "2026-03-11T21:11:34.359Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 159422,
+      "timeout": 600000,
+      "toolCalls": 14,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773263477963
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773263498373
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773263509408
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773263520398
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773263537944
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773263550501
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773263563897
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773263583114
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773263604505
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773263626750
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773263626750
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773263626750
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773263626750
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft full diamond armor and equip it"
+          },
+          "t": 1773263626750
+        }
+      ],
+      "ts": "2026-03-11T21:13:53.576Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 151626,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773263539333
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 3
+          },
+          "t": 1773263539333
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 12
+          },
+          "t": 1773263579620
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773263590572
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773263597604
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773263612439
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773263627441
+        }
+      ],
+      "ts": "2026-03-11T21:13:53.706Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": true,
+      "elapsed": 115956,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "cook and eat meat",
+            "priority": "high"
+          },
+          "t": 1773263534933
+        },
+        {
+          "name": "pickup",
+          "params": {},
+          "t": 1773263555957
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773263571149
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773263583881
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_beef",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773263602431
+        }
+      ],
+      "ts": "2026-03-11T21:13:54.159Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 176039,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T21:17:09.781Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 176487,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773263687029
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft 1x shears: find and smelt 2 iron ingots, craft crafting table, craft shears",
+            "priority": "high"
+          },
+          "t": 1773263707026
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773263715621
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773263721272
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773263726717
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773263743895
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773263775267
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773263789857
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773263824641
+        }
+      ],
+      "ts": "2026-03-11T21:17:10.254Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 230552,
+      "timeout": 600000,
+      "toolCalls": 13,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773263657771
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and equip a full set of diamond armor",
+            "priority": "high"
+          },
+          "t": 1773263683624
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773263683624
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773263694664
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773263713341
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773263737350
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773263754250
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and equip a full set of diamond armor",
+            "priority": "high"
+          },
+          "t": 1773263763785
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773263794236
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773263809727
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773263834197
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773263860094
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773263881842
+        }
+      ],
+      "ts": "2026-03-11T21:18:03.509Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 100424,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears: find and smelt 2 iron ingots",
+            "priority": "high"
+          },
+          "t": 1773263867300
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773263878431
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773263908121
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773263919651
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773263949164
+        }
+      ],
+      "ts": "2026-03-11T21:19:11.213Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "food",
+      "success": true,
+      "elapsed": 136266,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Cook and eat meat",
+            "priority": "high"
+          },
+          "t": 1773263877882
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "pig",
+            "count": 1
+          },
+          "t": 1773263887536
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773263911409
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773263928664
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773263942341
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773263955315
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_porkchop",
+            "fuel": "oak_planks",
+            "count": 1
+          },
+          "t": 1773263979302
+        }
+      ],
+      "ts": "2026-03-11T21:19:58.008Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 601325,
+      "timeout": 600000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears — obtain 2 iron ingots and craft; Craft full diamond armor and equip",
+            "priority": "high"
+          },
+          "t": 1773264296295
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773264315333
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "iron_ingot",
+            "count": 2
+          },
+          "t": 1773264392861
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773264409385
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft shears — obtain 2 iron ingots and craft"
+          },
+          "t": 1773264442403
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773264457536
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773264473581
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773264498650
+        }
+      ],
+      "ts": "2026-03-11T21:28:20.444Z"
     }
   ]
 }
