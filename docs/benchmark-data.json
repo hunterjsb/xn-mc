@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-11T15:16:06.687Z",
-  "totalRuns": 1038,
+  "generated": "2026-03-11T16:33:20.242Z",
+  "totalRuns": 1061,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -117,11 +117,11 @@
   "summary": {
     "x-ai/grok-4.1-fast": {
       "overall": {
-        "pass": 95,
-        "total": 146,
-        "rate": 0.6506849315068494,
-        "avgTime": 96672,
-        "avgTools": 8
+        "pass": 93,
+        "total": 143,
+        "rate": 0.6503496503496503,
+        "avgTime": 103127,
+        "avgTools": 9
       },
       "pick": {
         "pass": 19,
@@ -222,27 +222,30 @@
         }
       },
       "sleep": {
-        "pass": 8,
-        "total": 9,
-        "rate": 0.8888888888888888,
-        "avgTime": 15188,
+        "pass": 6,
+        "total": 6,
+        "rate": 1,
+        "avgTime": 88081,
         "avgTimeout": 300000,
-        "avgTools": 1,
-        "avgFailures": 0,
+        "avgTools": 11,
+        "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "sleep": 8,
-          "attack": 1
+          "chest": 27,
+          "objective": 8,
+          "place": 12,
+          "craft": 12,
+          "sleep": 9
         }
       }
     },
     "gpt-5-mini": {
       "overall": {
-        "pass": 95,
-        "total": 161,
-        "rate": 0.5900621118012422,
-        "avgTime": 192173,
-        "avgTools": 8
+        "pass": 99,
+        "total": 164,
+        "rate": 0.6036585365853658,
+        "avgTime": 196265,
+        "avgTools": 9
       },
       "pick": {
         "pass": 22,
@@ -339,17 +342,21 @@
         }
       },
       "sleep": {
-        "pass": 3,
-        "total": 5,
-        "rate": 0.6,
-        "avgTime": 23490,
+        "pass": 7,
+        "total": 8,
+        "rate": 0.875,
+        "avgTime": 177756,
         "avgTimeout": 300000,
-        "avgTools": 2,
-        "avgFailures": 0,
+        "avgTools": 11,
+        "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 3,
-          "sleep": 2
+          "objective": 14,
+          "chest": 28,
+          "craft": 15,
+          "place": 14,
+          "sleep": 7,
+          "whisper": 1
         }
       }
     },
@@ -488,10 +495,10 @@
     "anthropic/claude-haiku-4.5": {
       "overall": {
         "pass": 73,
-        "total": 113,
-        "rate": 0.6460176991150443,
-        "avgTime": 99610,
-        "avgTools": 7
+        "total": 115,
+        "rate": 0.6347826086956522,
+        "avgTime": 102706,
+        "avgTools": 8
       },
       "pick": {
         "pass": 16,
@@ -616,14 +623,18 @@
       },
       "sleep": {
         "pass": 3,
-        "total": 3,
-        "rate": 1,
-        "avgTime": 8412,
+        "total": 5,
+        "rate": 0.6,
+        "avgTime": 83762,
         "avgTimeout": 300000,
-        "avgTools": 1,
-        "avgFailures": 0,
+        "avgTools": 10,
+        "avgFailures": 2,
         "avgOwnerInteractions": 0,
         "toolCounts": {
+          "objective": 3,
+          "chest": 19,
+          "craft": 12,
+          "place": 5,
           "sleep": 3
         }
       }
@@ -865,11 +876,11 @@
     },
     "z-ai/glm-5": {
       "overall": {
-        "pass": 90,
-        "total": 143,
-        "rate": 0.6293706293706294,
-        "avgTime": 135468,
-        "avgTools": 8
+        "pass": 86,
+        "total": 138,
+        "rate": 0.6231884057971014,
+        "avgTime": 144843,
+        "avgTools": 9
       },
       "pick": {
         "pass": 20,
@@ -986,21 +997,20 @@
         }
       },
       "sleep": {
-        "pass": 9,
-        "total": 10,
-        "rate": 0.9,
-        "avgTime": 25218,
+        "pass": 5,
+        "total": 5,
+        "rate": 1,
+        "avgTime": 98277,
         "avgTimeout": 300000,
-        "avgTools": 2,
+        "avgTools": 10,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "sleep": 11,
-          "chest": 1,
-          "objective": 2,
-          "follow": 5,
-          "whisper": 1,
-          "attack": 2
+          "objective": 5,
+          "chest": 20,
+          "place": 10,
+          "craft": 12,
+          "sleep": 5
         }
       }
     },
@@ -1143,102 +1153,109 @@
     },
     "inception/mercury-2": {
       "overall": {
-        "pass": 6,
-        "total": 19,
-        "rate": 0.3157894736842105,
-        "avgTime": 93863,
-        "avgTools": 6
+        "pass": 15,
+        "total": 45,
+        "rate": 0.3333333333333333,
+        "avgTime": 132138,
+        "avgTools": 9
       },
       "pick": {
-        "pass": 1,
-        "total": 4,
-        "rate": 0.25,
-        "avgTime": 77485,
+        "pass": 2,
+        "total": 9,
+        "rate": 0.2222222222222222,
+        "avgTime": 163943,
         "avgTimeout": 600000,
-        "avgTools": 9,
-        "avgFailures": 2,
+        "avgTools": 11,
+        "avgFailures": 3,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 1,
-          "mine": 1,
-          "craft": 5,
-          "place": 2
+          "objective": 4,
+          "mine": 11,
+          "craft": 15,
+          "place": 3
         }
       },
       "food": {
-        "pass": 1,
-        "total": 3,
-        "rate": 0.3333333333333333,
-        "avgTime": 90548,
+        "pass": 2,
+        "total": 7,
+        "rate": 0.2857142857142857,
+        "avgTime": 85748,
         "avgTimeout": 600000,
-        "avgTools": 8,
+        "avgTools": 9,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 2,
-          "attack": 1,
-          "craft": 2,
-          "place": 2,
-          "smelt": 1
+          "objective": 4,
+          "attack": 2,
+          "craft": 4,
+          "place": 4,
+          "smelt": 2,
+          "eat": 1
         }
       },
       "shears": {
-        "pass": 1,
-        "total": 3,
-        "rate": 0.3333333333333333,
-        "avgTime": 90117,
+        "pass": 3,
+        "total": 8,
+        "rate": 0.375,
+        "avgTime": 126205,
         "avgTimeout": 600000,
         "avgTools": 6,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 2,
-          "mine": 1,
-          "place": 1,
-          "smelt": 1,
-          "craft": 1
+          "objective": 4,
+          "mine": 4,
+          "place": 3,
+          "smelt": 4,
+          "craft": 3
         }
       },
       "diamonds": {
-        "pass": 0,
-        "total": 3,
-        "rate": 0,
-        "avgTime": null,
+        "pass": 1,
+        "total": 8,
+        "rate": 0.125,
+        "avgTime": 260439,
         "avgTimeout": 600000,
-        "avgTools": null,
-        "avgFailures": null,
+        "avgTools": 18,
+        "avgFailures": 1,
         "avgOwnerInteractions": 0,
-        "toolCounts": {}
+        "toolCounts": {
+          "objective": 3,
+          "chest": 5,
+          "craft": 5,
+          "place": 1,
+          "equip": 4
+        }
       },
       "collect": {
-        "pass": 1,
-        "total": 3,
-        "rate": 0.3333333333333333,
-        "avgTime": 121839,
+        "pass": 3,
+        "total": 8,
+        "rate": 0.375,
+        "avgTime": 143629,
         "avgTimeout": 600000,
         "avgTools": 4,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 1,
-          "mine": 3
+          "objective": 4,
+          "mine": 9
         }
       },
       "sleep": {
-        "pass": 2,
-        "total": 3,
-        "rate": 0.6666666666666666,
-        "avgTime": 91593,
+        "pass": 4,
+        "total": 5,
+        "rate": 0.8,
+        "avgTime": 103186,
         "avgTimeout": 300000,
-        "avgTools": 6,
-        "avgFailures": 1,
+        "avgTools": 13,
+        "avgFailures": 2,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 1,
-          "chest": 4,
-          "craft": 2,
-          "place": 2,
-          "sleep": 2
+          "objective": 9,
+          "chest": 16,
+          "craft": 13,
+          "place": 8,
+          "sleep": 4
         }
       }
     }
@@ -55937,24 +55954,6 @@
     },
     {
       "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 15078,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773190065772
-        }
-      ],
-      "ts": "2026-03-11T00:47:50.804Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
       "bench": "food",
       "success": true,
       "elapsed": 80350,
@@ -56326,24 +56325,6 @@
         }
       ],
       "ts": "2026-03-11T01:25:45.248Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 10091,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773192381513
-        }
-      ],
-      "ts": "2026-03-11T01:26:23.313Z"
     },
     {
       "model": "x-ai/grok-4.1-fast",
@@ -56747,24 +56728,6 @@
     },
     {
       "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 15048,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773192970649
-        }
-      ],
-      "ts": "2026-03-11T01:36:16.112Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
       "bench": "collect",
       "success": true,
       "elapsed": 119640,
@@ -56973,24 +56936,6 @@
         }
       ],
       "ts": "2026-03-11T01:42:26.864Z"
-    },
-    {
-      "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 40258,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773193392299
-        }
-      ],
-      "ts": "2026-03-11T01:43:19.614Z"
     },
     {
       "model": "z-ai/glm-5",
@@ -57497,40 +57442,6 @@
     },
     {
       "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 20298,
-      "timeout": 300000,
-      "toolCalls": 3,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "chest",
-          "params": {
-            "action": "check"
-          },
-          "t": 1773193811553
-        },
-        {
-          "name": "objective",
-          "params": {
-            "action": "set",
-            "priority": "high",
-            "text": "sleep in the nearby bed to survive the night"
-          },
-          "t": 1773193823756
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773193823756
-        }
-      ],
-      "ts": "2026-03-11T01:50:28.815Z"
-    },
-    {
-      "model": "z-ai/glm-5",
       "bench": "diamonds",
       "success": true,
       "elapsed": 197721,
@@ -58014,24 +57925,6 @@
         }
       ],
       "ts": "2026-03-11T01:57:19.227Z"
-    },
-    {
-      "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 15171,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773194248189
-        }
-      ],
-      "ts": "2026-03-11T01:57:30.966Z"
     },
     {
       "model": "z-ai/glm-5",
@@ -58568,28 +58461,6 @@
     },
     {
       "model": "gpt-5-mini",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 10085,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "objective",
-          "params": {
-            "action": "set",
-            "text": "sleep in nearby bed",
-            "priority": "high"
-          },
-          "t": 1773194828935
-        }
-      ],
-      "ts": "2026-03-11T02:07:11.262Z"
-    },
-    {
-      "model": "gpt-5-mini",
       "bench": "food",
       "success": true,
       "elapsed": 171541,
@@ -58913,33 +58784,6 @@
         }
       ],
       "ts": "2026-03-11T02:09:40.754Z"
-    },
-    {
-      "model": "gpt-5-mini",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 20141,
-      "timeout": 300000,
-      "toolCalls": 2,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "objective",
-          "params": {
-            "action": "set",
-            "text": "sleep in nearby bed to survive the night",
-            "priority": "high"
-          },
-          "t": 1773195001875
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773195010295
-        }
-      ],
-      "ts": "2026-03-11T02:10:13.363Z"
     },
     {
       "model": "gpt-5-mini",
@@ -59498,31 +59342,6 @@
     },
     {
       "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 45853,
-      "timeout": 300000,
-      "toolCalls": 2,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773195738353
-        },
-        {
-          "name": "attack",
-          "params": {
-            "mob": "zombie"
-          },
-          "t": 1773195775019
-        }
-      ],
-      "ts": "2026-03-11T02:22:58.783Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
       "bench": "diamonds",
       "success": true,
       "elapsed": 165599,
@@ -59873,24 +59692,6 @@
         }
       ],
       "ts": "2026-03-11T02:25:56.209Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 10177,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773195975802
-        }
-      ],
-      "ts": "2026-03-11T02:26:21.112Z"
     },
     {
       "model": "x-ai/grok-4.1-fast",
@@ -60260,24 +60061,6 @@
         }
       ],
       "ts": "2026-03-11T02:34:33.107Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 10189,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773196492139
-        }
-      ],
-      "ts": "2026-03-11T02:34:57.063Z"
     },
     {
       "model": "x-ai/grok-4.1-fast",
@@ -61355,61 +61138,6 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-11T03:08:33.440Z"
-    },
-    {
-      "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 25337,
-      "timeout": 300000,
-      "toolCalls": 3,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "follow",
-          "params": {},
-          "t": 1773198530579
-        },
-        {
-          "name": "objective",
-          "params": {
-            "action": "set",
-            "text": "Sleep in the nearby bed to survive the night",
-            "priority": "high"
-          },
-          "t": 1773198543519
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773198543519
-        }
-      ],
-      "ts": "2026-03-11T03:09:09.965Z"
-    },
-    {
-      "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 30363,
-      "timeout": 300000,
-      "toolCalls": 2,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "follow",
-          "params": {},
-          "t": 1773198539977
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773198550200
-        }
-      ],
-      "ts": "2026-03-11T03:09:16.457Z"
     },
     {
       "model": "z-ai/glm-5",
@@ -62764,47 +62492,6 @@
     },
     {
       "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 30144,
-      "timeout": 300000,
-      "toolCalls": 2,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "follow",
-          "params": {},
-          "t": 1773201171579
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773201180759
-        }
-      ],
-      "ts": "2026-03-11T03:53:07.351Z"
-    },
-    {
-      "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 10041,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773201207431
-        }
-      ],
-      "ts": "2026-03-11T03:53:29.551Z"
-    },
-    {
-      "model": "z-ai/glm-5",
       "bench": "collect",
       "success": true,
       "elapsed": 333736,
@@ -63024,98 +62711,6 @@
         }
       ],
       "ts": "2026-03-11T03:57:47.095Z"
-    },
-    {
-      "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 35284,
-      "timeout": 300000,
-      "toolCalls": 2,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "follow",
-          "params": {},
-          "t": 1773201474221
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773201487768
-        }
-      ],
-      "ts": "2026-03-11T03:58:11.611Z"
-    },
-    {
-      "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 20067,
-      "timeout": 300000,
-      "toolCalls": 2,
-      "failures": 1,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "follow",
-          "params": {},
-          "t": 1773201486500
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773201497050
-        }
-      ],
-      "ts": "2026-03-11T03:58:19.054Z"
-    },
-    {
-      "model": "z-ai/glm-5",
-      "bench": "sleep",
-      "success": false,
-      "elapsed": 300292,
-      "timeout": 300000,
-      "toolCalls": 5,
-      "failures": 2,
-      "ownerInteractions": 1,
-      "toolLog": [
-        {
-          "name": "whisper",
-          "params": {
-            "message": "at 1 70 1 btw",
-            "player": "BrezzyTracks"
-          },
-          "t": 1773201237671
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773201247866
-        },
-        {
-          "name": "attack",
-          "params": {
-            "mob": "zombie",
-            "count": 2
-          },
-          "t": 1773201297038
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773201345491
-        },
-        {
-          "name": "attack",
-          "params": {
-            "mob": "zombie"
-          },
-          "t": 1773201387446
-        }
-      ],
-      "ts": "2026-03-11T03:58:41.707Z"
     },
     {
       "model": "gpt-5-mini",
@@ -63867,33 +63462,6 @@
     },
     {
       "model": "gpt-5-mini",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 40244,
-      "timeout": 300000,
-      "toolCalls": 2,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "objective",
-          "params": {
-            "action": "set",
-            "text": "Sleep in nearby bed to survive the night",
-            "priority": "high"
-          },
-          "t": 1773202668186
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773202681591
-        }
-      ],
-      "ts": "2026-03-11T04:18:06.356Z"
-    },
-    {
-      "model": "gpt-5-mini",
       "bench": "collect",
       "success": false,
       "elapsed": 106142,
@@ -63915,30 +63483,6 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-11T04:18:23.435Z"
-    },
-    {
-      "model": "gpt-5-mini",
-      "bench": "sleep",
-      "success": false,
-      "elapsed": 30625,
-      "timeout": 300000,
-      "toolCalls": 0,
-      "failures": 0,
-      "ownerInteractions": 1,
-      "toolLog": [],
-      "ts": "2026-03-11T04:18:49.038Z"
-    },
-    {
-      "model": "gpt-5-mini",
-      "bench": "sleep",
-      "success": false,
-      "elapsed": 35181,
-      "timeout": 300000,
-      "toolCalls": 0,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [],
-      "ts": "2026-03-11T04:19:09.967Z"
     },
     {
       "model": "x-ai/grok-4.1-fast",
@@ -65087,24 +64631,6 @@
     },
     {
       "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 10036,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773203547295
-        }
-      ],
-      "ts": "2026-03-11T04:32:31.462Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
       "bench": "collect",
       "success": false,
       "elapsed": 86939,
@@ -65114,36 +64640,6 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-11T04:33:19.284Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 5034,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773203614415
-        }
-      ],
-      "ts": "2026-03-11T04:33:36.060Z"
-    },
-    {
-      "model": "x-ai/grok-4.1-fast",
-      "bench": "sleep",
-      "success": false,
-      "elapsed": 60351,
-      "timeout": 300000,
-      "toolCalls": 0,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [],
-      "ts": "2026-03-11T04:33:43.286Z"
     },
     {
       "model": "x-ai/grok-4.1-fast",
@@ -65990,60 +65486,6 @@
     },
     {
       "model": "anthropic/claude-haiku-4.5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 5035,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773205115523
-        }
-      ],
-      "ts": "2026-03-11T04:58:39.155Z"
-    },
-    {
-      "model": "anthropic/claude-haiku-4.5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 5016,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773205117516
-        }
-      ],
-      "ts": "2026-03-11T04:58:40.563Z"
-    },
-    {
-      "model": "anthropic/claude-haiku-4.5",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 15185,
-      "timeout": 300000,
-      "toolCalls": 1,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773205133081
-        }
-      ],
-      "ts": "2026-03-11T04:59:06.502Z"
-    },
-    {
-      "model": "anthropic/claude-haiku-4.5",
       "bench": "collect",
       "success": false,
       "elapsed": 57544,
@@ -66546,18 +65988,6 @@
     },
     {
       "model": "inception/mercury-2",
-      "bench": "sleep",
-      "success": false,
-      "elapsed": 0,
-      "timeout": 300000,
-      "toolCalls": 0,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [],
-      "ts": "2026-03-11T15:00:58.631Z"
-    },
-    {
-      "model": "inception/mercury-2",
       "bench": "pick",
       "success": false,
       "elapsed": 660440,
@@ -66654,101 +66084,6 @@
     },
     {
       "model": "inception/mercury-2",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 87234,
-      "timeout": 300000,
-      "toolCalls": 11,
-      "failures": 2,
-      "ownerInteractions": 0,
-      "toolLog": [
-        {
-          "name": "objective",
-          "params": {
-            "action": "set",
-            "text": "craft and sleep in bed",
-            "priority": "high"
-          },
-          "t": 1773241409817
-        },
-        {
-          "name": "chest",
-          "params": {
-            "action": "check"
-          },
-          "t": 1773241410365
-        },
-        {
-          "name": "chest",
-          "params": {
-            "action": "take",
-            "item": "white_wool",
-            "count": 3
-          },
-          "t": 1773241411998
-        },
-        {
-          "name": "chest",
-          "params": {
-            "action": "take",
-            "item": "oak_planks",
-            "count": 3
-          },
-          "t": 1773241425224
-        },
-        {
-          "name": "chest",
-          "params": {
-            "action": "take",
-            "item": "crafting_table",
-            "count": 1
-          },
-          "t": 1773241426477
-        },
-        {
-          "name": "craft",
-          "params": {
-            "item": "bed"
-          },
-          "t": 1773241427371
-        },
-        {
-          "name": "place",
-          "params": {
-            "block": "crafting_table"
-          },
-          "t": 1773241429967
-        },
-        {
-          "name": "craft",
-          "params": {
-            "item": "white_bed",
-            "count": 1
-          },
-          "t": 1773241437013
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773241438314
-        },
-        {
-          "name": "place",
-          "params": {
-            "block": "white_bed"
-          },
-          "t": 1773241451569
-        },
-        {
-          "name": "sleep",
-          "params": {},
-          "t": 1773241471095
-        }
-      ],
-      "ts": "2026-03-11T15:04:35.667Z"
-    },
-    {
-      "model": "inception/mercury-2",
       "bench": "food",
       "success": false,
       "elapsed": 15061,
@@ -66823,18 +66158,6 @@
     },
     {
       "model": "inception/mercury-2",
-      "bench": "sleep",
-      "success": true,
-      "elapsed": 95952,
-      "timeout": 300000,
-      "toolCalls": 0,
-      "failures": 0,
-      "ownerInteractions": 0,
-      "toolLog": [],
-      "ts": "2026-03-11T15:10:44.439Z"
-    },
-    {
-      "model": "inception/mercury-2",
       "bench": "collect",
       "success": true,
       "elapsed": 121839,
@@ -66902,6 +66225,3495 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-11T15:16:06.658Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 212024,
+      "timeout": 300000,
+      "toolCalls": 12,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and sleep in a bed: check nearby chest for wool and planks, take them, craft a bed, place it, and sleep",
+            "priority": "high"
+          },
+          "t": 1773243457899
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773243465301
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773243484271
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773243507708
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243518329
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773243527320
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and sleep in a bed: check nearby chest for wool and planks, take them, craft a bed, place it, and sleep",
+            "priority": "high"
+          },
+          "t": 1773243537451
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243560381
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773243572443
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243589775
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773243619383
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773243654636
+        }
+      ],
+      "ts": "2026-03-11T15:40:54.909Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 217119,
+      "timeout": 300000,
+      "toolCalls": 12,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft a bed, place it, and sleep in it",
+            "priority": "high"
+          },
+          "t": 1773243461537
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773243471576
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773243494812
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773243509238
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243521116
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773243531625
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft a bed, place it, and sleep in it",
+            "priority": "high"
+          },
+          "t": 1773243549474
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243575356
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773243583033
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243602275
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773243621181
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773243656647
+        }
+      ],
+      "ts": "2026-03-11T15:40:59.998Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 303371,
+      "timeout": 300000,
+      "toolCalls": 3,
+      "failures": 0,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "whisper",
+          "params": {
+            "player": "BrezzyTracks",
+            "message": "Thanks, Brezzy. There happy now."
+          },
+          "t": 1773243449797
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Check nearby chest for wool and planks, craft a bed, place it, and sleep in it",
+            "priority": "high"
+          },
+          "t": 1773243465201
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Check nearby chest for wool and planks, craft a bed, place it, and sleep in it"
+          },
+          "t": 1773243481176
+        }
+      ],
+      "ts": "2026-03-11T15:42:26.603Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 122655,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a bed from chest wool and planks, place it, and sleep in it",
+            "priority": "high"
+          },
+          "t": 1773243781741
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773243790278
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773243809476
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773243809476
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773243809476
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243821097
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773243834051
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243849858
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773243858908
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773243888197
+        }
+      ],
+      "ts": "2026-03-11T15:44:52.508Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 158432,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Check nearby chest for wool and planks, craft a bed, place it, and sleep in it",
+            "priority": "high"
+          },
+          "t": 1773243784028
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773243789469
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773243802261
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773243814748
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773243827329
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243839576
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Check nearby chest for wool and planks, craft a bed, place it, and sleep in it",
+            "priority": "high"
+          },
+          "t": 1773243851109
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773243862457
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243875372
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed",
+            "direction": "forward"
+          },
+          "t": 1773243886347
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773243925179
+        }
+      ],
+      "ts": "2026-03-11T15:45:29.701Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 168472,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and sleep in a bed",
+            "priority": "high"
+          },
+          "t": 1773243795634
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773243801059
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773243824339
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773243824339
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773243824339
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773243855764
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773243873480
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and sleep in a bed",
+            "priority": "high"
+          },
+          "t": 1773243882392
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243909843
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed",
+            "direction": "forward"
+          },
+          "t": 1773243918519
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773243936472
+        }
+      ],
+      "ts": "2026-03-11T15:45:39.898Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 172443,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Check nearby chest for wool and planks, craft a bed, place it, and sleep in it",
+            "priority": "high"
+          },
+          "t": 1773243781046
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773243785335
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773243804002
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773243804002
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773243804002
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773243822116
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773243835908
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773243853076
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Place bed and sleep",
+            "priority": "high"
+          },
+          "t": 1773243866263
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773243901349
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773243938743
+        }
+      ],
+      "ts": "2026-03-11T15:45:42.658Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 193145,
+      "timeout": 300000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Check chest for wool and planks, craft a bed, place it, and sleep in it",
+            "priority": "high"
+          },
+          "t": 1773243810064
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773243821864
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773243847381
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773243861074
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773243877412
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773243891731
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773243908783
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773243936916
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773243959625
+        }
+      ],
+      "ts": "2026-03-11T15:46:02.714Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 144184,
+      "timeout": 300000,
+      "toolCalls": 15,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773244479426
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft bed place and sleep"
+          },
+          "t": 1773244505228
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773244505228
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773244505228
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773244505228
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773244510521
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773244510521
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773244525535
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773244533504
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244533504
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773244574947
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773244574947
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773244574947
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773244582824
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244610902
+        }
+      ],
+      "ts": "2026-03-11T15:56:58.489Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 57770,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep to skip night"
+          },
+          "t": 1773244863408
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773244863408
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773244873747
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773244873747
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773244873747
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773244880111
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773244880111
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773244895056
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773244900579
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244900579
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft bed and sleep to skip night"
+          },
+          "t": 1773244900579
+        }
+      ],
+      "ts": "2026-03-11T16:01:58.811Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 73800,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773244866122
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Check chest for wool and planks, craft bed, place it, sleep",
+            "priority": "high"
+          },
+          "t": 1773244866122
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773244877313
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773244877313
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773244877313
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773244889482
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773244889482
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773244905259
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773244914739
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244914739
+        }
+      ],
+      "ts": "2026-03-11T16:02:13.830Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 73561,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "check chest for wool and planks, craft bed, place it, sleep"
+          },
+          "t": 1773244865043
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773244865043
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773244876395
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773244876395
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773244876395
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773244887810
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773244887810
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773244903293
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773244914702
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244914702
+        }
+      ],
+      "ts": "2026-03-11T16:02:14.054Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 84698,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773244863697
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft bed and sleep"
+          },
+          "t": 1773244863697
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773244872083
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773244872083
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773244872083
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773244882802
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773244899849
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773244906276
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244906276
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244929008
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244941219
+        }
+      ],
+      "ts": "2026-03-11T16:02:25.755Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 94472,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "check chest for wool and planks, craft bed, place it, sleep"
+          },
+          "t": 1773244863178
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773244863178
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773244880762
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773244880762
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773244904714
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773244920042
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773244920042
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773244935031
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773244941212
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773244941212
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "check chest for wool and planks, craft bed, place it, sleep"
+          },
+          "t": 1773244941212
+        }
+      ],
+      "ts": "2026-03-11T16:02:33.066Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 78360,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Find wool and planks in chest, craft bed, place it, sleep",
+            "priority": "high"
+          },
+          "t": 1773245002338
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773245002338
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773245005569
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773245005569
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773245007916
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773245023440
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773245027394
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773245029867
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773245043377
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773245059932
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773245073981
+        }
+      ],
+      "ts": "2026-03-11T16:04:40.097Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 83928,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "check chest for wool and planks, craft bed, place it, sleep",
+            "priority": "high"
+          },
+          "t": 1773245001219
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773245001219
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773245005280
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773245005280
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773245007462
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773245022785
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773245025847
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773245029000
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773245042787
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773245062579
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773245077549
+        }
+      ],
+      "ts": "2026-03-11T16:04:44.279Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 88999,
+      "timeout": 300000,
+      "toolCalls": 8,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773245001316
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773245035182
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773245035182
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed, place it, and sleep",
+            "priority": "high"
+          },
+          "t": 1773245035182
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773245045511
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773245047981
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773245075256
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773245083430
+        }
+      ],
+      "ts": "2026-03-11T16:04:50.266Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 304229,
+      "timeout": 300000,
+      "toolCalls": 6,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773245000845
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773245023019
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773245023019
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773245043119
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773245064275
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773245084927
+        }
+      ],
+      "ts": "2026-03-11T16:08:24.521Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 304171,
+      "timeout": 300000,
+      "toolCalls": 6,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773245001111
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773245023760
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773245023760
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773245043082
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773245065806
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773245085822
+        }
+      ],
+      "ts": "2026-03-11T16:08:25.101Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 75686,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:10:28.095Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 74583,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:10:28.498Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "food",
+      "success": false,
+      "elapsed": 118051,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:11:44.452Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 158110,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "mine 2 iron_ore, place furnace, smelt raw_iron, craft shears",
+            "priority": "normal"
+          },
+          "t": 1773245400209
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773245401890
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773245422374
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773245441544
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 1
+          },
+          "t": 1773245467106
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 1
+          },
+          "t": 1773245474623
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773245505815
+        }
+      ],
+      "ts": "2026-03-11T16:11:52.367Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 250400,
+      "timeout": 600000,
+      "toolCalls": 13,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "obtain wooden pickaxe",
+            "priority": "normal"
+          },
+          "t": 1773245422157
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773245423746
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773245436405
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 8
+          },
+          "t": 1773245465241
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks",
+            "count": 4
+          },
+          "t": 1773245466608
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773245467618
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "obtain wooden pickaxe",
+            "priority": "normal"
+          },
+          "t": 1773245469005
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773245481526
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773245500391
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773245525689
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773245551820
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 6
+          },
+          "t": 1773245577512
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773245596377
+        }
+      ],
+      "ts": "2026-03-11T16:13:23.167Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 234389,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:14:46.697Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 99258,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft and sleep in a bed",
+            "priority": "high"
+          },
+          "t": 1773245645988
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773245646663
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773245653944
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773245671974
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773245672633
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773245673295
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft and sleep in a bed",
+            "priority": "high"
+          },
+          "t": 1773245685642
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773245691917
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773245698686
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773245719619
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "craft and sleep in a bed"
+          },
+          "t": 1773245720936
+        }
+      ],
+      "ts": "2026-03-11T16:15:24.552Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 199000,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:15:37.232Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "food",
+      "success": false,
+      "elapsed": 15347,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:16:20.857Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 168771,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather resources: 16 dirt, 8 logs, 16 stone",
+            "priority": "normal"
+          },
+          "t": 1773245710765
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773245711675
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773245752033
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 12
+          },
+          "t": 1773245839798
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Gather resources: 16 dirt, 8 logs, 16 stone"
+          },
+          "t": 1773245873299
+        }
+      ],
+      "ts": "2026-03-11T16:17:59.288Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 130387,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Mine 2 iron_ore, place furnace, smelt raw_iron with oak_planks, craft shears",
+            "priority": "high"
+          },
+          "t": 1773245868826
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773245871037
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773245884566
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773245903727
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773245927281
+        }
+      ],
+      "ts": "2026-03-11T16:18:53.471Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 89187,
+      "timeout": 300000,
+      "toolCalls": 12,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft and sleep in bed",
+            "priority": "normal"
+          },
+          "t": 1773245955364
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773245956051
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773245957990
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773245977428
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773245978883
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773245980182
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft and sleep in bed",
+            "priority": "normal"
+          },
+          "t": 1773245996633
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773245997643
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773245998796
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773246008584
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773246018729
+        },
+        {
+          "name": "sleep",
+          "params": {
+            "": {}
+          },
+          "t": 1773246039942
+        }
+      ],
+      "ts": "2026-03-11T16:20:45.931Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 603677,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:20:59.397Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 347715,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather oak logs and craft wooden pickaxe",
+            "priority": "normal"
+          },
+          "t": 1773245833155
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773245834311
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773245849932
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "planks",
+            "count": 8
+          },
+          "t": 1773245915461
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks",
+            "count": 4
+          },
+          "t": 1773245916312
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773245917511
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773245929114
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 5
+          },
+          "t": 1773245944821
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 3
+          },
+          "t": 1773245960345
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 5
+          },
+          "t": 1773246042696
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 5
+          },
+          "t": 1773246076299
+        }
+      ],
+      "ts": "2026-03-11T16:21:33.875Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 229057,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:22:09.547Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 580631,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:22:41.133Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 140278,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "dig 16 dirt, chop 8 logs, mine 16 stone",
+            "priority": "high"
+          },
+          "t": 1773246092369
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773246092765
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773246118713
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773246171203
+        }
+      ],
+      "ts": "2026-03-11T16:23:29.250Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "food",
+      "success": false,
+      "elapsed": 91219,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:23:30.294Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 64341,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:23:36.879Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 129507,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:23:42.056Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 81130,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:25:14.845Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 94791,
+      "timeout": 300000,
+      "toolCalls": 13,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft and sleep in bed",
+            "priority": "high"
+          },
+          "t": 1773246232222
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246233498
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773246235079
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246254446
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773246255452
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773246256863
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773246258340
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246272717
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773246283422
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft and sleep in bed",
+            "priority": "high"
+          },
+          "t": 1773246285317
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773246296230
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773246310666
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773246323807
+        }
+      ],
+      "ts": "2026-03-11T16:25:28.439Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "food",
+      "success": true,
+      "elapsed": 80948,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft furnace, place it, kill a cow or pig, smelt raw meat with oak planks as fuel, eat cooked food",
+            "priority": "high"
+          },
+          "t": 1773246251696
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773246253527
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246255000
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773246271533
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773246273302
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "kill a cow, smelt meat, eat cooked food",
+            "priority": "high"
+          },
+          "t": 1773246280373
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 1
+          },
+          "t": 1773246291404
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_beef",
+            "fuel": "oak_planks",
+            "count": 1
+          },
+          "t": 1773246304144
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773246327234
+        }
+      ],
+      "ts": "2026-03-11T16:25:33.159Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 155658,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:26:36.307Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 220796,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:26:44.095Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 14046,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:27:12.453Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 135406,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-11T16:27:50.789Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 129507,
+      "timeout": 300000,
+      "toolCalls": 14,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "make bed and sleep",
+            "priority": "normal"
+          },
+          "t": 1773246356265
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246356829
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773246359078
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773246392269
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773246392983
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773246394626
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773246397970
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773246399432
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246400286
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "make bed and sleep",
+            "priority": "normal"
+          },
+          "t": 1773246418672
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773246430848
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773246439746
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773246452286
+        },
+        {
+          "name": "sleep",
+          "params": {
+            "": {}
+          },
+          "t": 1773246481000
+        }
+      ],
+      "ts": "2026-03-11T16:28:04.955Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 260439,
+      "timeout": 600000,
+      "toolCalls": 18,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Get diamonds from chest, craft full set of diamond armor, equip all pieces",
+            "priority": "high"
+          },
+          "t": 1773246414733
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246434816
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773246437246
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773246438723
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773246450912
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246452700
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773246459969
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and equip full diamond armor",
+            "priority": "high"
+          },
+          "t": 1773246480236
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773246481160
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246482413
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773246499864
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773246513341
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Equip full set of diamond armor",
+            "priority": "high"
+          },
+          "t": 1773246527359
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773246544549
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773246559323
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246573254
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773246593667
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773246609804
+        }
+      ],
+      "ts": "2026-03-11T16:30:10.790Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 88997,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and sleep in a bed to survive the night",
+            "priority": "high"
+          },
+          "t": 1773246694290
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246694290
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773246703695
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773246703695
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773246725233
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246737537
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773246737537
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773246750610
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773246759180
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773246759180
+        }
+      ],
+      "ts": "2026-03-11T16:32:56.466Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 94141,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "check chest for wool and planks, craft bed, place it, sleep",
+            "priority": "high"
+          },
+          "t": 1773246695634
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246695634
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773246704877
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773246704877
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773246711922
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773246723016
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246732113
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773246747966
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773246752718
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773246776836
+        }
+      ],
+      "ts": "2026-03-11T16:33:01.627Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 93921,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Check chest, craft bed, place it, and sleep",
+            "priority": "high"
+          },
+          "t": 1773246693835
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246693835
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773246700922
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773246700922
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773246711282
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773246718819
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773246724844
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246732805
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773246752706
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773246762169
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773246762169
+        }
+      ],
+      "ts": "2026-03-11T16:33:02.815Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 99721,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Get wool and planks from chest, craft bed, place it, and sleep",
+            "priority": "high"
+          },
+          "t": 1773246698434
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246698434
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773246714038
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773246714038
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773246723206
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773246731861
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246740084
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773246760963
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773246766797
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773246766797
+        }
+      ],
+      "ts": "2026-03-11T16:33:06.512Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 114604,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Get wool and planks from chest, craft bed, place it, and sleep",
+            "priority": "high"
+          },
+          "t": 1773246692496
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773246692496
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773246696441
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773246696441
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773246703949
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773246715262
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773246728040
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773246736739
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773246748888
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773246758629
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773246795655
+        }
+      ],
+      "ts": "2026-03-11T16:33:20.207Z"
     }
   ]
 }

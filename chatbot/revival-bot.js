@@ -1675,7 +1675,15 @@ export class RevivalBot {
       .map(c => this._mcData?.blocksByName[`${c}_bed`]?.id)
       .filter(id => id != null);
 
-    const bed = this.bot.findBlock({ matching: bedIds, maxDistance: 32 });
+    // Small delay to let world state update (bed placed in same batch may not be registered yet)
+    await new Promise(r => setTimeout(r, 500));
+
+    let bed = this.bot.findBlock({ matching: bedIds, maxDistance: 32 });
+    if (!bed) {
+      // Retry once after a longer delay (block update may still be in flight)
+      await new Promise(r => setTimeout(r, 1500));
+      bed = this.bot.findBlock({ matching: bedIds, maxDistance: 32 });
+    }
     if (!bed) {
       this.log('action_failed', 'No bed found nearby');
       return;

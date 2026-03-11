@@ -416,9 +416,11 @@ async function runBenchmark(benchId, botName, workerId = 0) {
     if (fl > 10) console.log(`${tag}  WARNING: Hunger drain incomplete`);
   }
 
-  // Set time for sleep benchmark
+  // Set time for sleep benchmark + clear mobs + give resistance so bot doesn't die crafting
   if (benchId === 'sleep') {
     await rcon('time set midnight');
+    await rcon(`kill @e[type=!player,distance=..100,x=${pos.x},y=${pos.y},z=${pos.z}]`);
+    await rcon(`effect give ${botName} resistance 300 255 true`);
   }
 
   // ── 9. Send goal ──────────────────────────────────────────────────
@@ -448,6 +450,9 @@ async function runBenchmark(benchId, botName, workerId = 0) {
         const fl = await getFoodLevel(botName);
         passed = fl > 0 && fl >= 7;  // -1 = error, don't pass on error
       } else if (bench.successCheck === 'slept') {
+        // Keep it nighttime (in case another bot sleeping advanced time) and clear mobs
+        try { await rcon('time set midnight'); } catch {}
+        try { await rcon(`execute at ${botName} run kill @e[type=!player,distance=..100,type=!item]`); } catch {}
         // Check if bot actually slept using the "Sweet Dreams" advancement (most reliable)
         try {
           const resp = await rcon(`execute if entity @a[name=${botName},advancements={minecraft:adventure/sleep_in_bed=true}]`);
