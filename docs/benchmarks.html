@@ -847,7 +847,7 @@
 
   <section id="results-section">
     <h2>Results</h2>
-    <p class="description">Each model runs every benchmark multiple times at random surface locations. Success = target item in inventory before 5-minute timeout.</p>
+    <p class="description">Each model runs every benchmark multiple times at random surface locations. Success = completing the objective before timeout.</p>
 
     <div class="vchart-controls">
       <div>
@@ -893,7 +893,7 @@
       <li>Time set to day, bot teleported to spawn after greeting cycle</li>
       <li>Goal sent as owner chat message; up to 4 retries if bot goes idle for 20s</li>
       <li>Success = target item detected in inventory via RCON polling every 5s</li>
-      <li>Timeout: 5 minutes for all benchmarks</li>
+      <li>Timeout: 5-10 minutes per benchmark</li>
       <li>Metrics: wall-clock time, total tool calls, failed tool calls, LLM chat messages</li>
     </ul>
 
@@ -1063,43 +1063,48 @@
     }
 
     // ── Weighted Scores ──
-    // score = 100/n × Σ r×(1 - t/T) — higher is better (0-100). Split by timeout era.
+    // Benchmark-weighted: average per-benchmark scores so no single benchmark dominates.
+    // Per-bench score = (1/n_b) × Σ r(1 - t/T). Overall = average across benchmarks.
     const allRuns = data.runs || [];
-    function computeScore(model, timeoutFilter) {
-      let modelRuns = allRuns.filter(r => r.model === model);
-      if (timeoutFilter) modelRuns = modelRuns.filter(r => (r.timeout || 300_000) === timeoutFilter);
+    function computeScore(model) {
+      const modelRuns = allRuns.filter(r => r.model === model);
       if (modelRuns.length === 0) return null;
-      const total = modelRuns.reduce((sum, r) => {
-        if (!r.success) return sum;
-        const T = r.timeout || 300_000;
-        return sum + (1 - r.elapsed / T);
-      }, 0);
-      return { score: Math.round(100 * total / modelRuns.length), n: modelRuns.length };
+      // Group by benchmark
+      const byBench = {};
+      for (const r of modelRuns) {
+        (byBench[r.bench] = byBench[r.bench] || []).push(r);
+      }
+      // Score each benchmark independently, then average
+      let totalScore = 0;
+      let benchCount = 0;
+      for (const runs of Object.values(byBench)) {
+        const benchScore = runs.reduce((sum, r) => {
+          if (!r.success) return sum;
+          const T = r.timeout || 300_000;
+          return sum + (1 - r.elapsed / T);
+        }, 0) / runs.length;
+        totalScore += benchScore;
+        benchCount++;
+      }
+      return { score: Math.round(100 * totalScore / benchCount), n: modelRuns.length };
     }
 
     const scoreData = ranked.map(m => {
-      const s5 = computeScore(m, 300_000);
-      const s10 = computeScore(m, 600_000);
       const overall = computeScore(m);
-      return { model: m, s5, s10, score: overall?.score || 0 };
+      return { model: m, score: overall?.score || 0, n: overall?.n || 0 };
     });
 
     const glanceDesc = document.querySelector('#glance-section .description');
-    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = 100/n × Σ r(1 − t/T). Higher is better.`;
+    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = benchmark-weighted average of r(1 − t/T). Higher is better.`;
 
     const glanceGrid = document.getElementById('glance-grid');
-    let activeCol = 'overall'; // 'overall' | '5m' | '10m'
 
     function scoreColor(norm) {
       return `hsl(145, ${Math.round(norm * 50)}%, ${35 + Math.round(norm * 18)}%)`;
     }
 
     function renderScores() {
-      const sorted = [...scoreData].sort((a, b) => {
-        if (activeCol === '5m') return (b.s5?.score || 0) - (a.s5?.score || 0);
-        if (activeCol === '10m') return (b.s10?.score || 0) - (a.s10?.score || 0);
-        return b.score - a.score;
-      });
+      const sorted = [...scoreData].sort((a, b) => b.score - a.score);
       const maxScore = Math.max(...sorted.map(s => s.score), 1);
 
       let html = '';
@@ -1123,18 +1128,8 @@
           miniBarsHTML += `<div class="score-mini-bar" style="height: ${hPct}%; background: ${bg};" title="${benchNames[b] || b}: ${Math.round(rate * 100)}%"><div class="score-mini-label">${abbr}</div></div>`;
         }
 
-        const s5str = s.s5 ? `${s.s5.score}` : '-';
-        const s10str = s.s10 ? `${s.s10.score}` : '-';
-        const s5n = s.s5 ? `n=${s.s5.n}` : '';
-        const s10n = s.s10 ? `n=${s.s10.n}` : '';
-        const s5color = scoreColor(s.s5 ? s.s5.score / 100 : 0);
-        const s10color = scoreColor(s.s10 ? s.s10.score / 100 : 0);
         const overallNorm = maxScore > 0 ? s.score / maxScore : 0.5;
         const overallColor = scoreColor(overallNorm);
-
-        const a5 = activeCol === '5m' ? ' score-col-active' : '';
-        const a10 = activeCol === '10m' ? ' score-col-active' : '';
-        const aO = activeCol === 'overall' ? ' score-col-active' : '';
 
         html += `
           <div class="score-row" data-model="${s.model}">
@@ -1147,18 +1142,8 @@
               <div class="score-col-label">pass rate</div>
               <div class="score-mini-bars">${miniBarsHTML}</div>
             </div>
-            <div class="score-col score-col-clickable${a5}" data-sort="5m">
-              <div class="score-col-label">5m</div>
-              <div class="score-value" style="color: ${s5color}">${s5str}</div>
-              <div class="score-col-label">${s5n}</div>
-            </div>
-            <div class="score-col score-col-clickable${a10}" data-sort="10m">
-              <div class="score-col-label">10m</div>
-              <div class="score-value" style="color: ${s10color}">${s10str}</div>
-              <div class="score-col-label">${s10n}</div>
-            </div>
-            <div class="score-col score-col-clickable${aO}" data-sort="overall">
-              <div class="score-col-label">overall</div>
+            <div class="score-col">
+              <div class="score-col-label">score</div>
               <div class="score-value" style="color: ${overallColor}">${s.score}</div>
             </div>
           </div>`;
@@ -1169,15 +1154,6 @@
     renderScores();
 
     glanceGrid.addEventListener('click', (e) => {
-      const col = e.target.closest('.score-col-clickable');
-      if (col) {
-        const sort = col.dataset.sort;
-        if (sort && sort !== activeCol) {
-          activeCol = sort;
-          renderScores();
-        }
-        return;
-      }
       const row = e.target.closest('.score-row');
       if (row) openModelModal(row.dataset.model);
     });

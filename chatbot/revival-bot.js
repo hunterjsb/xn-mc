@@ -1430,6 +1430,7 @@ export class RevivalBot {
       birch_plank: 'birch_planks', spruce_plank: 'spruce_planks',
       dark_oak_plank: 'dark_oak_planks', jungle_plank: 'jungle_planks',
       acacia_plank: 'acacia_planks', mangrove_plank: 'mangrove_planks',
+      bed: 'white_bed',
       sticks: 'stick', wooden_stick: 'stick',
       wooden_plank: 'oak_planks', wooden_planks: 'oak_planks',
       log: 'oak_log', logs: 'oak_log', wood: 'oak_planks',
