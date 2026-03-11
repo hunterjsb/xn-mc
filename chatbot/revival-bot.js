@@ -1522,7 +1522,7 @@ export class RevivalBot {
     }
   }
 
-  async _cmdSmelt(itemName, fuelName = 'coal', count = 1) {
+  async _cmdSmelt(itemName, fuelName, count = 1) {
     // Fix common LLM item name mistakes (raw_porkchop → porkchop, raw_beef → beef, etc.)
     const SMELT_ALIASES = {
       raw_porkchop: 'porkchop', raw_beef: 'beef', raw_chicken: 'chicken',
@@ -1535,7 +1535,6 @@ export class RevivalBot {
       console.log(`[Smelt] ${this.username}: aliased ${itemName} → ${resolvedName}`);
     }
 
-    this.log('action', `Smelting ${count}x ${resolvedName} with ${fuelName}`);
     const prevState = this.state;
     this.state = 'smelting';
 
@@ -1545,7 +1544,7 @@ export class RevivalBot {
         .map(n => this._mcData?.blocksByName[n]?.id).filter(Boolean);
       const furnaceBlock = this.bot.findBlock({ matching: furnaceIds, maxDistance: 32 });
       if (!furnaceBlock) {
-        this.log('action_failed', 'No furnace found nearby');
+        this.log('action_failed', 'No furnace found nearby. Place a furnace first');
         return;
       }
 
@@ -1560,17 +1559,32 @@ export class RevivalBot {
         });
       }
 
-      // Check we have the input item and fuel
+      // Check we have the input item
       const inputItem = this.bot.inventory.items().find(i => i.name.includes(resolvedName));
       if (!inputItem) {
         this.log('action_failed', `No ${resolvedName} in inventory`);
         return;
       }
-      const fuelItem = this.bot.inventory.items().find(i => i.name.includes(fuelName));
+
+      // Auto-detect fuel if not specified: prefer coal > charcoal > planks > logs > sticks
+      const FUEL_PRIORITY = ['coal', 'charcoal', 'coal_block', 'planks', 'log', 'stick'];
+      let fuelItem;
+      if (fuelName) {
+        fuelItem = this.bot.inventory.items().find(i => i.name.includes(fuelName));
+      }
       if (!fuelItem) {
-        this.log('action_failed', `No ${fuelName} (fuel) in inventory`);
+        // Search by priority
+        for (const fp of FUEL_PRIORITY) {
+          fuelItem = this.bot.inventory.items().find(i => i.name.includes(fp) && i.name !== resolvedName);
+          if (fuelItem) break;
+        }
+      }
+      if (!fuelItem) {
+        this.log('action_failed', `No fuel in inventory (need coal, planks, logs, or sticks)`);
         return;
       }
+
+      this.log('action', `Smelting ${count}x ${resolvedName} with ${fuelItem.name}`);
 
       const furnace = await this.bot.openFurnace(furnaceBlock);
       const smeltCount = Math.min(count, inputItem.count);
@@ -1591,7 +1605,7 @@ export class RevivalBot {
       await furnace.putInput(inputItem.type, null, smeltCount);
 
       // Wait for smelting (roughly 10s per item, but check periodically)
-      const maxWait = smeltCount * 12000;
+      const maxWait = Math.max(smeltCount * 12000, 30000);
       const start = Date.now();
       while (Date.now() - start < maxWait) {
         await new Promise(r => setTimeout(r, 2000));
@@ -1599,13 +1613,19 @@ export class RevivalBot {
         if (this.state !== 'smelting') break; // interrupted
       }
 
-      // Take output
-      const output = furnace.outputItem();
+      // Take output — retry briefly if not ready yet
+      let output = furnace.outputItem();
+      if (!output) {
+        await new Promise(r => setTimeout(r, 3000));
+        output = furnace.outputItem();
+      }
       if (output) {
         await furnace.takeOutput();
-        this.log('action_success', `Smelted ${output.count}x ${output.name}`);
+        this.log('action_success', `Smelted ${output.count}x ${output.name}. It is now in your inventory`);
+      } else if (furnace.inputItem()) {
+        this.log('action_partial', `Smelting still in progress. Come back to the furnace later to collect the result`);
       } else {
-        this.log('action_partial', `Smelting in progress (items placed in furnace)`);
+        this.log('action_failed', `Smelting produced no output. Check you used the right item`);
       }
 
       furnace.close();
