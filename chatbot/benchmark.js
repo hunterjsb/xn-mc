@@ -61,7 +61,7 @@ export const BENCHMARKS = {
   pick: {
     name: 'Wooden Pickaxe',
     startItems: [],
-    goal: 'mine 4 oak_log, craft planks, craft crafting_table, place it, craft sticks, craft wooden_pickaxe',
+    goal: 'make a wooden pickaxe from scratch',
     successItems: ['wooden_pickaxe'],
     timeout: 600_000,
   },
@@ -71,7 +71,7 @@ export const BENCHMARKS = {
       'wooden_pickaxe 1', 'wooden_sword 1', 'wooden_axe 1',
       'cobblestone 8', 'oak_planks 16', 'stick 8', 'crafting_table 1',
     ],
-    goal: 'craft a furnace, place it, kill a cow or pig, smelt the raw meat with oak_planks as fuel, then eat the cooked food (you are hungry!)',
+    goal: 'you are starving! cook some meat and eat it before you die',
     successCheck: 'food_eaten', // custom: check food level restored
     timeout: 600_000,
   },
@@ -82,14 +82,14 @@ export const BENCHMARKS = {
       'furnace 1', 'torch 16', 'cooked_beef 5',
       'oak_planks 32', 'cobblestone 16', 'stick 8',
     ],
-    goal: 'mine 2 iron_ore, place the furnace, smelt the raw_iron with oak_planks as fuel, craft shears',
+    goal: 'craft a pair of shears. you will need to find and smelt some iron',
     successItems: ['shears'],
     timeout: 600_000,
   },
   diamonds: {
     name: 'Diamond Armor',
     startItems: [],
-    goal: 'get diamonds from the nearby chest, craft a full set of diamond armor (helmet, chestplate, leggings, boots), and EQUIP all 4 pieces',
+    goal: 'there is a chest nearby with diamonds in it. craft a full set of diamond armor and put it on',
     successCheck: 'diamond_armor_equipped', // custom: check armor slots
     timeout: 600_000,
   },
@@ -98,7 +98,7 @@ export const BENCHMARKS = {
     startItems: [
       'wooden_sword 1', 'torch 4',
     ],
-    goal: 'it is nighttime and dangerous! check the nearby chest for wool and planks, craft a bed, place it, and sleep in it',
+    goal: 'it is nighttime and monsters are everywhere! there is a chest nearby with supplies to make a bed. craft one and get some sleep',
     successCheck: 'slept', // custom: check SleepTimer or bed_used advancement
     timeout: 300_000, // 5 min
   },
@@ -107,7 +107,7 @@ export const BENCHMARKS = {
     startItems: [
       'iron_pickaxe 1', 'iron_axe 1', 'iron_shovel 1', 'bread 8',
     ],
-    goal: 'dig 16 dirt, chop 8 of any type of log (oak birch spruce etc), and mine 16 stone to get cobblestone',
+    goal: 'gather resources: 16 dirt, 8 logs, and 16 cobblestone',
     successCounts: { dirt: 16, _log: 8, cobblestone: 16 },
     timeout: 600_000,
   },
