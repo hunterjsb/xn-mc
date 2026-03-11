@@ -1794,6 +1794,21 @@ export class RevivalBot {
       if (result) candidates.push(result);
     }
 
+    // Also try one block above and below for uneven terrain
+    for (const dy of [0, 1, -1]) {
+      if (dy !== 0) {
+        for (const d of dirs) {
+          for (const dist of [1, 2]) {
+            const tp = pos.offset(d.x * dist, dy, d.z * dist);
+            if (isOpen(tp)) {
+              const bl = this.bot.blockAt(tp.offset(0, -1, 0));
+              if (bl && bl.name !== 'air') candidates.push({ ref: bl, face: new Vec3(0, 1, 0), clearPos: tp });
+            }
+          }
+        }
+      }
+    }
+
     for (const { ref, face, clearPos } of candidates) {
       try {
         if (clearPos) await clearIfReplaceable(clearPos);
@@ -1805,6 +1820,25 @@ export class RevivalBot {
         // Try next candidate
       }
     }
+
+    // Walk a few blocks and retry once
+    try {
+      const goals = await import('mineflayer-pathfinder').then(m => m.goals);
+      const goal = new goals.GoalNear(pos.x + (Math.random() * 6 - 3), pos.y, pos.z + (Math.random() * 6 - 3), 1);
+      this.bot.pathfinder.setGoal(goal);
+      await new Promise(r => setTimeout(r, 3000));
+      this.bot.pathfinder.stop();
+      // Try placing at new position
+      const newPos = this.bot.entity.position.floored();
+      const nb = this.bot.blockAt(newPos.offset(0, -1, 0));
+      if (nb && nb.name !== 'air' && isOpen(newPos)) {
+        await clearIfReplaceable(newPos);
+        await this.bot.equip(item, 'hand');
+        await this.bot.placeBlock(nb, new Vec3(0, 1, 0));
+        this.log('action_success', `Placed ${item.name} (after repositioning)`);
+        return;
+      }
+    } catch {}
     this.log('action_failed', `Place ${item.name}: no valid placement found`)
   }
 }
