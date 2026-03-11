@@ -635,8 +635,10 @@ export class ConversationManager {
     const pendingMessages = rBot.pendingMessages.splice(0); // drain queue
     const senders = pendingMessages.map(m => m.sender).filter(s => s !== '__system__');
 
-    // Skip most idle ticks to save API calls (but not in benchmark mode)
-    if (!rBot._benchMode && pendingMessages.length === 0 && rBot.objectives.length === 0 && rBot.state === 'idle') {
+    // Skip idle ticks: in benchmark mode, ALWAYS skip if no messages/objectives (wait for goal).
+    // In normal mode, skip ~70% of idle ticks to save API calls.
+    if (pendingMessages.length === 0 && rBot.objectives.length === 0 && rBot.state === 'idle') {
+      if (rBot._benchMode) return { actions: [], chat: null, senders: [] };
       if (Math.random() > 0.3) return { actions: [], chat: null, senders: [] };
     }
 

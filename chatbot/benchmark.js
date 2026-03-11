@@ -374,12 +374,13 @@ async function runBenchmark(benchId, botName) {
   // Target: food level ~3-6 (hungry enough to need food, but won't die from starvation)
   if (benchId === 'food') {
     console.log(`${tag}  Draining hunger...`);
-    // Give resistance to prevent starvation death during/after drain
-    await rcon(`effect give ${botName} resistance 60 255 true`);
-    const rHun = await rcon(`effect give ${botName} hunger 10 255 true`);
+    // Resistance prevents starvation death while bot works on cooking (covers full timeout)
+    await rcon(`effect give ${botName} resistance 600 255 true`);
+    // Lower amplifier (50) = slower drain = better control over target food level
+    const rHun = await rcon(`effect give ${botName} hunger 15 50 true`);
     console.log(`${tag}  Hunger effect: ${rHun}`);
-    // Poll until food drops below target, then clear
-    for (let i = 1; i <= 8; i++) {
+    // Poll until food drops to target range (3-5), then clear hunger
+    for (let i = 1; i <= 30; i++) {
       await sleep(1000);
       const fl = await getFoodLevel(botName);
       if (fl >= 0 && fl <= 5) break;
@@ -387,7 +388,6 @@ async function runBenchmark(benchId, botName) {
     await rcon(`effect clear ${botName} hunger`);
     const fl = await getFoodLevel(botName);
     console.log(`${tag}  Food level: ${fl}`);
-    // Keep resistance for 60s to prevent starvation death while bot works on cooking
   }
   console.log(`${tag}  Goal: ${bench.goal}`);
   await api('POST', '/rbsay', { bot: botName, message: bench.goal, as: OWNER });
