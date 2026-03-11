@@ -1481,13 +1481,60 @@ export class RevivalBot {
           }
           craftingTable = tableBlock;
         } else {
-          // No crafting table found — check if bot has one in inventory to hint the LLM
-          const hasTable = this.bot.inventory.items().some(i => i.name === 'crafting_table');
-          this.log('action_failed', hasTable
-            ? `${itemName} needs a crafting table (3×3 grid). Place your crafting_table first!`
-            : `${itemName} needs a crafting table but none found nearby and none in inventory`);
-          this.state = prevState;
-          return;
+          // No crafting table found — auto-place from inventory if we have one
+          const tableItem = this.bot.inventory.items().find(i => i.name === 'crafting_table');
+          if (tableItem) {
+            this.log('action', `No crafting table nearby — placing one from inventory`);
+            try {
+              await this.bot.equip(tableItem, 'hand');
+              const pos = this.bot.entity.position.floored();
+              // Try to place on the block below us or adjacent
+              const Vec3 = (await import('vec3')).default;
+              const dirs = [
+                new Vec3(1,0,0), new Vec3(-1,0,0), new Vec3(0,0,1), new Vec3(0,0,-1),
+                new Vec3(0,0,0), // right where we stand
+              ];
+              let placed = false;
+              for (const d of dirs) {
+                const target = pos.offset(d.x, d.y, d.z);
+                const below = this.bot.blockAt(target.offset(0, -1, 0));
+                const atTarget = this.bot.blockAt(target);
+                if (below && below.name !== 'air' && atTarget && atTarget.name === 'air') {
+                  try {
+                    await this.bot.placeBlock(below, new Vec3(0, 1, 0));
+                    placed = true;
+                    break;
+                  } catch (e) { /* try next */ }
+                }
+              }
+              if (placed) {
+                // Re-find the placed crafting table
+                const placedTable = this.bot.findBlock({
+                  matching: this._mcData.blocksByName.crafting_table?.id,
+                  maxDistance: 5,
+                });
+                if (placedTable) {
+                  craftingTable = placedTable;
+                } else {
+                  this.log('action_failed', `Placed crafting table but couldn't find it`);
+                  this.state = prevState;
+                  return;
+                }
+              } else {
+                this.log('action_failed', `Could not find a spot to place crafting table`);
+                this.state = prevState;
+                return;
+              }
+            } catch (err) {
+              this.log('action_failed', `Failed to place crafting table: ${err.message}`);
+              this.state = prevState;
+              return;
+            }
+          } else {
+            this.log('action_failed', `${itemName} needs a crafting table but none found nearby and none in inventory`);
+            this.state = prevState;
+            return;
+          }
         }
       }
 
@@ -1513,7 +1560,9 @@ export class RevivalBot {
         }
       }
       if (crafted === 0) {
-        this.log('action_failed', `No recipe for ${itemName} (missing materials or crafting table)`);
+        const invSummary = this.bot.inventory.items()
+          .map(i => `${i.name} x${i.count}`).join(', ') || 'empty';
+        this.log('action_failed', `No recipe for ${itemName}. Your inventory: ${invSummary}`);
       } else {
         this.log('action_success', `Crafted ${crafted}x ${itemName}`);
       }
@@ -1542,10 +1591,47 @@ export class RevivalBot {
       // Find a furnace nearby
       const furnaceIds = ['furnace', 'blast_furnace', 'smoker']
         .map(n => this._mcData?.blocksByName[n]?.id).filter(Boolean);
-      const furnaceBlock = this.bot.findBlock({ matching: furnaceIds, maxDistance: 32 });
+      let furnaceBlock = this.bot.findBlock({ matching: furnaceIds, maxDistance: 32 });
       if (!furnaceBlock) {
-        this.log('action_failed', 'No furnace found nearby. Place a furnace first');
-        return;
+        // Auto-place furnace from inventory if we have one
+        const furnaceItem = this.bot.inventory.items().find(i => ['furnace', 'blast_furnace', 'smoker'].includes(i.name));
+        if (furnaceItem) {
+          this.log('action', `No furnace nearby — placing one from inventory`);
+          try {
+            await this.bot.equip(furnaceItem, 'hand');
+            const Vec3 = (await import('vec3')).default;
+            const pos = this.bot.entity.position.floored();
+            const dirs = [
+              new Vec3(1,0,0), new Vec3(-1,0,0), new Vec3(0,0,1), new Vec3(0,0,-1),
+            ];
+            let placed = false;
+            for (const d of dirs) {
+              const target = pos.offset(d.x, d.y, d.z);
+              const below = this.bot.blockAt(target.offset(0, -1, 0));
+              const atTarget = this.bot.blockAt(target);
+              if (below && below.name !== 'air' && atTarget && atTarget.name === 'air') {
+                try {
+                  await this.bot.placeBlock(below, new Vec3(0, 1, 0));
+                  placed = true;
+                  break;
+                } catch (e) { /* try next */ }
+              }
+            }
+            if (placed) {
+              furnaceBlock = this.bot.findBlock({ matching: furnaceIds, maxDistance: 5 });
+            }
+          } catch (err) {
+            this.log('action_failed', `Failed to place furnace: ${err.message}`);
+            return;
+          }
+        }
+        if (!furnaceBlock) {
+          const hasFurnace = this.bot.inventory.items().some(i => i.name === 'furnace');
+          this.log('action_failed', hasFurnace
+            ? 'Could not find a spot to place furnace'
+            : 'No furnace found nearby and none in inventory. Craft one first (8 cobblestone)');
+          return;
+        }
       }
 
       // Walk to furnace if needed
