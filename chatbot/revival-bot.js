@@ -217,7 +217,8 @@ export class RevivalBot {
 
     // Nearby utility blocks (crafting table, furnace, chest, etc.)
     const utilityBlocks = [];
-    const UTILITY_BLOCK_IDS = ['crafting_table', 'furnace', 'chest', 'anvil', 'enchanting_table', 'smithing_table', 'blast_furnace', 'smoker'];
+    const UTILITY_BLOCK_IDS = ['crafting_table', 'furnace', 'chest', 'anvil', 'enchanting_table', 'smithing_table', 'blast_furnace', 'smoker',
+      'red_bed', 'white_bed', 'blue_bed', 'green_bed', 'black_bed', 'yellow_bed', 'orange_bed', 'cyan_bed', 'purple_bed', 'pink_bed', 'brown_bed', 'gray_bed', 'light_gray_bed', 'light_blue_bed', 'lime_bed', 'magenta_bed'];
     for (const name of UTILITY_BLOCK_IDS) {
       const blockId = this._mcData?.blocksByName[name]?.id;
       if (blockId == null) continue;

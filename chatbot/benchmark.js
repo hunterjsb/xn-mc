@@ -57,8 +57,8 @@ export const BENCHMARKS = {
       'wooden_pickaxe 1', 'wooden_sword 1', 'wooden_axe 1',
       'cobblestone 8', 'oak_planks 16', 'stick 8', 'crafting_table 1',
     ],
-    goal: 'craft a furnace, place it, kill a cow or pig, smelt the raw meat with oak_planks as fuel',
-    successItems: ['cooked_beef', 'cooked_porkchop', 'cooked_chicken', 'cooked_mutton', 'cooked_rabbit'],
+    goal: 'craft a furnace, place it, kill a cow or pig, smelt the raw meat with oak_planks as fuel, then eat the cooked food (you are hungry!)',
+    successCheck: 'food_eaten', // custom: check food level restored
     timeout: 600_000,
   },
   shears: {
@@ -75,10 +75,18 @@ export const BENCHMARKS = {
   diamonds: {
     name: 'Diamond Armor',
     startItems: [],
-    goal: 'get diamonds and craft a full set of diamond armor',
-    successItems: ['diamond_helmet', 'diamond_chestplate', 'diamond_leggings', 'diamond_boots'],
-    successAll: true,  // require ALL items, not just one
+    goal: 'get diamonds from the nearby chest, craft a full set of diamond armor (helmet, chestplate, leggings, boots), and EQUIP all 4 pieces',
+    successCheck: 'diamond_armor_equipped', // custom: check armor slots
     timeout: 600_000,
+  },
+  sleep: {
+    name: 'Survive & Sleep',
+    startItems: [
+      'wooden_sword 1', 'torch 4',
+    ],
+    goal: 'it is nighttime and monsters are spawning! find the nearby bed and sleep in it to survive the night',
+    successCheck: 'slept', // custom: check if time advanced past night
+    timeout: 300_000, // 5 min — should be quick
   },
   collect: {
     name: 'Resource Collection',
@@ -118,17 +126,48 @@ async function waitForBot(name, timeoutMs = 30_000) {
 
 async function getInventory(player) {
   const items = [];
-  // Slots 0-35 = main inventory, 100-103 = armor (boots, leggings, chestplate, helmet)
-  const slots = [...Array(36).keys(), 100, 101, 102, 103];
-  for (const i of slots) {
+  // Slots 0-35 = main inventory
+  for (const i of Array(36).keys()) {
     try {
       const resp = await rcon(`data get entity ${player} Inventory[{Slot:${i}b}]`);
       if (resp.includes('No elements') || resp.includes('Found no')) continue;
       const m = resp.match(/id: "minecraft:(\w+)".*?count: (\d+)/);
-      if (m) items.push({ name: m[1], count: parseInt(m[2]) });
+      if (m) items.push({ name: m[1], count: parseInt(m[2]), slot: i });
+    } catch { continue; }
+  }
+  // MC 1.21+ equipment slots (armor + held items)
+  for (const [slot, idx] of [['feet', 100], ['legs', 101], ['chest', 102], ['head', 103]]) {
+    try {
+      const resp = await rcon(`data get entity ${player} equipment.${slot}`);
+      if (resp.includes('Found no') || resp.includes('{}')) continue;
+      const m = resp.match(/id: "minecraft:(\w+)".*?count: (\d+)/);
+      if (m) items.push({ name: m[1], count: parseInt(m[2]), slot: idx });
     } catch { continue; }
   }
   return items;
+}
+
+// Check if specific items are equipped (MC 1.21+ uses equipment NBT, not Inventory slots)
+async function hasEquippedArmor(player, armorItems) {
+  const slotMap = { head: 'helmet', chest: 'chestplate', legs: 'leggings', feet: 'boots' };
+  const equipped = [];
+  for (const slot of ['head', 'chest', 'legs', 'feet']) {
+    try {
+      const resp = await rcon(`data get entity ${player} equipment.${slot}`);
+      const m = resp.match(/id: "minecraft:(\w+)"/);
+      if (m) equipped.push(m[1]);
+    } catch {}
+  }
+  return armorItems.every(name => equipped.includes(name));
+}
+
+// Check player's food/hunger level (returns -1 on error instead of 20)
+async function getFoodLevel(player) {
+  try {
+    const resp = await rcon(`data get entity ${player} foodLevel`);
+    const m = resp.match(/(\d+)$/);
+    return m ? parseInt(m[1]) : -1;
+  } catch { return -1; }
 }
 
 async function hasItem(player, itemNames, requireAll = false) {
@@ -236,8 +275,12 @@ async function runBenchmark(benchId, botName) {
   const pos = await getPlayerPos(botName);
   console.log(`${tag}  Spawned at ${pos.x}, ${pos.y}, ${pos.z}`);
 
-  // 5. Set time to day, set up environment, set up inventory
-  await rcon('time set day');
+  // 5. Set time, set up environment, set up inventory
+  if (benchId === 'sleep') {
+    await rcon('time set 14000'); // dusk — mobs start spawning
+  } else {
+    await rcon('time set day');
+  }
   // Ensure solid ground at spawn for all benchmarks
   for (let dx = -1; dx <= 1; dx++) {
     for (let dz = -1; dz <= 1; dz++) {
@@ -279,6 +322,22 @@ async function runBenchmark(benchId, botName) {
       await rcon(`setblock ${pos.x - 2} ${pos.y + y} ${pos.z} minecraft:oak_log`);
     }
   }
+  if (benchId === 'sleep') {
+    // Build a small shelter with a bed 5 blocks away
+    const bx = pos.x + 5, bz = pos.z;
+    // Clear space and place bed
+    for (let dy = 0; dy <= 2; dy++) {
+      await rcon(`setblock ${bx} ${pos.y + dy} ${bz} minecraft:air`);
+      await rcon(`setblock ${bx + 1} ${pos.y + dy} ${bz} minecraft:air`);
+    }
+    await rcon(`setblock ${bx} ${pos.y - 1} ${bz} minecraft:oak_planks`);
+    await rcon(`setblock ${bx + 1} ${pos.y - 1} ${bz} minecraft:oak_planks`);
+    await rcon(`setblock ${bx} ${pos.y} ${bz} minecraft:red_bed[part=foot,facing=east]`);
+    await rcon(`setblock ${bx + 1} ${pos.y} ${bz} minecraft:red_bed[part=head,facing=east]`);
+    // Place some torches so it's findable
+    await rcon(`setblock ${bx} ${pos.y + 1} ${bz + 1} minecraft:torch`);
+    await rcon(`setblock ${bx} ${pos.y + 1} ${bz - 1} minecraft:torch`);
+  }
   await rcon(`clear ${botName}`);
   for (const item of bench.startItems) {
     const [name, count] = item.split(' ');
@@ -299,15 +358,37 @@ async function runBenchmark(benchId, botName) {
   await rcon(`tp ${botName} ${pos.x} ${pos.y} ${pos.z}`);
   await sleep(1000);
 
-  // 6c. Spawn animals for food bench (right before goal so they don't wander)
+  // 6c. Bench-specific pre-goal setup
   if (benchId === 'food') {
     await rcon(`summon cow ${pos.x + 3} ${pos.y} ${pos.z}`);
     await rcon(`summon cow ${pos.x - 3} ${pos.y} ${pos.z}`);
     await rcon(`summon pig ${pos.x} ${pos.y} ${pos.z + 3}`);
   }
+  if (benchId === 'sleep') {
+    await rcon('time set midnight');
+  }
 
   // 7. Reset bench metrics and send goal
   await api('POST', `/bench/reset?bot=${botName}`);
+  // Food bench: drain hunger AFTER reset, right before goal
+  // Target: food level ~3-6 (hungry enough to need food, but won't die from starvation)
+  if (benchId === 'food') {
+    console.log(`${tag}  Draining hunger...`);
+    // Give resistance to prevent starvation death during/after drain
+    await rcon(`effect give ${botName} resistance 60 255 true`);
+    const rHun = await rcon(`effect give ${botName} hunger 10 255 true`);
+    console.log(`${tag}  Hunger effect: ${rHun}`);
+    // Poll until food drops below target, then clear
+    for (let i = 1; i <= 8; i++) {
+      await sleep(1000);
+      const fl = await getFoodLevel(botName);
+      if (fl >= 0 && fl <= 5) break;
+    }
+    await rcon(`effect clear ${botName} hunger`);
+    const fl = await getFoodLevel(botName);
+    console.log(`${tag}  Food level: ${fl}`);
+    // Keep resistance for 60s to prevent starvation death while bot works on cooking
+  }
   console.log(`${tag}  Goal: ${bench.goal}`);
   await api('POST', '/rbsay', { bot: botName, message: bench.goal, as: OWNER });
   const startTime = Date.now();
@@ -324,11 +405,34 @@ async function runBenchmark(benchId, botName) {
   while (Date.now() - startTime < bench.timeout) {
     await sleep(5000);
 
-    // Check inventory for success
+    // Check for success (custom or standard)
     try {
-      const passed = bench.successCounts
-        ? await hasRequiredCounts(botName, bench.successCounts)
-        : await hasItem(botName, bench.successItems, bench.successAll);
+      let passed = false;
+      if (bench.successCheck === 'diamond_armor_equipped') {
+        passed = await hasEquippedArmor(botName, ['diamond_helmet', 'diamond_chestplate', 'diamond_leggings', 'diamond_boots']);
+      } else if (bench.successCheck === 'food_eaten') {
+        // Success = food level restored above 6 (started at ~0 after hunger drain)
+        const fl = await getFoodLevel(botName);
+        passed = fl > 0 && fl >= 7;  // -1 = error, don't pass on error
+      } else if (bench.successCheck === 'slept') {
+        // Check if bot is currently sleeping OR time is now morning (sleeping skips to ~23460)
+        try {
+          const sleepResp = await rcon(`data get entity ${botName} SleepTimer`);
+          const sleeping = sleepResp.match(/(\d+)/);
+          if (sleeping && parseInt(sleeping[1]) > 0) { passed = true; }
+        } catch {}
+        if (!passed) {
+          const timeResp = await rcon('time query daytime');
+          const m = timeResp.match(/(\d+)/);
+          const daytime = m ? parseInt(m[1]) : 18000;
+          // Started at 18000 (midnight), sleeping advances to ~23460 or 0 (dawn)
+          passed = daytime < 2000 || daytime > 23000;
+        }
+      } else if (bench.successCounts) {
+        passed = await hasRequiredCounts(botName, bench.successCounts);
+      } else if (bench.successItems) {
+        passed = await hasItem(botName, bench.successItems, bench.successAll);
+      }
       if (passed) {
         success = true;
         break;
