@@ -692,7 +692,12 @@ async function main() {
     }
   }
 
-  const m = model || 'gpt-5-mini';
+  // Detect actual model: CLI flag → REVIVAL_MODEL env → default
+  const envModel = process.env.REVIVAL_MODEL;
+  const defaultModel = envModel
+    ? (envModel.startsWith('local/') ? envModel.slice('local/'.length).replace(':latest', '') : envModel)
+    : 'gpt-5-mini';
+  const m = model || defaultModel;
   const allResults = [];
   let jobIdx = 0;
 

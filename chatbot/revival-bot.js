@@ -1639,7 +1639,28 @@ export class RevivalBot {
       if (crafted === 0) {
         const invSummary = this.bot.inventory.items()
           .map(i => `${i.name} x${i.count}`).join(', ') || 'empty';
-        this.log('action_failed', `No recipe for ${itemName}. Your inventory: ${invSummary}`);
+        // Distinguish "no recipe exists" from "missing ingredients"
+        // recipesAll returns all recipes regardless of inventory
+        const allRecipes = this._mcData.recipes?.[item.id];
+        if (allRecipes && allRecipes.length > 0) {
+          // Recipe exists but ingredients are missing — extract what's needed
+          const r = allRecipes[0];
+          const needed = {};
+          const ingredients = r.inShape ? r.inShape.flat() : (r.ingredients || []);
+          for (const ing of ingredients) {
+            if (ing && ing.id !== undefined && ing.id >= 0) {
+              const ingItem = this._mcData.items[ing.id];
+              if (ingItem) needed[ingItem.name] = (needed[ingItem.name] || 0) + (ing.count || 1);
+            } else if (typeof ing === 'number' && ing >= 0) {
+              const ingItem = this._mcData.items[ing];
+              if (ingItem) needed[ingItem.name] = (needed[ingItem.name] || 0) + 1;
+            }
+          }
+          const neededStr = Object.entries(needed).map(([n, c]) => `${n} x${c}`).join(', ') || 'unknown';
+          this.log('action_failed', `Can't craft ${itemName} — missing ingredients. Need: ${neededStr}. You have: ${invSummary}`);
+        } else {
+          this.log('action_failed', `No recipe for ${itemName}. Your inventory: ${invSummary}`);
+        }
       } else {
         const isArmor = /helmet|chestplate|leggings|boots/.test(itemName);
         this.log('action_success', `Crafted ${crafted}x ${itemName}` + (isArmor ? '. Use equip to put it on' : ''));
