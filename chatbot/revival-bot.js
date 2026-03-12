@@ -747,6 +747,9 @@ export class RevivalBot {
       iron: 'iron_ore', gold: 'gold_ore', diamond: 'diamond_ore',
       coal: 'coal_ore', copper: 'copper_ore', lapis: 'lapis_ore',
       redstone: 'redstone_ore', emerald: 'emerald_ore',
+      // LLM sometimes uses drop names instead of block names
+      raw_iron: 'iron_ore', raw_gold: 'gold_ore', raw_copper: 'copper_ore',
+      cobbled_deepslate: 'deepslate',
       dirt: 'dirt', sand: 'sand', gravel: 'gravel', clay: 'clay',
     };
     const resolvedBlock = MINE_ALIASES[blockName] || blockName;
@@ -2172,7 +2175,8 @@ export class RevivalBot {
         if (clearPos) await clearIfReplaceable(clearPos);
         await this.bot.equip(item, 'hand'); // re-equip after digging
         await this.bot.placeBlock(ref, face);
-        this.log('action_success', `Placed ${item.name}`);
+        const bedHint = item.name.endsWith('_bed') ? '. Use sleep() to sleep in it' : '';
+        this.log('action_success', `Placed ${item.name}${bedHint}`);
         return;
       } catch (err) {
         // Try next candidate
@@ -2193,7 +2197,8 @@ export class RevivalBot {
         await clearIfReplaceable(newPos);
         await this.bot.equip(item, 'hand');
         await this.bot.placeBlock(nb, new Vec3(0, 1, 0));
-        this.log('action_success', `Placed ${item.name} (after repositioning)`);
+        const bedHint2 = item.name.endsWith('_bed') ? '. Use sleep() to sleep in it' : '';
+        this.log('action_success', `Placed ${item.name} (after repositioning)${bedHint2}`);
         return;
       }
     } catch {}

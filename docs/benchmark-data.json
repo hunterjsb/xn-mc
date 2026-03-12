@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T21:41:09.558Z",
-  "totalRuns": 1970,
+  "generated": "2026-03-12T22:30:47.566Z",
+  "totalRuns": 1982,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1653,26 +1653,26 @@
     },
     "glm-4.7-flash": {
       "overall": {
-        "pass": 95,
-        "total": 150,
-        "rate": 0.6333333333333333,
-        "avgTime": 223244,
+        "pass": 103,
+        "total": 162,
+        "rate": 0.6358024691358025,
+        "avgTime": 224828,
         "avgTools": 9
       },
       "pick": {
-        "pass": 15,
-        "total": 21,
-        "rate": 0.7142857142857143,
-        "avgTime": 335511,
+        "pass": 16,
+        "total": 22,
+        "rate": 0.7272727272727273,
+        "avgTime": 338512,
         "avgTimeout": 600000,
-        "avgTools": 14,
+        "avgTools": 13,
         "avgFailures": 2,
         "avgOwnerInteractions": 0,
         "toolCounts": {
           "stop": 8,
-          "objective": 40,
-          "mine": 53,
-          "craft": 140,
+          "objective": 41,
+          "mine": 54,
+          "craft": 146,
           "chest": 20,
           "place": 15,
           "attack": 1,
@@ -1682,8 +1682,8 @@
       },
       "food": {
         "pass": 15,
-        "total": 25,
-        "rate": 0.6,
+        "total": 26,
+        "rate": 0.5769230769230769,
         "avgTime": 171835,
         "avgTimeout": 600000,
         "avgTools": 7,
@@ -1691,13 +1691,13 @@
         "avgOwnerInteractions": 0,
         "toolCounts": {
           "attack": 19,
-          "objective": 58,
-          "craft": 40,
-          "chest": 53,
-          "pickup": 23,
+          "objective": 61,
+          "craft": 41,
+          "chest": 59,
+          "pickup": 29,
           "mine": 14,
-          "smelt": 32,
-          "eat": 21,
+          "smelt": 34,
+          "eat": 23,
           "remember": 1,
           "place": 18,
           "come_here": 1,
@@ -1706,41 +1706,43 @@
         }
       },
       "shears": {
-        "pass": 17,
-        "total": 21,
-        "rate": 0.8095238095238095,
-        "avgTime": 266887,
+        "pass": 20,
+        "total": 25,
+        "rate": 0.8,
+        "avgTime": 256251,
         "avgTimeout": 600000,
         "avgTools": 6,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 32,
-          "mine": 34,
-          "smelt": 33,
-          "craft": 25,
+          "objective": 42,
+          "mine": 38,
+          "smelt": 43,
+          "craft": 36,
           "eat": 4,
-          "chest": 18,
-          "come_here": 1,
+          "chest": 22,
+          "come_here": 2,
           "stop": 4,
           "equip": 1,
-          "pickup": 3
+          "pickup": 3,
+          "place": 4,
+          "attack": 1
         }
       },
       "diamonds": {
-        "pass": 20,
-        "total": 33,
-        "rate": 0.6060606060606061,
-        "avgTime": 153230,
+        "pass": 21,
+        "total": 34,
+        "rate": 0.6176470588235294,
+        "avgTime": 158154,
         "avgTimeout": 600000,
         "avgTools": 12,
         "avgFailures": 2,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 91,
-          "chest": 137,
+          "objective": 92,
+          "chest": 141,
           "place": 8,
-          "craft": 225,
+          "craft": 233,
           "mine": 20,
           "equip": 16,
           "objective(set)": 1,
@@ -1748,24 +1750,24 @@
           "stop": 7,
           "whisper": 2,
           "eat": 6,
-          "come_here": 1,
+          "come_here": 2,
           "pickup": 3,
           "follow": 1,
           "attack": 1
         }
       },
       "collect": {
-        "pass": 15,
-        "total": 17,
-        "rate": 0.8823529411764706,
-        "avgTime": 210225,
+        "pass": 16,
+        "total": 18,
+        "rate": 0.8888888888888888,
+        "avgTime": 210482,
         "avgTimeout": 600000,
         "avgTools": 5,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 22,
-          "mine": 60,
+          "objective": 23,
+          "mine": 63,
           "craft": 3,
           "chest": 8,
           "whisper": 1,
@@ -1776,26 +1778,28 @@
         }
       },
       "sleep": {
-        "pass": 11,
-        "total": 18,
-        "rate": 0.6111111111111112,
-        "avgTime": 192159,
+        "pass": 13,
+        "total": 22,
+        "rate": 0.5909090909090909,
+        "avgTime": 201570,
         "avgTimeout": 300000,
         "avgTools": 10,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 22,
-          "craft": 32,
-          "chest": 79,
+          "objective": 26,
+          "craft": 41,
+          "chest": 97,
           "mine": 3,
-          "sleep": 11,
+          "sleep": 13,
           "stop": 4,
-          "place": 9,
-          "whisper": 1,
-          "equip": 1,
+          "place": 14,
+          "whisper": 3,
+          "equip": 2,
           "pickup": 1,
-          "eat": 2
+          "eat": 2,
+          "come_here": 1,
+          "chest(check)": 1
         }
       },
       "iron": {
@@ -135275,6 +135279,1197 @@
         }
       ],
       "ts": "2026-03-12T21:41:09.510Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 194436,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears by finding and smelting iron",
+            "priority": "high"
+          },
+          "t": 1773351902733
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773351902733
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 5
+          },
+          "t": 1773352000278
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773352067529
+        }
+      ],
+      "ts": "2026-03-12T21:47:55.696Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 208363,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears - mine iron ore, smelt, then craft",
+            "priority": "high"
+          },
+          "t": 1773351911051
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773351911051
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "bone",
+            "count": 5
+          },
+          "t": 1773352021246
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773352083791
+        }
+      ],
+      "ts": "2026-03-12T21:48:08.614Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 601645,
+      "timeout": 600000,
+      "toolCalls": 32,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "smelt raw iron to iron ingots, craft iron pickaxe",
+            "priority": "high"
+          },
+          "t": 1773351921079
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773351921079
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_shears",
+            "count": 1
+          },
+          "t": 1773351966451
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "smelt raw iron to iron ingots, craft iron pickaxe"
+          },
+          "t": 1773351966451
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft iron pickaxe",
+            "priority": "high"
+          },
+          "t": 1773351966451
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773351966451
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "craft iron pickaxe"
+          },
+          "t": 1773351981107
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773351989894
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773352010359
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears (need iron ingots)",
+            "priority": "high"
+          },
+          "t": 1773352030461
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352041109
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773352058674
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 8
+          },
+          "t": 1773352184346
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773352198109
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773352215897
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773352232050
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 8
+          },
+          "t": 1773352245546
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 8
+          },
+          "t": 1773352262924
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773352282516
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773352301691
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "smelt 8 raw iron for shears",
+            "priority": "high"
+          },
+          "t": 1773352316847
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 8
+          },
+          "t": 1773352316847
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 8,
+            "fuel": "cobblestone"
+          },
+          "t": 1773352334781
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352353885
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773352369197
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773352387870
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773352407868
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "creeper",
+            "count": 1
+          },
+          "t": 1773352424288
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352452774
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "above"
+          },
+          "t": 1773352468480
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352488606
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "torch",
+            "count": 8
+          },
+          "t": 1773352505000
+        }
+      ],
+      "ts": "2026-03-12T21:55:10.161Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 185138,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron shears - need to mine and smelt iron ore",
+            "priority": "high"
+          },
+          "t": 1773352612831
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773352612831
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773352667514
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_shears",
+            "count": 1
+          },
+          "t": 1773352726244
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773352757884
+        }
+      ],
+      "ts": "2026-03-12T21:59:23.310Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 383520,
+      "timeout": 600000,
+      "toolCalls": 8,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773352633998
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 3
+          },
+          "t": 1773352651997
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 12
+          },
+          "t": 1773352766958
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks",
+            "count": 4
+          },
+          "t": 1773352852774
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773352869868
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773352897557
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773352929020
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773352957223
+        }
+      ],
+      "ts": "2026-03-12T22:02:41.265Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 256639,
+      "timeout": 600000,
+      "toolCalls": 14,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor from nearby chest",
+            "priority": "normal"
+          },
+          "t": 1773352833811
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352833811
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond"
+          },
+          "t": 1773352861149
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773352888637
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773352888637
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773352888637
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773352888637
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352939502
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773352968021
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take"
+          },
+          "t": 1773352997654
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773353027958
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773353027958
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773353027958
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773353027958
+        }
+      ],
+      "ts": "2026-03-12T22:03:57.315Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "food",
+      "success": false,
+      "elapsed": 600610,
+      "timeout": 600000,
+      "toolCalls": 20,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773352596097
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Cook and eat meat to survive",
+            "priority": "high"
+          },
+          "t": 1773352622292
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773352644454
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 4
+          },
+          "t": 1773352660269
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "beef"
+          },
+          "t": 1773352677092
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352689957
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352703949
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "rotten_flesh"
+          },
+          "t": 1773352739198
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773352785497
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352813682
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "salmon"
+          },
+          "t": 1773352843436
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "salmon"
+          },
+          "t": 1773352879425
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352908454
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773352947444
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "salmon"
+          },
+          "t": 1773352975669
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773353007095
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "raw_meat"
+          },
+          "t": 1773353036884
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773353077731
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Cook and eat meat to survive",
+            "priority": "high"
+          },
+          "t": 1773353113284
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "rotten_flesh",
+            "fuel": "bone",
+            "count": 5
+          },
+          "t": 1773353113284
+        }
+      ],
+      "ts": "2026-03-12T22:06:25.679Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 214325,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather 16 dirt, 8 logs, and 16 cobblestone",
+            "priority": "normal"
+          },
+          "t": 1773353121839
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773353141974
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 7
+          },
+          "t": 1773353186526
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773353242188
+        }
+      ],
+      "ts": "2026-03-12T22:07:52.597Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 304592,
+      "timeout": 300000,
+      "toolCalls": 13,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773352986967
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep (nighttime safety)",
+            "priority": "high"
+          },
+          "t": 1773353017051
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773353017051
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773353045718
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773353102544
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773353132395
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773353151057
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773353176852
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773353206377
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773353223567
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773353251087
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773353262685
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773353274841
+        }
+      ],
+      "ts": "2026-03-12T22:08:06.517Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 220769,
+      "timeout": 300000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "whisper",
+          "params": {
+            "player": "BrezzyTracks",
+            "message": "thanks for bringing me back! uhh ok, i think i got it"
+          },
+          "t": 1773354382985
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep to survive the night"
+          },
+          "t": 1773354414902
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773354414902
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take"
+          },
+          "t": 1773354449645
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773354485689
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773354512337
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773354531660
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773354556969
+        }
+      ],
+      "ts": "2026-03-12T22:29:25.349Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 285886,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "whisper",
+          "params": {
+            "player": "BrezzyTracks",
+            "message": "hey thanks for the revival! all good now."
+          },
+          "t": 1773354370444
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and get some sleep - monsters are out tonight",
+            "priority": "high"
+          },
+          "t": 1773354404776
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773354404776
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773354439946
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773354474151
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773354504292
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773354504292
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773354540498
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773354567188
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773354604099
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773354622464
+        }
+      ],
+      "ts": "2026-03-12T22:30:30.082Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 304887,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed from chest supplies and sleep through the night",
+            "priority": "high"
+          },
+          "t": 1773354394169
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773354394169
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773354427165
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773354461386
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773354494630
+        },
+        {
+          "name": "chest(check)",
+          "params": {},
+          "t": 1773354522609
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773354548661
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773354575760
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773354595622
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773354615123
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed",
+            "direction": "forward"
+          },
+          "t": 1773354631078
+        }
+      ],
+      "ts": "2026-03-12T22:30:47.510Z"
     }
   ]
 }
