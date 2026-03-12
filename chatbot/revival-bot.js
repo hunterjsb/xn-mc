@@ -1870,8 +1870,43 @@ export class RevivalBot {
       bed = this.bot.findBlock({ matching: bedIds, maxDistance: 32 });
     }
     if (!bed) {
-      this.log('action_failed', 'No bed found nearby');
-      return;
+      // Auto-place a bed from inventory if we have one
+      const bedItem = this.bot.inventory.items().find(i => i.name.endsWith('_bed'));
+      if (bedItem) {
+        this.log('action', `No bed nearby — placing ${bedItem.name} from inventory`);
+        try {
+          await this.bot.equip(bedItem, 'hand');
+          const pos = this.bot.entity.position.floored();
+          const Vec3 = this.bot.entity.position.constructor;
+          const REPLACEABLE = new Set(['short_grass','tall_grass','fern','dead_bush','leaf_litter','snow','vine','dandelion','poppy']);
+          let placed = false;
+          for (const [dx, dz] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]]) {
+            const target = pos.offset(dx, 0, dz);
+            const below = this.bot.blockAt(target.offset(0, -1, 0));
+            const atTarget = this.bot.blockAt(target);
+            if (below && below.name !== 'air' && atTarget &&
+                (atTarget.name === 'air' || REPLACEABLE.has(atTarget.name))) {
+              try {
+                if (REPLACEABLE.has(atTarget.name)) await this.bot.dig(atTarget);
+                await this.bot.equip(bedItem, 'hand');
+                await this.bot.placeBlock(below, new Vec3(0, 1, 0));
+                placed = true;
+                break;
+              } catch (e) { /* try next */ }
+            }
+          }
+          if (placed) {
+            await new Promise(r => setTimeout(r, 500));
+            bed = this.bot.findBlock({ matching: bedIds, maxDistance: 8 });
+          }
+        } catch (err) {
+          this.log('action_failed', `Failed to place bed: ${err.message}`);
+        }
+      }
+      if (!bed) {
+        this.log('action_failed', 'No bed found nearby and none in inventory');
+        return;
+      }
     }
 
     try {
