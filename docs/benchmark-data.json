@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T18:11:34.984Z",
-  "totalRuns": 1899,
+  "generated": "2026-03-12T18:22:36.001Z",
+  "totalRuns": 1902,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1782,10 +1782,10 @@
     },
     "glm-4.7-flash": {
       "overall": {
-        "pass": 48,
-        "total": 74,
-        "rate": 0.6486486486486487,
-        "avgTime": 220158,
+        "pass": 50,
+        "total": 77,
+        "rate": 0.6493506493506493,
+        "avgTime": 228267,
         "avgTools": 10
       },
       "pick": {
@@ -1831,21 +1831,25 @@
         }
       },
       "shears": {
-        "pass": 8,
-        "total": 9,
-        "rate": 0.8888888888888888,
-        "avgTime": 208105,
+        "pass": 10,
+        "total": 12,
+        "rate": 0.8333333333333334,
+        "avgTime": 251064,
         "avgTimeout": 600000,
-        "avgTools": 5,
+        "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 10,
-          "mine": 9,
-          "smelt": 15,
-          "craft": 12,
+          "objective": 17,
+          "mine": 20,
+          "smelt": 25,
+          "craft": 14,
           "eat": 3,
-          "chest": 7
+          "chest": 14,
+          "come_here": 1,
+          "stop": 1,
+          "equip": 1,
+          "pickup": 2
         }
       },
       "diamonds": {
@@ -128017,6 +128021,377 @@
         }
       ],
       "ts": "2026-03-12T18:11:34.923Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 393463,
+      "timeout": 600000,
+      "toolCalls": 13,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "gather materials for diamond armor: oak logs and cobblestone",
+            "priority": "normal"
+          },
+          "t": 1773339176636
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 4
+          },
+          "t": 1773339202271
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears: smelt iron, craft shears",
+            "priority": "normal"
+          },
+          "t": 1773339268658
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 4,
+            "fuel": "cobblestone"
+          },
+          "t": 1773339268658
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 32
+          },
+          "t": 1773339316019
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 32
+          },
+          "t": 1773339316019
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 32
+          },
+          "t": 1773339433796
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft a pair of shears: smelt iron, craft shears",
+            "priority": "normal"
+          },
+          "t": 1773339458580
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "coal",
+            "count": 4
+          },
+          "t": 1773339458580
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773339476413
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773339494355
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "iron_ingot"
+          },
+          "t": 1773339526475
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 2
+          },
+          "t": 1773339545931
+        }
+      ],
+      "ts": "2026-03-12T18:19:07.347Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 452336,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears - need iron ore and smelting",
+            "priority": "high"
+          },
+          "t": 1773339185960
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773339185960
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773339244799
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773339294458
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773339349665
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773339423150
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773339506281
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears - need iron ingots",
+            "priority": "high"
+          },
+          "t": 1773339555411
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3,
+            "fuel": "coal"
+          },
+          "t": 1773339555411
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773339601757
+        }
+      ],
+      "ts": "2026-03-12T18:20:06.156Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 602164,
+      "timeout": 600000,
+      "toolCalls": 19,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773339162344
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears by mining and smelting iron",
+            "priority": "high"
+          },
+          "t": 1773339194082
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773339194082
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "coal",
+            "count": 1
+          },
+          "t": 1773339283338
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773339304151
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773339326559
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773339339010
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears (need 2 iron ingots)",
+            "priority": "high"
+          },
+          "t": 1773339410619
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "fuel": "coal",
+            "count": 10
+          },
+          "t": 1773339410619
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773339448039
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773339467766
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "fuel": "coal",
+            "count": 10
+          },
+          "t": 1773339484194
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773339516464
+        },
+        {
+          "name": "pickup",
+          "params": {},
+          "t": 1773339537908
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773339567323
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "fuel": "coal",
+            "count": 10
+          },
+          "t": 1773339623975
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "fuel": "coal",
+            "count": 10
+          },
+          "t": 1773339654366
+        },
+        {
+          "name": "pickup",
+          "params": {},
+          "t": 1773339676276
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773339698965
+        }
+      ],
+      "ts": "2026-03-12T18:22:35.946Z"
     }
   ]
 }
