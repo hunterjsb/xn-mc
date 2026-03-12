@@ -1551,24 +1551,29 @@ export class RevivalBot {
             try {
               await this.bot.equip(tableItem, 'hand');
               const pos = this.bot.entity.position.floored();
-              // Try to place on the block below us or adjacent
               const Vec3 = (await import('vec3')).default;
-              const dirs = [
-                new Vec3(1,0,0), new Vec3(-1,0,0), new Vec3(0,0,1), new Vec3(0,0,-1),
-                new Vec3(0,0,0), // right where we stand
-              ];
+              const REPLACEABLE = new Set(['short_grass','tall_grass','fern','dead_bush','leaf_litter','snow','vine','dandelion','poppy']);
               let placed = false;
-              for (const d of dirs) {
-                const target = pos.offset(d.x, d.y, d.z);
-                const below = this.bot.blockAt(target.offset(0, -1, 0));
-                const atTarget = this.bot.blockAt(target);
-                if (below && below.name !== 'air' && atTarget && atTarget.name === 'air') {
-                  try {
-                    await this.bot.placeBlock(below, new Vec3(0, 1, 0));
-                    placed = true;
-                    break;
-                  } catch (e) { /* try next */ }
+              for (const dy of [0, 1, -1]) {
+                for (const [dx, dz] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+                  for (const dist of [1, 2]) {
+                    const target = pos.offset(dx * dist, dy, dz * dist);
+                    const below = this.bot.blockAt(target.offset(0, -1, 0));
+                    const atTarget = this.bot.blockAt(target);
+                    if (below && below.name !== 'air' && atTarget &&
+                        (atTarget.name === 'air' || REPLACEABLE.has(atTarget.name))) {
+                      try {
+                        if (REPLACEABLE.has(atTarget.name)) await this.bot.dig(atTarget);
+                        await this.bot.equip(tableItem, 'hand');
+                        await this.bot.placeBlock(below, new Vec3(0, 1, 0));
+                        placed = true;
+                        break;
+                      } catch (e) { /* try next */ }
+                    }
+                  }
+                  if (placed) break;
                 }
+                if (placed) break;
               }
               if (placed) {
                 // Re-find the placed crafting table
@@ -1665,21 +1670,29 @@ export class RevivalBot {
             await this.bot.equip(furnaceItem, 'hand');
             const Vec3 = (await import('vec3')).default;
             const pos = this.bot.entity.position.floored();
-            const dirs = [
-              new Vec3(1,0,0), new Vec3(-1,0,0), new Vec3(0,0,1), new Vec3(0,0,-1),
-            ];
+            const REPLACEABLE = new Set(['short_grass','tall_grass','fern','dead_bush','leaf_litter','snow','vine','dandelion','poppy']);
             let placed = false;
-            for (const d of dirs) {
-              const target = pos.offset(d.x, d.y, d.z);
-              const below = this.bot.blockAt(target.offset(0, -1, 0));
-              const atTarget = this.bot.blockAt(target);
-              if (below && below.name !== 'air' && atTarget && atTarget.name === 'air') {
-                try {
-                  await this.bot.placeBlock(below, new Vec3(0, 1, 0));
-                  placed = true;
-                  break;
-                } catch (e) { /* try next */ }
+            // Try cardinal dirs at distance 1 and 2, including y offsets for uneven terrain
+            for (const dy of [0, 1, -1]) {
+              for (const [dx, dz] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+                for (const dist of [1, 2]) {
+                  const target = pos.offset(dx * dist, dy, dz * dist);
+                  const below = this.bot.blockAt(target.offset(0, -1, 0));
+                  const atTarget = this.bot.blockAt(target);
+                  if (below && below.name !== 'air' && atTarget &&
+                      (atTarget.name === 'air' || REPLACEABLE.has(atTarget.name))) {
+                    try {
+                      if (REPLACEABLE.has(atTarget.name)) await this.bot.dig(atTarget);
+                      await this.bot.equip(furnaceItem, 'hand');
+                      await this.bot.placeBlock(below, new Vec3(0, 1, 0));
+                      placed = true;
+                      break;
+                    } catch (e) { /* try next */ }
+                  }
+                }
+                if (placed) break;
               }
+              if (placed) break;
             }
             if (placed) {
               furnaceBlock = this.bot.findBlock({ matching: furnaceIds, maxDistance: 5 });
