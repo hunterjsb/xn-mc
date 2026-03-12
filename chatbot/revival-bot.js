@@ -1669,6 +1669,12 @@ export class RevivalBot {
         if (isArmor) {
           // Auto-equip armor immediately after crafting
           try {
+            // Close crafting table window first — equip fails while a container is open
+            if (this.bot.currentWindow) {
+              this.bot.closeWindow(this.bot.currentWindow);
+            }
+            // Always wait for inventory sync after crafting
+            await new Promise(r => setTimeout(r, 500));
             const armorItem = this.bot.inventory.items().find(i => i.name === itemName);
             if (armorItem) {
               let dest = 'torso';
@@ -1680,7 +1686,8 @@ export class RevivalBot {
             } else {
               this.log('action_success', `Crafted ${crafted}x ${itemName}. Use equip to put it on`);
             }
-          } catch {
+          } catch (equipErr) {
+            console.error(`[Revival] Auto-equip ${itemName} failed: ${equipErr.message}`);
             this.log('action_success', `Crafted ${crafted}x ${itemName}. Use equip to put it on`);
           }
         } else {
@@ -1870,6 +1877,11 @@ export class RevivalBot {
 
     this.log('action', `Equipping ${item.name} to ${dest}`);
     try {
+      // Close any open container window first — equip can fail with a window open
+      if (this.bot.currentWindow) {
+        this.bot.closeWindow(this.bot.currentWindow);
+        await new Promise(r => setTimeout(r, 200));
+      }
       await this.bot.equip(item, dest);
       this.log('action_success', `Equipped ${item.name}`);
     } catch (err) {

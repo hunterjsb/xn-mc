@@ -7,6 +7,9 @@
  *   food     — From wooden tools, kill an animal and cook food
  *   shears   — From wooden tools + food, mine iron, smelt, craft shears
  *   diamonds — From empty, find diamonds in a chest and craft full armor
+ *   sleep    — From sword + torches, craft bed from chest and sleep
+ *   collect  — With iron tools, gather dirt/logs/cobblestone
+ *   iron     — From food only, full progression to iron pickaxe
  *
  * Usage:
  *   node benchmark.js pick              # run one benchmark
@@ -109,6 +112,15 @@ export const BENCHMARKS = {
     ],
     goal: 'gather resources: 16 dirt, 8 logs, and 16 cobblestone',
     successCounts: { dirt: 16, _log: 8, cobblestone: 16 },
+    timeout: 600_000,
+  },
+  iron: {
+    name: 'Iron Pickaxe',
+    startItems: [
+      'cooked_beef 5',
+    ],
+    goal: 'craft an iron pickaxe from scratch',
+    successItems: ['iron_pickaxe'],
     timeout: 600_000,
   },
 };
