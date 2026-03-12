@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T09:49:37.544Z",
-  "totalRuns": 1678,
+  "generated": "2026-03-12T10:41:07.808Z",
+  "totalRuns": 1688,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1115,10 +1115,10 @@
     },
     "local/glm-4.7-flash:latest": {
       "overall": {
-        "pass": 137,
-        "total": 315,
-        "rate": 0.43492063492063493,
-        "avgTime": 238350,
+        "pass": 142,
+        "total": 325,
+        "rate": 0.4369230769230769,
+        "avgTime": 237271,
         "avgTools": 10
       },
       "pick": {
@@ -1147,26 +1147,26 @@
         }
       },
       "food": {
-        "pass": 14,
-        "total": 56,
-        "rate": 0.25,
-        "avgTime": 209290,
-        "avgTimeout": 492857,
-        "avgTools": 9,
+        "pass": 19,
+        "total": 66,
+        "rate": 0.2878787878787879,
+        "avgTime": 208872,
+        "avgTimeout": 509091,
+        "avgTools": 8,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 73,
-          "craft": 99,
-          "place": 46,
-          "attack": 18,
-          "stop": 4,
-          "mine": 18,
-          "chest": 33,
-          "smelt": 23,
-          "eat": 22,
+          "objective": 80,
+          "craft": 106,
+          "place": 49,
+          "attack": 25,
+          "stop": 5,
+          "mine": 19,
+          "chest": 38,
+          "smelt": 30,
+          "eat": 28,
           "whisper": 3,
-          "pickup": 11,
+          "pickup": 14,
           "drop": 1,
           "remember": 1
         }
@@ -109489,6 +109489,481 @@
         }
       ],
       "ts": "2026-03-12T09:47:34.453Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 125967,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T10:02:39.183Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 134795,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 1,
+      "toolLog": [],
+      "ts": "2026-03-12T10:02:49.402Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": true,
+      "elapsed": 75542,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773309784529
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Cook and eat meat to restore hunger",
+            "priority": "high"
+          },
+          "t": 1773309800902
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 1
+          },
+          "t": 1773309800902
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773309821982
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "fuel": "coal",
+            "count": 1
+          },
+          "t": 1773309839518
+        }
+      ],
+      "ts": "2026-03-12T10:04:18.461Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": true,
+      "elapsed": 392331,
+      "timeout": 600000,
+      "toolCalls": 12,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "kill animals for food and cook/eat",
+            "priority": "high"
+          },
+          "t": 1773309809010
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 2
+          },
+          "t": 1773309809010
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773309846992
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773309858688
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773309875972
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 8
+          },
+          "t": 1773309898124
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773309960178
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 3
+          },
+          "t": 1773309972154
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773310030468
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 3
+          },
+          "t": 1773310070650
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773310132936
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "fuel": "coal",
+            "count": 2
+          },
+          "t": 1773310157463
+        }
+      ],
+      "ts": "2026-03-12T10:09:44.397Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 603677,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773309630579
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "salmon"
+          },
+          "t": 1773309680157
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "salmon",
+            "count": 3,
+            "fuel": "coal"
+          },
+          "t": 1773309708406
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773309736533
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773309758055
+        }
+      ],
+      "ts": "2026-03-12T10:10:39.760Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 111015,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T10:14:07.489Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": true,
+      "elapsed": 176850,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773310356257
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 1
+          },
+          "t": 1773310382179
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Cook and eat meat to survive",
+            "priority": "high"
+          },
+          "t": 1773310417810
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "beef"
+          },
+          "t": 1773310417810
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773310448145
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773310467821
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 2
+          },
+          "t": 1773310492164
+        }
+      ],
+      "ts": "2026-03-12T10:15:20.469Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": true,
+      "elapsed": 196903,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft diamond armor",
+            "priority": "high"
+          },
+          "t": 1773310346577
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "pig",
+            "count": 1
+          },
+          "t": 1773310373959
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773310400660
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773310428093
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773310458972
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773310483420
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "porkchop",
+            "count": 1
+          },
+          "t": 1773310516228
+        }
+      ],
+      "ts": "2026-03-12T10:15:35.538Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": true,
+      "elapsed": 196898,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773310474476
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "porkchop"
+          },
+          "t": 1773310503749
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "cow",
+            "count": 1
+          },
+          "t": 1773310503749
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773310534227
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "cook and eat meat",
+            "priority": "high"
+          },
+          "t": 1773310564906
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773310564906
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773310584670
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773310606978
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773310617308
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "porkchop",
+            "count": 1
+          },
+          "t": 1773310640082
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 1
+          },
+          "t": 1773310640082
+        }
+      ],
+      "ts": "2026-03-12T10:17:47.458Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 503631,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T10:24:19.455Z"
     }
   ]
 }

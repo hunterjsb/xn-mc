@@ -1000,6 +1000,8 @@ export class RevivalBot {
 
     const nameLower = mobName.toLowerCase();
     let killed = 0;
+    // Snapshot inventory before attack for diff
+    const invBefore = new Map(this.bot.inventory.items().map(i => [i.name, i.count]));
 
     for (let i = 0; i < count && this.state === 'attacking' && this.connected && !this.despawned; i++) {
       const target = this.bot.nearestEntity(e => {
@@ -1049,7 +1051,14 @@ export class RevivalBot {
     if (this.state === 'attacking') this.state = 'idle';
 
     if (killed > 0) {
-      this.log('action_success', `Killed ${killed}${count > 1 ? `/${count}` : ''} ${mobName}`);
+      // Report inventory diff (what was picked up from drops)
+      const gained = [];
+      for (const item of this.bot.inventory.items()) {
+        const before = invBefore.get(item.name) || 0;
+        if (item.count > before) gained.push(`${item.name} x${item.count - before}`);
+      }
+      const dropMsg = gained.length > 0 ? `. Picked up: ${gained.join(', ')}` : '';
+      this.log('action_success', `Killed ${killed}${count > 1 ? `/${count}` : ''} ${mobName}${dropMsg}`);
     }
   }
 
