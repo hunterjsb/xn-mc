@@ -331,19 +331,25 @@ function wireRevivalBot(rBot) {
 
 async function executeRevivalAction(rBot, actionName, params) {
   console.log(`[Revival Action] ${rBot.username}: ${actionName}(${JSON.stringify(params)})`);
+  // Guard against missing required params (LLM sometimes omits them)
+  const need = (val, name) => {
+    if (val) return true;
+    rBot.log('action_failed', `${actionName}: missing required parameter "${name}"`);
+    return false;
+  };
   switch (actionName) {
     case 'follow': rBot._cmdFollowPlayer(params.player || rBot.owner); break;
     case 'come_here': rBot._cmdCome(); break;
     case 'stop': rBot._cmdStop(); break;
     case 'guard': rBot._cmdGuard(); break;
-    case 'mine': await rBot._cmdMine(params.block, params.count || 16); break;
-    case 'attack': await rBot._cmdAttack(params.mob, params.count || 1); break;
+    case 'mine': if (need(params.block, 'block')) await rBot._cmdMine(params.block, params.count || 16); break;
+    case 'attack': if (need(params.mob, 'mob')) await rBot._cmdAttack(params.mob, params.count || 1); break;
     case 'pickup': await rBot._cmdPickup(params.item); break;
     case 'drop':
       if (params.item) rBot._cmdDrop(params.item, params.count);
       else await rBot._cmdDropAll();
       break;
-    case 'give': rBot._cmdGive(params.player, params.item, params.count); break;
+    case 'give': if (need(params.player, 'player') && need(params.item, 'item')) rBot._cmdGive(params.player, params.item, params.count); break;
     case 'chest':
       switch (params.action) {
         case 'check': await rBot._cmdCheckChests(); break;
@@ -357,12 +363,12 @@ async function executeRevivalAction(rBot, actionName, params) {
           break;
       }
       break;
-    case 'craft': await rBot._cmdCraft(params.item, params.count || 1); break;
-    case 'equip': await rBot._cmdEquip(params.item); break;
-    case 'smelt': await rBot._cmdSmelt(params.item, params.fuel || 'coal', params.count || 1); break;
+    case 'craft': if (need(params.item, 'item')) await rBot._cmdCraft(params.item, params.count || 1); break;
+    case 'equip': if (need(params.item, 'item')) await rBot._cmdEquip(params.item); break;
+    case 'smelt': if (need(params.item, 'item')) await rBot._cmdSmelt(params.item, params.fuel || 'coal', params.count || 1); break;
     case 'eat': await rBot._cmdEat(); break;
     case 'sleep': await rBot._cmdSleep(); break;
-    case 'place': await rBot._cmdPlace(params.block, params.direction || 'forward'); break;
+    case 'place': if (need(params.block, 'block')) await rBot._cmdPlace(params.block, params.direction || 'forward'); break;
     case 'whisper':
       if (params.player && params.message) {
         rBot.bot.chat(`/msg ${params.player} ${params.message}`);

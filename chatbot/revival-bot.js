@@ -1839,7 +1839,8 @@ export class RevivalBot {
     });
 
     if (foods.length === 0) {
-      this.log('action_failed', 'No food in inventory');
+      const inv = this.bot.inventory.items().map(i => `${i.name} x${i.count}`).join(', ') || 'empty';
+      this.log('action_failed', `No cooked food in inventory. You have: ${inv}`);
       return;
     }
 

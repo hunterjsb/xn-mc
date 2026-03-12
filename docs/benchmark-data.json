@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T07:12:02.536Z",
-  "totalRuns": 1607,
+  "generated": "2026-03-12T07:29:13.814Z",
+  "totalRuns": 1612,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1115,10 +1115,10 @@
     },
     "local/glm-4.7-flash:latest": {
       "overall": {
-        "pass": 93,
-        "total": 244,
-        "rate": 0.38114754098360654,
-        "avgTime": 242462,
+        "pass": 98,
+        "total": 249,
+        "rate": 0.39357429718875503,
+        "avgTime": 242309,
         "avgTools": 10
       },
       "pick": {
@@ -1170,21 +1170,21 @@
         }
       },
       "shears": {
-        "pass": 17,
-        "total": 44,
-        "rate": 0.38636363636363635,
-        "avgTime": 206814,
-        "avgTimeout": 463636,
+        "pass": 22,
+        "total": 49,
+        "rate": 0.4489795918367347,
+        "avgTime": 214231,
+        "avgTimeout": 477551,
         "avgTools": 6,
-        "avgFailures": 0,
+        "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 58,
-          "mine": 55,
-          "smelt": 60,
-          "place": 67,
-          "chest": 34,
-          "craft": 33,
+          "objective": 69,
+          "mine": 61,
+          "smelt": 67,
+          "place": 71,
+          "chest": 35,
+          "craft": 43,
           "eat": 4,
           "stop": 4,
           "follow": 2,
@@ -103575,6 +103575,388 @@
         }
       ],
       "ts": "2026-03-12T07:09:01.959Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 136783,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773299560904
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears - need iron ore, smelt, then craft",
+            "priority": "normal"
+          },
+          "t": 1773299588283
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 4
+          },
+          "t": 1773299588283
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773299640132
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773299652144
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773299693912
+        }
+      ],
+      "ts": "2026-03-12T07:14:55.851Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 218839,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft diamond helmet",
+            "priority": "normal"
+          },
+          "t": 1773299569485
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773299569485
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears (mine & smelt iron)",
+            "priority": "high"
+          },
+          "t": 1773299599524
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 10
+          },
+          "t": 1773299599524
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773299679423
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 6,
+            "fuel": "coal"
+          },
+          "t": 1773299679423
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773299751999
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773299773250
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft shears (mine & smelt iron)"
+          },
+          "t": 1773299773250
+        }
+      ],
+      "ts": "2026-03-12T07:16:18.010Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 290107,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773299579653
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears - need iron from mining and smelting",
+            "priority": "high"
+          },
+          "t": 1773299630722
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773299630722
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2,
+            "fuel": "coal"
+          },
+          "t": 1773299713393
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears - need iron from mining and smelting",
+            "priority": "high"
+          },
+          "t": 1773299713393
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "coal",
+            "count": 2
+          },
+          "t": 1773299763092
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773299843737
+        }
+      ],
+      "ts": "2026-03-12T07:17:29.107Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 159581,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773299720865
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears (need iron ingots)",
+            "priority": "normal"
+          },
+          "t": 1773299729974
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773299729974
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773299825248
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773299865624
+        }
+      ],
+      "ts": "2026-03-12T07:17:50.158Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 391940,
+      "timeout": 600000,
+      "toolCalls": 12,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor",
+            "priority": "normal"
+          },
+          "t": 1773299794345
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773299806591
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773299876593
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773299900331
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2
+          },
+          "t": 1773299918499
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2
+          },
+          "t": 1773299938130
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773299971898
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773300000327
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears",
+            "priority": "high"
+          },
+          "t": 1773300000327
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773300151223
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773300160575
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773300182853
+        }
+      ],
+      "ts": "2026-03-12T07:23:03.850Z"
     }
   ]
 }
