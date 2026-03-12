@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T13:59:46.320Z",
-  "totalRuns": 1812,
+  "generated": "2026-03-12T14:20:15.675Z",
+  "totalRuns": 1822,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1115,31 +1115,31 @@
     },
     "local/glm-4.7-flash:latest": {
       "overall": {
-        "pass": 225,
-        "total": 449,
-        "rate": 0.5011135857461024,
-        "avgTime": 229735,
+        "pass": 230,
+        "total": 459,
+        "rate": 0.5010893246187363,
+        "avgTime": 230122,
         "avgTools": 10
       },
       "pick": {
-        "pass": 30,
-        "total": 82,
-        "rate": 0.36585365853658536,
-        "avgTime": 358431,
-        "avgTimeout": 519512,
-        "avgTools": 10,
+        "pass": 35,
+        "total": 88,
+        "rate": 0.3977272727272727,
+        "avgTime": 342587,
+        "avgTimeout": 525000,
+        "avgTools": 11,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 144,
-          "mine": 138,
-          "craft": 304,
-          "place": 59,
+          "objective": 153,
+          "mine": 145,
+          "craft": 343,
+          "place": 60,
           "chest": 44,
           "stop": 8,
           "whisper": 5,
           "follow": 4,
-          "come_here": 4,
+          "come_here": 5,
           "eat": 7,
           "objective(set)": 1,
           "pickup": 5,
@@ -1277,7 +1277,7 @@
       },
       "undefined": {
         "pass": 0,
-        "total": 1,
+        "total": 5,
         "rate": 0,
         "avgTime": null,
         "avgTimeout": 600000,
@@ -119215,6 +119215,578 @@
         }
       ],
       "ts": "2026-03-12T13:56:08.456Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T14:01:49.603Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T14:01:49.692Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T14:02:22.830Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T14:02:22.898Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 149555,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773324092665
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "make wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773324102188
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 3
+          },
+          "t": 1773324102188
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773324130551
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 3
+          },
+          "t": 1773324140083
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773324151496
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 1
+          },
+          "t": 1773324151496
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324151496
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773324193941
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773324212084
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324232036
+        }
+      ],
+      "ts": "2026-03-12T14:03:59.307Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 266668,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773324174932
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773324202564
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 3
+          },
+          "t": 1773324202564
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773324240516
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773324286547
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773324313982
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324335681
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft wooden pickaxe - need 3 oak_planks and 2 sticks",
+            "priority": "high"
+          },
+          "t": 1773324360073
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 1
+          },
+          "t": 1773324360073
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 1
+          },
+          "t": 1773324391830
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324422731
+        }
+      ],
+      "ts": "2026-03-12T14:07:07.609Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 182776,
+      "timeout": 600000,
+      "toolCalls": 13,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324269224
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773324296976
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 16
+          },
+          "t": 1773324296976
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "planks",
+            "count": 5
+          },
+          "t": 1773324349497
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks",
+            "count": 4
+          },
+          "t": 1773324349497
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324349497
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773324349497
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773324383325
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324411890
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773324434237
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773324434237
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773324434237
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Make a wooden pickaxe from scratch"
+          },
+          "t": 1773324434237
+        }
+      ],
+      "ts": "2026-03-12T14:07:19.761Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 130416,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T14:09:45.185Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 449318,
+      "timeout": 600000,
+      "toolCalls": 15,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773324184750
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 16
+          },
+          "t": 1773324184750
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773324222130
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 2
+          },
+          "t": 1773324249020
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 2
+          },
+          "t": 1773324278045
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324305856
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773324325197
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773324325197
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773324371362
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 1
+          },
+          "t": 1773324402895
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324444224
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324481592
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773324517015
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773324556423
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324605884
+        }
+      ],
+      "ts": "2026-03-12T14:10:10.101Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 189290,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "make a wooden pickaxe from scratch"
+          },
+          "t": 1773324470335
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 3
+          },
+          "t": 1773324470335
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 12
+          },
+          "t": 1773324546342
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks"
+          },
+          "t": 1773324573001
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773324589897
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773324597877
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773324624579
+        }
+      ],
+      "ts": "2026-03-12T14:10:30.409Z"
     }
   ]
 }
