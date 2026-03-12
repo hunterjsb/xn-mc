@@ -715,7 +715,7 @@ async function main() {
         saveResult(result, m);
       } catch (err) {
         console.error(`  [Worker ${workerId}] ERROR: ${err.message}`);
-        const failResult = { bench: job.benchId, success: false, error: err.message, model: m, timeout: BENCHMARKS[job.benchId]?.timeout || 300_000, elapsed: 0, toolCalls: 0, ts: new Date().toISOString() };
+        const failResult = { benchmark: job.benchId, success: false, error: err.message, model: m, timeout: BENCHMARKS[job.benchId]?.timeout || 300_000, elapsed: 0, toolCalls: 0, ts: new Date().toISOString() };
         allResults.push(failResult);
         saveResult(failResult, m);
       }
