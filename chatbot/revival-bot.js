@@ -1305,6 +1305,69 @@ export class RevivalBot {
     this.log('action_failed', `No ${itemName} found in nearby containers`);
   }
 
+  async _cmdTakeAllFromChest() {
+    this.state = 'checking_chests';
+    this.log('action', 'Taking all items from nearby container');
+
+    const chestIds = [
+      this._mcData?.blocksByName.chest?.id,
+      this._mcData?.blocksByName.trapped_chest?.id,
+      this._mcData?.blocksByName.barrel?.id,
+    ].filter(Boolean);
+
+    const positions = this.bot.findBlocks({
+      matching: chestIds,
+      maxDistance: 32,
+      count: 5,
+    });
+
+    if (positions.length === 0) {
+      this.state = 'idle';
+      this.log('action_failed', 'No containers found nearby');
+      return;
+    }
+
+    for (const pos of positions) {
+      const block = this.bot.blockAt(pos);
+      if (!block) continue;
+      try {
+        const dist = this.bot.entity.position.distanceTo(pos);
+        if (dist > 4) {
+          this.bot.pathfinder.setGoal(new goals.GoalNear(pos.x, pos.y, pos.z, 3));
+          await new Promise(resolve => {
+            const timeout = setTimeout(() => resolve(), 10000);
+            this.bot.once('goal_reached', () => { clearTimeout(timeout); resolve(); });
+          });
+        }
+        const container = await this.bot.openContainer(block);
+        const items = container.containerItems();
+        if (items.length === 0) {
+          container.close();
+          continue;
+        }
+        let taken = 0;
+        for (const item of [...items]) {
+          try {
+            await container.withdraw(item.type, item.metadata, item.count);
+            taken++;
+          } catch {}
+        }
+        container.close();
+        if (taken > 0) {
+          const inv = this.bot.inventory.items().map(i => `${i.name} x${i.count}`).join(', ');
+          this.state = 'idle';
+          this.log('action_success', `Took ${taken} item stacks from chest. Inventory: ${inv}`);
+          return;
+        }
+      } catch (err) {
+        // try next container
+      }
+    }
+
+    this.state = 'idle';
+    this.log('action_failed', 'Could not take items from any container');
+  }
+
   async _cmdDepositAll() {
     const items = this.bot.inventory.items();
     if (items.length === 0) {
@@ -1809,7 +1872,21 @@ export class RevivalBot {
       await this.bot.sleep(bed);
       this.log('action_success', 'Sleeping in bed');
     } catch (err) {
-      this.log('action_failed', `Sleep: ${err.message}`);
+      const msg = err.message || '';
+      // Provide actionable hints based on common sleep failures
+      if (msg.includes('not night') || msg.includes('day')) {
+        this.log('action_failed', 'Can only sleep at night or during thunderstorms');
+      } else if (msg.includes('monster') || msg.includes('hostile')) {
+        this.log('action_failed', 'Cannot sleep — hostile mobs nearby. Kill them or move away');
+      } else if (msg.includes('occupied') || msg.includes('taken')) {
+        this.log('action_failed', 'Bed is occupied by another player');
+      } else if (msg.includes('obstructed') || msg.includes('blocked')) {
+        this.log('action_failed', 'Bed is obstructed — clear blocks around it');
+      } else if (msg.includes('too far')) {
+        this.log('action_failed', 'Too far from bed — walk closer first');
+      } else {
+        this.log('action_failed', `Sleep failed: ${msg}`);
+      }
     }
   }
 

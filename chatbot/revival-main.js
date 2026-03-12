@@ -347,7 +347,10 @@ async function executeRevivalAction(rBot, actionName, params) {
     case 'chest':
       switch (params.action) {
         case 'check': await rBot._cmdCheckChests(); break;
-        case 'take': await rBot._cmdTakeFromChest(params.item, params.count); break;
+        case 'take':
+          if (!params.item) await rBot._cmdTakeAllFromChest();
+          else await rBot._cmdTakeFromChest(params.item, params.count);
+          break;
         case 'deposit':
           if (params.item) await rBot._cmdDepositInChest(params.item, params.count);
           else await rBot._cmdDepositAll();

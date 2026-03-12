@@ -297,6 +297,9 @@ async function runBenchmark(benchId, botName, workerId = 0) {
   await waitForBot(botName);
   console.log(`${tag}  Connected!`);
   try { await rcon(`op ${botName}`); } catch {}
+  // Resistance for entire benchmark (hardcore = permaban on death)
+  const resDuration = Math.ceil(bench.timeout / 1000) + 120; // benchmark timeout + 2 min buffer
+  try { await rcon(`effect give ${botName} resistance ${resDuration} 255 true`); } catch {}
   await sleep(2000);
 
   // ── 4. Teleport to isolated area ──────────────────────────────────
@@ -416,7 +419,7 @@ async function runBenchmark(benchId, botName, workerId = 0) {
     if (fl > 10) console.log(`${tag}  WARNING: Hunger drain incomplete`);
   }
 
-  // Set time for sleep benchmark + clear mobs + give resistance so bot doesn't die crafting
+  // Set time for sleep benchmark + clear mobs + give resistance for full duration
   if (benchId === 'sleep') {
     await rcon('time set midnight');
     await rcon(`kill @e[type=!player,distance=..100,x=${pos.x},y=${pos.y},z=${pos.z}]`);
@@ -705,7 +708,7 @@ async function main() {
         saveResult(result, m);
       } catch (err) {
         console.error(`  [Worker ${workerId}] ERROR: ${err.message}`);
-        const failResult = { benchmark: job.benchId, success: false, error: err.message, model: m, timeout: BENCHMARKS[job.benchId]?.timeout || 300_000 };
+        const failResult = { bench: job.benchId, success: false, error: err.message, model: m, timeout: BENCHMARKS[job.benchId]?.timeout || 300_000, elapsed: 0, toolCalls: 0, ts: new Date().toISOString() };
         allResults.push(failResult);
         saveResult(failResult, m);
       }

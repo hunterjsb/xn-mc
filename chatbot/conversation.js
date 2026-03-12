@@ -60,7 +60,7 @@ function getRevivalBackend() {
 
   // Default: openai (gpt-5-mini) → openrouter → grok direct
   if (openaiClient) return { client: openaiClient, model: REVIVAL_MODEL, tag: 'openai',
-    extraParams: { max_completion_tokens: 2048 } };
+    extraParams: { max_completion_tokens: 4096 } };
   if (openrouterClient) return { client: openrouterClient, model: 'x-ai/grok-4.1-fast', tag: 'openrouter/grok',
     extraParams: { max_tokens: 4096, temperature: 0.6 } };
   return { client: grokClient, model: GROK_MODEL, tag: 'grok',
@@ -715,7 +715,7 @@ RULES:
       { type: 'function', function: { name: 'pickup', description: 'Walk to and pick up items dropped on the ground. Check nearbyEntities for "dropped:item_name" entries.', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name filter (e.g. raw_beef, diamond). Omit to pick up everything nearby.' } }, required: [] } } },
       { type: 'function', function: { name: 'drop', description: 'Drop items. Omit item to drop everything.', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name (omit to drop all)' }, count: { type: 'integer', description: 'How many (omit for all of that item)' } }, required: [] } } },
       { type: 'function', function: { name: 'give', description: 'Walk to a player and give them an item', parameters: { type: 'object', properties: { player: { type: 'string' }, item: { type: 'string' }, count: { type: 'integer' } }, required: ['player', 'item'] } } },
-      { type: 'function', function: { name: 'chest', description: 'Interact with nearby chests/containers.', parameters: { type: 'object', properties: { action: { type: 'string', enum: ['check', 'take', 'deposit'], description: 'check = scan contents, take = grab item, deposit = store item (omit item to store all)' }, item: { type: 'string', description: 'Item name (required for take, optional for deposit)' }, count: { type: 'integer', description: 'How many (omit for all)' } }, required: ['action'] } } },
+      { type: 'function', function: { name: 'chest', description: 'Interact with nearby chests/containers.', parameters: { type: 'object', properties: { action: { type: 'string', enum: ['check', 'take', 'deposit'], description: 'check = scan contents, take = grab item (omit item to take everything), deposit = store item (omit item to store all)' }, item: { type: 'string', description: 'Item name (optional for take/deposit — omit to take/deposit all)' }, count: { type: 'integer', description: 'How many (omit for all)' } }, required: ['action'] } } },
       { type: 'function', function: { name: 'craft', description: 'Craft an item using nearby crafting table or inventory', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item to craft (e.g. wooden_pickaxe, furnace)' }, count: { type: 'integer', description: 'How many (default 1)' } }, required: ['item'] } } },
       { type: 'function', function: { name: 'equip', description: 'Equip an item from inventory', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item name (e.g. iron_sword, diamond_chestplate)' } }, required: ['item'] } } },
       { type: 'function', function: { name: 'smelt', description: 'Smelt items in a nearby furnace', parameters: { type: 'object', properties: { item: { type: 'string', description: 'Item to smelt (e.g. raw_iron)' }, fuel: { type: 'string', description: 'Fuel (default: coal)' }, count: { type: 'integer', description: 'How many (default 1)' } }, required: ['item'] } } },
@@ -740,12 +740,23 @@ RULES:
       ];
 
       const rb = getRevivalBackend();
-      const response = await rb.client.chat.completions.create({
+      const callLLM = (timeoutMs) => rb.client.chat.completions.create({
         model: rb.model,
         messages,
         tools,
         ...rb.extraParams,
-      }, { timeout: 60_000 });
+      }, { timeout: timeoutMs });
+
+      let response;
+      try {
+        response = await callLLM(60_000);
+      } catch (firstErr) {
+        // Retry once on timeout/network errors (not on 4xx auth/quota errors)
+        const status = firstErr?.status || firstErr?.response?.status;
+        if (status && status >= 400 && status < 500) throw firstErr;
+        console.log(`[RevivalTick] ⟳ ${rb.tag} (${rBot.username}) retry after: ${firstErr.message?.slice(0, 80)}`);
+        response = await callLLM(45_000);
+      }
 
       const choice = response.choices[0];
       const hasTools = !!choice.message.tool_calls?.length;
