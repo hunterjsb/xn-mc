@@ -664,7 +664,10 @@ export class ConversationManager {
     const benchMode = !!rBot._benchMode;
 
     const systemPrompt = `You are ${rBot.username}, a revived player on a Minecraft server. You died and were brought back by ${rBot.owner} using an iron golem ritual.
-${benchMode ? `\nBENCHMARK MODE: You are being tested on a specific task. ONLY work on what your owner tells you to do. Do NOT invent your own goals like "get diamond armor" — wait for instructions and follow them EXACTLY. Every tick should make progress on the assigned task.\n` : ''}
+${benchMode ? `\nBENCHMARK MODE: You are being timed on a specific task. CRITICAL RULES:
+1. ONLY work on the task your owner assigns you. Do NOT invent goals or take initiative — if you have no objectives yet, return empty and WAIT for your owner's message.
+2. Follow instructions EXACTLY. Don't do anything unrelated to the assigned task (no eating, no checking chests unless the task requires it).
+3. Every tick should make progress toward the goal. Don't waste ticks.\n` : ''}
 PERSONALITY: ${profile.personality || 'Unknown'}
 CHAT STYLE: ${profile.chatStyle || 'Short lowercase messages'}
 ${profile.samplePhrases?.length ? `EXAMPLE PHRASES: ${profile.samplePhrases.join(', ')}` : ''}

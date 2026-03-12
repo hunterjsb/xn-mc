@@ -18,6 +18,7 @@ const TWO_HOURS = 2 * 60 * 60 * 1000;
 const OWNER_GRACE_PERIOD = 5 * 60 * 1000;
 const TICK_INTERVAL_MIN = 10000;  // 10s
 const TICK_INTERVAL_MAX = 20000;  // 20s
+const BENCH_TICK_INTERVAL = 3000; // 3s — faster ticks in benchmark mode
 const SURVIVAL_INTERVAL = 3000;   // 3s — fast reactive loop
 const STUCK_THRESHOLD = 30000;    // 30s same position → unstuck
 const MAX_LOG_ENTRIES = 15;
@@ -425,7 +426,9 @@ export class RevivalBot {
   _scheduleNextTick(delay) {
     if (this.despawned) return;
     if (delay == null) {
-      delay = TICK_INTERVAL_MIN + Math.random() * (TICK_INTERVAL_MAX - TICK_INTERVAL_MIN);
+      delay = this._benchMode
+        ? BENCH_TICK_INTERVAL
+        : TICK_INTERVAL_MIN + Math.random() * (TICK_INTERVAL_MAX - TICK_INTERVAL_MIN);
     }
     if (this._tickTimer) clearTimeout(this._tickTimer);
     this._tickTimer = setTimeout(() => this._runTick(), delay);
