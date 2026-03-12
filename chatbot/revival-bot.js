@@ -115,6 +115,7 @@ export class RevivalBot {
   }
 
   addObjective(text, priority = 'normal') {
+    if (!text) return; // guard against undefined/null text from LLM
     // Don't add duplicates (fuzzy — check if existing objective substantially overlaps)
     const textLower = text.toLowerCase();
     if (this.objectives.some(o => {
@@ -131,6 +132,7 @@ export class RevivalBot {
   }
 
   completeObjective(text) {
+    if (!text) return; // guard against undefined/null text from LLM
     const idx = this.objectives.findIndex(o => o.text.toLowerCase().includes(text.toLowerCase()));
     if (idx !== -1) {
       const removed = this.objectives.splice(idx, 1)[0];
