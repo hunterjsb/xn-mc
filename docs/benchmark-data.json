@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T18:01:00.350Z",
-  "totalRuns": 1896,
+  "generated": "2026-03-12T18:11:34.984Z",
+  "totalRuns": 1899,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1782,10 +1782,10 @@
     },
     "glm-4.7-flash": {
       "overall": {
-        "pass": 46,
-        "total": 71,
-        "rate": 0.647887323943662,
-        "avgTime": 213878,
+        "pass": 48,
+        "total": 74,
+        "rate": 0.6486486486486487,
+        "avgTime": 220158,
         "avgTools": 10
       },
       "pick": {
@@ -1927,20 +1927,23 @@
         "toolCounts": {}
       },
       "iron": {
-        "pass": 0,
-        "total": 3,
-        "rate": 0,
-        "avgTime": null,
+        "pass": 2,
+        "total": 6,
+        "rate": 0.3333333333333333,
+        "avgTime": 364589,
         "avgTimeout": 600000,
-        "avgTools": null,
-        "avgFailures": null,
+        "avgTools": 13,
+        "avgFailures": 3,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 5,
-          "chest": 13,
-          "mine": 5,
-          "eat": 2,
-          "smelt": 1
+          "objective": 10,
+          "chest": 14,
+          "mine": 10,
+          "eat": 3,
+          "smelt": 5,
+          "craft": 13,
+          "place": 15,
+          "pickup": 3
         }
       }
     }
@@ -127609,6 +127612,411 @@
         }
       ],
       "ts": "2026-03-12T17:57:15.656Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "iron",
+      "success": true,
+      "elapsed": 323004,
+      "timeout": 600000,
+      "toolCalls": 12,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft wooden pickaxe and mine diamonds for armor",
+            "priority": "high"
+          },
+          "t": 1773338512979
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "birch_planks",
+            "count": 4
+          },
+          "t": 1773338512979
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773338540796
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773338569163
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773338569163
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773338569163
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773338581164
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773338656703
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773338721453
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773338751238
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773338787234
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773338814784
+        }
+      ],
+      "ts": "2026-03-12T18:06:57.596Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "iron",
+      "success": true,
+      "elapsed": 406173,
+      "timeout": 600000,
+      "toolCalls": 14,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773338521787
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773338549427
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773338621323
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2,
+            "fuel": "coal"
+          },
+          "t": 1773338643015
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "raw_iron"
+          },
+          "t": 1773338676679
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773338691607
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773338710993
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "raw_iron"
+          },
+          "t": 1773338740937
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773338776984
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773338805865
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773338834604
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "raw_iron"
+          },
+          "t": 1773338856215
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 1
+          },
+          "t": 1773338856215
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773338894100
+        }
+      ],
+      "ts": "2026-03-12T18:08:19.608Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604028,
+      "timeout": 600000,
+      "toolCalls": 21,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773338503810
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773338530786
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773338558764
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 5
+          },
+          "t": 1773338632925
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773338700630
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773338731027
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773338796252
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773338825312
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "below"
+          },
+          "t": 1773338845143
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773338866174
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773338884888
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "above"
+          },
+          "t": 1773338907539
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773338926971
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "below"
+          },
+          "t": 1773338947715
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773338969784
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 1
+          },
+          "t": 1773338990018
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773339007899
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "above"
+          },
+          "t": 1773339032097
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773339051750
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "forward"
+          },
+          "t": 1773339072002
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table",
+            "direction": "below"
+          },
+          "t": 1773339092162
+        }
+      ],
+      "ts": "2026-03-12T18:11:34.923Z"
     }
   ]
 }
