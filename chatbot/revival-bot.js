@@ -1760,6 +1760,8 @@ export class RevivalBot {
       raw_mutton: 'mutton', raw_rabbit: 'rabbit', raw_salmon: 'salmon',
       raw_cod: 'cod', raw_iron: 'raw_iron', raw_gold: 'raw_gold',
       raw_copper: 'raw_copper', log: 'oak_log', plank: 'oak_planks',
+      // LLM often confuses ore block names with raw items
+      iron_ore: 'raw_iron', gold_ore: 'raw_gold', copper_ore: 'raw_copper',
     };
     const resolvedName = SMELT_ALIASES[itemName] || itemName;
     if (resolvedName !== itemName) {
@@ -1844,14 +1846,21 @@ export class RevivalBot {
 
       // Auto-detect fuel if not specified: prefer coal > charcoal > planks > logs > sticks
       const FUEL_PRIORITY = ['coal', 'charcoal', 'coal_block', 'planks', 'log', 'stick'];
+      const VALID_FUELS = new Set([
+        'coal', 'charcoal', 'coal_block', 'blaze_rod', 'lava_bucket', 'stick',
+        'oak_planks', 'spruce_planks', 'birch_planks', 'jungle_planks',
+        'acacia_planks', 'dark_oak_planks', 'cherry_planks', 'mangrove_planks',
+        'oak_log', 'spruce_log', 'birch_log', 'jungle_log',
+        'acacia_log', 'dark_oak_log', 'cherry_log', 'mangrove_log',
+      ]);
       let fuelItem;
       if (fuelName) {
-        fuelItem = this.bot.inventory.items().find(i => i.name.includes(fuelName));
+        fuelItem = this.bot.inventory.items().find(i => i.name.includes(fuelName) && VALID_FUELS.has(i.name));
       }
       if (!fuelItem) {
-        // Search by priority
+        // Search by priority — auto-detect valid fuel
         for (const fp of FUEL_PRIORITY) {
-          fuelItem = this.bot.inventory.items().find(i => i.name.includes(fp) && i.name !== resolvedName);
+          fuelItem = this.bot.inventory.items().find(i => i.name.includes(fp) && i.name !== resolvedName && VALID_FUELS.has(i.name));
           if (fuelItem) break;
         }
       }
