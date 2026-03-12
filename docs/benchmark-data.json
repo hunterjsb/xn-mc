@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T03:59:59.490Z",
-  "totalRuns": 1517,
+  "generated": "2026-03-12T05:05:01.339Z",
+  "totalRuns": 1547,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1030,28 +1030,28 @@
     },
     "local/glm-4.7-flash:latest": {
       "overall": {
-        "pass": 42,
-        "total": 154,
-        "rate": 0.2727272727272727,
-        "avgTime": 223464,
+        "pass": 59,
+        "total": 184,
+        "rate": 0.32065217391304346,
+        "avgTime": 229067,
         "avgTools": 10
       },
       "pick": {
-        "pass": 7,
-        "total": 37,
-        "rate": 0.1891891891891892,
-        "avgTime": 264537,
-        "avgTimeout": 421622,
-        "avgTools": 12,
+        "pass": 9,
+        "total": 42,
+        "rate": 0.21428571428571427,
+        "avgTime": 309559,
+        "avgTimeout": 442857,
+        "avgTools": 10,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 82,
-          "mine": 67,
-          "craft": 131,
+          "objective": 83,
+          "mine": 71,
+          "craft": 138,
           "place": 41,
           "chest": 20,
-          "stop": 5,
+          "stop": 6,
           "whisper": 2,
           "follow": 3,
           "come_here": 4,
@@ -1061,44 +1061,45 @@
         }
       },
       "food": {
-        "pass": 6,
-        "total": 31,
-        "rate": 0.1935483870967742,
-        "avgTime": 215784,
-        "avgTimeout": 406452,
+        "pass": 7,
+        "total": 36,
+        "rate": 0.19444444444444445,
+        "avgTime": 236193,
+        "avgTimeout": 433333,
         "avgTools": 9,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 53,
-          "craft": 88,
-          "place": 36,
+          "objective": 56,
+          "craft": 90,
+          "place": 38,
           "attack": 12,
-          "stop": 3,
+          "stop": 4,
           "mine": 16,
-          "chest": 19,
-          "smelt": 11,
-          "eat": 1,
+          "chest": 23,
+          "smelt": 13,
+          "eat": 4,
           "whisper": 2,
-          "pickup": 6
+          "pickup": 9,
+          "drop": 1
         }
       },
       "shears": {
-        "pass": 11,
-        "total": 29,
-        "rate": 0.3793103448275862,
-        "avgTime": 190750,
-        "avgTimeout": 393103,
+        "pass": 14,
+        "total": 34,
+        "rate": 0.4117647058823529,
+        "avgTime": 179258,
+        "avgTimeout": 423529,
         "avgTools": 6,
-        "avgFailures": 1,
+        "avgFailures": 0,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 37,
-          "mine": 30,
-          "smelt": 29,
-          "place": 46,
-          "chest": 11,
-          "craft": 20,
+          "objective": 44,
+          "mine": 35,
+          "smelt": 33,
+          "place": 54,
+          "chest": 17,
+          "craft": 24,
           "eat": 3,
           "stop": 2,
           "follow": 2,
@@ -1110,59 +1111,68 @@
         }
       },
       "diamonds": {
-        "pass": 11,
-        "total": 29,
-        "rate": 0.3793103448275862,
-        "avgTime": 231155,
-        "avgTimeout": 393103,
+        "pass": 14,
+        "total": 34,
+        "rate": 0.4117647058823529,
+        "avgTime": 219498,
+        "avgTimeout": 423529,
         "avgTools": 16,
         "avgFailures": 2,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 68,
+          "objective": 76,
           "mine": 19,
-          "chest": 75,
-          "craft": 114,
-          "place": 25,
+          "chest": 87,
+          "craft": 132,
+          "place": 26,
           "attack": 4,
           "pickup": 4,
           "follow": 6,
           "come_here": 3,
           "whisper": 2,
-          "smelt": 1
+          "smelt": 1,
+          "equip": 12,
+          "stop": 1
         }
       },
       "collect": {
-        "pass": 7,
-        "total": 28,
-        "rate": 0.25,
-        "avgTime": 228298,
-        "avgTimeout": 385714,
-        "avgTools": 8,
+        "pass": 12,
+        "total": 33,
+        "rate": 0.36363636363636365,
+        "avgTime": 242699,
+        "avgTimeout": 418182,
+        "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 36,
-          "mine": 64,
-          "eat": 1,
-          "follow": 1,
-          "chest": 4,
+          "objective": 41,
+          "mine": 85,
+          "eat": 2,
+          "follow": 2,
+          "chest": 5,
           "attack": 2,
           "craft": 2,
-          "stop": 1,
+          "stop": 3,
           "place": 2
         }
       },
       "sleep": {
-        "pass": 0,
-        "total": 0,
-        "rate": 0,
-        "avgTime": null,
-        "avgTimeout": null,
-        "avgTools": null,
-        "avgFailures": null,
-        "avgOwnerInteractions": null,
-        "toolCounts": {}
+        "pass": 3,
+        "total": 5,
+        "rate": 0.6,
+        "avgTime": 193525,
+        "avgTimeout": 300000,
+        "avgTools": 10,
+        "avgFailures": 1,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 7,
+          "chest": 16,
+          "pickup": 3,
+          "craft": 6,
+          "sleep": 5,
+          "place": 3
+        }
       }
     },
     "inception/mercury-2": {
@@ -96493,6 +96503,1852 @@
         }
       ],
       "ts": "2026-03-12T03:59:59.453Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 111213,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T04:03:56.934Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 141833,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773288131627
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 5
+          },
+          "t": 1773288154339
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears - need iron ingots first",
+            "priority": "normal"
+          },
+          "t": 1773288202464
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2
+          },
+          "t": 1773288202464
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773288260058
+        }
+      ],
+      "ts": "2026-03-12T04:04:23.401Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 203514,
+      "timeout": 600000,
+      "toolCalls": 19,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773288310930
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor set and equip",
+            "priority": "high"
+          },
+          "t": 1773288329441
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773288329441
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773288329441
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773288329441
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773288329441
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773288356565
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take"
+          },
+          "t": 1773288385894
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take"
+          },
+          "t": 1773288385894
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773288413952
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773288413952
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773288413952
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773288413952
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773288413952
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773288452576
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773288452576
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773288452576
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773288452576
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft full diamond armor set and equip"
+          },
+          "t": 1773288452576
+        }
+      ],
+      "ts": "2026-03-12T04:07:36.613Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 304251,
+      "timeout": 300000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft bed and sleep at night",
+            "priority": "high"
+          },
+          "t": 1773288337952
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773288337952
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773288376252
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "white_wool"
+          },
+          "t": 1773288402848
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773288423746
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "white_wool"
+          },
+          "t": 1773288443221
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "white_wool"
+          },
+          "t": 1773288470820
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "craft bed and sleep at night"
+          },
+          "t": 1773288490307
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773288490307
+        }
+      ],
+      "ts": "2026-03-12T04:09:45.938Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 538684,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T04:10:59.484Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 434778,
+      "timeout": 600000,
+      "toolCalls": 8,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773288861054
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773288888548
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft wooden pickaxe from scratch",
+            "priority": "normal"
+          },
+          "t": 1773288888548
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 12
+          },
+          "t": 1773288944629
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773288962848
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773289000248
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773289017081
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773289036020
+        }
+      ],
+      "ts": "2026-03-12T04:17:18.893Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": true,
+      "elapsed": 358648,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773288880675
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "cook and eat meat",
+            "priority": "high"
+          },
+          "t": 1773288907719
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "beef"
+          },
+          "t": 1773288907719
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773288925068
+        },
+        {
+          "name": "drop",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773288936658
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "beef"
+          },
+          "t": 1773288936658
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773288936658
+        },
+        {
+          "name": "pickup",
+          "params": {},
+          "t": 1773288971833
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773288992911
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 2
+          },
+          "t": 1773289009577
+        }
+      ],
+      "ts": "2026-03-12T04:17:19.211Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 588978,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773288481125
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather 16 dirt, 8 logs, 16 cobblestone",
+            "priority": "high"
+          },
+          "t": 1773288509025
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773288509025
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773288543411
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773288899844
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773288916249
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773288954534
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773288984432
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 16
+          },
+          "t": 1773289026233
+        }
+      ],
+      "ts": "2026-03-12T04:17:45.913Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 128304,
+      "timeout": 600000,
+      "toolCalls": 17,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft a wooden pickaxe"
+          },
+          "t": 1773289067154
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773289067154
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor and equip",
+            "priority": "high"
+          },
+          "t": 1773289083797
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773289083797
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773289102753
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor and equip",
+            "priority": "high"
+          },
+          "t": 1773289119770
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773289119770
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773289139189
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773289164666
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773289164666
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773289164666
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773289164666
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773289182547
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773289182547
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773289182547
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773289182547
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft full diamond armor and equip"
+          },
+          "t": 1773289182547
+        }
+      ],
+      "ts": "2026-03-12T04:19:46.654Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 148449,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears - need iron ingots",
+            "priority": "normal"
+          },
+          "t": 1773289074519
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773289074519
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773289147040
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773289202900
+        }
+      ],
+      "ts": "2026-03-12T04:20:08.057Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 185099,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Mine 2 oak logs and 16 cobblestone"
+          },
+          "t": 1773289094339
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773289110338
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep",
+            "priority": "high"
+          },
+          "t": 1773289130494
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773289130494
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773289130494
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773289130494
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773289154544
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773289173175
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773289193067
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773289212418
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773289264459
+        }
+      ],
+      "ts": "2026-03-12T04:21:10.866Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 104836,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T04:22:12.222Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 42894,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T04:22:17.027Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 212976,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773289221523
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather 16 dirt, 8 logs, 16 cobblestone",
+            "priority": "normal"
+          },
+          "t": 1773289245301
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773289245301
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773289282719
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773289382583
+        }
+      ],
+      "ts": "2026-03-12T04:23:38.702Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 92041,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T04:24:07.388Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 191222,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773289435019
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773289443189
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep through night",
+            "priority": "high"
+          },
+          "t": 1773289474549
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773289474549
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773289474549
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773289518194
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773289538733
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773289577638
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed",
+            "direction": "forward"
+          },
+          "t": 1773289610673
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773289610673
+        }
+      ],
+      "ts": "2026-03-12T04:27:06.339Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 192333,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "follow",
+          "params": {},
+          "t": 1773289485997
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather 16 dirt, 8 logs, and 16 cobblestone",
+            "priority": "normal"
+          },
+          "t": 1773289510099
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773289510099
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "birch_log",
+            "count": 7
+          },
+          "t": 1773289549701
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "birch_log",
+            "count": 2
+          },
+          "t": 1773289589432
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 16
+          },
+          "t": 1773289630567
+        }
+      ],
+      "ts": "2026-03-12T04:27:38.656Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 600470,
+      "timeout": 600000,
+      "toolCalls": 16,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears - mine iron ore, smelt to ingots, craft shears",
+            "priority": "normal"
+          },
+          "t": 1773289363844
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773289363844
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears - mine iron ore, smelt to ingots, craft shears",
+            "priority": "normal"
+          },
+          "t": 1773289404320
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773289404320
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773289502462
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773289600762
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773289622306
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773289640869
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773289662012
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773289699762
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "above"
+          },
+          "t": 1773289732480
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773289781947
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773289819040
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773289855273
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773289891212
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773289931725
+        }
+      ],
+      "ts": "2026-03-12T04:32:28.360Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": false,
+      "elapsed": 604129,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773290089959
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "birch_log",
+            "count": 4
+          },
+          "t": 1773290155685
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773290188522
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 1
+          },
+          "t": 1773290226340
+        }
+      ],
+      "ts": "2026-03-12T04:37:28.157Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 601689,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773290098148
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Cook and eat rotten_flesh",
+            "priority": "high"
+          },
+          "t": 1773290177658
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "rotten_flesh",
+            "count": 1
+          },
+          "t": 1773290177658
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773290200890
+        }
+      ],
+      "ts": "2026-03-12T04:38:00.631Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 90687,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-12T04:39:44.528Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 123179,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773290409507
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather 16 dirt, 8 logs, 16 cobblestone",
+            "priority": "high"
+          },
+          "t": 1773290417927
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773290417927
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773290450285
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 16
+          },
+          "t": 1773290484804
+        }
+      ],
+      "ts": "2026-03-12T04:42:01.856Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 605264,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft shears",
+            "priority": "high"
+          },
+          "t": 1773290080562
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 5
+          },
+          "t": 1773290080562
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773290110068
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check",
+            "item": "raw_iron",
+            "count": 5
+          },
+          "t": 1773290168775
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "iron_ingot",
+            "count": 2
+          },
+          "t": 1773290392323
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "iron_ingot",
+            "count": 2
+          },
+          "t": 1773290527690
+        }
+      ],
+      "ts": "2026-03-12T04:42:47.602Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 600162,
+      "timeout": 600000,
+      "toolCalls": 2,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773290370212
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773290401813
+        }
+      ],
+      "ts": "2026-03-12T04:47:41.462Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 121084,
+      "timeout": 600000,
+      "toolCalls": 3,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears",
+            "priority": "normal"
+          },
+          "t": 1773290978761
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3,
+            "fuel": "coal"
+          },
+          "t": 1773290978761
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773290991727
+        }
+      ],
+      "ts": "2026-03-12T04:49:57.197Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 499495,
+      "timeout": 600000,
+      "toolCalls": 1,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773291032182
+        }
+      ],
+      "ts": "2026-03-12T04:50:34.499Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "food",
+      "success": false,
+      "elapsed": 602598,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773290970115
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "iron_ingot",
+            "count": 5
+          },
+          "t": 1773291053355
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773291093958
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773291120502
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773291150328
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "mine raw iron, smelt to ingots, craft shears"
+          },
+          "t": 1773291186244
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773291186244
+        }
+      ],
+      "ts": "2026-03-12T04:53:13.106Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 198452,
+      "timeout": 600000,
+      "toolCalls": 14,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773291013858
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full set of diamond armor and equip",
+            "priority": "high"
+          },
+          "t": 1773291022145
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773291022145
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take"
+          },
+          "t": 1773291042132
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate",
+            "count": 1
+          },
+          "t": 1773291069699
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet",
+            "count": 1
+          },
+          "t": 1773291085404
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings",
+            "count": 1
+          },
+          "t": 1773291110223
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773291139759
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots",
+            "count": 1
+          },
+          "t": 1773291169713
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773291204362
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773291204362
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773291204362
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773291204362
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft full set of diamond armor and equip"
+          },
+          "t": 1773291204362
+        }
+      ],
+      "ts": "2026-03-12T04:53:30.065Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 204253,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft bed and sleep through the night",
+            "priority": "high"
+          },
+          "t": 1773291077249
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773291077249
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773291102824
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773291102824
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773291129288
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773291161696
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773291178778
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773291194363
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773291224018
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773291248173
+        }
+      ],
+      "ts": "2026-03-12T04:54:13.710Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 196830,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773291214330
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "gather 16 dirt, 8 logs, 16 cobblestone",
+            "priority": "normal"
+          },
+          "t": 1773291233623
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773291233623
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773291275437
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 16
+          },
+          "t": 1773291359549
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773291395750
+        }
+      ],
+      "ts": "2026-03-12T04:56:44.346Z"
     }
   ]
 }

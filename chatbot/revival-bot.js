@@ -1966,11 +1966,9 @@ export class RevivalBot {
 
     const candidates = [];
 
-    // Try placing at feet (on block below) — most reliable placement
-    const belowBlock = this.bot.blockAt(pos.offset(0, -1, 0));
-    if (belowBlock && belowBlock.name !== 'air' && isOpen(pos)) {
-      candidates.push({ ref: belowBlock, face: new Vec3(0, 1, 0), clearPos: pos });
-    }
+    // Try placing at feet (on block below) — skip if bot is standing there
+    // (can't place a block where the player entity is)
+    // Instead try one block to the side at same Y level
 
     // Then try cardinal directions
     for (const d of dirs) {
