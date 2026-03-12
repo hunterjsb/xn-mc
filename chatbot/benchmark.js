@@ -297,9 +297,12 @@ async function runBenchmark(benchId, botName, workerId = 0) {
   await waitForBot(botName);
   console.log(`${tag}  Connected!`);
   try { await rcon(`op ${botName}`); } catch {}
-  // Resistance for entire benchmark (hardcore = permaban on death)
+  // Death protection for entire benchmark (hardcore = permaban on death)
+  // Note: resistance 255 amplifier overflows to -1 in Java (0% reduction)
+  // Use regeneration 10 to outheal any damage, plus resistance 4 (100% reduction)
   const resDuration = Math.ceil(bench.timeout / 1000) + 120; // benchmark timeout + 2 min buffer
-  try { await rcon(`effect give ${botName} minecraft:resistance ${resDuration} 255 true`); } catch {}
+  try { await rcon(`effect give ${botName} minecraft:resistance ${resDuration} 4 true`); } catch {}
+  try { await rcon(`effect give ${botName} minecraft:regeneration ${resDuration} 10 true`); } catch {}
   await sleep(2000);
 
   // ── 4. Teleport to isolated area ──────────────────────────────────
@@ -414,9 +417,10 @@ async function runBenchmark(benchId, botName, workerId = 0) {
       if (fl >= 0 && fl <= 6) break;
     }
     await rcon(`effect clear ${botName} minecraft:hunger`);
-    // Re-apply resistance after hunger drain (effect clear can strip other effects)
+    // Re-apply death protection after hunger drain (effect clear can strip other effects)
     const resDur2 = Math.ceil(bench.timeout / 1000) + 120;
-    try { await rcon(`effect give ${botName} minecraft:resistance ${resDur2} 255 true`); } catch {}
+    try { await rcon(`effect give ${botName} minecraft:resistance ${resDur2} 4 true`); } catch {}
+    try { await rcon(`effect give ${botName} minecraft:regeneration ${resDur2} 10 true`); } catch {}
     const fl = await getFoodLevel(botName);
     console.log(`${tag}  Food level: ${fl}`);
     if (fl > 10) console.log(`${tag}  WARNING: Hunger drain incomplete`);
@@ -426,7 +430,7 @@ async function runBenchmark(benchId, botName, workerId = 0) {
   if (benchId === 'sleep') {
     await rcon('time set midnight');
     await rcon(`kill @e[type=!player,distance=..100,x=${pos.x},y=${pos.y},z=${pos.z}]`);
-    await rcon(`effect give ${botName} resistance 300 255 true`);
+    await rcon(`effect give ${botName} minecraft:resistance 300 4 true`);
   }
 
   // ── 9. Send goal ──────────────────────────────────────────────────
