@@ -113,12 +113,12 @@ async function callLLM(params, { label = 'LLM' } = {}) {
       model: REVIVAL_MODEL,
       ...(max_tokens ? { max_completion_tokens: Math.max(max_tokens * 8, 2048) } : {}),
     };
-    const response = await openaiClient.chat.completions.create(openaiParams);
+    const response = await openaiClient.chat.completions.create(openaiParams, { timeout: 30_000 });
     console.log(`[${label}] ✓ openai`);
     return response;
   }
 
-  const response = await grokClient.chat.completions.create({ ...params, model: GROK_MODEL });
+  const response = await grokClient.chat.completions.create({ ...params, model: GROK_MODEL }, { timeout: 30_000 });
   console.log(`[${label}] ✓ grok`);
   return response;
 }
@@ -745,7 +745,7 @@ RULES:
         messages,
         tools,
         ...rb.extraParams,
-      });
+      }, { timeout: 60_000 });
 
       const choice = response.choices[0];
       const hasTools = !!choice.message.tool_calls?.length;
