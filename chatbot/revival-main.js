@@ -616,6 +616,7 @@ function setupWebhookServer() {
       rBot._benchLog = [];
       rBot._benchStart = Date.now();
       rBot._benchMode = true;    // benchmark mode — focuses LLM on task
+      rBot._benchGoalReceived = false;  // reset goal tracking for idle tick skip
       rBot.clearObjectives();    // clear stale objectives from greeting/previous bench
       rBot.actionLog.length = 0; // clear action log so LLM doesn't see stale context
       rBot.tickHistory.length = 0;

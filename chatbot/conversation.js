@@ -635,11 +635,18 @@ export class ConversationManager {
     const pendingMessages = rBot.pendingMessages.splice(0); // drain queue
     const senders = pendingMessages.map(m => m.sender).filter(s => s !== '__system__');
 
-    // Skip idle ticks: in benchmark mode, ALWAYS skip if no messages/objectives (wait for goal).
+    // Track when bench mode has received its first owner message (the goal).
+    // Before goal: skip idle ticks to prevent hallucination.
+    // After goal: keep ticking even if objectives are empty (recovery from chat-only responses).
+    if (rBot._benchMode && pendingMessages.some(m => m.sender !== '__system__')) {
+      rBot._benchGoalReceived = true;
+    }
+
+    // Skip idle ticks: in benchmark mode, only skip if goal hasn't arrived yet.
     // In normal mode, skip ~70% of idle ticks to save API calls.
     if (pendingMessages.length === 0 && rBot.objectives.length === 0 && rBot.state === 'idle') {
-      if (rBot._benchMode) return { actions: [], chat: null, senders: [] };
-      if (Math.random() > 0.3) return { actions: [], chat: null, senders: [] };
+      if (rBot._benchMode && !rBot._benchGoalReceived) return { actions: [], chat: null, senders: [] };
+      if (!rBot._benchMode && Math.random() > 0.3) return { actions: [], chat: null, senders: [] };
     }
 
     const worldSection = Object.keys(world).length > 0
