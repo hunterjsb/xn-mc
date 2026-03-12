@@ -299,7 +299,7 @@ async function runBenchmark(benchId, botName, workerId = 0) {
   try { await rcon(`op ${botName}`); } catch {}
   // Resistance for entire benchmark (hardcore = permaban on death)
   const resDuration = Math.ceil(bench.timeout / 1000) + 120; // benchmark timeout + 2 min buffer
-  try { await rcon(`effect give ${botName} resistance ${resDuration} 255 true`); } catch {}
+  try { await rcon(`effect give ${botName} minecraft:resistance ${resDuration} 255 true`); } catch {}
   await sleep(2000);
 
   // ── 4. Teleport to isolated area ──────────────────────────────────
@@ -403,17 +403,20 @@ async function runBenchmark(benchId, botName, workerId = 0) {
   if (benchId === 'food') {
     console.log(`${tag}  Draining hunger...`);
     // Phase 1: Burn saturation buffer (~3s at amp 255)
-    await rcon(`effect give ${botName} hunger 3 255 true`);
+    await rcon(`effect give ${botName} minecraft:hunger 3 255 true`);
     await sleep(3500);
-    await rcon(`effect clear ${botName} hunger`);
+    await rcon(`effect clear ${botName} minecraft:hunger`);
     // Phase 2: Controlled food drain (amp 50 ≈ 1.5 food/sec)
-    await rcon(`effect give ${botName} hunger 30 50 true`);
+    await rcon(`effect give ${botName} minecraft:hunger 30 50 true`);
     for (let i = 1; i <= 20; i++) {
       await sleep(1000);
       const fl = await getFoodLevel(botName);
       if (fl >= 0 && fl <= 6) break;
     }
-    await rcon(`effect clear ${botName} hunger`);
+    await rcon(`effect clear ${botName} minecraft:hunger`);
+    // Re-apply resistance after hunger drain (effect clear can strip other effects)
+    const resDur2 = Math.ceil(bench.timeout / 1000) + 120;
+    try { await rcon(`effect give ${botName} minecraft:resistance ${resDur2} 255 true`); } catch {}
     const fl = await getFoodLevel(botName);
     console.log(`${tag}  Food level: ${fl}`);
     if (fl > 10) console.log(`${tag}  WARNING: Hunger drain incomplete`);
