@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T17:45:20.783Z",
-  "totalRuns": 1893,
+  "generated": "2026-03-12T18:01:00.350Z",
+  "totalRuns": 1896,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -22,7 +22,8 @@
     "diamonds",
     "collect",
     "sleep",
-    null
+    null,
+    "iron"
   ],
   "benchMeta": {
     "pick": {
@@ -106,6 +107,17 @@
       "goal": "",
       "successItems": [],
       "startItems": []
+    },
+    "iron": {
+      "name": "Iron Pickaxe",
+      "timeout": 600000,
+      "goal": "craft an iron pickaxe from scratch",
+      "successItems": [
+        "iron_pickaxe"
+      ],
+      "startItems": [
+        "cooked_beef"
+      ]
     }
   },
   "benchNames": {
@@ -114,7 +126,8 @@
     "shears": "Iron Shears",
     "diamonds": "Diamond Armor",
     "collect": "Resource Collection",
-    "sleep": "Craft Bed & Sleep"
+    "sleep": "Craft Bed & Sleep",
+    "iron": "Iron Pickaxe"
   },
   "benchTimeouts": {
     "pick": 600000,
@@ -123,7 +136,8 @@
     "diamonds": 600000,
     "collect": 600000,
     "sleep": 300000,
-    "undefined": 300000
+    "undefined": 300000,
+    "iron": 600000
   },
   "summary": {
     "x-ai/grok-4.1-fast": {
@@ -255,6 +269,17 @@
         }
       },
       "undefined": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
+      },
+      "iron": {
         "pass": 0,
         "total": 0,
         "rate": 0,
@@ -399,6 +424,17 @@
         "avgFailures": null,
         "avgOwnerInteractions": null,
         "toolCounts": {}
+      },
+      "iron": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
       }
     },
     "minimax/minimax-m2.5": {
@@ -534,6 +570,17 @@
         "toolCounts": {}
       },
       "undefined": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
+      },
+      "iron": {
         "pass": 0,
         "total": 0,
         "rate": 0,
@@ -702,6 +749,17 @@
         "avgFailures": null,
         "avgOwnerInteractions": null,
         "toolCounts": {}
+      },
+      "iron": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
       }
     },
     "google/gemini-3.1-flash-lite-preview": {
@@ -817,6 +875,17 @@
         "toolCounts": {}
       },
       "undefined": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
+      },
+      "iron": {
         "pass": 0,
         "total": 0,
         "rate": 0,
@@ -951,6 +1020,17 @@
         "toolCounts": {}
       },
       "undefined": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
+      },
+      "iron": {
         "pass": 0,
         "total": 0,
         "rate": 0,
@@ -1103,6 +1183,17 @@
         }
       },
       "undefined": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
+      },
+      "iron": {
         "pass": 0,
         "total": 0,
         "rate": 0,
@@ -1286,6 +1377,17 @@
         "avgFailures": null,
         "avgOwnerInteractions": 0,
         "toolCounts": {}
+      },
+      "iron": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
       }
     },
     "inception/mercury-2": {
@@ -1412,6 +1514,17 @@
         "avgFailures": null,
         "avgOwnerInteractions": null,
         "toolCounts": {}
+      },
+      "iron": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
       }
     },
     "moonshotai/kimi-k2.5": {
@@ -1517,6 +1630,17 @@
         }
       },
       "undefined": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
+      },
+      "iron": {
         "pass": 0,
         "total": 0,
         "rate": 0,
@@ -1643,13 +1767,24 @@
         "avgFailures": null,
         "avgOwnerInteractions": null,
         "toolCounts": {}
+      },
+      "iron": {
+        "pass": 0,
+        "total": 0,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": null,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": null,
+        "toolCounts": {}
       }
     },
     "glm-4.7-flash": {
       "overall": {
         "pass": 46,
-        "total": 68,
-        "rate": 0.6764705882352942,
+        "total": 71,
+        "rate": 0.647887323943662,
         "avgTime": 213878,
         "avgTools": 10
       },
@@ -1790,6 +1925,23 @@
         "avgFailures": null,
         "avgOwnerInteractions": null,
         "toolCounts": {}
+      },
+      "iron": {
+        "pass": 0,
+        "total": 3,
+        "rate": 0,
+        "avgTime": null,
+        "avgTimeout": 600000,
+        "avgTools": null,
+        "avgFailures": null,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 5,
+          "chest": 13,
+          "mine": 5,
+          "eat": 2,
+          "smelt": 1
+        }
       }
     }
   },
@@ -127224,6 +127376,239 @@
         }
       ],
       "ts": "2026-03-12T17:45:20.744Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600210,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773337761420
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773337790246
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft iron pickaxe from scratch",
+            "priority": "normal"
+          },
+          "t": 1773337790246
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft iron pickaxe from scratch",
+            "priority": "normal"
+          },
+          "t": 1773337886537
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773337886537
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773337902737
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773337952788
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773337985047
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773338087485
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773338124770
+        }
+      ],
+      "ts": "2026-03-12T17:57:14.457Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600978,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773337770875
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 6
+          },
+          "t": 1773337800991
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773337826231
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773337921695
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773338032641
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773338113924
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773338113924
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773338197436
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773338197436
+        }
+      ],
+      "ts": "2026-03-12T17:57:15.256Z"
+    },
+    {
+      "model": "glm-4.7-flash",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601419,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773337780230
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 5
+          },
+          "t": 1773337780230
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773337876448
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773337964885
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take"
+          },
+          "t": 1773338076384
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773338139714
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ingot",
+            "count": 3
+          },
+          "t": 1773338229569
+        }
+      ],
+      "ts": "2026-03-12T17:57:15.656Z"
     }
   ]
 }

@@ -767,6 +767,12 @@ export class RevivalBot {
     let failReason = null;
     let roamed = false;
 
+    // Snapshot inventory before mining to track what was actually collected
+    const invBefore = new Map();
+    for (const item of this.bot.inventory.items()) {
+      invBefore.set(item.name, (invBefore.get(item.name) || 0) + item.count);
+    }
+
     // Auto-equip best tool for the block type
     const bestTool = this.bot.pathfinder?.bestHarvestTool(this.bot.blockAt(this.bot.entity.position.offset(0, -1, 0)) || blockType)
       || this.bot.inventory.items().find(i => PICKAXE_TIERS.includes(i.name));
@@ -879,12 +885,23 @@ export class RevivalBot {
 
     if (this.state === 'mining') this.state = 'idle';
 
+    // Report what was actually collected (inventory diff)
+    const gained = [];
+    for (const item of this.bot.inventory.items()) {
+      const before = invBefore.get(item.name) || 0;
+      if (item.count > before) gained.push(`${item.name} x${item.count - before}`);
+    }
+    const dropMsg = gained.length > 0 ? `. Collected: ${gained.join(', ')}` : '';
+    const noDropsWarning = mined > 0 && gained.length === 0
+      ? '. WARNING: Mined blocks but got no drops — you may need a better pickaxe (stone for iron/lapis, iron for gold/redstone/emerald/diamond)'
+      : '';
+
     if (mined === 0 && failReason) {
       this.log('action_failed', `Mine ${blockName}: ${failReason}`);
     } else if (mined < count) {
-      this.log('action_partial', `Mined ${mined}/${count} ${blockName}: ${failReason || 'interrupted'}`);
+      this.log('action_partial', `Mined ${mined}/${count} ${blockName}${dropMsg}${noDropsWarning}: ${failReason || 'interrupted'}`);
     } else {
-      this.log('action_success', `Mined ${mined} ${blockName}`);
+      this.log('action_success', `Mined ${mined} ${blockName}${dropMsg}${noDropsWarning}`);
     }
   }
 
@@ -895,8 +912,26 @@ export class RevivalBot {
     // Check for a pickaxe
     const pickaxe = this.bot.inventory.items().find(i => PICKAXE_TIERS.includes(i.name));
     if (!pickaxe) {
-      this.log('action_failed', `Strip-mine ${blockName}: no pickaxe in inventory`);
+      this.log('action_failed', `Strip-mine ${blockName}: no pickaxe in inventory. Craft a wooden_pickaxe first (need planks + sticks)`);
       return { found: 0, reason: 'no pickaxe in inventory' };
+    }
+
+    // Warn about tool tier (stone+ for iron, iron+ for diamond/gold)
+    const STONE_TIER_ORES = ['iron_ore', 'lapis_ore', 'copper_ore'];
+    const IRON_TIER_ORES = ['gold_ore', 'redstone_ore', 'emerald_ore', 'diamond_ore'];
+    if (STONE_TIER_ORES.includes(blockName) && pickaxe.name === 'wooden_pickaxe') {
+      this.log('action_failed', `${blockName} requires at least a stone_pickaxe to drop items. Upgrade your pickaxe first`);
+      return { found: 0, reason: `wooden_pickaxe cannot harvest ${blockName}` };
+    }
+    if (IRON_TIER_ORES.includes(blockName) && ['wooden_pickaxe', 'stone_pickaxe'].includes(pickaxe.name)) {
+      this.log('action_failed', `${blockName} requires at least an iron_pickaxe to drop items. Upgrade your pickaxe first`);
+      return { found: 0, reason: `${pickaxe.name} cannot harvest ${blockName}` };
+    }
+
+    // Snapshot inventory to track what was actually collected
+    const invBefore = new Map();
+    for (const item of this.bot.inventory.items()) {
+      invBefore.set(item.name, (invBefore.get(item.name) || 0) + item.count);
     }
     try { await this.bot.equip(pickaxe, 'hand'); } catch {}
 
@@ -992,7 +1027,17 @@ export class RevivalBot {
       : `strip-mined ${blocksDug} blocks but found no ${blockName}`;
 
     if (found > 0) {
-      this.log('action_success', `Strip-mined ${found} ${blockName} (dug ${blocksDug} blocks)`);
+      // Report actual drops collected
+      const gained = [];
+      for (const item of this.bot.inventory.items()) {
+        const before = invBefore.get(item.name) || 0;
+        if (item.count > before) gained.push(`${item.name} x${item.count - before}`);
+      }
+      const dropMsg = gained.length > 0 ? `. Collected: ${gained.join(', ')}` : '';
+      const noDropsWarning = gained.length === 0
+        ? '. WARNING: Found ore but got no drops — your pickaxe tier may be too low'
+        : '';
+      this.log('action_success', `Strip-mined ${found} ${blockName} (dug ${blocksDug} blocks)${dropMsg}${noDropsWarning}`);
     }
     return { found, reason };
   }
