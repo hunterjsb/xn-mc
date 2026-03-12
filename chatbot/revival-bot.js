@@ -1671,7 +1671,11 @@ export class RevivalBot {
           try {
             const armorItem = this.bot.inventory.items().find(i => i.name === itemName);
             if (armorItem) {
-              await this.bot.equip(armorItem, 'torso');  // mineflayer picks correct slot by item type
+              let dest = 'torso';
+              if (itemName.includes('helmet') || itemName.includes('cap')) dest = 'head';
+              else if (itemName.includes('leggings') || itemName.includes('pants')) dest = 'legs';
+              else if (itemName.includes('boots')) dest = 'feet';
+              await this.bot.equip(armorItem, dest);
               this.log('action_success', `Crafted and equipped ${itemName}`);
             } else {
               this.log('action_success', `Crafted ${crafted}x ${itemName}. Use equip to put it on`);
