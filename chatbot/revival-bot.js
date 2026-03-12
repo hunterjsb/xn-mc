@@ -115,7 +115,7 @@ export class RevivalBot {
   }
 
   addObjective(text, priority = 'normal') {
-    if (!text) return; // guard against undefined/null text from LLM
+    if (!text || typeof text !== 'string') return; // guard against undefined/null/non-string from LLM
     // Don't add duplicates (fuzzy — check if existing objective substantially overlaps)
     const textLower = text.toLowerCase();
     if (this.objectives.some(o => {
@@ -132,7 +132,7 @@ export class RevivalBot {
   }
 
   completeObjective(text) {
-    if (!text) return; // guard against undefined/null text from LLM
+    if (!text || typeof text !== 'string') return; // guard against undefined/null/non-string from LLM
     const idx = this.objectives.findIndex(o => o.text.toLowerCase().includes(text.toLowerCase()));
     if (idx !== -1) {
       const removed = this.objectives.splice(idx, 1)[0];
@@ -1658,7 +1658,14 @@ export class RevivalBot {
               return;
             }
           } else {
-            this.log('action_failed', `${itemName} needs a crafting table but none found nearby and none in inventory`);
+            // Check if bot can craft a table from planks
+            const planks = this.bot.inventory.items().filter(i => i.name.endsWith('_planks'));
+            const plankCount = planks.reduce((s, i) => s + i.count, 0);
+            if (plankCount >= 4) {
+              this.log('action_failed', `${itemName} requires a crafting table (3x3 recipe). You have ${plankCount} planks — craft a crafting_table first (costs 4 planks, no table needed)`);
+            } else {
+              this.log('action_failed', `${itemName} requires a crafting table (3x3 recipe). None nearby and none in inventory. Craft one from 4 planks`);
+            }
             this.state = prevState;
             return;
           }

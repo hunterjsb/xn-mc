@@ -382,8 +382,10 @@ async function executeRevivalAction(rBot, actionName, params) {
     case 'objective':
       if (params.action === 'set') rBot.addObjective(params.text, params.priority || 'normal');
       else if (params.action === 'complete') {
-        rBot.completeObjective(params.text);
-        cm.addMemory(rBot.username, `Completed objective: ${params.text}`);
+        if (params.text && typeof params.text === 'string') {
+          rBot.completeObjective(params.text);
+          cm.addMemory(rBot.username, `Completed objective: ${params.text}`);
+        }
       }
       else if (params.action === 'clear') rBot.clearObjectives();
       break;
