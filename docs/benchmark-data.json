@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-12T09:35:20.376Z",
-  "totalRuns": 1673,
+  "generated": "2026-03-12T09:49:37.544Z",
+  "totalRuns": 1678,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1115,10 +1115,10 @@
     },
     "local/glm-4.7-flash:latest": {
       "overall": {
-        "pass": 132,
-        "total": 310,
-        "rate": 0.4258064516129032,
-        "avgTime": 238985,
+        "pass": 137,
+        "total": 315,
+        "rate": 0.43492063492063493,
+        "avgTime": 238350,
         "avgTools": 10
       },
       "pick": {
@@ -1247,26 +1247,26 @@
         }
       },
       "sleep": {
-        "pass": 14,
-        "total": 25,
-        "rate": 0.56,
-        "avgTime": 191176,
+        "pass": 19,
+        "total": 30,
+        "rate": 0.6333333333333333,
+        "avgTime": 199182,
         "avgTimeout": 300000,
         "avgTools": 11,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 32,
-          "chest": 86,
-          "pickup": 3,
-          "craft": 38,
-          "sleep": 23,
-          "place": 17,
+          "objective": 39,
+          "chest": 109,
+          "pickup": 4,
+          "craft": 52,
+          "sleep": 28,
+          "place": 21,
           "eat": 1,
           "mine": 2,
-          "whisper": 1,
+          "whisper": 2,
           "come_here": 1,
-          "stop": 1,
+          "stop": 2,
           "remember": 1,
           "equip": 1
         }
@@ -108996,6 +108996,499 @@
         }
       ],
       "ts": "2026-03-12T09:32:13.400Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 171085,
+      "timeout": 300000,
+      "toolCalls": 9,
+      "failures": 1,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "whisper",
+          "params": {
+            "player": "BrezzyTracks",
+            "message": "thanks for bringing me back! i think i'm alive now"
+          },
+          "t": 1773308396169
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft bed and sleep for safety",
+            "priority": "high"
+          },
+          "t": 1773308420975
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773308420975
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773308447658
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773308447658
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773308476893
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773308505773
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773308532193
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773308549843
+        }
+      ],
+      "ts": "2026-03-12T09:42:38.181Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 259668,
+      "timeout": 300000,
+      "toolCalls": 12,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep for the night",
+            "priority": "high"
+          },
+          "t": 1773308405071
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773308405071
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773308429579
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773308460333
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773308487703
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773308514694
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773308542439
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773308542439
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773308569150
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773308602858
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft bed and sleep for the night"
+          },
+          "t": 1773308639476
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773308639476
+        }
+      ],
+      "ts": "2026-03-12T09:44:07.063Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 280445,
+      "timeout": 300000,
+      "toolCalls": 12,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773308387190
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep through the night",
+            "priority": "high"
+          },
+          "t": 1773308412927
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773308412927
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773308439484
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773308469228
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773308497145
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773308524710
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773308559521
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773308585042
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773308585042
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773308621872
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773308657476
+        }
+      ],
+      "ts": "2026-03-12T09:44:27.759Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 123417,
+      "timeout": 300000,
+      "toolCalls": 9,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773308672551
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep for the night",
+            "priority": "high"
+          },
+          "t": 1773308689834
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773308689834
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773308708589
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773308727040
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773308738795
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773308760152
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773308768475
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773308788211
+        }
+      ],
+      "ts": "2026-03-12T09:46:34.198Z"
+    },
+    {
+      "model": "local/glm-4.7-flash:latest",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 273395,
+      "timeout": 300000,
+      "toolCalls": 14,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "pickup",
+          "params": {},
+          "t": 1773308594411
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep through the night",
+            "priority": "high"
+          },
+          "t": 1773308612898
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773308612898
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773308631980
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773308648474
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773308664868
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773308682127
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "planks",
+            "count": 4
+          },
+          "t": 1773308700427
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773308718557
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773308751278
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "planks"
+          },
+          "t": 1773308780071
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773308803337
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed",
+            "direction": "forward"
+          },
+          "t": 1773308823572
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773308847873
+        }
+      ],
+      "ts": "2026-03-12T09:47:34.453Z"
     }
   ]
 }
