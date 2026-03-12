@@ -131,13 +131,38 @@
       border: 1px solid var(--border);
       border-radius: 0.75rem;
       padding: 0.75rem 1rem;
-      flex: 1 1 140px;
-      max-width: 220px;
+      flex: 1 1 180px;
+      max-width: 260px;
       transition: border-color 0.2s;
       cursor: pointer;
     }
 
     .bench-card:hover { border-color: #3f3f46; }
+
+    .bench-card .bench-goal {
+      color: #71717a;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      margin-top: 0.25rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .bench-card .bench-rate {
+      margin-top: 0.4rem;
+      height: 4px;
+      border-radius: 2px;
+      background: #18181b;
+      overflow: hidden;
+    }
+
+    .bench-card .bench-rate-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
 
     /* ---------- Benchmark Modal ---------- */
     .bench-modal-backdrop {
@@ -973,14 +998,23 @@
       const meta = benchMeta[b] || {};
       const name = meta.name || benchNames[b] || b;
       const totalAll = models.reduce((sum, m) => sum + (summary[m]?.[b]?.total || 0), 0);
+      const passAll = models.reduce((sum, m) => sum + (summary[m]?.[b]?.pass || 0), 0);
       const modelCount = models.filter(m => (summary[m]?.[b]?.total || 0) > 0).length;
-      const detail = totalAll > 0 ? `${totalAll} runs \u00B7 ${modelCount} models` : 'no runs yet';
+      const detail = totalAll > 0 ? `${totalAll} runs \u00B7 ${modelCount} model${modelCount !== 1 ? 's' : ''}` : 'no runs yet';
+      const rate = totalAll > 0 ? passAll / totalAll : 0;
+      const ratePct = Math.round(rate * 100);
+      const rateColor = rate >= 0.7 ? 'var(--green)' : rate >= 0.4 ? 'var(--orange)' : 'var(--red)';
       const iconUrl = itemToIcon((meta.successItems || [])[0]);
-      const iconHTML = iconUrl ? `<img class="bench-icon" src="${iconUrl}" alt="${name}">` : '';
+      const iconHTML = iconUrl ? `<img class="bench-icon" src="${iconUrl}" alt="" onerror="this.style.display='none'">` : '';
+      const goal = meta.goal || '';
+      // Capitalize first letter of goal
+      const goalDisplay = goal ? goal.charAt(0).toUpperCase() + goal.slice(1) : '';
       cardsHTML += `
         <div class="bench-card" data-bench="${b}">
           <div class="card-header">${iconHTML}<div class="bench-name">${name}</div></div>
-          <div class="bench-detail">${detail}</div>
+          ${goalDisplay ? `<div class="bench-goal">${goalDisplay}</div>` : ''}
+          <div class="bench-detail">${detail} \u00B7 ${ratePct}% avg pass</div>
+          <div class="bench-rate"><div class="bench-rate-fill" style="width:${ratePct}%;background:${rateColor}"></div></div>
         </div>`;
     }
     benchGrid.innerHTML = cardsHTML;
@@ -1017,7 +1051,7 @@
 
       modalContent.innerHTML = `
         <div class="modal-header">
-          ${iconUrl ? `<img class="modal-icon" src="${iconUrl}" alt="${name}">` : ''}
+          ${iconUrl ? `<img class="modal-icon" src="${iconUrl}" alt="" onerror="this.style.display='none'">` : ''}
           <div>
             <div class="modal-title">${name}</div>
             <div class="modal-detail">${totalAll} runs across ${models.filter(m => (summary[m]?.[benchId]?.total || 0) > 0).length} models</div>
