@@ -1666,7 +1666,22 @@ export class RevivalBot {
         }
       } else {
         const isArmor = /helmet|chestplate|leggings|boots/.test(itemName);
-        this.log('action_success', `Crafted ${crafted}x ${itemName}` + (isArmor ? '. Use equip to put it on' : ''));
+        if (isArmor) {
+          // Auto-equip armor immediately after crafting
+          try {
+            const armorItem = this.bot.inventory.items().find(i => i.name === itemName);
+            if (armorItem) {
+              await this.bot.equip(armorItem, 'torso');  // mineflayer picks correct slot by item type
+              this.log('action_success', `Crafted and equipped ${itemName}`);
+            } else {
+              this.log('action_success', `Crafted ${crafted}x ${itemName}. Use equip to put it on`);
+            }
+          } catch {
+            this.log('action_success', `Crafted ${crafted}x ${itemName}. Use equip to put it on`);
+          }
+        } else {
+          this.log('action_success', `Crafted ${crafted}x ${itemName}`);
+        }
       }
     } finally {
       this.state = prevState;
