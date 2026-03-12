@@ -1063,9 +1063,32 @@
     }
 
     // ── Weighted Scores ──
-    // Benchmark-weighted: average per-benchmark scores so no single benchmark dominates.
-    // Per-bench score = (1/n_b) × Σ r(1 - t/T). Overall = average across benchmarks.
+    // Difficulty-weighted scoring: harder benchmarks count more.
+    // Difficulty = 1 - globalAvgPassRate (a bench everyone aces gets low weight).
+    // Per-bench score = (1/n) × Σ success ? (1 - t/T) : 0.
+    // Overall = Σ (normalizedWeight_b × perBenchScore_b) × 100.
     const allRuns = data.runs || [];
+
+    // Precompute global difficulty weights per benchmark
+    const globalBenchRates = {};
+    for (const r of allRuns) {
+      if (!globalBenchRates[r.bench]) globalBenchRates[r.bench] = { pass: 0, total: 0 };
+      globalBenchRates[r.bench].total++;
+      if (r.success) globalBenchRates[r.bench].pass++;
+    }
+    const benchDifficulty = {};
+    let totalDifficulty = 0;
+    for (const [b, { pass, total }] of Object.entries(globalBenchRates)) {
+      benchDifficulty[b] = 1 - (pass / total); // 0 = everyone passes, 1 = nobody passes
+      totalDifficulty += benchDifficulty[b];
+    }
+    // Normalize so weights sum to 1 (fallback to equal weights if all 0)
+    const benchWeight = {};
+    const nBench = Object.keys(benchDifficulty).length;
+    for (const b of Object.keys(benchDifficulty)) {
+      benchWeight[b] = totalDifficulty > 0 ? benchDifficulty[b] / totalDifficulty : 1 / nBench;
+    }
+
     function computeScore(model, timeoutFilter) {
       let modelRuns = allRuns.filter(r => r.model === model);
       if (timeoutFilter) modelRuns = modelRuns.filter(r => (r.timeout || 300_000) === timeoutFilter);
@@ -1075,19 +1098,22 @@
       for (const r of modelRuns) {
         (byBench[r.bench] = byBench[r.bench] || []).push(r);
       }
-      // Score each benchmark independently, then average
+      // Score each benchmark with difficulty weighting
       let totalScore = 0;
-      let benchCount = 0;
-      for (const runs of Object.values(byBench)) {
+      let totalWeight = 0;
+      for (const [bench, runs] of Object.entries(byBench)) {
         const benchScore = runs.reduce((sum, r) => {
           if (!r.success) return sum;
           const T = r.timeout || 300_000;
           return sum + (1 - r.elapsed / T);
         }, 0) / runs.length;
-        totalScore += benchScore;
-        benchCount++;
+        const w = benchWeight[bench] || (1 / nBench);
+        totalScore += w * benchScore;
+        totalWeight += w;
       }
-      return { score: Math.round(100 * totalScore / benchCount), n: modelRuns.length };
+      // Normalize by weight of benchmarks this model actually ran
+      const norm = totalWeight > 0 ? totalScore / totalWeight : 0;
+      return { score: Math.round(100 * norm), n: modelRuns.length };
     }
 
     const scoreData = ranked.map(m => {
@@ -1098,7 +1124,7 @@
     });
 
     const glanceDesc = document.querySelector('#glance-section .description');
-    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = benchmark-weighted average of r(1 − t/T). Higher is better.`;
+    glanceDesc.textContent = `${totalRuns} runs across ${models.length} models. Score = difficulty-weighted average of r(1 − t/T). Harder benchmarks count more.`;
 
     const glanceGrid = document.getElementById('glance-grid');
     let activeCol = 'overall'; // 'overall' | '5m' | '10m'
