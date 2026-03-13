@@ -663,6 +663,12 @@ export class ConversationManager {
       if (rBot._benchMode && !rBot._benchGoalReceived) return { actions: [], chat: null, senders: [] };
       if (!rBot._benchMode && Math.random() > 0.3) return { actions: [], chat: null, senders: [] };
     }
+    // In benchmark mode, skip LLM calls when the bot is actively busy (mining/crafting/smelting/etc.)
+    // and there are no new messages. The bot can't act on a response while busy anyway.
+    const BUSY_STATES = new Set(['mining', 'attacking', 'smelting', 'checking_chests', 'crafting']);
+    if (rBot._benchMode && pendingMessages.length === 0 && BUSY_STATES.has(rBot.state)) {
+      return { actions: [], chat: null, senders: [] };
+    }
 
     const worldSection = Object.keys(world).length > 0
       ? Object.entries(world).map(([k, v]) => `  ${k}: ${v}`).join('\n')

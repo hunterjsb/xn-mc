@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-13T21:45:25.494Z",
-  "totalRuns": 2574,
+  "generated": "2026-03-13T22:22:37.823Z",
+  "totalRuns": 2603,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -287,27 +287,27 @@
     },
     "gpt-5-mini": {
       "overall": {
-        "pass": 249,
-        "total": 419,
-        "rate": 0.594272076372315,
-        "avgTime": 186738,
+        "pass": 250,
+        "total": 420,
+        "rate": 0.5952380952380952,
+        "avgTime": 186387,
         "avgTools": 8
       },
       "pick": {
-        "pass": 57,
-        "total": 87,
-        "rate": 0.6551724137931034,
-        "avgTime": 237367,
-        "avgTimeout": 489655,
+        "pass": 58,
+        "total": 88,
+        "rate": 0.6590909090909091,
+        "avgTime": 234983,
+        "avgTimeout": 490909,
         "avgTools": 11,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 118,
-          "mine": 137,
+          "objective": 119,
+          "mine": 138,
           "chest": 51,
-          "craft": 313,
-          "place": 46,
+          "craft": 320,
+          "place": 47,
           "pickup": 6
         }
       },
@@ -1526,114 +1526,124 @@
     },
     "moonshotai/kimi-k2.5": {
       "overall": {
-        "pass": 33,
-        "total": 70,
-        "rate": 0.4714285714285714,
-        "avgTime": 162979,
+        "pass": 51,
+        "total": 98,
+        "rate": 0.5204081632653061,
+        "avgTime": 162764,
         "avgTools": 8
       },
       "pick": {
-        "pass": 7,
-        "total": 10,
-        "rate": 0.7,
-        "avgTime": 181826,
+        "pass": 12,
+        "total": 15,
+        "rate": 0.8,
+        "avgTime": 170495,
         "avgTimeout": 600000,
         "avgTools": 10,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 8,
-          "mine": 13,
-          "craft": 44,
-          "place": 5,
-          "pickup": 2,
-          "chest": 1
+          "objective": 14,
+          "mine": 19,
+          "craft": 74,
+          "place": 6,
+          "pickup": 3,
+          "chest": 2,
+          "eat": 1
         }
       },
       "food": {
-        "pass": 4,
-        "total": 10,
+        "pass": 6,
+        "total": 15,
         "rate": 0.4,
-        "avgTime": 126071,
+        "avgTime": 109515,
         "avgTimeout": 600000,
         "avgTools": 5,
         "avgFailures": 0,
-        "avgOwnerInteractions": 0,
-        "toolCounts": {
-          "objective": 3,
-          "craft": 7,
-          "place": 8,
-          "attack": 8,
-          "pickup": 5,
-          "smelt": 5,
-          "chest": 3
-        }
-      },
-      "shears": {
-        "pass": 6,
-        "total": 10,
-        "rate": 0.6,
-        "avgTime": 187510,
-        "avgTimeout": 600000,
-        "avgTools": 6,
-        "avgFailures": 1,
-        "avgOwnerInteractions": 0,
-        "toolCounts": {
-          "objective": 11,
-          "mine": 17,
-          "place": 8,
-          "smelt": 21,
-          "craft": 8,
-          "chest": 2,
-          "pickup": 1
-        }
-      },
-      "diamonds": {
-        "pass": 4,
-        "total": 10,
-        "rate": 0.4,
-        "avgTime": 119705,
-        "avgTimeout": 600000,
-        "avgTools": 10,
-        "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
           "objective": 4,
-          "chest": 11,
-          "craft": 18,
-          "place": 4,
-          "equip": 1
+          "craft": 10,
+          "place": 10,
+          "attack": 9,
+          "pickup": 6,
+          "smelt": 7,
+          "chest": 6,
+          "eat": 6
         }
       },
-      "collect": {
-        "pass": 4,
-        "total": 10,
-        "rate": 0.4,
-        "avgTime": 146677,
+      "shears": {
+        "pass": 10,
+        "total": 14,
+        "rate": 0.7142857142857143,
+        "avgTime": 184823,
         "avgTimeout": 600000,
-        "avgTools": 5,
+        "avgTools": 6,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 6,
-          "mine": 16,
+          "objective": 15,
+          "mine": 21,
+          "place": 12,
+          "smelt": 25,
+          "craft": 16,
+          "chest": 3,
+          "pickup": 1,
+          "eat": 1
+        }
+      },
+      "diamonds": {
+        "pass": 6,
+        "total": 15,
+        "rate": 0.4,
+        "avgTime": 120891,
+        "avgTimeout": 600000,
+        "avgTools": 9,
+        "avgFailures": 0,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 7,
+          "chest": 26,
+          "craft": 26,
+          "place": 5,
+          "equip": 1,
+          "come_here": 2,
+          "follow": 2,
+          "whisper": 1,
+          "stop": 1,
           "pickup": 1
         }
       },
+      "collect": {
+        "pass": 8,
+        "total": 15,
+        "rate": 0.5333333333333333,
+        "avgTime": 184805,
+        "avgTimeout": 600000,
+        "avgTools": 7,
+        "avgFailures": 1,
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 10,
+          "mine": 40,
+          "pickup": 7,
+          "chest": 2,
+          "equip": 2
+        }
+      },
       "sleep": {
-        "pass": 7,
-        "total": 10,
-        "rate": 0.7,
-        "avgTime": 124862,
+        "pass": 8,
+        "total": 14,
+        "rate": 0.5714285714285714,
+        "avgTime": 126160,
         "avgTimeout": 300000,
         "avgTools": 9,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 8,
-          "chest": 38,
-          "place": 13,
-          "craft": 17,
+          "objective": 9,
+          "chest": 45,
+          "place": 14,
+          "craft": 19,
           "sleep": 5
         }
       },
@@ -173584,6 +173594,1752 @@
         }
       ],
       "ts": "2026-03-13T21:41:08.833Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 69741,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773438344273
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears - find and smelt iron",
+            "priority": "high"
+          },
+          "t": 1773438354142
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773438354142
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2
+          },
+          "t": 1773438374379
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773438406126
+        }
+      ],
+      "ts": "2026-03-13T21:46:54.071Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 140864,
+      "timeout": 600000,
+      "toolCalls": 13,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773438350435
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773438350435
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks"
+          },
+          "t": 1773438375776
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick"
+          },
+          "t": 1773438390139
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks"
+          },
+          "t": 1773438395621
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773438414557
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773438418699
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773438424763
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773438438616
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cherry_log",
+            "count": 3
+          },
+          "t": 1773438445636
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "oak_log"
+          },
+          "t": 1773438459510
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773438470198
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773438479482
+        }
+      ],
+      "ts": "2026-03-13T21:48:04.318Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 129442,
+      "timeout": 600000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and equip full diamond armor",
+            "priority": "high"
+          },
+          "t": 1773438441352
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773438441352
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond"
+          },
+          "t": 1773438457865
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773438499939
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773438507716
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773438524784
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773438540627
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773438557965
+        }
+      ],
+      "ts": "2026-03-13T21:49:28.557Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 258063,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T21:50:05.078Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 45772,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T21:50:30.336Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 86492,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773438620823
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773438626242
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773438626242
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 12
+          },
+          "t": 1773438673078
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773438690827
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773438694949
+        }
+      ],
+      "ts": "2026-03-13T21:51:46.660Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 135248,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773438725748
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears - need to find, mine, and smelt iron",
+            "priority": "high"
+          },
+          "t": 1773438770644
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773438770644
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2
+          },
+          "t": 1773438810484
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773438841310
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773438854735
+        }
+      ],
+      "ts": "2026-03-13T21:54:21.265Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 421694,
+      "timeout": 600000,
+      "toolCalls": 13,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "gather 16 dirt, 8 logs, and 16 cobblestone"
+          },
+          "t": 1773438514005
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773438514005
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773438547599
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773438605848
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773438615713
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 6
+          },
+          "t": 1773438653812
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773438659060
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773438694128
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 6
+          },
+          "t": 1773438697141
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 6
+          },
+          "t": 1773438736168
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 6
+          },
+          "t": 1773438781179
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773438865423
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 6
+          },
+          "t": 1773438891523
+        }
+      ],
+      "ts": "2026-03-13T21:55:24.557Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 341903,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T21:56:38.305Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 106963,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "gather 16 dirt, 8 logs, and 16 cobblestone",
+            "priority": "normal"
+          },
+          "t": 1773438948232
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773438948232
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773438985941
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 13
+          },
+          "t": 1773439023246
+        }
+      ],
+      "ts": "2026-03-13T21:57:26.460Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 303667,
+      "timeout": 300000,
+      "toolCalls": 3,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439018087
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773439055689
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439091744
+        }
+      ],
+      "ts": "2026-03-13T22:01:58.407Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 319806,
+      "timeout": 600000,
+      "toolCalls": 13,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773439095231
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773439095231
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773439137226
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks",
+            "count": 2
+          },
+          "t": 1773439156127
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 1
+          },
+          "t": 1773439176234
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773439219438
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773439273654
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773439280451
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773439288791
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773439296028
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773439309282
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773439341025
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773439371582
+        }
+      ],
+      "ts": "2026-03-13T22:03:02.556Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 600221,
+      "timeout": 600000,
+      "toolCalls": 1,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773438950138
+        }
+      ],
+      "ts": "2026-03-13T22:04:40.272Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 360440,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears - mine iron ore, smelt into ingots, craft shears",
+            "priority": "high"
+          },
+          "t": 1773439471610
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773439471610
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773439570252
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773439603028
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773439646528
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773439692291
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "below"
+          },
+          "t": 1773439709818
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 2
+          },
+          "t": 1773439723659
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773439753073
+        }
+      ],
+      "ts": "2026-03-13T22:09:18.117Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "food",
+      "success": false,
+      "elapsed": 601363,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "attack",
+          "params": {
+            "mob": "zombie"
+          },
+          "t": 1773439372061
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773439434023
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439455666
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773439471059
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773439489606
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773439500603
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439518362
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773439554363
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439613030
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773439791759
+        }
+      ],
+      "ts": "2026-03-13T22:12:22.063Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 249019,
+      "timeout": 600000,
+      "toolCalls": 17,
+      "failures": 5,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Gather 16 dirt, 8 logs, and 16 cobblestone"
+          },
+          "t": 1773439787571
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773439787571
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773439878881
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "oak_log"
+          },
+          "t": 1773439881093
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "oak_log"
+          },
+          "t": 1773439887403
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773439896585
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773439903610
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "oak_log"
+          },
+          "t": 1773439916858
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "oak_log"
+          },
+          "t": 1773439922144
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "dirt"
+          },
+          "t": 1773439922144
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "spruce_log",
+            "count": 3
+          },
+          "t": 1773439930452
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "iron_axe"
+          },
+          "t": 1773439955403
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "dirt"
+          },
+          "t": 1773439955403
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773439960518
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "iron_pickaxe"
+          },
+          "t": 1773439996830
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773439996830
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773440000643
+        }
+      ],
+      "ts": "2026-03-13T22:13:42.955Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 135252,
+      "timeout": 300000,
+      "toolCalls": 8,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft a bed and sleep",
+            "priority": "high"
+          },
+          "t": 1773439967028
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439973184
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773440014410
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773440045317
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed",
+            "count": 1
+          },
+          "t": 1773440056476
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773440066785
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773440080685
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773440089577
+        }
+      ],
+      "ts": "2026-03-13T22:14:54.012Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 600347,
+      "timeout": 600000,
+      "toolCalls": 16,
+      "failures": 4,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773439503025
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439503025
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond"
+          },
+          "t": 1773439538792
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773439538792
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773439683365
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773439683365
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439818058
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773439819150
+        },
+        {
+          "name": "follow",
+          "params": {},
+          "t": 1773439848418
+        },
+        {
+          "name": "whisper",
+          "params": {
+            "player": "BrezzyTracks",
+            "message": "Captain! I be stranded at -10177, 65, 9977. No diamonds, no tools, no sight of ye. Need yer help to craft that armor!"
+          },
+          "t": 1773439872104
+        },
+        {
+          "name": "stop",
+          "params": {},
+          "t": 1773439891763
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773439944280
+        },
+        {
+          "name": "pickup",
+          "params": {},
+          "t": 1773439958836
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773439984583
+        },
+        {
+          "name": "follow",
+          "params": {},
+          "t": 1773440060876
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773440075069
+        }
+      ],
+      "ts": "2026-03-13T22:15:00.365Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 156332,
+      "timeout": 600000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Make a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773440060599
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773440060599
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks"
+          },
+          "t": 1773440089851
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick"
+          },
+          "t": 1773440107815
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773440107815
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks"
+          },
+          "t": 1773440138323
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773440145289
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773440187396
+        }
+      ],
+      "ts": "2026-03-13T22:16:36.313Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "food",
+      "success": true,
+      "elapsed": 92130,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773440140844
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773440150650
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773440160781
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "count": 2,
+            "fuel": "oak_planks"
+          },
+          "t": 1773440178508
+        }
+      ],
+      "ts": "2026-03-13T22:16:47.953Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 157745,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears - find iron, smelt it, craft shears",
+            "priority": "high"
+          },
+          "t": 1773440121884
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 4
+          },
+          "t": 1773440121884
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773440195598
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 4,
+            "fuel": "oak_planks"
+          },
+          "t": 1773440205591
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773440259787
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773440267732
+        }
+      ],
+      "ts": "2026-03-13T22:17:53.961Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "diamonds",
+      "success": true,
+      "elapsed": 117084,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773440217253
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "diamond",
+            "count": 24
+          },
+          "t": 1773440243472
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773440268495
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773440281026
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_chestplate"
+          },
+          "t": 1773440291462
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_leggings"
+          },
+          "t": 1773440300179
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft full diamond armor and equip it",
+            "priority": "high"
+          },
+          "t": 1773440307763
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_helmet"
+          },
+          "t": 1773440307763
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "diamond_boots"
+          },
+          "t": 1773440324484
+        }
+      ],
+      "ts": "2026-03-13T22:18:49.649Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "collect",
+      "success": true,
+      "elapsed": 114057,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "gather 16 dirt, 8 logs, and 16 cobblestone",
+            "priority": "high"
+          },
+          "t": 1773440229632
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "dirt",
+            "count": 16
+          },
+          "t": 1773440229632
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773440255112
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773440297810
+        }
+      ],
+      "ts": "2026-03-13T22:18:58.370Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 69668,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "make wooden pickaxe from scratch"
+          },
+          "t": 1773440355946
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773440355946
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 12
+          },
+          "t": 1773440383283
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks",
+            "count": 1
+          },
+          "t": 1773440389990
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773440398726
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "make wooden pickaxe from scratch"
+          },
+          "t": 1773440409712
+        }
+      ],
+      "ts": "2026-03-13T22:20:15.491Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "food",
+      "success": true,
+      "elapsed": 60678,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "pickup",
+          "params": {
+            "item": "beef"
+          },
+          "t": 1773440366763
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Cook and eat beef before starving",
+            "priority": "high"
+          },
+          "t": 1773440388366
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773440388366
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773440394842
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "beef",
+            "fuel": "oak_planks"
+          },
+          "t": 1773440401043
+        }
+      ],
+      "ts": "2026-03-13T22:20:22.983Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "diamonds",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T22:20:26.332Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 184475,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T22:21:13.973Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "collect",
+      "success": false,
+      "elapsed": 35439,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T22:21:49.234Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "pick",
+      "success": true,
+      "elapsed": 99091,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a wooden pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773440465209
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 3
+          },
+          "t": 1773440465209
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773440481558
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 2
+          },
+          "t": 1773440487501
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 1
+          },
+          "t": 1773440501361
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773440510777
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773440514870
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773440520745
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks"
+          },
+          "t": 1773440545170
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773440553235
+        }
+      ],
+      "ts": "2026-03-13T22:22:37.715Z"
     }
   ]
 }
