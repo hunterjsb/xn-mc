@@ -450,13 +450,30 @@ export class RevivalBot {
 
   async _runTick() {
     if (this._ticking || !this.connected || this.despawned) {
-      if (this._benchMode && !this._ticking) {
-        console.log(`[Revival Tick] ${this.username} skip: connected=${this.connected} despawned=${this.despawned}`);
+      if (this._benchMode) {
+        if (this._ticking) {
+          const stuckMs = Date.now() - (this._tickStartTime || 0);
+          if (stuckMs > 90_000) {
+            console.error(`[Revival Tick] ${this.username} STUCK for ${Math.round(stuckMs/1000)}s — force-releasing tick lock`);
+            this._ticking = false;
+            // Don't return — fall through to start a new tick
+          } else {
+            console.log(`[Revival Tick] ${this.username} busy (${Math.round(stuckMs/1000)}s)`);
+            this._scheduleNextTick();
+            return;
+          }
+        } else {
+          console.log(`[Revival Tick] ${this.username} skip: connected=${this.connected} despawned=${this.despawned}`);
+          this._scheduleNextTick();
+          return;
+        }
+      } else {
+        this._scheduleNextTick();
+        return;
       }
-      this._scheduleNextTick();
-      return;
     }
     this._ticking = true;
+    this._tickStartTime = Date.now();
     this._abortIdleTick = false;
     try {
       if (this._onTick) await this._onTick(this);
