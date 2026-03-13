@@ -843,7 +843,7 @@ export class RevivalBot {
 
         // For log blocks, try all wood variants before giving up
         if (blockName.endsWith('_log')) {
-          const LOG_VARIANTS = ['oak_log', 'birch_log', 'spruce_log', 'dark_oak_log', 'jungle_log', 'acacia_log', 'mangrove_log', 'cherry_log'];
+          const LOG_VARIANTS = ['oak_log', 'birch_log', 'spruce_log', 'dark_oak_log', 'jungle_log', 'acacia_log', 'mangrove_log', 'cherry_log', 'pale_oak_log'];
           let found = false;
           for (const variant of LOG_VARIANTS) {
             if (variant === blockName) continue;
