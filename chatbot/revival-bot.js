@@ -1629,7 +1629,14 @@ export class RevivalBot {
               await this.bot.equip(tableItem, 'hand');
               const pos = this.bot.entity.position.floored();
               const Vec3 = (await import('vec3')).default;
-              const REPLACEABLE = new Set(['short_grass','tall_grass','fern','dead_bush','leaf_litter','snow','vine','dandelion','poppy']);
+              const isReplaceable = (block) => {
+                if (!block || block.name === 'air') return true;
+                if (block.boundingBox === 'empty') return true;
+                return block.name.includes('grass') || block.name.includes('flower')
+                  || block.name.includes('fern') || block.name.includes('sapling')
+                  || block.name.includes('carpet') || block.name.includes('mushroom')
+                  || ['dead_bush','leaf_litter','snow','vine','sweet_berry_bush'].includes(block.name);
+              };
               let placed = false;
               for (const dy of [0, 1, -1]) {
                 for (const [dx, dz] of [[1,0],[-1,0],[0,1],[0,-1]]) {
@@ -1637,10 +1644,9 @@ export class RevivalBot {
                     const target = pos.offset(dx * dist, dy, dz * dist);
                     const below = this.bot.blockAt(target.offset(0, -1, 0));
                     const atTarget = this.bot.blockAt(target);
-                    if (below && below.name !== 'air' && atTarget &&
-                        (atTarget.name === 'air' || REPLACEABLE.has(atTarget.name))) {
+                    if (below && below.name !== 'air' && isReplaceable(atTarget)) {
                       try {
-                        if (REPLACEABLE.has(atTarget.name)) await this.bot.dig(atTarget);
+                        if (atTarget && atTarget.name !== 'air') await this.bot.dig(atTarget);
                         await this.bot.equip(tableItem, 'hand');
                         await this.bot.placeBlock(below, new Vec3(0, 1, 0));
                         placed = true;
@@ -1810,7 +1816,15 @@ export class RevivalBot {
             await this.bot.equip(furnaceItem, 'hand');
             const Vec3 = (await import('vec3')).default;
             const pos = this.bot.entity.position.floored();
-            const REPLACEABLE = new Set(['short_grass','tall_grass','fern','dead_bush','leaf_litter','snow','vine','dandelion','poppy']);
+            // Check if a block is replaceable (no collision, vegetation, etc.)
+            const isReplaceable = (block) => {
+              if (!block || block.name === 'air') return true;
+              if (block.boundingBox === 'empty') return true;
+              return block.name.includes('grass') || block.name.includes('flower')
+                || block.name.includes('fern') || block.name.includes('sapling')
+                || block.name.includes('carpet') || block.name.includes('mushroom')
+                || ['dead_bush','leaf_litter','snow','vine','sweet_berry_bush'].includes(block.name);
+            };
             let placed = false;
             // Try cardinal dirs at distance 1 and 2, including y offsets for uneven terrain
             for (const dy of [0, 1, -1]) {
@@ -1819,10 +1833,9 @@ export class RevivalBot {
                   const target = pos.offset(dx * dist, dy, dz * dist);
                   const below = this.bot.blockAt(target.offset(0, -1, 0));
                   const atTarget = this.bot.blockAt(target);
-                  if (below && below.name !== 'air' && atTarget &&
-                      (atTarget.name === 'air' || REPLACEABLE.has(atTarget.name))) {
+                  if (below && below.name !== 'air' && isReplaceable(atTarget)) {
                     try {
-                      if (REPLACEABLE.has(atTarget.name)) await this.bot.dig(atTarget);
+                      if (atTarget && atTarget.name !== 'air') await this.bot.dig(atTarget);
                       await this.bot.equip(furnaceItem, 'hand');
                       await this.bot.placeBlock(below, new Vec3(0, 1, 0));
                       placed = true;
@@ -2030,16 +2043,22 @@ export class RevivalBot {
           await this.bot.equip(bedItem, 'hand');
           const pos = this.bot.entity.position.floored();
           const Vec3 = this.bot.entity.position.constructor;
-          const REPLACEABLE = new Set(['short_grass','tall_grass','fern','dead_bush','leaf_litter','snow','vine','dandelion','poppy']);
+          const isReplaceable = (block) => {
+            if (!block || block.name === 'air') return true;
+            if (block.boundingBox === 'empty') return true;
+            return block.name.includes('grass') || block.name.includes('flower')
+              || block.name.includes('fern') || block.name.includes('sapling')
+              || block.name.includes('carpet') || block.name.includes('mushroom')
+              || ['dead_bush','leaf_litter','snow','vine','sweet_berry_bush'].includes(block.name);
+          };
           let placed = false;
           for (const [dx, dz] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]]) {
             const target = pos.offset(dx, 0, dz);
             const below = this.bot.blockAt(target.offset(0, -1, 0));
             const atTarget = this.bot.blockAt(target);
-            if (below && below.name !== 'air' && atTarget &&
-                (atTarget.name === 'air' || REPLACEABLE.has(atTarget.name))) {
+            if (below && below.name !== 'air' && isReplaceable(atTarget)) {
               try {
-                if (REPLACEABLE.has(atTarget.name)) await this.bot.dig(atTarget);
+                if (atTarget && atTarget.name !== 'air') await this.bot.dig(atTarget);
                 await this.bot.equip(bedItem, 'hand');
                 await this.bot.placeBlock(below, new Vec3(0, 1, 0));
                 placed = true;
@@ -2108,20 +2127,28 @@ export class RevivalBot {
     const pos = this.bot.entity.position.floored();
     const Vec3 = this.bot.entity.position.constructor;
 
-    // Blocks that can be broken to make room for placement
-    const REPLACEABLE = new Set([
-      'short_grass', 'tall_grass', 'fern', 'large_fern', 'dead_bush',
-      'leaf_litter', 'seagrass', 'tall_seagrass', 'snow',
-      'vine', 'dandelion', 'poppy', 'blue_orchid', 'allium',
-      'azure_bluet', 'red_tulip', 'orange_tulip', 'white_tulip', 'pink_tulip',
-      'oxeye_daisy', 'cornflower', 'lily_of_the_valley', 'sunflower',
-      'lilac', 'rose_bush', 'peony', 'sweet_berry_bush',
-    ]);
+    // Check if a block can be broken to make room for placement
+    // Instead of a whitelist, check if the block has no collision (flowers, grass, etc.)
+    // or is in a known breakable-for-placement set
+    const isReplaceable = (block) => {
+      if (!block || block.name === 'air') return true;
+      // Blocks with no collision box are generally replaceable
+      if (block.boundingBox === 'empty') return true;
+      // Explicit set for edge cases
+      const REPLACEABLE_NAMES = new Set([
+        'short_grass', 'tall_grass', 'fern', 'large_fern', 'dead_bush',
+        'leaf_litter', 'seagrass', 'tall_seagrass', 'snow',
+        'vine', 'sweet_berry_bush', 'pale_moss_carpet',
+      ]);
+      return REPLACEABLE_NAMES.has(block.name)
+        || block.name.includes('flower') || block.name.includes('sapling')
+        || block.name.includes('mushroom') || block.name.includes('carpet');
+    };
 
     // Clear replaceable block at a position if present
     const clearIfReplaceable = async (targetPos) => {
       const block = this.bot.blockAt(targetPos);
-      if (block && REPLACEABLE.has(block.name)) {
+      if (block && block.name !== 'air' && isReplaceable(block)) {
         try { await this.bot.dig(block); } catch {}
       }
     };
@@ -2129,7 +2156,7 @@ export class RevivalBot {
     // Check if a position is open (air or replaceable)
     const isOpen = (targetPos) => {
       const block = this.bot.blockAt(targetPos);
-      return block && (block.name === 'air' || REPLACEABLE.has(block.name));
+      return isReplaceable(block);
     };
 
     // Try placing on top of ground block in a cardinal direction

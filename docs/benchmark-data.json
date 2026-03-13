@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-13T01:30:34.147Z",
-  "totalRuns": 2051,
+  "generated": "2026-03-13T01:46:34.319Z",
+  "totalRuns": 2054,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -274,10 +274,10 @@
     },
     "gpt-5-mini": {
       "overall": {
-        "pass": 191,
-        "total": 333,
-        "rate": 0.5735735735735735,
-        "avgTime": 191131,
+        "pass": 194,
+        "total": 336,
+        "rate": 0.5773809523809523,
+        "avgTime": 192520,
         "avgTools": 9
       },
       "pick": {
@@ -321,21 +321,21 @@
         }
       },
       "shears": {
-        "pass": 40,
-        "total": 60,
-        "rate": 0.6666666666666666,
-        "avgTime": 178802,
-        "avgTimeout": 440000,
+        "pass": 43,
+        "total": 63,
+        "rate": 0.6825396825396826,
+        "avgTime": 185927,
+        "avgTimeout": 447619,
         "avgTools": 7,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 62,
-          "mine": 61,
-          "place": 69,
-          "chest": 34,
-          "craft": 57,
-          "smelt": 44,
+          "objective": 71,
+          "mine": 67,
+          "place": 71,
+          "chest": 39,
+          "craft": 63,
+          "smelt": 50,
           "equip": 2,
           "pickup": 7,
           "whisper": 2
@@ -141915,6 +141915,321 @@
         }
       ],
       "ts": "2026-03-13T01:29:37.795Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 136027,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773365733937
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft shears (find and smelt iron)",
+            "priority": "high"
+          },
+          "t": 1773365751101
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773365768904
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace"
+          },
+          "t": 1773365817080
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773365828310
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears",
+            "count": 1
+          },
+          "t": 1773365860127
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft shears (find and smelt iron)"
+          },
+          "t": 1773365866565
+        }
+      ],
+      "ts": "2026-03-13T01:37:49.174Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 157240,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a furnace",
+            "priority": "high"
+          },
+          "t": 1773365740619
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears",
+            "priority": "high"
+          },
+          "t": 1773365780970
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft a furnace"
+          },
+          "t": 1773365797246
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773365809552
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773365845099
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 2
+          },
+          "t": 1773365856571
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773365884409
+        }
+      ],
+      "ts": "2026-03-13T01:38:08.763Z"
+    },
+    {
+      "model": "gpt-5-mini",
+      "bench": "shears",
+      "success": true,
+      "elapsed": 549501,
+      "timeout": 600000,
+      "toolCalls": 20,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron_pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773365761500
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773365772916
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773365781722
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 3
+          },
+          "t": 1773365811980
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773365850174
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773365854883
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe",
+            "count": 1
+          },
+          "t": 1773365863519
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft iron_pickaxe from scratch"
+          },
+          "t": 1773365871082
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears",
+            "priority": "high"
+          },
+          "t": 1773365903315
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773365916772
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773365927116
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773365942259
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 1
+          },
+          "t": 1773365995660
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773366033847
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 2
+          },
+          "t": 1773366057065
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 1
+          },
+          "t": 1773366147077
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a pair of shears",
+            "priority": "high"
+          },
+          "t": 1773366216246
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773366226913
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "oak_planks",
+            "count": 1
+          },
+          "t": 1773366252000
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "shears"
+          },
+          "t": 1773366277999
+        }
+      ],
+      "ts": "2026-03-13T01:44:41.658Z"
     }
   ]
 }
