@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-13T22:22:37.823Z",
-  "totalRuns": 2603,
+  "generated": "2026-03-13T23:14:04.344Z",
+  "totalRuns": 2605,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1526,10 +1526,10 @@
     },
     "moonshotai/kimi-k2.5": {
       "overall": {
-        "pass": 51,
-        "total": 98,
-        "rate": 0.5204081632653061,
-        "avgTime": 162764,
+        "pass": 52,
+        "total": 100,
+        "rate": 0.52,
+        "avgTime": 161397,
         "avgTools": 8
       },
       "pick": {
@@ -1573,8 +1573,8 @@
       },
       "shears": {
         "pass": 10,
-        "total": 14,
-        "rate": 0.7142857142857143,
+        "total": 15,
+        "rate": 0.6666666666666666,
         "avgTime": 184823,
         "avgTimeout": 600000,
         "avgTools": 6,
@@ -1631,20 +1631,20 @@
         }
       },
       "sleep": {
-        "pass": 8,
-        "total": 14,
-        "rate": 0.5714285714285714,
-        "avgTime": 126160,
+        "pass": 9,
+        "total": 15,
+        "rate": 0.6,
+        "avgTime": 122329,
         "avgTimeout": 300000,
         "avgTools": 9,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
           "objective": 9,
-          "chest": 45,
+          "chest": 48,
           "place": 14,
-          "craft": 19,
-          "sleep": 5
+          "craft": 20,
+          "sleep": 6
         }
       },
       "iron": {
@@ -175340,6 +175340,68 @@
         }
       ],
       "ts": "2026-03-13T22:22:37.715Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 91680,
+      "timeout": 300000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773440501431
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773440541487
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773440541487
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773440562683
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773440572736
+        }
+      ],
+      "ts": "2026-03-13T22:23:01.310Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "shears",
+      "success": false,
+      "elapsed": 156271,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T22:23:10.129Z"
     }
   ]
 }

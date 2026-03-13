@@ -661,29 +661,17 @@ function saveResult(result, model) {
 // ── Main ─────────────────────────────────────────────────────────────
 
 async function setRevivalModel(model) {
-  const { execSync } = await import('child_process');
   const { writeFileSync, unlinkSync } = await import('fs');
   const modelFile = new URL('./.revival-model', import.meta.url).pathname;
   if (model) {
     console.log(`  Switching revival model to: ${model}`);
     writeFileSync(modelFile, model, 'utf8');
-    execSync(`REVIVAL_MODEL=${model} pm2 restart xandaris-revival --update-env`, { stdio: 'pipe' });
   } else {
     console.log(`  Restoring default revival model...`);
     try { unlinkSync(modelFile); } catch {}
-    execSync(`REVIVAL_MODEL= pm2 restart xandaris-revival --update-env`, { stdio: 'pipe' });
   }
-  // Wait for API to be ready (up to 20s)
-  for (let i = 0; i < 20; i++) {
-    await sleep(1000);
-    try {
-      await api('GET', '/rblist');
-      console.log(`  Revival API ready (${i + 1}s)`);
-      break;
-    } catch {
-      if (i === 19) console.log('  WARNING: Revival API not responding after 20s');
-    }
-  }
+  // No restart needed — getRevivalBackend() reads .revival-model on every tick
+  await sleep(1000);
 }
 
 async function main() {

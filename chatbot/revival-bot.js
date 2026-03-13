@@ -1287,18 +1287,18 @@ export class RevivalBot {
 
     const positions = this.bot.findBlocks({
       matching: allIds,
-      maxDistance: 32,
-      count: 15,
+      maxDistance: 16,
+      count: 8,
     });
 
     if (positions.length === 0) {
       this.state = 'idle';
-      this.log('action_failed', 'No containers found nearby');
+      this.log('action_failed', 'No containers found within 16 blocks');
       return;
     }
 
     const results = [];
-    for (const pos of positions.slice(0, 8)) {
+    for (const pos of positions.slice(0, 4)) {
       const block = this.bot.blockAt(pos);
       if (!block) continue;
       try {
