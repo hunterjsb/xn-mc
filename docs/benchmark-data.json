@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-13T23:14:04.344Z",
-  "totalRuns": 2605,
+  "generated": "2026-03-13T23:31:04.089Z",
+  "totalRuns": 2610,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1847,8 +1847,8 @@
     "deepseek/deepseek-v3.2": {
       "overall": {
         "pass": 57,
-        "total": 102,
-        "rate": 0.5588235294117647,
+        "total": 107,
+        "rate": 0.5327102803738317,
         "avgTime": 158073,
         "avgTools": 10
       },
@@ -1969,18 +1969,18 @@
       },
       "iron": {
         "pass": 2,
-        "total": 10,
-        "rate": 0.2,
+        "total": 15,
+        "rate": 0.13333333333333333,
         "avgTime": 352306,
         "avgTimeout": 600000,
         "avgTools": 20,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 18,
-          "mine": 19,
-          "craft": 58,
-          "chest": 11,
+          "objective": 21,
+          "mine": 23,
+          "craft": 60,
+          "chest": 15,
           "smelt": 8,
           "pickup": 3,
           "place": 1,
@@ -175402,6 +175402,170 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-13T22:23:10.129Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 92633,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T23:16:14.883Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 360352,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T23:20:43.416Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 320024,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T23:21:48.705Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601717,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773444045595
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773444126214
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773444135524
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773444202322
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773444227791
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773444254421
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773444272442
+        }
+      ],
+      "ts": "2026-03-13T23:24:44.501Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600873,
+      "timeout": 600000,
+      "toolCalls": 6,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773444467175
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft stone pickaxe from scratch",
+            "priority": "normal"
+          },
+          "t": 1773444520067
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773444523666
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 4
+          },
+          "t": 1773444549890
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773444553842
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft stone pickaxe from scratch",
+            "priority": "normal"
+          },
+          "t": 1773444652688
+        }
+      ],
+      "ts": "2026-03-13T23:31:04.010Z"
     }
   ]
 }

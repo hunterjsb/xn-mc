@@ -290,13 +290,14 @@ export class RevivalBot {
 
   // Auto-eat when food is low
   _survivalEat() {
-    if (!this.bot) return;
-    if (this.bot.food >= 14) return;
+    const bot = this.bot;
+    if (!bot) return;
+    if (bot.food >= 14) return;
     if (Date.now() - this._lastEatTime < 10000) return; // 10s cooldown
     // Don't interrupt active combat or crafting (window click conflicts)
     if (this.state === 'attacking' || this.state === 'crafting' || this.state === 'smelting') return;
 
-    const food = this.bot.inventory.items().find(i => FOOD_ITEMS.has(i.name));
+    const food = bot.inventory.items().find(i => FOOD_ITEMS.has(i.name));
     if (!food) return;
 
     this._lastEatTime = Date.now();
@@ -310,14 +311,15 @@ export class RevivalBot {
 
   // Fight back when hit by hostiles
   _survivalDefend() {
-    if (!this.bot) return;
+    const bot = this.bot;
+    if (!bot?.entity) return;
     // Skip during mining/checking chests — those are interruptible by other means
     if (this.state === 'mining' || this.state === 'checking_chests') return;
 
     // Check if a hostile mob is attacking us (within 5 blocks and targeting us)
-    const hostile = this.bot.nearestEntity(e => {
+    const hostile = bot.nearestEntity(e => {
       if (!e || !e.name) return false;
-      const dist = e.position.distanceTo(this.bot.entity.position);
+      const dist = e.position.distanceTo(bot.entity.position);
       if (dist > 5) return false;
       return HOSTILE_MOBS.has(e.name.toLowerCase());
     });
@@ -326,14 +328,14 @@ export class RevivalBot {
 
     // Only fight back if we're actually taking damage (health changed recently)
     // or if the mob is very close (within 3 blocks)
-    const dist = hostile.position.distanceTo(this.bot.entity.position);
+    const dist = hostile.position.distanceTo(bot.entity.position);
     if (dist > 3) return;
 
     console.log(`[Survival] ${this.username} defending against ${hostile.name} (${Math.round(dist)}m)`);
     this.log('survival', `Auto-defending against ${hostile.name}`);
 
     // Equip best weapon first
-    const weapons = this.bot.inventory.items().filter(i =>
+    const weapons = bot.inventory.items().filter(i =>
       i.name.includes('sword') || i.name.includes('axe')
     );
     if (weapons.length > 0) {
@@ -347,17 +349,17 @@ export class RevivalBot {
         if (aSword !== bSword) return aSword - bSword;
         return aTier - bTier;
       })[0];
-      this.bot.equip(best, 'hand').catch(() => {});
+      bot.equip(best, 'hand').catch(() => {});
     }
 
     try {
-      this.bot.pvp.attack(hostile);
+      bot.pvp.attack(hostile);
     } catch {}
   }
 
   // Swim up when underwater
   _survivalBreathe() {
-    if (!this.bot.entity) return;
+    if (!this.bot?.entity) return;
     const pos = this.bot.entity.position;
     const block = this.bot.blockAt(pos.offset(0, 1, 0)); // block at head level
     if (!block) return;
