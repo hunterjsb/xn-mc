@@ -190,6 +190,17 @@ export class RevivalBot {
     // Inventory summary
     const inventory = this.bot.inventory.items().map(i => `${i.name}x${i.count}`);
 
+    // Equipped armor (slots 5-8: helmet, chestplate, leggings, boots)
+    const armorSlots = [
+      { slot: 5, name: 'head' }, { slot: 6, name: 'chest' },
+      { slot: 7, name: 'legs' }, { slot: 8, name: 'feet' },
+    ];
+    const equipped = [];
+    for (const { slot, name } of armorSlots) {
+      const item = this.bot.inventory.slots[slot];
+      if (item) equipped.push(`${name}:${item.name}`);
+    }
+
     // Owner proximity
     const ownerEntity = this.bot.players[this.owner]?.entity;
     const ownerDist = ownerEntity
@@ -240,6 +251,7 @@ export class RevivalBot {
       timeOfDay: isDay === null ? 'unknown' : (isDay ? 'day' : 'night'),
       dimension,
       inventory: inventory.length > 0 ? inventory.join(', ') : 'empty',
+      equipped: equipped.length > 0 ? equipped.join(', ') : 'nothing',
       ownerDistance: ownerDist !== null ? `${ownerDist}m` : 'not visible',
       nearbyEntities: nearby.length > 0 ? nearby.slice(0, 15).join(', ') : 'none',
       nearbyBlocks: utilityBlocks.length > 0 ? utilityBlocks.join(', ') : 'none',
@@ -438,6 +450,9 @@ export class RevivalBot {
 
   async _runTick() {
     if (this._ticking || !this.connected || this.despawned) {
+      if (this._benchMode && !this._ticking) {
+        console.log(`[Revival Tick] ${this.username} skip: connected=${this.connected} despawned=${this.despawned}`);
+      }
       this._scheduleNextTick();
       return;
     }
@@ -1724,28 +1739,35 @@ export class RevivalBot {
       } else {
         const isArmor = /helmet|chestplate|leggings|boots/.test(itemName);
         if (isArmor) {
-          // Auto-equip armor immediately after crafting
-          try {
-            // Close crafting table window first — equip fails while a container is open
-            if (this.bot.currentWindow) {
-              this.bot.closeWindow(this.bot.currentWindow);
-            }
-            // Always wait for inventory sync after crafting
-            await new Promise(r => setTimeout(r, 500));
-            const armorItem = this.bot.inventory.items().find(i => i.name === itemName);
-            if (armorItem) {
+          // Auto-equip armor immediately after crafting (retry up to 3 times)
+          let equipped = false;
+          for (let attempt = 0; attempt < 3 && !equipped; attempt++) {
+            try {
+              // Close crafting table window — equip fails while a container is open
+              if (this.bot.currentWindow) {
+                this.bot.closeWindow(this.bot.currentWindow);
+                await new Promise(r => setTimeout(r, 300));
+              }
+              // Wait for inventory sync (longer on retries)
+              await new Promise(r => setTimeout(r, 500 + attempt * 500));
+              const armorItem = this.bot.inventory.items().find(i => i.name === itemName);
+              if (!armorItem) {
+                if (attempt < 2) continue; // retry — item may not have synced yet
+                this.log('action_success', `Crafted ${crafted}x ${itemName}. Use equip to put it on`);
+                break;
+              }
               let dest = 'torso';
               if (itemName.includes('helmet') || itemName.includes('cap')) dest = 'head';
               else if (itemName.includes('leggings') || itemName.includes('pants')) dest = 'legs';
               else if (itemName.includes('boots')) dest = 'feet';
               await this.bot.equip(armorItem, dest);
               this.log('action_success', `Crafted and equipped ${itemName}`);
-            } else {
+              equipped = true;
+            } catch (equipErr) {
+              if (attempt < 2) continue; // retry
+              console.error(`[Revival] Auto-equip ${itemName} failed after 3 attempts: ${equipErr.message}`);
               this.log('action_success', `Crafted ${crafted}x ${itemName}. Use equip to put it on`);
             }
-          } catch (equipErr) {
-            console.error(`[Revival] Auto-equip ${itemName} failed: ${equipErr.message}`);
-            this.log('action_success', `Crafted ${crafted}x ${itemName}. Use equip to put it on`);
           }
         } else {
           this.log('action_success', `Crafted ${crafted}x ${itemName}`);
@@ -2175,8 +2197,27 @@ export class RevivalBot {
         if (clearPos) await clearIfReplaceable(clearPos);
         await this.bot.equip(item, 'hand'); // re-equip after digging
         await this.bot.placeBlock(ref, face);
-        const bedHint = item.name.endsWith('_bed') ? '. Use sleep() to sleep in it' : '';
-        this.log('action_success', `Placed ${item.name}${bedHint}`);
+        if (item.name.endsWith('_bed')) {
+          // Auto-sleep after placing a bed
+          await new Promise(r => setTimeout(r, 500));
+          try {
+            const bedBlock = this.bot.findBlock({
+              matching: Object.values(this._mcData.blocksByName)
+                .filter(b => b.name.endsWith('_bed')).map(b => b.id),
+              maxDistance: 8,
+            });
+            if (bedBlock) {
+              await this.bot.sleep(bedBlock);
+              this.log('action_success', `Placed ${item.name} and sleeping`);
+              return;
+            }
+          } catch (sleepErr) {
+            // Sleep failed (not night, mobs, etc.) — still placed successfully
+          }
+          this.log('action_success', `Placed ${item.name}. Use sleep() to sleep in it`);
+        } else {
+          this.log('action_success', `Placed ${item.name}`);
+        }
         return;
       } catch (err) {
         // Try next candidate
@@ -2197,8 +2238,24 @@ export class RevivalBot {
         await clearIfReplaceable(newPos);
         await this.bot.equip(item, 'hand');
         await this.bot.placeBlock(nb, new Vec3(0, 1, 0));
-        const bedHint2 = item.name.endsWith('_bed') ? '. Use sleep() to sleep in it' : '';
-        this.log('action_success', `Placed ${item.name} (after repositioning)${bedHint2}`);
+        if (item.name.endsWith('_bed')) {
+          await new Promise(r => setTimeout(r, 500));
+          try {
+            const bedBlock = this.bot.findBlock({
+              matching: Object.values(this._mcData.blocksByName)
+                .filter(b => b.name.endsWith('_bed')).map(b => b.id),
+              maxDistance: 8,
+            });
+            if (bedBlock) {
+              await this.bot.sleep(bedBlock);
+              this.log('action_success', `Placed ${item.name} and sleeping`);
+              return;
+            }
+          } catch {}
+          this.log('action_success', `Placed ${item.name}. Use sleep() to sleep in it`);
+        } else {
+          this.log('action_success', `Placed ${item.name} (after repositioning)`);
+        }
         return;
       }
     } catch {}

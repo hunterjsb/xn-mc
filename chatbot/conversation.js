@@ -831,7 +831,8 @@ RULES:
 
       return result;
     } catch (err) {
-      console.error(`[RevivalTick Error] ${err.message}`);
+      const rb = getRevivalBackend();
+      console.error(`[RevivalTick Error] ${rb.tag} (${rBot.username}): ${err.status || ''} ${err.message}`);
       return { actions: [], chat: null, senders };
     }
   }
