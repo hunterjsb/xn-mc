@@ -7,6 +7,7 @@ chatbot/skin-assignments.json
 chatbot/slur-filter.js
 chatbot/revival-profiles/
 chatbot/revival-state.json
+chatbot/.revival-model
 
 # Bukkit plugin build output
 revival-plugin/build/

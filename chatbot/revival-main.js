@@ -237,7 +237,17 @@ function wireRevivalBot(rBot) {
     for (let step = 0; step < MAX_STEPS; step++) {
       if (!bot.connected || bot.despawned) break;
 
-      const result = await cm.revivalTick(bot);
+      let result;
+      try {
+        result = await cm.revivalTick(bot);
+      } catch (tickErr) {
+        // Log LLM errors in bench log so we can track API failures
+        if (bot._benchLog) {
+          bot._benchLog.push({ type: 'error', detail: tickErr.message?.slice(0, 200), t: Date.now() });
+        }
+        console.error(`[Revival Tick] ${bot.username} revivalTick error: ${tickErr.message?.slice(0, 100)}`);
+        break;
+      }
       if (step === 0) allSenders = result.senders;
 
       // Bench tracking: log tool calls
@@ -584,6 +594,7 @@ function setupWebhookServer() {
       const toolCalls = rBot._benchLog.filter(e => e.type === 'tool');
       const chats = rBot._benchLog.filter(e => e.type === 'chat');
       const idles = rBot._benchLog.filter(e => e.type === 'idle');
+      const errors = rBot._benchLog.filter(e => e.type === 'error');
       const results = rBot._benchLog.filter(e => e.type === 'result');
       const failures = results.filter(e => e.result?.includes('fail'));
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -596,6 +607,7 @@ function setupWebhookServer() {
         totalToolCalls: toolCalls.length,
         totalChats: chats.length,
         totalIdles: idles.length,
+        totalErrors: errors.length,
         totalFailures: failures.length,
         log: rBot._benchLog,
       }, null, 2));
@@ -624,6 +636,40 @@ function setupWebhookServer() {
       rBot.tickHistory.length = 0;
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ status: 'ok', benchStart: rBot._benchStart }));
+      return;
+    }
+
+    // POST /despawn?bot=Name — despawn a specific bot
+    if (req.method === 'POST' && req.url?.startsWith('/despawn')) {
+      const botName = new URL(req.url, 'http://localhost').searchParams.get('bot');
+      let found = false;
+      if (botName) {
+        for (const [name, rb] of revivalBots) {
+          if (rb.username === botName || name === botName) {
+            try { rb.despawn('api_despawn'); } catch {}
+            found = true;
+            break;
+          }
+        }
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'ok', bot: botName, found }));
+      return;
+    }
+
+    // POST /bench/cleanup — despawn all benchmark bots (use before starting a new batch)
+    if (req.method === 'POST' && req.url === '/bench/cleanup') {
+      const benchNames = new Set(['Archaeo','Basalt','Calcite','Diorite','Elytra','Flint','Gravel','Hopper','Ignite','Jasper','Kelp','Lapis','Magma','Nether','Obsidian','Prism','Quartz','Redstone','Shulker','Tundra']);
+      const cleaned = [];
+      for (const [name, rb] of revivalBots) {
+        if (benchNames.has(rb.username) || benchNames.has(name)) {
+          try { rb.despawn('bench_cleanup'); } catch {}
+          cleaned.push(rb.username);
+        }
+      }
+      console.log(`[Bench] Cleaned up ${cleaned.length} bench bots: ${cleaned.join(', ') || 'none'}`);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'ok', cleaned }));
       return;
     }
 

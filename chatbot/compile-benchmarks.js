@@ -108,7 +108,7 @@ export function compileBenchmarks({ check = false } = {}) {
         name: def.name,
         timeout: def.timeout,
         goal: def.goal,
-        successItems: def.successItems || (def.successCounts ? Object.keys(def.successCounts) : []),
+        successItems: def.successItems || (def.iconItem ? [def.iconItem] : (def.successCounts ? Object.keys(def.successCounts) : [])),
         startItems: (def.startItems || []).map(s => s.split(' ')[0]),
       };
     } else {

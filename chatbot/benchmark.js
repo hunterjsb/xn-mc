@@ -76,6 +76,7 @@ export const BENCHMARKS = {
     ],
     goal: 'you are starving! cook some meat and eat it before you die',
     successCheck: 'food_eaten', // custom: check food level restored
+    iconItem: 'cooked_beef',
     timeout: 600_000,
   },
   shears: {
@@ -94,6 +95,7 @@ export const BENCHMARKS = {
     startItems: [],
     goal: 'there is a chest nearby with diamonds in it. craft a full set of diamond armor and put it on',
     successCheck: 'diamond_armor_equipped', // custom: check armor slots
+    iconItem: 'diamond_chestplate',
     timeout: 600_000,
   },
   sleep: {
@@ -103,6 +105,7 @@ export const BENCHMARKS = {
     ],
     goal: 'it is nighttime and monsters are everywhere! there is a chest nearby with supplies to make a bed. craft one and get some sleep',
     successCheck: 'slept', // custom: check SleepTimer or bed_used advancement
+    iconItem: 'red_bed',
     timeout: 300_000, // 5 min
   },
   collect: {
@@ -112,6 +115,7 @@ export const BENCHMARKS = {
     ],
     goal: 'gather resources: 16 dirt, 8 logs, and 16 cobblestone',
     successCounts: { dirt: 16, _log: 8, cobblestone: 16 },
+    iconItem: 'oak_log',
     timeout: 600_000,
   },
   iron: {
@@ -289,6 +293,7 @@ async function runBenchmark(benchId, botName, workerId = 0) {
   console.log(`${tag} ${'='.repeat(50)}`);
 
   // ── 1. Clean up any existing bot ──────────────────────────────────
+  try { await api('POST', `/despawn?bot=${botName}`); } catch {} // despawn this specific bot only
   try { await rcon(`kick ${botName}`); } catch {}
   await sleep(3000);
 
@@ -552,6 +557,15 @@ async function runBenchmark(benchId, botName, workerId = 0) {
         console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] Resending goal (retry ${retries}/4)...`);
         await api('POST', '/rbsay', { bot: botName, message: bench.goal, as: OWNER });
         lastToolTime = Date.now();
+      } else if (retries >= 4 && Date.now() - lastToolTime > 120_000) {
+        // All retries exhausted and idle 2+ min — check if bot has done anything
+        try {
+          const m = await api('GET', `/bench/metrics?bot=${botName}`);
+          if ((m.totalToolCalls || 0) === 0 && (m.totalErrors || 0) > 0) {
+            console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] Aborting — ${m.totalErrors} LLM errors, 0 tool calls. API may be down.`);
+            break;
+          }
+        } catch {}
       }
     } catch {}
   }
@@ -647,14 +661,28 @@ function saveResult(result, model) {
 
 async function setRevivalModel(model) {
   const { execSync } = await import('child_process');
+  const { writeFileSync, unlinkSync } = await import('fs');
+  const modelFile = new URL('./.revival-model', import.meta.url).pathname;
   if (model) {
     console.log(`  Switching revival model to: ${model}`);
+    writeFileSync(modelFile, model, 'utf8');
     execSync(`REVIVAL_MODEL=${model} pm2 restart xandaris-revival --update-env`, { stdio: 'pipe' });
   } else {
     console.log(`  Restoring default revival model...`);
+    try { unlinkSync(modelFile); } catch {}
     execSync(`REVIVAL_MODEL= pm2 restart xandaris-revival --update-env`, { stdio: 'pipe' });
   }
-  await sleep(5000);
+  // Wait for API to be ready (up to 20s)
+  for (let i = 0; i < 20; i++) {
+    await sleep(1000);
+    try {
+      await api('GET', '/rblist');
+      console.log(`  Revival API ready (${i + 1}s)`);
+      break;
+    } catch {
+      if (i === 19) console.log('  WARNING: Revival API not responding after 20s');
+    }
+  }
 }
 
 async function main() {
@@ -712,6 +740,10 @@ async function main() {
   const m = model || defaultModel;
   const allResults = [];
   let jobIdx = 0;
+
+  // Clean up any stale bench bots from previous runs/crashes
+  try { await api('POST', '/bench/cleanup'); } catch {}
+  await sleep(2000);
 
   // Set time to day (sleep benchmarks set time to midnight individually before their goal)
   await rcon('time set day');

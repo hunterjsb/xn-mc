@@ -36,9 +36,15 @@ const OPENAI_DIRECT_MODELS = new Set([
   'gpt-5-mini', 'gpt-4.1-mini', 'gpt-4.1', 'gpt-4.1-nano', 'o3-mini', 'o4-mini',
 ]);
 
+// Model override file — survives PM2 auto-restarts (env vars don't)
+const MODEL_OVERRIDE_FILE = join(__dirname, '.revival-model');
+function readModelOverride() {
+  try { const m = readFileSync(MODEL_OVERRIDE_FILE, 'utf8').trim(); return m || null; } catch { return null; }
+}
+
 // Select revival LLM backend. Supports REVIVAL_MODEL env (model name) for flexible routing.
 function getRevivalBackend() {
-  const model = process.env.REVIVAL_MODEL;
+  const model = process.env.REVIVAL_MODEL || readModelOverride();
   if (model) {
     // Route local/ prefixed models to Ollama via ngrok (OpenAI-compatible endpoint)
     if (model.startsWith('local/') && ollamaClient) {
@@ -58,11 +64,11 @@ function getRevivalBackend() {
     console.warn(`[RevivalBackend] Model ${model} requested but no suitable client`);
   }
 
-  // Default: openai (gpt-5-mini) → openrouter → grok direct
+  // Default: openrouter (gpt-5-mini) → openai → grok direct
+  if (openrouterClient) return { client: openrouterClient, model: REVIVAL_MODEL, tag: `openrouter/${REVIVAL_MODEL}`,
+    extraParams: { max_tokens: 4096, temperature: 0.6 } };
   if (openaiClient) return { client: openaiClient, model: REVIVAL_MODEL, tag: 'openai',
     extraParams: { max_completion_tokens: 4096 } };
-  if (openrouterClient) return { client: openrouterClient, model: 'x-ai/grok-4.1-fast', tag: 'openrouter/grok',
-    extraParams: { max_tokens: 4096, temperature: 0.6 } };
   return { client: grokClient, model: GROK_MODEL, tag: 'grok',
     extraParams: { max_tokens: 4096, temperature: 0.6 } };
 }
@@ -104,8 +110,17 @@ export async function discordRevivalEmbed(deadPlayer, reviver) {
   } catch { /* non-critical */ }
 }
 
-async function callLLM(params, { label = 'LLM' } = {}) {
-  // Use OpenAI (gpt-5-mini) if available, otherwise Grok
+async function callLLM(params, { label = 'LLM', lightweight = false } = {}) {
+  // Use OpenRouter (gpt-5-mini) if available, fallback to OpenAI → Grok
+  if (openrouterClient) {
+    const response = await openrouterClient.chat.completions.create({
+      ...params,
+      model: lightweight ? 'gpt-5-mini' : REVIVAL_MODEL,
+    }, { timeout: 30_000 });
+    console.log(`[${label}] ✓ openrouter`);
+    return response;
+  }
+
   if (openaiClient) {
     const { max_tokens, temperature, ...rest } = params;
     const openaiParams = {
@@ -278,7 +293,7 @@ export class ConversationManager {
         max_tokens: 200,
         temperature: 0.3
       }, { label: 'MemoryCompact', lightweight: true });
-      mem.summary = response.choices[0].message.content.trim();
+      mem.summary = (response.choices[0].message.content || '').trim();
       mem.recent = kept;
       this._saveMemory(username);
       console.log(`[Memory] Compacted ${toCompact.length} entries for ${username}`);
@@ -750,12 +765,18 @@ RULES:
       ];
 
       const rb = getRevivalBackend();
-      const callLLM = (timeoutMs) => rb.client.chat.completions.create({
-        model: rb.model,
-        messages,
-        tools,
-        ...rb.extraParams,
-      }, { timeout: timeoutMs });
+      // Use AbortController to cancel hung HTTP requests and prevent memory leaks.
+      // The OpenAI SDK accepts { signal } in the options object.
+      const callLLM = (timeoutMs) => {
+        const controller = new AbortController();
+        const hardDeadline = setTimeout(() => controller.abort(), timeoutMs + 10_000);
+        return rb.client.chat.completions.create({
+          model: rb.model,
+          messages,
+          tools,
+          ...rb.extraParams,
+        }, { timeout: timeoutMs, signal: controller.signal }).finally(() => clearTimeout(hardDeadline));
+      };
 
       let response;
       try {

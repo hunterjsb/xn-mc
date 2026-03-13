@@ -179,7 +179,7 @@ export class RevivalBot {
   // ── World context for LLM ─────────────────────────────────────────
 
   getWorldContext() {
-    if (!this.bot?.entity) return {};
+    if (!this.bot?.entity?.position) return {};
 
     const pos = this.bot.entity.position;
     const health = this.bot.health;
@@ -290,6 +290,7 @@ export class RevivalBot {
 
   // Auto-eat when food is low
   _survivalEat() {
+    if (!this.bot) return;
     if (this.bot.food >= 14) return;
     if (Date.now() - this._lastEatTime < 10000) return; // 10s cooldown
     // Don't interrupt active combat or crafting (window click conflicts)
@@ -309,6 +310,7 @@ export class RevivalBot {
 
   // Fight back when hit by hostiles
   _survivalDefend() {
+    if (!this.bot) return;
     // Skip during mining/checking chests — those are interruptible by other means
     if (this.state === 'mining' || this.state === 'checking_chests') return;
 
@@ -476,7 +478,7 @@ export class RevivalBot {
     this._tickStartTime = Date.now();
     this._abortIdleTick = false;
     try {
-      if (this._onTick) await this._onTick(this);
+      if (this._onTick && this.bot) await this._onTick(this);
     } catch (err) {
       console.error(`[Revival Tick] ${this.username} error: ${err.message}`);
     } finally {
@@ -505,7 +507,10 @@ export class RevivalBot {
       version: false,
       auth: 'offline',
       hideErrors: false,
-      fakeHost: `localhost\x00127.0.0.1\x00${uuid}`
+      fakeHost: `localhost\x00127.0.0.1\x00${uuid}`,
+      // Reduce memory: fewer chunks loaded (default is server's view-distance, often 10+)
+      // Bots don't need far vision — 6 chunks is plenty for pathfinding/mining
+      viewDistance: 6,
     });
 
     this.bot.on('login', () => {
@@ -676,8 +681,24 @@ export class RevivalBot {
     }
     this.connected = false;
 
+    // Release mineflayer bot and chunk data for GC
+    if (this.bot) {
+      try { this.bot.removeAllListeners(); } catch {}
+      this.bot = null;
+    }
+    this._mcData = null;
+    this._movements = null;
+    this.tickHistory = [];
+    this.actionLog = [];
+    this.pendingMessages = [];
+
     console.log(`[Revival] ${this.username} despawned (${reason})`);
     if (this._onDespawn) this._onDespawn(this.username, reason);
+  }
+
+  /** Throw if bot has been despawned mid-tick */
+  _requireBot() {
+    if (!this.bot) throw new Error('bot despawned');
   }
 
   // ── Chat ───────────────────────────────────────────────────────────
@@ -771,6 +792,7 @@ export class RevivalBot {
   }
 
   async _cmdMine(blockName, count) {
+    this._requireBot();
     // Fix common LLM block name mistakes
     const MINE_ALIASES = {
       log: 'oak_log', logs: 'oak_log', wood: 'oak_log',
@@ -898,9 +920,9 @@ export class RevivalBot {
           this.bot.collectBlock.collect(block).finally(restoreMovements),
           new Promise((_, reject) => {
             const check = setInterval(() => {
-              if (this.state !== 'mining') {
+              if (this.state !== 'mining' || !this.bot) {
                 clearInterval(check);
-                this.bot.pathfinder?.stop();
+                this.bot?.pathfinder?.stop();
                 reject(new Error('interrupted'));
               }
             }, 250);
@@ -943,6 +965,7 @@ export class RevivalBot {
   }
 
   async _stripMine(blockName, blockTypeId, targetCount, optimalY) {
+    this._requireBot();
     this.log('action', `Strip-mining for ${blockName} at Y=${optimalY}`);
     console.log(`[StripMine] ${this.username} mining ${blockName} → Y=${optimalY}`);
 
@@ -1080,6 +1103,7 @@ export class RevivalBot {
   }
 
   async _cmdAttack(mobName, count = 1) {
+    this._requireBot();
     this.state = 'attacking';
     this.log('action', `Attacking ${count}x ${mobName}`);
 
@@ -1148,6 +1172,7 @@ export class RevivalBot {
   }
 
   async _cmdPickup(itemName) {
+    this._requireBot();
     const pos = this.bot.entity.position;
     const items = [];
     for (const entity of Object.values(this.bot.entities)) {
@@ -1202,6 +1227,7 @@ export class RevivalBot {
   }
 
   async _cmdDropAll() {
+    this._requireBot();
     const items = this.bot.inventory.items();
     if (items.length === 0) {
       this.log('action_failed', 'Inventory is empty');
@@ -1241,6 +1267,7 @@ export class RevivalBot {
   }
 
   async _cmdCheckChests() {
+    this._requireBot();
     this.state = 'checking_chests';
     this.log('action', 'Scanning nearby containers');
 
@@ -1320,6 +1347,7 @@ export class RevivalBot {
   }
 
   async _cmdTakeFromChest(itemName, count) {
+    this._requireBot();
     this.log('action', `Taking ${count || 'all'} ${itemName} from container`);
 
     const chestIds = [
@@ -1400,6 +1428,7 @@ export class RevivalBot {
   }
 
   async _cmdTakeAllFromChest() {
+    this._requireBot();
     this.state = 'checking_chests';
     this.log('action', 'Taking all items from nearby container');
 
@@ -1463,6 +1492,7 @@ export class RevivalBot {
   }
 
   async _cmdDepositAll() {
+    this._requireBot();
     const items = this.bot.inventory.items();
     if (items.length === 0) {
       this.log('action_failed', 'Inventory is empty');
@@ -1528,6 +1558,7 @@ export class RevivalBot {
   }
 
   async _cmdDepositInChest(itemName, count) {
+    this._requireBot();
     this.log('action', `Depositing ${count || 'all'} ${itemName} in chest`);
 
     const item = this.bot.inventory.items().find(i =>
@@ -1581,6 +1612,7 @@ export class RevivalBot {
   }
 
   async _cmdCraft(itemName, count = 1) {
+    this._requireBot();
     // Fix common LLM item name mistakes
     const CRAFT_ALIASES = {
       planks: 'oak_planks', oak_plank: 'oak_planks', plank: 'oak_planks',
@@ -1802,6 +1834,7 @@ export class RevivalBot {
   }
 
   async _cmdSmelt(itemName, fuelName, count = 1) {
+    this._requireBot();
     // Fix common LLM item name mistakes (raw_porkchop → porkchop, raw_beef → beef, etc.)
     const SMELT_ALIASES = {
       raw_porkchop: 'porkchop', raw_beef: 'beef', raw_chicken: 'chicken',
@@ -1904,9 +1937,9 @@ export class RevivalBot {
       const VALID_FUELS = new Set([
         'coal', 'charcoal', 'coal_block', 'blaze_rod', 'lava_bucket', 'stick',
         'oak_planks', 'spruce_planks', 'birch_planks', 'jungle_planks',
-        'acacia_planks', 'dark_oak_planks', 'cherry_planks', 'mangrove_planks',
+        'acacia_planks', 'dark_oak_planks', 'cherry_planks', 'mangrove_planks', 'pale_oak_planks',
         'oak_log', 'spruce_log', 'birch_log', 'jungle_log',
-        'acacia_log', 'dark_oak_log', 'cherry_log', 'mangrove_log',
+        'acacia_log', 'dark_oak_log', 'cherry_log', 'mangrove_log', 'pale_oak_log',
       ]);
       let fuelItem;
       if (fuelName) {
@@ -1935,8 +1968,8 @@ export class RevivalBot {
         const FUEL_RATES = {
           coal: 8, charcoal: 8, coal_block: 80, blaze_rod: 12, lava_bucket: 100,
           oak_planks: 1.5, spruce_planks: 1.5, birch_planks: 1.5, jungle_planks: 1.5,
-          acacia_planks: 1.5, dark_oak_planks: 1.5, cherry_planks: 1.5, mangrove_planks: 1.5,
-          oak_log: 1.5, spruce_log: 1.5, birch_log: 1.5, stick: 0.5,
+          acacia_planks: 1.5, dark_oak_planks: 1.5, cherry_planks: 1.5, mangrove_planks: 1.5, pale_oak_planks: 1.5,
+          oak_log: 1.5, spruce_log: 1.5, birch_log: 1.5, pale_oak_log: 1.5, stick: 0.5,
         };
         const rate = FUEL_RATES[fuelItem.name] || 1.5;
         const fuelNeeded = Math.ceil(smeltCount / rate);
@@ -1947,10 +1980,16 @@ export class RevivalBot {
       // Wait for smelting (roughly 10s per item, but check periodically)
       const maxWait = Math.max(smeltCount * 12000, 30000);
       const start = Date.now();
+      let stalledNoFuel = false;
       while (Date.now() - start < maxWait) {
         await new Promise(r => setTimeout(r, 2000));
         if (!furnace.inputItem()) break; // all smelted
         if (this.state !== 'smelting') break; // interrupted
+        // Detect out-of-fuel stall: input remains but no fuel and furnace not actively burning
+        if (furnace.inputItem() && !furnace.fuelItem() && furnace.fuel === 0) {
+          stalledNoFuel = true;
+          break;
+        }
       }
 
       // Take output — retry briefly if not ready yet
@@ -1961,7 +2000,14 @@ export class RevivalBot {
       }
       if (output) {
         await furnace.takeOutput();
-        this.log('action_success', `Smelted ${output.count}x ${output.name}. It is now in your inventory`);
+        const remaining = furnace.inputItem();
+        if (remaining) {
+          this.log('action_partial', `Smelted ${output.count}x ${output.name} (collected). ${remaining.count}x ${remaining.name} still in furnace — ran out of fuel. Add more fuel and smelt again`);
+        } else {
+          this.log('action_success', `Smelted ${output.count}x ${output.name}. It is now in your inventory`);
+        }
+      } else if (stalledNoFuel) {
+        this.log('action_failed', `Furnace ran out of fuel with ${furnace.inputItem()?.count || '?'}x input remaining. Add more fuel (coal, planks, or logs) and try again`);
       } else if (furnace.inputItem()) {
         this.log('action_partial', `Smelting still in progress. Come back to the furnace later to collect the result`);
       } else {
@@ -1977,6 +2023,7 @@ export class RevivalBot {
   }
 
   async _cmdEquip(itemName) {
+    this._requireBot();
     const item = this.bot.inventory.items().find(i =>
       i.name.toLowerCase().includes(itemName.toLowerCase())
     );
@@ -2008,6 +2055,7 @@ export class RevivalBot {
   }
 
   async _cmdEat() {
+    this._requireBot();
     const foods = this.bot.inventory.items().filter(i => {
       const food = this._mcData?.foodsByName?.[i.name] || this._mcData?.itemsByName?.[i.name];
       // Simple heuristic: common food items
@@ -2036,6 +2084,7 @@ export class RevivalBot {
   }
 
   async _cmdSleep() {
+    this._requireBot();
     const bedColors = ['white', 'orange', 'magenta', 'light_blue', 'yellow', 'lime',
       'pink', 'gray', 'light_gray', 'cyan', 'purple', 'blue', 'brown', 'green', 'red', 'black'];
     const bedIds = bedColors
@@ -2128,6 +2177,7 @@ export class RevivalBot {
   }
 
   async _cmdPlace(blockName, direction = 'forward') {
+    this._requireBot();
     const item = this.bot.inventory.items().find(i => i.name.includes(blockName));
     if (!item) {
       this.log('action_failed', `No ${blockName} in inventory`);
