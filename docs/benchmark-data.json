@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-13T10:33:10.582Z",
-  "totalRuns": 2341,
+  "generated": "2026-03-13T14:00:06.929Z",
+  "totalRuns": 2408,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -135,8 +135,8 @@
     "x-ai/grok-4.1-fast": {
       "overall": {
         "pass": 146,
-        "total": 224,
-        "rate": 0.6517857142857143,
+        "total": 229,
+        "rate": 0.6375545851528385,
         "avgTime": 106563,
         "avgTools": 9
       },
@@ -262,14 +262,23 @@
       },
       "iron": {
         "pass": 0,
-        "total": 0,
+        "total": 5,
         "rate": 0,
         "avgTime": null,
-        "avgTimeout": null,
+        "avgTimeout": 600000,
         "avgTools": null,
         "avgFailures": null,
-        "avgOwnerInteractions": null,
-        "toolCounts": {}
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 3,
+          "chest": 7,
+          "craft": 12,
+          "equip": 8,
+          "place": 1,
+          "mine": 8,
+          "pickup": 2,
+          "smelt": 1
+        }
       }
     },
     "gpt-5-mini": {
@@ -417,10 +426,10 @@
     },
     "minimax/minimax-m2.5": {
       "overall": {
-        "pass": 74,
-        "total": 155,
-        "rate": 0.4774193548387097,
-        "avgTime": 206567,
+        "pass": 77,
+        "total": 165,
+        "rate": 0.4666666666666667,
+        "avgTime": 205962,
         "avgTools": 9
       },
       "pick": {
@@ -540,25 +549,29 @@
         }
       },
       "sleep": {
-        "pass": 3,
-        "total": 5,
+        "pass": 6,
+        "total": 10,
         "rate": 0.6,
-        "avgTime": 125377,
+        "avgTime": 158198,
         "avgTimeout": 300000,
         "avgTools": 9,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 3,
-          "chest": 12,
-          "craft": 5,
-          "place": 6,
-          "sleep": 1
+          "objective": 8,
+          "chest": 29,
+          "craft": 10,
+          "place": 8,
+          "sleep": 2,
+          "eat": 3,
+          "mine": 1,
+          "whisper": 1,
+          "pickup": 1
         }
       },
       "iron": {
         "pass": 0,
-        "total": 5,
+        "total": 10,
         "rate": 0,
         "avgTime": null,
         "avgTimeout": 600000,
@@ -566,23 +579,24 @@
         "avgFailures": null,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "craft": 5,
-          "chest": 7,
-          "mine": 7,
+          "craft": 13,
+          "chest": 15,
+          "mine": 15,
           "eat": 1,
           "guard": 1,
           "attack": 5,
-          "objective": 1,
-          "place": 1
+          "objective": 3,
+          "place": 2,
+          "whisper": 1
         }
       }
     },
     "anthropic/claude-haiku-4.5": {
       "overall": {
-        "pass": 94,
-        "total": 153,
-        "rate": 0.6143790849673203,
-        "avgTime": 105372,
+        "pass": 96,
+        "total": 160,
+        "rate": 0.6,
+        "avgTime": 103707,
         "avgTools": 8
       },
       "pick": {
@@ -708,40 +722,45 @@
         }
       },
       "sleep": {
-        "pass": 4,
-        "total": 8,
-        "rate": 0.5,
-        "avgTime": 76824,
+        "pass": 6,
+        "total": 10,
+        "rate": 0.6,
+        "avgTime": 59691,
         "avgTimeout": 300000,
-        "avgTools": 10,
+        "avgTools": 9,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 4,
-          "chest": 31,
-          "craft": 15,
-          "place": 9,
-          "sleep": 5
+          "objective": 6,
+          "chest": 38,
+          "craft": 17,
+          "place": 11,
+          "sleep": 6
         }
       },
       "iron": {
         "pass": 0,
-        "total": 0,
+        "total": 5,
         "rate": 0,
         "avgTime": null,
-        "avgTimeout": null,
+        "avgTimeout": 600000,
         "avgTools": null,
         "avgFailures": null,
-        "avgOwnerInteractions": null,
-        "toolCounts": {}
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "objective": 2,
+          "mine": 3,
+          "chest": 3,
+          "smelt": 1
+        }
       }
     },
     "google/gemini-3.1-flash-lite-preview": {
       "overall": {
-        "pass": 35,
-        "total": 140,
-        "rate": 0.25,
-        "avgTime": 102804,
+        "pass": 39,
+        "total": 150,
+        "rate": 0.26,
+        "avgTime": 99573,
         "avgTools": 8
       },
       "pick": {
@@ -839,25 +858,25 @@
         }
       },
       "sleep": {
-        "pass": 3,
-        "total": 5,
-        "rate": 0.6,
-        "avgTime": 17097,
+        "pass": 7,
+        "total": 10,
+        "rate": 0.7,
+        "avgTime": 48071,
         "avgTimeout": 300000,
-        "avgTools": 5,
+        "avgTools": 4,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 5,
-          "chest": 4,
-          "craft": 3,
-          "place": 2,
-          "sleep": 2
+          "objective": 9,
+          "chest": 10,
+          "craft": 5,
+          "place": 4,
+          "sleep": 6
         }
       },
       "iron": {
         "pass": 0,
-        "total": 5,
+        "total": 10,
         "rate": 0,
         "avgTime": null,
         "avgTimeout": 600000,
@@ -866,16 +885,17 @@
         "avgOwnerInteractions": 0,
         "toolCounts": {
           "objective": 1,
-          "mine": 2
+          "mine": 2,
+          "chest": 1
         }
       }
     },
     "qwen/qwen3.5-flash-02-23": {
       "overall": {
-        "pass": 67,
-        "total": 159,
-        "rate": 0.42138364779874216,
-        "avgTime": 152157,
+        "pass": 69,
+        "total": 169,
+        "rate": 0.40828402366863903,
+        "avgTime": 148728,
         "avgTools": 9
       },
       "pick": {
@@ -985,20 +1005,20 @@
         }
       },
       "sleep": {
-        "pass": 2,
-        "total": 5,
+        "pass": 4,
+        "total": 10,
         "rate": 0.4,
-        "avgTime": 92418,
+        "avgTime": 63137,
         "avgTimeout": 300000,
         "avgTools": 9,
         "avgFailures": 0,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "chest": 14,
-          "objective": 3,
-          "craft": 4,
-          "place": 3,
-          "sleep": 6,
+          "chest": 23,
+          "objective": 6,
+          "craft": 6,
+          "place": 5,
+          "sleep": 8,
           "stop": 2,
           "come_here": 1,
           "mine": 1
@@ -1006,7 +1026,7 @@
       },
       "iron": {
         "pass": 0,
-        "total": 5,
+        "total": 10,
         "rate": 0,
         "avgTime": null,
         "avgTimeout": 600000,
@@ -1014,17 +1034,17 @@
         "avgFailures": null,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "mine": 1,
-          "chest": 3
+          "mine": 4,
+          "chest": 5
         }
       }
     },
     "z-ai/glm-5": {
       "overall": {
-        "pass": 109,
-        "total": 170,
-        "rate": 0.6411764705882353,
-        "avgTime": 153325,
+        "pass": 113,
+        "total": 180,
+        "rate": 0.6277777777777778,
+        "avgTime": 152133,
         "avgTools": 9
       },
       "pick": {
@@ -1143,32 +1163,39 @@
         }
       },
       "sleep": {
-        "pass": 5,
-        "total": 5,
-        "rate": 1,
-        "avgTime": 98277,
+        "pass": 9,
+        "total": 10,
+        "rate": 0.9,
+        "avgTime": 107771,
         "avgTimeout": 300000,
         "avgTools": 10,
         "avgFailures": 1,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 5,
-          "chest": 20,
-          "place": 10,
-          "craft": 12,
-          "sleep": 5
+          "objective": 12,
+          "chest": 37,
+          "place": 13,
+          "craft": 17,
+          "sleep": 8,
+          "follow": 1,
+          "mine": 1
         }
       },
       "iron": {
         "pass": 0,
-        "total": 0,
+        "total": 5,
         "rate": 0,
         "avgTime": null,
-        "avgTimeout": null,
+        "avgTimeout": 600000,
         "avgTools": null,
         "avgFailures": null,
-        "avgOwnerInteractions": null,
-        "toolCounts": {}
+        "avgOwnerInteractions": 0,
+        "toolCounts": {
+          "chest": 4,
+          "craft": 9,
+          "mine": 3,
+          "smelt": 1
+        }
       }
     },
     "local/glm-4.7-flash:latest": {
@@ -1348,8 +1375,8 @@
     "inception/mercury-2": {
       "overall": {
         "pass": 56,
-        "total": 133,
-        "rate": 0.42105263157894735,
+        "total": 138,
+        "rate": 0.4057971014492754,
         "avgTime": 116128,
         "avgTools": 9
       },
@@ -1464,7 +1491,7 @@
       },
       "iron": {
         "pass": 0,
-        "total": 5,
+        "total": 10,
         "rate": 0,
         "avgTime": null,
         "avgTimeout": 600000,
@@ -1472,22 +1499,22 @@
         "avgFailures": null,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "chest": 3,
-          "objective": 3,
-          "mine": 8,
+          "chest": 9,
+          "objective": 5,
+          "mine": 12,
           "smelt": 1,
           "guard": 1,
-          "craft": 1,
+          "craft": 2,
           "attack": 1
         }
       }
     },
     "moonshotai/kimi-k2.5": {
       "overall": {
-        "pass": 32,
-        "total": 65,
-        "rate": 0.49230769230769234,
-        "avgTime": 151303,
+        "pass": 33,
+        "total": 70,
+        "rate": 0.4714285714285714,
+        "avgTime": 162979,
         "avgTools": 8
       },
       "pick": {
@@ -1596,30 +1623,32 @@
         }
       },
       "iron": {
-        "pass": 0,
-        "total": 5,
-        "rate": 0,
-        "avgTime": null,
+        "pass": 1,
+        "total": 10,
+        "rate": 0.1,
+        "avgTime": 536634,
         "avgTimeout": 600000,
-        "avgTools": null,
-        "avgFailures": null,
+        "avgTools": 21,
+        "avgFailures": 2,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 6,
-          "mine": 22,
-          "craft": 33,
-          "place": 6,
-          "smelt": 7,
-          "pickup": 1,
-          "chest": 12
+          "objective": 9,
+          "mine": 31,
+          "craft": 51,
+          "place": 8,
+          "smelt": 13,
+          "pickup": 4,
+          "chest": 17,
+          "equip": 2,
+          "come_here": 1
         }
       }
     },
     "deepseek/deepseek-v3.2": {
       "overall": {
         "pass": 20,
-        "total": 65,
-        "rate": 0.3076923076923077,
+        "total": 70,
+        "rate": 0.2857142857142857,
         "avgTime": 164991,
         "avgTools": 9
       },
@@ -1733,7 +1762,7 @@
       },
       "iron": {
         "pass": 0,
-        "total": 5,
+        "total": 10,
         "rate": 0,
         "avgTime": null,
         "avgTimeout": 600000,
@@ -1741,12 +1770,13 @@
         "avgFailures": null,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 20,
-          "chest": 19,
-          "mine": 10,
-          "craft": 16,
+          "objective": 25,
+          "chest": 26,
+          "mine": 17,
+          "craft": 18,
           "guard": 1,
-          "smelt": 4
+          "smelt": 4,
+          "pickup": 1
         }
       }
     },
@@ -161888,6 +161918,3185 @@
         }
       ],
       "ts": "2026-03-13T10:32:54.801Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 227699,
+      "timeout": 300000,
+      "toolCalls": 3,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft and sleep in a bed using chest supplies"
+          },
+          "t": 1773398229614
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773398230581
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773398274613
+        }
+      ],
+      "ts": "2026-03-13T10:38:06.809Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 304049,
+      "timeout": 300000,
+      "toolCalls": 6,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "text": "Craft a bed and sleep to skip the night",
+            "action": "set"
+          },
+          "t": 1773398229460
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773398230337
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773398233727
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773398253654
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773398322493
+        },
+        {
+          "name": "place",
+          "params": {
+            "direction": "below",
+            "block": "white_bed"
+          },
+          "t": 1773398368950
+        }
+      ],
+      "ts": "2026-03-13T10:39:36.815Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 26254,
+      "timeout": 300000,
+      "toolCalls": 4,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "text": "craft a bed and sleep",
+            "action": "set"
+          },
+          "t": 1773398396386
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take"
+          },
+          "t": 1773398396386
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773398397805
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773398405367
+        }
+      ],
+      "ts": "2026-03-13T10:40:22.561Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 676074,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T10:45:34.389Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 15202,
+      "timeout": 300000,
+      "toolCalls": 5,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft a bed and sleep"
+          },
+          "t": 1773398747814
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773398747814
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take"
+          },
+          "t": 1773398749387
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773398750786
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773398754854
+        }
+      ],
+      "ts": "2026-03-13T10:46:02.301Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604609,
+      "timeout": 600000,
+      "toolCalls": 1,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773398932299
+        }
+      ],
+      "ts": "2026-03-13T10:48:52.906Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 16048,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T10:49:41.255Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T10:52:37.091Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 687574,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T10:52:37.319Z"
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite-preview",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 698100,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T10:57:54.089Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 192833,
+      "timeout": 300000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "check chest for bed supplies, craft bed, sleep"
+          },
+          "t": 1773399526656
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773399526656
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773399566364
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773399615789
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773399665493
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773399679022
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773399694721
+        }
+      ],
+      "ts": "2026-03-13T11:01:41.741Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 301080,
+      "timeout": 300000,
+      "toolCalls": 7,
+      "failures": 4,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773399555614
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773399648517
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773399666389
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773399689218
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773399734851
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773399750560
+        },
+        {
+          "name": "eat",
+          "params": {},
+          "t": 1773399778367
+        }
+      ],
+      "ts": "2026-03-13T11:03:28.569Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601420,
+      "timeout": 600000,
+      "toolCalls": 2,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400007675
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 5
+          },
+          "t": 1773400076247
+        }
+      ],
+      "ts": "2026-03-13T11:08:27.557Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 305208,
+      "timeout": 300000,
+      "toolCalls": 3,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773399991932
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400061082
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773400127815
+        }
+      ],
+      "ts": "2026-03-13T11:08:52.712Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 605552,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773399990930
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch"
+          },
+          "t": 1773400048119
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400073018
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773400138694
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773400152277
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773400254987
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400315401
+        }
+      ],
+      "ts": "2026-03-13T11:12:09.609Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 205421,
+      "timeout": 300000,
+      "toolCalls": 12,
+      "failures": 1,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "whisper",
+          "params": {
+            "message": "I've been revived! At position near crafting table, furnace, and chest. Ready for orders.",
+            "player": "BrezzyTracks"
+          },
+          "t": 1773400154501
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400173361
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Await orders from BrezzyTracks"
+          },
+          "t": 1773400191417
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "clear"
+          },
+          "t": 1773400201347
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a bed and sleep"
+          },
+          "t": 1773400213042
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773400213042
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773400241869
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773400250515
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400261050
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773400303707
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773400324022
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773400350784
+        }
+      ],
+      "ts": "2026-03-13T11:12:38.613Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 174805,
+      "timeout": 300000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400381908
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "porkchop"
+          },
+          "t": 1773400432798
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773400454024
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773400495804
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773400506891
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773400523606
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773400545195
+        }
+      ],
+      "ts": "2026-03-13T11:15:53.537Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 606861,
+      "timeout": 600000,
+      "toolCalls": 14,
+      "failures": 1,
+      "ownerInteractions": 1,
+      "toolLog": [
+        {
+          "name": "whisper",
+          "params": {
+            "message": "Thank you for bringing me back, BrezzyTracks. What would you like me to do?",
+            "player": "BrezzyTracks"
+          },
+          "t": 1773400136031
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400145138
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch"
+          },
+          "t": 1773400194429
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773400202070
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400252698
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773400293706
+        },
+        {
+          "name": "craft",
+          "params": {
+            "count": 11,
+            "item": "oak_planks"
+          },
+          "t": 1773400432795
+        },
+        {
+          "name": "craft",
+          "params": {
+            "count": 4,
+            "item": "stick"
+          },
+          "t": 1773400458677
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773400494504
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773400517680
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773400543768
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cobblestone",
+            "count": 16
+          },
+          "t": 1773400556872
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773400629200
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773400665626
+        }
+      ],
+      "ts": "2026-03-13T11:18:52.293Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601029,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 1,
+      "toolLog": [],
+      "ts": "2026-03-13T11:22:29.802Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601982,
+      "timeout": 600000,
+      "toolCalls": 5,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773400966578
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773401026661
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773401098653
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks"
+          },
+          "t": 1773401139321
+        },
+        {
+          "name": "craft",
+          "params": {
+            "count": 4,
+            "item": "stick"
+          },
+          "t": 1773401166316
+        }
+      ],
+      "ts": "2026-03-13T11:26:13.595Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 20961,
+      "timeout": 300000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "priority": "high",
+            "text": "Craft bed and sleep"
+          },
+          "t": 1773401205207
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773401205207
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773401208526
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773401208526
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773401208526
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773401212018
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773401217507
+        }
+      ],
+      "ts": "2026-03-13T11:27:04.710Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 46750,
+      "timeout": 300000,
+      "toolCalls": 10,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773401205029
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft bed and sleep",
+            "priority": "high"
+          },
+          "t": 1773401227553
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773401227553
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773401227553
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773401229757
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773401231815
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773401237215
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773401239046
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773401241144
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft bed and sleep"
+          },
+          "t": 1773401247487
+        }
+      ],
+      "ts": "2026-03-13T11:27:31.777Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T11:30:01.923Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600591,
+      "timeout": 600000,
+      "toolCalls": 1,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773401722817
+        }
+      ],
+      "ts": "2026-03-13T11:36:43.646Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 602948,
+      "timeout": 600000,
+      "toolCalls": 2,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773401725543
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773401743065
+        }
+      ],
+      "ts": "2026-03-13T11:37:22.457Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 636024,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T11:40:51.135Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 303255,
+      "timeout": 300000,
+      "toolCalls": 1,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773402059472
+        }
+      ],
+      "ts": "2026-03-13T11:42:00.508Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 62699,
+      "timeout": 300000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T11:42:10.685Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604628,
+      "timeout": 600000,
+      "toolCalls": 2,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773402419803
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773402466506
+        }
+      ],
+      "ts": "2026-03-13T11:48:12.658Z"
+    },
+    {
+      "model": "qwen/qwen3.5-flash-02-23",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 612579,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T11:52:29.740Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604504,
+      "timeout": 600000,
+      "toolCalls": 3,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft iron pickaxe from scratch"
+          },
+          "t": 1773403359693
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773403363119
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "cherry_log",
+            "count": 4
+          },
+          "t": 1773403366754
+        }
+      ],
+      "ts": "2026-03-13T12:03:05.102Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604525,
+      "timeout": 600000,
+      "toolCalls": 2,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft an iron pickaxe from scratch"
+          },
+          "t": 1773403360348
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773403364087
+        }
+      ],
+      "ts": "2026-03-13T12:03:05.230Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604895,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T12:03:05.605Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604988,
+      "timeout": 600000,
+      "toolCalls": 8,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773403577206
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773403645695
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft an iron pickaxe from scratch",
+            "priority": "normal"
+          },
+          "t": 1773403733664
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773403757459
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773403788857
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "dirt"
+          },
+          "t": 1773403857879
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 4
+          },
+          "t": 1773403887840
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773403976729
+        }
+      ],
+      "ts": "2026-03-13T12:13:25.242Z"
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 602801,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773403577548
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft iron pickaxe from scratch",
+            "priority": "normal"
+          },
+          "t": 1773403622654
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773403637176
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773403682663
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773403715855
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773403737948
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773403804103
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773403855806
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "craft iron pickaxe from scratch"
+          },
+          "t": 1773403976176
+        }
+      ],
+      "ts": "2026-03-13T12:13:51.205Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 602165,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T12:24:20.757Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 602578,
+      "timeout": 600000,
+      "toolCalls": 1,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773404529132
+        }
+      ],
+      "ts": "2026-03-13T12:24:21.346Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 602613,
+      "timeout": 600000,
+      "toolCalls": 7,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft an iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773404460144
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773404460144
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks",
+            "count": 4
+          },
+          "t": 1773404506103
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773404513351
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 9
+          },
+          "t": 1773404572804
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "count": 9
+          },
+          "t": 1773404603071
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "count": 9
+          },
+          "t": 1773404631545
+        }
+      ],
+      "ts": "2026-03-13T12:24:21.608Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": true,
+      "elapsed": 536634,
+      "timeout": 600000,
+      "toolCalls": 21,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773404713964
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft an iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773404722510
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "birch_log"
+          },
+          "t": 1773404722510
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "birch_planks",
+            "count": 4
+          },
+          "t": 1773404732108
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773404741839
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773404754495
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "birch_log"
+          },
+          "t": 1773404780427
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "birch_planks",
+            "count": 8
+          },
+          "t": 1773404813624
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773404824400
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773404841325
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773404854045
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773404864380
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773404926280
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773404942875
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773404955389
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace"
+          },
+          "t": 1773405060997
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 5
+          },
+          "t": 1773405077428
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "birch_log"
+          },
+          "t": 1773405155329
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "birch_planks",
+            "count": 4
+          },
+          "t": 1773405169480
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 2
+          },
+          "t": 1773405185742
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "iron_pickaxe"
+          },
+          "t": 1773405195540
+        }
+      ],
+      "ts": "2026-03-13T12:33:30.612Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 605007,
+      "timeout": 600000,
+      "toolCalls": 20,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft an iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773404685658
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 16
+          },
+          "t": 1773404697015
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 16
+          },
+          "t": 1773404755867
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773404761832
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773404769732
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773404779460
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773404795599
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 16
+          },
+          "t": 1773404807697
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stone_pickaxe",
+            "count": 1
+          },
+          "t": 1773404870263
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773404888734
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "furnace",
+            "count": 1
+          },
+          "t": 1773404977199
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "furnace",
+            "direction": "forward"
+          },
+          "t": 1773404998071
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 4,
+            "fuel": "oak_planks"
+          },
+          "t": 1773405013299
+        },
+        {
+          "name": "come_here",
+          "params": {},
+          "t": 1773405058327
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 4,
+            "fuel": "oak_planks"
+          },
+          "t": 1773405083943
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 4,
+            "fuel": "stick"
+          },
+          "t": 1773405134494
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773405202557
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773405219651
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773405243665
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "raw_iron",
+            "count": 4
+          },
+          "t": 1773405251274
+        }
+      ],
+      "ts": "2026-03-13T12:34:39.490Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 36444,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T12:35:43.578Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 338463,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T12:40:45.623Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 603506,
+      "timeout": 600000,
+      "toolCalls": 3,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773405840304
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "planks"
+          },
+          "t": 1773405867761
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773405874732
+        }
+      ],
+      "ts": "2026-03-13T12:45:10.404Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 603864,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T12:46:06.334Z"
+    },
+    {
+      "model": "inception/mercury-2",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 603480,
+      "timeout": 600000,
+      "toolCalls": 10,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft iron pickaxe",
+            "priority": "high"
+          },
+          "t": 1773405863005
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773405863501
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773405905612
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773405975397
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773405989188
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft iron pickaxe",
+            "priority": "high"
+          },
+          "t": 1773406051413
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773406072569
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773406123674
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773406202531
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773406255815
+        }
+      ],
+      "ts": "2026-03-13T12:51:02.941Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 25373,
+      "timeout": 300000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft bed and sleep",
+            "priority": "high"
+          },
+          "t": 1773406302527
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773406302527
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773406306409
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773406306409
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773406306409
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773406309085
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773406315410
+        }
+      ],
+      "ts": "2026-03-13T12:52:04.809Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 25474,
+      "timeout": 300000,
+      "toolCalls": 7,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "craft bed and sleep",
+            "priority": "high"
+          },
+          "t": 1773406301645
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773406301645
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773406307098
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773406307098
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773406314356
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773406321339
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773406321339
+        }
+      ],
+      "ts": "2026-03-13T12:52:05.051Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601142,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773406798857
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773406798857
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773406839257
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773406889145
+        }
+      ],
+      "ts": "2026-03-13T13:02:34.139Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601948,
+      "timeout": 600000,
+      "toolCalls": 1,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773406794391
+        }
+      ],
+      "ts": "2026-03-13T13:02:34.697Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601973,
+      "timeout": 600000,
+      "toolCalls": 4,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773406794577
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773406798775
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "iron_ore",
+            "count": 3
+          },
+          "t": 1773406891680
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 2
+          },
+          "t": 1773406925255
+        }
+      ],
+      "ts": "2026-03-13T13:02:34.807Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 0,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T13:03:07.995Z"
+    },
+    {
+      "model": "anthropic/claude-haiku-4.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604598,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T13:12:51.692Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 602500,
+      "timeout": 600000,
+      "toolCalls": 15,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch"
+          },
+          "t": 1773407854627
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773407854627
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 16
+          },
+          "t": 1773407920560
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 8
+          },
+          "t": 1773407920560
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773407920560
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773407920560
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773407981912
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773407981912
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773407981912
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773407981912
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773407991882
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 4
+          },
+          "t": 1773407991882
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773408099132
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 5
+          },
+          "t": 1773408099132
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773408099132
+        }
+      ],
+      "ts": "2026-03-13T13:23:26.609Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 603787,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft an iron pickaxe from scratch"
+          },
+          "t": 1773407857195
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773407857195
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773407920426
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 6
+          },
+          "t": 1773407920426
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773407991043
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773407991043
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table",
+            "count": 1
+          },
+          "t": 1773408062613
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe",
+            "count": 1
+          },
+          "t": 1773408082801
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773408082801
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773408116086
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 6
+          },
+          "t": 1773408116086
+        }
+      ],
+      "ts": "2026-03-13T13:23:27.893Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604141,
+      "timeout": 600000,
+      "toolCalls": 16,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft an iron pickaxe from scratch"
+          },
+          "t": 1773407856619
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773407856619
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "spruce_planks",
+            "count": 12
+          },
+          "t": 1773407922070
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773407961798
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 4
+          },
+          "t": 1773407973406
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773408015571
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773408030264
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 8
+          },
+          "t": 1773408092904
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773408092904
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773408119997
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773408119997
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "cobblestone"
+          },
+          "t": 1773408155796
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773408155796
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 2
+          },
+          "t": 1773408155796
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "fuel": "spruce_planks",
+            "count": 3
+          },
+          "t": 1773408193891
+        },
+        {
+          "name": "pickup",
+          "params": {
+            "item": "cobblestone"
+          },
+          "t": 1773408193891
+        }
+      ],
+      "ts": "2026-03-13T13:23:28.303Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600006,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T13:33:42.591Z"
+    },
+    {
+      "model": "x-ai/grok-4.1-fast",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 602639,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T13:33:42.716Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 108350,
+      "timeout": 300000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a bed and sleep",
+            "priority": "high"
+          },
+          "t": 1773408890903
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773408890903
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773408899945
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773408899945
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773408920766
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "bed"
+          },
+          "t": 1773408938780
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "white_bed"
+          },
+          "t": 1773408948797
+        }
+      ],
+      "ts": "2026-03-13T13:36:02.193Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 138759,
+      "timeout": 300000,
+      "toolCalls": 7,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a bed and sleep through the night",
+            "priority": "high"
+          },
+          "t": 1773408881244
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773408900980
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773408921048
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773408921048
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773408943236
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed",
+            "count": 1
+          },
+          "t": 1773408974421
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773408986457
+        }
+      ],
+      "ts": "2026-03-13T13:36:31.609Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 123409,
+      "timeout": 300000,
+      "toolCalls": 11,
+      "failures": 2,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "follow",
+          "params": {},
+          "t": 1773409010854
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a bed and sleep",
+            "priority": "high"
+          },
+          "t": 1773409024831
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773409037856
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool"
+          },
+          "t": 1773409045818
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks"
+          },
+          "t": 1773409045818
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773409056920
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773409100143
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773409108385
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773409121581
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773409126983
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft a bed and sleep"
+          },
+          "t": 1773409126983
+        }
+      ],
+      "ts": "2026-03-13T13:38:52.010Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 412075,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T13:43:12.536Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 601701,
+      "timeout": 600000,
+      "toolCalls": 2,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773409407531
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773409440342
+        }
+      ],
+      "ts": "2026-03-13T13:44:13.457Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": true,
+      "elapsed": 108034,
+      "timeout": 300000,
+      "toolCalls": 9,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "priority": "high",
+            "text": "Craft a bed and sleep"
+          },
+          "t": 1773409424929
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773409424929
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "white_wool",
+            "count": 3
+          },
+          "t": 1773409439879
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773409477680
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "take",
+            "item": "crafting_table"
+          },
+          "t": 1773409495542
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773409500744
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "white_bed"
+          },
+          "t": 1773409500744
+        },
+        {
+          "name": "sleep",
+          "params": {},
+          "t": 1773409506609
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "complete",
+            "text": "Craft a bed and sleep"
+          },
+          "t": 1773409506609
+        }
+      ],
+      "ts": "2026-03-13T13:45:16.300Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600433,
+      "timeout": 600000,
+      "toolCalls": 1,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773409768231
+        }
+      ],
+      "ts": "2026-03-13T13:49:38.759Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "sleep",
+      "success": false,
+      "elapsed": 302021,
+      "timeout": 300000,
+      "toolCalls": 3,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft a bed and sleep through the night",
+            "priority": "high"
+          },
+          "t": 1773409762618
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773409762618
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 3
+          },
+          "t": 1773409822684
+        }
+      ],
+      "ts": "2026-03-13T13:50:48.240Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 605245,
+      "timeout": 600000,
+      "toolCalls": 11,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773409765492
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 3
+          },
+          "t": 1773409811573
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick",
+            "count": 4
+          },
+          "t": 1773409825454
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 1
+          },
+          "t": 1773409841301
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773409855456
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks"
+          },
+          "t": 1773409884495
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773409920636
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773409949245
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "stone",
+            "count": 3
+          },
+          "t": 1773410002033
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773410029879
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773410058905
+        }
+      ],
+      "ts": "2026-03-13T13:54:34.158Z"
+    },
+    {
+      "model": "z-ai/glm-5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600530,
+      "timeout": 600000,
+      "toolCalls": 3,
+      "failures": 1,
+      "ownerInteractions": 2,
+      "toolLog": [
+        {
+          "name": "craft",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773410322756
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773410329144
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "item": "raw_iron",
+            "count": 3
+          },
+          "t": 1773410361392
+        }
+      ],
+      "ts": "2026-03-13T13:59:56.643Z"
     }
   ]
 }
