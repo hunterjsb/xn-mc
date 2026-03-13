@@ -561,8 +561,9 @@ async function runBenchmark(benchId, botName, workerId = 0) {
         // All retries exhausted and idle 2+ min — check if bot has done anything
         try {
           const m = await api('GET', `/bench/metrics?bot=${botName}`);
-          if ((m.totalToolCalls || 0) === 0 && (m.totalErrors || 0) > 0) {
-            console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] Aborting — ${m.totalErrors} LLM errors, 0 tool calls. API may be down.`);
+          if ((m.totalToolCalls || 0) === 0) {
+            const reason = (m.totalErrors || 0) > 0 ? `${m.totalErrors} LLM errors` : 'no progress';
+            console.log(`${tag}  [${fmtTime(Date.now() - startTime)}] Aborting — ${reason}, 0 tool calls after ${retries} retries.`);
             break;
           }
         } catch {}

@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-13T20:13:39.903Z",
-  "totalRuns": 2539,
+  "generated": "2026-03-13T20:37:49.230Z",
+  "totalRuns": 2544,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -431,8 +431,8 @@
     "minimax/minimax-m2.5": {
       "overall": {
         "pass": 77,
-        "total": 174,
-        "rate": 0.4425287356321839,
+        "total": 179,
+        "rate": 0.4301675977653631,
         "avgTime": 205962,
         "avgTools": 9
       },
@@ -575,7 +575,7 @@
       },
       "iron": {
         "pass": 0,
-        "total": 20,
+        "total": 25,
         "rate": 0,
         "avgTime": null,
         "avgTimeout": 600000,
@@ -583,15 +583,17 @@
         "avgFailures": null,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "craft": 18,
-          "chest": 23,
-          "mine": 21,
+          "craft": 31,
+          "chest": 24,
+          "mine": 23,
           "eat": 1,
           "guard": 1,
           "attack": 6,
-          "objective": 6,
-          "place": 3,
-          "whisper": 1
+          "objective": 8,
+          "place": 8,
+          "whisper": 1,
+          "smelt": 1,
+          "pickup": 1
         }
       }
     },
@@ -170429,6 +170431,251 @@
         }
       ],
       "ts": "2026-03-13T20:09:58.807Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 241115,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T20:21:34.686Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600812,
+      "timeout": 600000,
+      "toolCalls": 12,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "craft",
+          "params": {
+            "item": "spruce_planks",
+            "count": 3
+          },
+          "t": 1773433257425
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stick"
+          },
+          "t": 1773433280047
+        },
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe: 1) craft table, 2) mine iron ore, 3) smelt iron, 4) craft pickaxe"
+          },
+          "t": 1773433297543
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773433313652
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "spruce_planks"
+          },
+          "t": 1773433332572
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773433353416
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 3
+          },
+          "t": 1773433356009
+        },
+        {
+          "name": "smelt",
+          "params": {
+            "count": 3,
+            "fuel": "spruce_log",
+            "item": "iron_ore"
+          },
+          "t": 1773433429437
+        },
+        {
+          "name": "pickup",
+          "params": {},
+          "t": 1773433479371
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773433518394
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "spruce_planks",
+            "count": 4
+          },
+          "t": 1773433552088
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773433591647
+        }
+      ],
+      "ts": "2026-03-13T20:27:34.603Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600770,
+      "timeout": 600000,
+      "toolCalls": 13,
+      "failures": 3,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft iron pickaxe from scratch"
+          },
+          "t": 1773433253837
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "oak_planks",
+            "count": 7
+          },
+          "t": 1773433275794
+        },
+        {
+          "name": "craft",
+          "params": {
+            "count": 4,
+            "item": "stick"
+          },
+          "t": 1773433287651
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773433313687
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773433324694
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773433377090
+        },
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773433397449
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773433468468
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "wooden_pickaxe"
+          },
+          "t": 1773433494232
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773433550205
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "crafting_table"
+          },
+          "t": 1773433584855
+        },
+        {
+          "name": "place",
+          "params": {
+            "block": "crafting_table"
+          },
+          "t": 1773433618213
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773433653246
+        }
+      ],
+      "ts": "2026-03-13T20:27:35.108Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 617467,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T20:32:06.152Z"
+    },
+    {
+      "model": "minimax/minimax-m2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 331421,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T20:33:19.193Z"
     }
   ]
 }
