@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-14T00:08:20.356Z",
-  "totalRuns": 2615,
+  "generated": "2026-03-14T00:25:15.057Z",
+  "totalRuns": 2620,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1527,8 +1527,8 @@
     "moonshotai/kimi-k2.5": {
       "overall": {
         "pass": 52,
-        "total": 105,
-        "rate": 0.49523809523809526,
+        "total": 110,
+        "rate": 0.4727272727272727,
         "avgTime": 161397,
         "avgTools": 8
       },
@@ -1649,23 +1649,24 @@
       },
       "iron": {
         "pass": 1,
-        "total": 15,
-        "rate": 0.06666666666666667,
+        "total": 20,
+        "rate": 0.05,
         "avgTime": 536634,
         "avgTimeout": 600000,
         "avgTools": 21,
         "avgFailures": 2,
         "avgOwnerInteractions": 0,
         "toolCounts": {
-          "objective": 9,
-          "mine": 31,
-          "craft": 51,
+          "objective": 10,
+          "mine": 39,
+          "craft": 53,
           "place": 8,
           "smelt": 13,
           "pickup": 4,
-          "chest": 17,
-          "equip": 2,
-          "come_here": 1
+          "chest": 18,
+          "equip": 3,
+          "come_here": 1,
+          "attack": 1
         }
       }
     },
@@ -175626,6 +175627,178 @@
       "ownerInteractions": 0,
       "toolLog": [],
       "ts": "2026-03-13T23:45:14.383Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 357601,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-14T00:14:50.591Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 362389,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-14T00:14:56.048Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604087,
+      "timeout": 600000,
+      "toolCalls": 9,
+      "failures": 1,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "objective",
+          "params": {
+            "action": "set",
+            "text": "Craft an iron pickaxe from scratch",
+            "priority": "high"
+          },
+          "t": 1773447230863
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773447237133
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 6
+          },
+          "t": 1773447321228
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773447368552
+        },
+        {
+          "name": "attack",
+          "params": {
+            "mob": "skeleton"
+          },
+          "t": 1773447391985
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "sticks",
+            "count": 4
+          },
+          "t": 1773447428697
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773447428697
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773447461801
+        },
+        {
+          "name": "equip",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773447532481
+        }
+      ],
+      "ts": "2026-03-14T00:18:56.852Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 600252,
+      "timeout": 600000,
+      "toolCalls": 2,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "chest",
+          "params": {
+            "action": "check"
+          },
+          "t": 1773447745100
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "oak_log",
+            "count": 8
+          },
+          "t": 1773447794965
+        }
+      ],
+      "ts": "2026-03-14T00:25:04.702Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 604244,
+      "timeout": 600000,
+      "toolCalls": 3,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 16
+          },
+          "t": 1773447740897
+        },
+        {
+          "name": "craft",
+          "params": {
+            "item": "stone_pickaxe"
+          },
+          "t": 1773447798980
+        },
+        {
+          "name": "mine",
+          "params": {
+            "block": "iron_ore",
+            "count": 8
+          },
+          "t": 1773447816928
+        }
+      ],
+      "ts": "2026-03-14T00:25:14.983Z"
     }
   ]
 }
