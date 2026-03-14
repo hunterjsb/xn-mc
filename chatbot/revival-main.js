@@ -251,6 +251,9 @@ function wireRevivalBot(rBot) {
       if (step === 0) allSenders = result.senders;
 
       // Bench tracking: log tool calls
+      if (bot._benchMode && result.actions.length > 0) {
+        console.log(`[BenchTrack] ${bot.username}: ${result.actions.length} tool(s) — benchLog now ${bot._benchLog.length + result.actions.length}`);
+      }
       for (const action of result.actions) {
         bot._benchLog.push({ type: 'tool', name: action.name, params: action.params, t: Date.now() });
       }

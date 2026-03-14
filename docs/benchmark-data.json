@@ -1,6 +1,6 @@
 {
-  "generated": "2026-03-13T23:31:04.089Z",
-  "totalRuns": 2610,
+  "generated": "2026-03-14T00:08:20.356Z",
+  "totalRuns": 2615,
   "models": [
     "x-ai/grok-4.1-fast",
     "gpt-5-mini",
@@ -1527,8 +1527,8 @@
     "moonshotai/kimi-k2.5": {
       "overall": {
         "pass": 52,
-        "total": 100,
-        "rate": 0.52,
+        "total": 105,
+        "rate": 0.49523809523809526,
         "avgTime": 161397,
         "avgTools": 8
       },
@@ -1649,8 +1649,8 @@
       },
       "iron": {
         "pass": 1,
-        "total": 10,
-        "rate": 0.1,
+        "total": 15,
+        "rate": 0.06666666666666667,
         "avgTime": 536634,
         "avgTimeout": 600000,
         "avgTools": 21,
@@ -175566,6 +175566,66 @@
         }
       ],
       "ts": "2026-03-13T23:31:04.010Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 212199,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T23:36:33.485Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 372168,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T23:39:13.660Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 605772,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T23:43:06.581Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 452537,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T23:44:27.347Z"
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "bench": "iron",
+      "success": false,
+      "elapsed": 343788,
+      "timeout": 600000,
+      "toolCalls": 0,
+      "failures": 0,
+      "ownerInteractions": 0,
+      "toolLog": [],
+      "ts": "2026-03-13T23:45:14.383Z"
     }
   ]
 }

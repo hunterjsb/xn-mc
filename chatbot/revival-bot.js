@@ -590,9 +590,14 @@ export class RevivalBot {
     });
 
     this.bot.on('kicked', (reason) => {
-      console.log(`[Revival] ${this.username} kicked — despawning`);
       this.connected = false;
-      this.despawn('kicked');
+      if (this._benchMode) {
+        // In bench mode, don't despawn — preserve benchLog for metrics collection
+        console.log(`[Revival] ${this.username} kicked during bench — keeping in map for metrics`);
+      } else {
+        console.log(`[Revival] ${this.username} kicked — despawning`);
+        this.despawn('kicked');
+      }
     });
 
     this.bot.on('error', (err) => {
