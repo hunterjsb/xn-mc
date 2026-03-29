@@ -313,7 +313,7 @@ export class ConversationManager {
         max_tokens: 30,
         temperature: 0.2
       }, { label: 'MemoryEval', lightweight: true });
-      const result = response.choices[0].message.content.trim();
+      const result = (response.choices[0].message.content || '').trim();
       if (result.toLowerCase() === 'none' || result.length < 3) return;
       this.addMemory(username, result);
       console.log(`[Memory] ${username}: ${result}`);
@@ -463,7 +463,7 @@ export class ConversationManager {
         temperature: 0.5
       }, { label: 'Orchestrator', lightweight: true });
 
-      const pick = response.choices[0].message.content.trim();
+      const pick = (response.choices[0].message.content || '').trim();
       const validNames = botProfiles.map(b => b.username);
 
       // Parse "server:BotName" or just "BotName"
@@ -516,7 +516,7 @@ export class ConversationManager {
         max_tokens: 80,
         temperature: 0.75
       }, { label: 'Response', botName: bot.username });
-      let reply = stripThinking(response.choices[0].message.content.trim());
+      let reply = stripThinking((response.choices[0].message.content || '').trim());
       reply = reply.replace(/^["']|["']$/g, '');
       // Strip the bot's own name in any format from the start of the message
       const nameEsc = bot.username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -582,7 +582,7 @@ export class ConversationManager {
         max_tokens: 40,
         temperature: 0.8
       }, { label: 'Chatter', botName: bot.username });
-      let reply = stripThinking(response.choices[0].message.content.trim());
+      let reply = stripThinking((response.choices[0].message.content || '').trim());
       reply = reply.replace(/^["']|["']$/g, '');
       reply = stripEmojis(reply);
       reply = trimToComplete(reply);
@@ -632,7 +632,7 @@ export class ConversationManager {
         max_tokens: 30,
         temperature: 1.0
       }, { label: 'JoinReaction', botName: bot.username });
-      let reply = stripThinking(response.choices[0].message.content.trim());
+      let reply = stripThinking((response.choices[0].message.content || '').trim());
       reply = reply.replace(/^["']|["']$/g, '');
       reply = stripEmojis(reply);
       return reply ? { text: reply } : null;

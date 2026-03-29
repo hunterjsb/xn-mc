@@ -100,7 +100,7 @@ async function distillPlayer(playerName, chats) {
     ...extraParams,
   });
 
-  const raw = response.choices[0].message.content.trim();
+  const raw = (response.choices[0].message.content || '').trim();
   try {
     return JSON.parse(raw);
   } catch {
