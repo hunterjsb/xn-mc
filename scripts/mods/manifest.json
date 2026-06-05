@@ -10,7 +10,6 @@
     { "name": "Architectury API",         "slug": "architectury-api",       "required": true },
     { "name": "YACL",                     "slug": "yacl",                   "required": true },
     { "name": "Mod Menu",                 "slug": "modmenu",                "required": false },
-    { "name": "Litematica",               "slug": "litematica",             "required": false },
     { "name": "MaLiLib",                  "slug": "malilib",                "required": false },
     { "name": "MiniHUD",                  "slug": "minihud",                "required": false },
     { "name": "Tweakeroo",                "slug": "tweakeroo",              "required": false },
