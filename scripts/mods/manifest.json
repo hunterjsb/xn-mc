@@ -1,0 +1,57 @@
+{
+  "mc_version": "26.1.2",
+  "fabric_loader": "0.19.3",
+  "mods": [
+    { "name": "Fabric API",               "slug": "fabric-api",             "required": true },
+    { "name": "Sodium",                   "slug": "sodium",                 "required": true },
+    { "name": "Iris",                     "slug": "iris",                   "required": true },
+    { "name": "Fabric Language Kotlin",   "slug": "fabric-language-kotlin", "required": true },
+    { "name": "Cloth Config",             "slug": "cloth-config",           "required": true },
+    { "name": "Architectury API",         "slug": "architectury-api",       "required": true },
+    { "name": "YACL",                     "slug": "yacl",                   "required": true },
+    { "name": "Mod Menu",                 "slug": "modmenu",                "required": false },
+    { "name": "Litematica",               "slug": "litematica",             "required": false },
+    { "name": "MaLiLib",                  "slug": "malilib",                "required": false },
+    { "name": "MiniHUD",                  "slug": "minihud",                "required": false },
+    { "name": "Tweakeroo",                "slug": "tweakeroo",              "required": false },
+    { "name": "Item Scroller",            "slug": "item-scroller",          "required": false },
+    { "name": "Inventory Profiles Next",  "slug": "inventory-profiles-next","required": false },
+    { "name": "libIPN",                   "slug": "libipn",                 "required": false },
+    { "name": "Xaero's Minimap",          "slug": "xaeros-minimap",         "required": false },
+    { "name": "Xaero's World Map",        "slug": "xaeros-world-map",       "required": false },
+    { "name": "AppleSkin",                "slug": "appleskin",              "required": false },
+    { "name": "Chat Heads",               "slug": "chat-heads",             "required": false },
+    { "name": "Chat Patches",             "slug": "chatpatches",            "required": false },
+    { "name": "Dynamic Crosshair",        "slug": "dynamiccrosshair",       "required": false },
+    { "name": "Logical Zoom",             "slug": "logical-zoom",           "required": false },
+    { "name": "Mouse Tweaks",             "slug": "mouse-tweaks",           "required": false },
+    { "name": "Shulker Box Tooltip",      "slug": "shulkerboxtooltip",      "required": false },
+    { "name": "Totem Counter",            "slug": "totemcounter",           "required": false },
+    { "name": "Build Guide",              "slug": "build-guide",            "required": false },
+    { "name": "CalcMod",                  "slug": "calcmod",                "required": false },
+    { "name": "Durability Ping",          "slug": "durability-ping",        "required": false },
+    { "name": "Auto Logout",              "slug": "auto-logout",            "required": false },
+    { "name": "ukulib",                   "slug": "ukulib",                 "required": false },
+    { "name": "Nether Coords",            "slug": "nether-coords",          "required": false },
+    {
+      "name": "Baritone",
+      "slug": null,
+      "github": "cabaletta/baritone",
+      "asset_pattern": "baritone-unoptimized-fabric-*.jar",
+      "note": "Not on Modrinth — download from GitHub releases",
+      "required": false
+    },
+    {
+      "name": "AutoReconnect",
+      "slug": null,
+      "note": "autoreconnectrf abandoned at 1.20.1 — find replacement for 26.1.2",
+      "required": false
+    },
+    {
+      "name": "Status Effect Timer",
+      "slug": null,
+      "note": "Not found on Modrinth — verify manually",
+      "required": false
+    }
+  ]
+}
