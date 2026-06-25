@@ -27,6 +27,9 @@ discord/xhc-discord
 # Discord Pulumi (generated / runtime)
 discord/sdks/
 discord/.outputs/
+# Pulumi local-backend churn — keep the live stack state, not the backup/history bloat
+discord/state/.pulumi/backups/
+discord/state/.pulumi/history/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
